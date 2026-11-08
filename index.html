@@ -3899,7 +3899,7 @@ html[data-theme=malam] .plstick{background:#0a0f1e}
 <div class="syncpill" id="syncPill" hidden></div>
 <div class="toast" id="toast" hidden></div>
 
-<script src="av.js?v=245"></script>
+<script src="av.js?v=246"></script>
 <script>
 /* ---------- visual assets ---------- */
 const INK='#1B1E3D';
@@ -9916,7 +9916,7 @@ function renderHUD(){
   if(grp){const cur=curTeamIdx();$('#teamBar').innerHTML=grp.teams.map((t,i)=>`<div class="team ${i===cur?'on':''} ${grp.locked[i]?'out':''}" style="--tc:${t.color}"><span><i style="background:${t.color}"></i>${esc(t.name)}</span><span class="sc">${t.score}</span></div>`).join('')}
 }
 function showQText(q){
-  $('#qtag').textContent=`${q.subj||S.name} · Soal ${game.i+1} dari ${game.qs.length}`;
+  $('#qtag').textContent=`${q.subj||S.name} · Soal ${game.i+1} dari ${game.qs.length}${q.rev?' · Ulangan: '+q.rev:''}`;
   $('#qtext').innerHTML=q.q;
   $('#speakBtn').hidden=!qSpeech(q);
 }
@@ -11714,7 +11714,7 @@ function progOf(c,s){const k=progKey(c,s);return P.prog[k]||(P.prog[k]={done:0})
 const totalNodes=s=>s.units.length*NODES.length;
 const lvOf=()=>LEVELS.find(l=>l.id===CLS().lv);
 const TK_GAMES=['penalti','kuis'];
-function gameFor(subj,ui){const u=subj.units[ui];const f=FIT[u.fit||subj.fit];let isTk=false;try{isTk=CLS().lv==='tk'}catch(e){}if(isTk&&f!==FIT.picture)return TK_GAMES[ui%TK_GAMES.length];const list=f.games.filter(g=>g!=='kuis');return list.length?list[ui%list.length]:'kuis'}
+function gameFor(subj,ui){const u=subj.units[ui];const f=FIT[u.fit||subj.fit];let isTk=false;try{isTk=CLS().lv==='tk'}catch(e){}if(isTk&&f!==FIT.picture)return TK_GAMES[ui%TK_GAMES.length];const list=f.games.filter(g=>g!=='kuis'&&g!=='urut');return list.length?list[ui%list.length]:'kuis'}
 const UNIT_SHADES=[0,-.16,-.3,.1,-.08,-.22];
 const unitColor=ui=>{const c=(typeof P!=='undefined'&&P&&P.cls)?SUBJ().color:null;return c?shade(c,UNIT_SHADES[ui%UNIT_SHADES.length]):UNIT_COLORS[ui%UNIT_COLORS.length]};
 const WORLD_DOODLES={hitung:['1','2','3','+','5','★'],huruf:['A','b','C','d','E','?'],warna:['●','▲','■','★','◆','♥'],mtk:['+','×','÷','=','π','%'],bindo:['Aa','B','“','?','!','k'],umum:['☀','☁','♣','✿','☂','★'],
@@ -12672,7 +12672,7 @@ function startNode(ui,ni){const s=SUBJ(),u=s.units[ui],nd=NODES[ni],idx=ui*NODES
   if(ni===2&&spPending(ui)){openSport(ui);return}
   if(nd.k==='chest'){openChest(idx);return}
   if(nd.k!=='game'&&!HUNL()&&P.hearts<=0){openHearts();return}
-  const prev=s.units.slice(0,ui);const review=k=>prev.length?Array.from({length:k},()=>unitQs(pick(prev),1)[0]):unitQs(u,k);
+  const prev=s.units.slice(0,ui);const review=k=>prev.length?Array.from({length:k},()=>{const pu=pick(prev),q=unitQs(pu,1)[0];if(q)q.rev=pu.t;return q}):unitQs(u,k);
   let qs,mode='kuis';
   if(nd.k==='lesson')qs=mixTypes(nd.n===1?unitQs(u,5):shuffle([...unitQs(u,3),...review(2)]),u);
   else if(nd.k==='test')qs=shuffle([...unitQs(u,6),...review(2)]);
@@ -15170,7 +15170,7 @@ function folBind(root,list,after){root.querySelectorAll('[data-follow]').forEach
   try{await folDo(f,on);if(on){try{sfx.ok()}catch(_){}toast('team',`Kamu mengikuti ${f.name}.`)}b.outerHTML=folBtn(f,b.classList.contains('sm'));folBind(root,list,after);after&&after()}catch(err){b.disabled=false;toast('lock',fbErr(err))}})}
 const shareIcon='<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M12 3 V15 M7 8 L12 3 L17 8 M5 13 V19 C5 20 6 21 7 21 H17 C18 21 19 20 19 19 V13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const qrIcon='<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><path d="M14 14h3v3h-3zM18 18h3v3h-3zM18 14h3M14 18v3" stroke-linecap="round"/></svg>';
-let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=245';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
+let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=246';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
 function qrMatrix(text){const Q=window.QRCodeLib,q=new Q(-1,Q.ECL.M);q.addData(text);q.make();const n=q.getModuleCount(),m=[];for(let r=0;r<n;r++){m.push([]);for(let c=0;c<n;c++)m[r].push(q.isDark(r,c))}return m}
 function qrSvgOf(m){const n=m.length;let d='';for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(m[r][c])d+=`M${c} ${r}h1.02v1.02h-1.02z`;
   return `<svg viewBox="-2 -2 ${n+4} ${n+4}" class="pcqr" shape-rendering="crispEdges" aria-label="Kode QR profil"><rect x="-2" y="-2" width="${n+4}" height="${n+4}" fill="#fff"/><path d="${d}" fill="#1C1E3D"/></svg>`}
