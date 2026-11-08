@@ -3899,7 +3899,7 @@ html[data-theme=malam] .plstick{background:#0a0f1e}
 <div class="syncpill" id="syncPill" hidden></div>
 <div class="toast" id="toast" hidden></div>
 
-<script src="av.js?v=241"></script>
+<script src="av.js?v=242"></script>
 <script>
 /* ---------- visual assets ---------- */
 const INK='#1B1E3D';
@@ -5949,7 +5949,7 @@ for(let g=1;g<=12;g++){const grp=COURSE.find(x=>x.id===GRADE_GRP(g)),tags=GRADE_
   const lvl=g<=6?'SD':g<=9?'SMP':'SMA/SMK';
   COURSE.push({id:'k'+g,name:'Kelas '+g,full:lvl+' Kelas '+g,lv:grp.lv,grp:grp.id,grade:g,subjects})}
 {const tk=COURSE.find(x=>x.id==='tk');if(tk){const i=COURSE.indexOf(tk);COURSE.splice(i,1);COURSE.unshift(tk)}}
-{const ORD=['mtk','bindo','pancasila','pai','umum','ipas','ipa','ips','fisika','kimbio','ekonomi','geografi','sosiologi','sejarah','eng','informatika','tkj','kka','pjok','seni'];COURSE.filter(c=>c.grade).forEach(c=>c.subjects.sort((a,b)=>{const i=ORD.indexOf(a.id),j=ORD.indexOf(b.id);return (i<0?99:i)-(j<0?99:j)}))}
+{const ORD=['mtk','bindo','pancasila','pai','umum','ipas','ipa','ips','fisika','kimbio','kimia','biologi','ekonomi','geografi','sosiologi','sejarah','eng','informatika','tkj','kka','pjok','seni'];COURSE.filter(c=>c.grade).forEach(c=>c.subjects.sort((a,b)=>{const i=ORD.indexOf(a.id),j=ORD.indexOf(b.id);return (i<0?99:i)-(j<0?99:j)}))}
 
 /* ===================== Matematika SD Kelas 1–6 sesuai Kurikulum Merdeka =====================
    Bab mengikuti buku siswa "Matematika untuk SD/MI" Kemendikbudristek 2022 (SIBI). Soal dibuat sendiri oleh pembuat soal otomatis. */
@@ -6261,7 +6261,7 @@ for(let g=1;g<=6;g++){const c=COURSE.find(x=>x.id==='k'+g);if(!c)continue;const 
 function unitByTitle(cls,subj,t,ui){const c=COURSE.find(x=>x.id===cls),s=c&&c.subjects.find(x=>x.id===subj);if(!s)return null;const old=(subj==='mtk'&&MM_OLDU[cls])||(typeof CUR_OLDU!=='undefined'&&CUR_OLDU[cls+'/'+subj]);
   return (t&&s.units.find(u=>u.t===t))||(old&&t&&old.find(u=>u.t===t))||(old?old[ui]:s.units[ui])||null}
 /* jalur mapel lain yang diganti mengikuti buku: progres dipindahkan sebanding (sekali per mapel) */
-function curMigrate(p){const NL=NODES.length;p.cmig=p.cmig||{};Object.keys(CUR_OLDU).forEach(k=>{if(p.cmig[k])return;p.cmig[k]=1;const o=p.prog&&p.prog[k];if(!o||!o.done)return;const [cid,sid]=k.split('/'),c=COURSE.find(x=>x.id===cid),s=c&&c.subjects.find(x=>x.id===sid);if(!s)return;
+function curMigrate(p){const NL=NODES.length;p.cmig=p.cmig||{};Object.keys(CUR_OLDU).forEach(k=>{if(p.cmig[k])return;p.cmig[k]=1;const o=p.prog&&(p.prog[k]||(CUR_ALIAS[k]&&p.prog[CUR_ALIAS[k]]));if(!o||!o.done)return;const [cid,sid]=k.split('/'),c=COURSE.find(x=>x.id===cid),s=c&&c.subjects.find(x=>x.id===sid);if(!s)return;
   const oc=CUR_OLDU[k].length,nc=s.units.length,du=Math.min(oc,Math.floor(o.done/NL)),nu=du>=oc?nc:Math.round(du/oc*nc);p.prog[k]=Object.assign({},o,{done:nu*NL+(nu<nc&&du<oc?o.done%NL:0)})})}
 /* progres Matematika kelas 1–6 dipindahkan sebanding ke jalur baru (sekali saja) */
 function mmMigrate(p){if(!p)return;try{curMigrate(p)}catch(e){}if(p.mmv)return;const NL=NODES.length;
@@ -6367,7 +6367,7 @@ const BI1_MERDEKA=[['Bunyi apa?','Menyimak, berkenalan, huruf B-b, suku kata ba-
  ['Aku ingin','Uang logam dan kertas, menabung, membaca kata sederhana',[biBank(BI_UANG),biGabung,biEja,biBanyakSuku],'Gabungkan suku kata untuk membaca kata: ce + le + ngan = celengan.'],
  ['Di sekitar rumah','Arah, letak, dan pekerja di sekitar kita',[biArah,biBank(BI_ARAH),biKerja],'Kata arah: kanan, kiri, atas, bawah.']];
 /* pasang ke Kelas 1; unit lama disimpan untuk tugas/modul lama dan pemindahan progres */
-var CUR_OLDU=CUR_OLDU||{};
+var CUR_OLDU=CUR_OLDU||{};var CUR_ALIAS=CUR_ALIAS||{};
 {const c=COURSE.find(x=>x.id==='k1'),s=c&&c.subjects.find(x=>x.id==='bindo');if(s){CUR_OLDU['k1/bindo']=s.units;s.units=BI1_MERDEKA.map(([t,d,gens,tip],i)=>U(t,d,gens,{tip,_k:'bi1/bindo/'+i,merdeka:true}));s.merdeka=true}}
 
 /* ===================== Kelas 1: Pancasila, PAI, PJOK, Seni Rupa — bab mengikuti buku Kurikulum Merdeka (SIBI), bahasa disederhanakan ===================== */
@@ -8589,6 +8589,12 @@ curInstall('k10',{
  geografi:[['Pengantar ilmu geografi','Pendekatan, peta, SIG, bencana',[kb(GEO10[0])],'Pendekatan keruangan.'],
   ['Fenomena geosfer','Litosfer sampai antroposfer',[kb(GEO10[1])],'Enam lapisan geosfer.']]},'g10');
 /* ===================== Kelas 11 SMA: B. Indonesia, Pancasila, PAI, Fisika, Kimia-Biologi, Ekonomi, Geografi, Sosiologi, Sejarah ===================== */
+/* Kelas 11-12: Kimia dan Biologi adalah mapel terpisah (Kurikulum Merdeka) */
+function curSplitSubj(cid,from,parts){const c=COURSE.find(x=>x.id===cid);if(!c)return;const i=c.subjects.findIndex(x=>x.id===from);if(i<0)return;const s=c.subjects[i];
+  const neu=parts.map(p=>Object.assign({},s,p,{units:s.units.slice()}));c.subjects.splice(i,1,...neu);
+  neu.forEach(n=>{CUR_OLDU[cid+'/'+n.id]=s.units;CUR_ALIAS[cid+'/'+n.id]=cid+'/'+from})}
+curSplitSubj('k11','kimbio',[{id:'kimia',name:'Kimia',glyph:'H₂O',color:'#0EA5E9'},{id:'biologi',name:'Biologi',glyph:'DNA',color:'#16A34A'}]);
+curSplitSubj('k12','kimbio',[{id:'kimia',name:'Kimia',glyph:'H₂O',color:'#0EA5E9'},{id:'biologi',name:'Biologi',glyph:'DNA',color:'#16A34A'}]);
 const BI11=[
  [bb('Pernyataan yang dapat dibuktikan kebenarannya disebut kalimat …','fakta',['opini','saran','harapan'],'Opini berisi pendapat pribadi.'),
   bb('Paragraf yang ide pokoknya di awal disebut paragraf …','deduktif',['induktif','campuran','naratif'],'Induktif: ide pokok di akhir.'),
@@ -8836,14 +8842,14 @@ curInstall('k11',{
   ['Gelombang, bunyi, cahaya','Doppler, v = λf',[kb(FIS11[4])],'Bunyi butuh medium.'],
   ['Kalor','Suhu, kalor, perpindahan kalor',[kb(FIS11[5])],'Q = m c ΔT.'],
   ['Termodinamika','Gas ideal, proses, mesin kalor',[kb(FIS11[6])],'Hukum I: kekekalan energi.']],
- kimbio:[['Struktur atom dan SPU','Konfigurasi elektron, sifat periodik',[kb(KB11[0])],'Nomor atom = jumlah proton.'],
+ kimia:[['Struktur atom dan SPU','Konfigurasi elektron, sifat periodik',[kb(KB11[0])],'Nomor atom = jumlah proton.'],
   ['Ikatan kimia','Ion, kovalen, logam, antarmolekul',[kb(KB11[1])],'Kaidah oktet.'],
   ['Stoikiometri','Mol dan pereaksi pembatas',[kb(KB11[2])],'massa = mol × Mr.'],
   ['Hidrokarbon','Alkana, alkena, alkuna',[kb(KB11[3])],'Hanya C dan H.'],
   ['Termokimia','Eksoterm, endoterm, Hess',[kb(KB11[4])],'Eksoterm melepas kalor.'],
   ['Laju reaksi','Tumbukan dan katalis',[kb(KB11[5])],'Suhu naik, laju naik.'],
-  ['Kesetimbangan kimia','Le Chatelier, Haber-Bosch',[kb(KB11[6])],'Laju maju = laju balik.'],
-  ['Menjelajah sel','Struktur dan organel sel',[kb(KB11[7])],'Mitokondria penghasil energi.'],
+  ['Kesetimbangan kimia','Le Chatelier, Haber-Bosch',[kb(KB11[6])],'Laju maju = laju balik.']],
+ biologi:[['Menjelajah sel','Struktur dan organel sel',[kb(KB11[7])],'Mitokondria penghasil energi.'],
   ['Transpor membran','Difusi, osmosis, transpor aktif',[kb(KB11[8])],'Transpor aktif butuh energi.'],
   ['Pengaturan pada tumbuhan','Jaringan, transpor, hormon',[kb(KB11[9])],'Xilem air, floem makanan.'],
   ['Transpor zat pada manusia','Pernapasan, pencernaan, ekskresi',[kb(KB11[10])],'Alveolus, vili, nefron.'],
@@ -9108,11 +9114,11 @@ curInstall('k12',{
   ['Relativitas','Postulat Einstein, dilatasi waktu',[kb(FIS12[6])],'Kecepatan cahaya tetap.'],
   ['Gejala kuantum','Foton, efek fotolistrik',[kb(FIS12[7])],'E = h f.'],
   ['Fisika inti','Radioaktivitas, fisi, fusi',[kb(FIS12[8])],'Fusi di matahari.']],
- kimbio:[['Larutan dan koloid','Asam-basa, pH, koligatif',[kb(KB12[0])],'pH < 7 asam.'],
+ kimia:[['Larutan dan koloid','Asam-basa, pH, koligatif',[kb(KB12[0])],'pH < 7 asam.'],
   ['Elektrokimia','Redoks, sel volta, elektrolisis',[kb(KB12[1])],'Volta: kimia jadi listrik.'],
   ['Gugus fungsi senyawa karbon','Alkohol, ester',[kb(KB12[2])],'Gugus fungsi menentukan sifat.'],
-  ['Makromolekul (polimer)','Polimer alami dan plastik',[kb(KB12[3])],'Polimer dari banyak monomer.'],
-  ['Metabolisme','Enzim, respirasi, fotosintesis',[kb(KB12[4])],'Enzim = biokatalisator.'],
+  ['Makromolekul (polimer)','Polimer alami dan plastik',[kb(KB12[3])],'Polimer dari banyak monomer.']],
+ biologi:[['Metabolisme','Enzim, respirasi, fotosintesis',[kb(KB12[4])],'Enzim = biokatalisator.'],
   ['Genetika dan pewarisan sifat','DNA, meiosis, mutasi',[kb(KB12[5])],'Mendel bapak genetika.'],
   ['Teori evolusi','Darwin, fosil, seleksi alam',[kb(KB12[6])],'Yang mampu beradaptasi bertahan.'],
   ['Inovasi bioteknologi','Konvensional dan modern',[kb(KB12[7])],'Tempe hingga transgenik.']],
@@ -9274,7 +9280,7 @@ const allGames=f=>{f=f||FIT.long;if(f===FIT.picture)return f.games;const rest=MO
 const SUBJ_FIT={'tk/hitung':'kid','tk/tambah':'kidSlow','tk/huruf':'kid','tk/warna':'kidSlow','tk/banyak':'picture','tk/__mix':'kidSlow',
  'sd/tambahkurang':'num','sd/kalibagi':'num','sd/mtk':'unit','sd/bindo':'word','sd/ipas':'phrase','sd/pancasila':'long','sd/eng':'word','sd/__mix':'phrase',
  'smp/mtk':'num','smp/ipa':'phrase','smp/ips':'long','smp/eng':'long','smp/__mix':'long',
- 'sma/mtk':'num','sma/fisika':'unit','sma/kimbio':'phrase','sma/sejarah':'long','sma/eng':'long','sma/tkj':'phrase','sma/__mix':'long','tk/pai':'word','sd/pai':'long','smp/pai':'long','sma/pai':'long'};
+ 'sma/mtk':'num','sma/fisika':'unit','sma/kimbio':'phrase','sma/kimia':'phrase','sma/biologi':'phrase','sma/sejarah':'long','sma/eng':'long','sma/tkj':'phrase','sma/__mix':'long','tk/pai':'word','sd/pai':'long','smp/pai':'long','sma/pai':'long'};
 const WHY={lompat:'Petualangan dari START ke FINIS, soal muncul dari kotak tanya',tembak:'Cepat dan seru untuk jawaban singkat',balap:'Pindah jalur ke angka yang benar',balon:'Santai, angka dan kata pendek mudah dibaca',tikus:'Latih refleks dengan jawaban singkat',
  pancing:'Kartu ikan lebar, ada waktu membaca',katak:'Daun berhenti lama, cocok untuk membaca',lari:'Tombol jawaban lebar, muat jawaban panjang',ular:'Jawaban panjang ditulis di daftar A–D',penalti:'Kotak gawang lebar, seru seperti adu penalti',basket:'Bidik ring, latih fokus sambil membaca',buah:'Sayat cepat, seru untuk jawaban singkat',labirin:'Jawaban di daftar A–D, kejar-kejaran dengan hantu',memori:'Latih ingatan sambil menjawab',benarsalah:'Cepat menilai setiap jawaban',susun:'Latih ejaan kata dan istilah',kelompok:'Pilah jawaban benar dan salah',urut:'Latih urutan: angka, proses, dan peristiwa',pacu:'Balapan perahu khas Riau, makin benar makin cepat',layang:'Santai, terbangkan layangan ke awan',kuis:'Lengkap dengan pembahasan, cocok untuk semua soal'};
 const fitOf=(lv,sid)=>FIT[SUBJ_FIT[lv+'/'+sid]||'phrase'];
@@ -10428,7 +10434,7 @@ const URUT={
  warna:{q:'Urutkan warna pelangi',items:['Merah','Jingga','Kuning','Hijau','Biru','Nila','Ungu']}};
 const URUT_BY={hitung:['angka'],tambah:['angka'],huruf:['huruf'],warna:['warna'],banyak:['angka'],tambahkurang:['angka'],kalibagi:['angka'],mtk:['angka','panjang'],
  bindo:['hari','bulan'],umum:['hari','bulan','kupu','katak','warna'],ipas:['planet','kupu','katak','cerna','rantai','air'],ipa:['organisasi','cerna','planet','panjang'],ips:['sejarah','presiden'],sejarah:['sejarah','presiden'],
- pancasila:['sila','sejarah'],eng:['days','months','ordinal'],pai:['wudu','shalat','rukun','iman','gerak','khalifah'],fisika:['panjang','angka'],kimbio:['organisasi','cerna'],tkj:['data','osi']};
+ pancasila:['sila','sejarah'],eng:['days','months','ordinal'],pai:['wudu','shalat','rukun','iman','gerak','khalifah'],fisika:['panjang','angka'],kimbio:['organisasi','cerna'],biologi:['organisasi','cerna'],tkj:['data','osi']};
 function urutTask(){const sid=(S&&S.id)||'';let keys=URUT_BY[sid]||['angka','hari','planet'];const key=pick(keys);
   if(key==='angka'){const lv=(L&&L.id)||'sd';const mx=lv==='tk'?10:lv==='sd'?999:lv==='smp'?500:2000;const set=new Set();while(set.size<4){let v=lv==='smp'?Math.round((Math.random()*2-1)*mx):1+Math.floor(Math.random()*mx);if(lv==='sma')v=Math.round(Math.random()*mx)/10;set.add(v)}
    const desc=Math.random()<.4;const items=[...set].sort((a,b)=>desc?b-a:a-b).map(v=>String(v).replace('.',','));return {q:`Urutkan bilangan dari yang ${desc?'terbesar':'terkecil'}`,items}}
@@ -10512,7 +10518,7 @@ function lpTheme(){let id='';try{id=String((S&&S.id)||SUBJ().id)}catch(e){}const
   kota:{s0:'#FF9A6B',s1:'#FFE0B5',sun:'#FFF1A6',hill:'#B48AD9',hill2:'#D7B8EE',dirt:'#8A6A9E',grass:'#C59BE0'},
   angkasa:{s0:'#0B1440',s1:'#3B2D7A',moon:'#FFF4C7',night:true,hill:'#5240A8',hill2:'#3A2E80',dirt:'#4A3C6E',grass:'#8C7BE0'},
   gurun:{s0:'#5FB8F5',s1:'#FFE7B3',sun:'#FFC94D',hill:'#E9B66B',hill2:'#F3D39B',dirt:'#C98E4A',grass:'#E8B060'}};
-  const k=/ipa|kimbio|biologi|ipas|alam/.test(id)?'hutan':/fisika|informatika|tkj|kka|mtk|matematika|hitung/.test(id)&&/fisika|informatika|tkj|kka/.test(id)?'angkasa':/mtk|matematika|hitung/.test(id)?'kota':/bindo|eng|huruf|bahasa|seni|warna/.test(id)?'pantai':/ips|sejarah|geografi|ekonomi|sosiologi|pancasila|pai/.test(id)?'gurun':['hutan','pantai','kota','angkasa','gurun'][Math.floor(Math.random()*5)];
+  const k=/ipa|kimbio|kimia|biologi|ipas|alam/.test(id)?'hutan':/fisika|informatika|tkj|kka|mtk|matematika|hitung/.test(id)&&/fisika|informatika|tkj|kka/.test(id)?'angkasa':/mtk|matematika|hitung/.test(id)?'kota':/bindo|eng|huruf|bahasa|seni|warna/.test(id)?'pantai':/ips|sejarah|geografi|ekonomi|sosiologi|pancasila|pai/.test(id)?'gurun':['hutan','pantai','kota','angkasa','gurun'][Math.floor(Math.random()*5)];
   return T[k]}
 function lpGem(n){try{if(!P)return;P.gems=(P.gems||0)+n;clearTimeout(lpGem.t);lpGem.t=setTimeout(()=>{try{save();renderTop()}catch(e){}},400)}catch(e){}}
 const Lompat={
@@ -11158,7 +11164,7 @@ const UNIT_SHADES=[0,-.16,-.3,.1,-.08,-.22];
 const unitColor=ui=>{const c=(typeof P!=='undefined'&&P&&P.cls)?SUBJ().color:null;return c?shade(c,UNIT_SHADES[ui%UNIT_SHADES.length]):UNIT_COLORS[ui%UNIT_COLORS.length]};
 const WORLD_DOODLES={hitung:['1','2','3','+','5','★'],huruf:['A','b','C','d','E','?'],warna:['●','▲','■','★','◆','♥'],mtk:['+','×','÷','=','π','%'],bindo:['Aa','B','“','?','!','k'],umum:['☀','☁','♣','✿','☂','★'],
   ipas:['☘','☀','H₂O','✿','°C','∿'],ipa:['H₂O','☘','°C','∿','O₂','g'],pancasila:['★','◆','✦','♥','✿','⚑'],eng:['Hi!','A','b','?','ok','C'],ips:['⌖','N','↗','⚑','$','✈'],
-  fisika:['F=ma','∿','λ','g','Ω','v'],kimbio:['DNA','H₂O','pH','✿','C','O₂'],sejarah:['1945','⚑','✦','★','IV','II'],tkj:['0101','</>','{ }','#','01','IP'],pai:['ا','ب','☪','✦','ت','★']};
+  fisika:['F=ma','∿','λ','g','Ω','v'],kimbio:['DNA','H₂O','pH','✿','C','O₂'],kimia:['H₂O','pH','C','O₂','⚗','NaCl'],biologi:['DNA','✿','🧬','🌱','🦠','O₂'],sejarah:['1945','⚑','✦','★','IV','II'],tkj:['0101','</>','{ }','#','01','IP'],pai:['ا','ب','☪','✦','ت','★']};
 function applyTheme(cls,subj){const W=COURSE.some(c=>c.id===cls)?cls:'k4';const c=COURSE.find(x=>x.id===W);const s=c.subjects.find(x=>x.id===subj)||null;
   document.body.dataset.world=c.grp||W;document.documentElement.style.setProperty('--subj',s?s.color:LEVEL_COL[c.lv]||'#3D8BFF');
   const g=(s&&WORLD_DOODLES[s.id])||['A','+','★','7','÷','B'];document.querySelectorAll('.world .doodle').forEach((d,i)=>{const t=g[i%g.length];d.textContent=t+(/^[☀-➿]$/.test(t)?'︎':'')})}
@@ -11767,7 +11773,7 @@ const UNIT_POSE=[[/sumber hukum islam/,'rehal'],[/prakarya/,'palet'],[/penduduk/
  [/bola|atletik|gerak dasar/,'bola'],[/musik|lagu|tari/,'musik'],[/greeting|english|hello/,'hello'],[/puisi|pantun|teks|cerita|membaca|sastra|berita|ilmiah|surat/,'baca'],[/kalimat|ejaan|tanda baca|grammar|tenses|passive/,'menulis'],
  [/algoritma|pemrograman|komputasional|\bai\b/,'robot'],[/komputer|perangkat/,'laptop'],[/zat|reaksi|larutan|unsur|atom/,'tabung'],[/gaya|gerak lurus|besaran|berat|kalor|cahaya/,'magnet'],[/geografi|arah|peta/,'peta'],[/kpk|fpb|linear/,'ops'],[/aturan/,'timbangan'],[/hari|sejarah/,'gulungan']];
 const SUBJ_POSE={hitung:['angka','ops','trofi'],mtk:['penggaris','kalkulator','ops'],huruf:['abc','baca','menulis'],bindo:['baca','menulis','halo'],eng:['hello','baca','abc'],
- ipa:['tabung','tanaman','mikroskop'],ipas:['tanaman','tabung','teropong'],kimbio:['tabung','mikroskop','tanaman'],fisika:['magnet','atom','teropong'],
+ ipa:['tabung','tanaman','mikroskop'],ipas:['tanaman','tabung','teropong'],kimbio:['tabung','mikroskop','tanaman'],kimia:['tabung','mikroskop','tanaman'],biologi:['mikroskop','tanaman','tabung'],fisika:['magnet','atom','teropong'],
  ips:['globe','peta','koin'],geografi:['globe','peta','teropong'],ekonomi:['koin','kalkulator','menulis'],sosiologi:['teman','halo','baca'],
  sejarah:['gulungan','bendera','baca'],pancasila:['bendera','teman','baca'],pai:['rehal','lentera','baca'],pjok:['bola','stopwatch','trofi'],
  seni:['palet','musik','bentuk'],warna:['palet','bentuk','balon'],informatika:['laptop','lampu','menulis'],tkj:['laptop','robot','lampu'],kka:['laptop','robot','lampu'],umum:['lampu','globe','teropong'],diri:['teman','halo','sorak'],sains:['hewan','tanaman','awan'],pkris:['baca','lentera','teman'],pkat:['baca','lentera','teman'],phin:['baca','lentera','teman'],pbud:['baca','lentera','teman'],pkhc:['baca','lentera','teman']};
@@ -14609,7 +14615,7 @@ function folBind(root,list,after){root.querySelectorAll('[data-follow]').forEach
   try{await folDo(f,on);if(on){try{sfx.ok()}catch(_){}toast('team',`Kamu mengikuti ${f.name}.`)}b.outerHTML=folBtn(f,b.classList.contains('sm'));folBind(root,list,after);after&&after()}catch(err){b.disabled=false;toast('lock',fbErr(err))}})}
 const shareIcon='<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M12 3 V15 M7 8 L12 3 L17 8 M5 13 V19 C5 20 6 21 7 21 H17 C18 21 19 20 19 19 V13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const qrIcon='<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><path d="M14 14h3v3h-3zM18 18h3v3h-3zM18 14h3M14 18v3" stroke-linecap="round"/></svg>';
-let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=241';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
+let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=242';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
 function qrMatrix(text){const Q=window.QRCodeLib,q=new Q(-1,Q.ECL.M);q.addData(text);q.make();const n=q.getModuleCount(),m=[];for(let r=0;r<n;r++){m.push([]);for(let c=0;c<n;c++)m[r].push(q.isDark(r,c))}return m}
 function qrSvgOf(m){const n=m.length;let d='';for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(m[r][c])d+=`M${c} ${r}h1.02v1.02h-1.02z`;
   return `<svg viewBox="-2 -2 ${n+4} ${n+4}" class="pcqr" shape-rendering="crispEdges" aria-label="Kode QR profil"><rect x="-2" y="-2" width="${n+4}" height="${n+4}" fill="#fff"/><path d="${d}" fill="#1C1E3D"/></svg>`}
