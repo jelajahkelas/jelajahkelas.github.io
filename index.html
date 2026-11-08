@@ -3510,6 +3510,7 @@ body.teacher .nav[data-tab="smod"]{display:none!important}
 .mmtbl{display:flex;flex-direction:column;gap:6px;margin:10px auto 4px;max-width:360px;text-align:left}.mmtbl>span{display:flex;gap:8px;align-items:center;background:var(--card,#fff);border:2px solid var(--line,#E5E5E5);border-radius:12px;padding:6px 10px;font-size:20px;letter-spacing:2px}.mmtbl b{font-size:15px;letter-spacing:0;min-width:64px}
 .mmtab{border-collapse:collapse;margin:10px auto 4px;font-size:16px}.mmtab th,.mmtab td{border:2px solid var(--line,#E5E5E5);padding:5px 14px}.mmtab th{background:var(--bg2,#F2F4FF)}
 .mmbar{display:flex;align-items:flex-end;gap:12px;height:150px;margin:12px auto 4px;max-width:320px;padding:0 6px 22px;border-bottom:2px solid var(--line,#E5E5E5);position:relative}.mmbar>span{flex:1;height:100%;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;position:relative}.mmbar i{display:block;width:100%;background:#9B6BFF;border-radius:8px 8px 0 0;position:relative;min-height:6px}.mmbar em{position:absolute;top:-20px;left:0;right:0;text-align:center;font-style:normal;font-size:13px;font-weight:800}.mmbar small{position:absolute;bottom:-22px;font-size:12px;font-weight:700}
+.glisten{margin-top:8px;align-self:flex-start;font-size:14px}
 /* Toko: judul bagian besar gelap */
 html body:not(.teacher) #vShop .shopsec h3{font-size:22px!important;color:var(--ink)!important;text-transform:none!important;letter-spacing:0!important}
 /* Profil: ringkasan tanpa kotak */
@@ -3892,7 +3893,7 @@ html[data-theme=malam] .plstick{background:#0a0f1e}
 <div class="syncpill" id="syncPill" hidden></div>
 <div class="toast" id="toast" hidden></div>
 
-<script src="av.js?v=225"></script>
+<script src="av.js?v=226"></script>
 <script>
 /* ---------- visual assets ---------- */
 const INK='#1B1E3D';
@@ -6403,7 +6404,15 @@ function musicStart(){if(!MUS.on||!soundOn||MUS.t)return;try{actx=actx||new (win
     MUS.next+=d;MUS.step++}},90)}catch(e){}}
 function musicStop(){clearInterval(MUS.t);MUS.t=null;try{MUS.gain&&MUS.gain.disconnect()}catch(e){}MUS.gain=null}
 function setMusic(){}
-function qSpeech(q){if(!q)return '';if(q.say)return q.say;if(typeof L==='undefined'||!L||L.id!=='tk')return '';return plainTx(q.q).replace(/\s*…\s*/g,' apa? ').replace(/🔊/g,'').trim()}
+/* murid yang belum lancar membaca (TK dan SD kelas 1–3): soal, pilihan, dan materi dibacakan */
+function earlyReader(){try{if(typeof L!=='undefined'&&L&&L.id==='tk')return true;if(!P||document.body.classList.contains('teacher'))return false;const c=CLS();return !!c&&(c.id==='tk'||(c.grade>0&&c.grade<=3))}catch(e){return false}}
+function spokenTx(t){return String(t||'').replace(/[\p{Extended_Pictographic}\uFE0F\u200D]/gu,' ').replace(/🔊/g,'')
+  .replace(/(\d)\s*×\s*(?=\d|…|\?|x)/g,'$1 kali ').replace(/(\d)\s*:\s*(?=\d|…|\?)/g,'$1 bagi ').replace(/(\d)\s*[−-]\s*(?=\d|…|\?)/g,'$1 kurang ').replace(/\+/g,' tambah ').replace(/=/g,' sama dengan ')
+  .replace(/(\d)\/(\d)/g,'$1 per $2').replace(/%/g,' persen').replace(/°/g,' derajat').replace(/cm²/g,' sentimeter persegi').replace(/m²/g,' meter persegi').replace(/cm³/g,' sentimeter kubik').replace(/&gt;|>/g,' lebih dari ').replace(/&lt;|</g,' kurang dari ')
+  .replace(/\s*…\s*/g,' apa? ').replace(/\?\s*$/,' berapa?').replace(/\s+/g,' ').trim()}
+function qSpeech(q){if(!q)return '';if(q.say)return q.say;if(!earlyReader())return '';return spokenTx(plainTx(q.q))}
+function sayLong(t){if(!t)return;try{const s=window.speechSynthesis;s.cancel();const parts=String(t).match(/[^.!?\n]+[.!?\n]*/g)||[t];let buf='';const out=[];parts.forEach(p=>{if((buf+p).length>180&&buf){out.push(buf);buf=''}buf+=p});if(buf)out.push(buf);
+  out.forEach(x=>{const u=new SpeechSynthesisUtterance(x.trim());u.lang='id-ID';u.rate=.9;s.speak(u)})}catch(e){}}
 function optSpeech(q,k){if(q.trace||q.warna||q.match)return '';const o=q.opts[k];if(q.optSay&&q.optSay[o])return q.optSay[o];const t=plainTx(o).replace(/[^\p{L}\p{N}’' -]/gu,' ').replace(/\s+/g,' ').trim();if(t)return t;const m=String(o).match(/class="objs">([^<]*)</);return m?String([...m[1]].filter(ch=>/\p{Extended_Pictographic}/u.test(ch)).length):''}
 function say(t){if(!soundOn||!t)return;try{const s=window.speechSynthesis;s.cancel();const u=new SpeechSynthesisUtterance(t);u.lang='id-ID';u.rate=.9;s.speak(u)}catch(e){}}
 
@@ -6624,7 +6633,7 @@ function renderQ(){
   const chk=!!(game.lesson&&game.mode==='kuis');
   $('#opts').classList.toggle('picopts',!!q.pic);$('#opts').classList.toggle('bsopts',!!q.bs);
   if(q.ketik||q.match||q.trace||q.warna)setTimeout(()=>qSpecial(q),0);
-  $('#opts').querySelectorAll('.opt').forEach(b=>b.onclick=()=>{const k=+b.dataset.k;if(L.id==='tk'&&chk){if(game.sel===k&&!game.locked){$('#checkBtn').click();return}if(!q.noOptSay){const t=optSpeech(q,k);if(t)say(t)}}chk?selectOpt(k):answer(k)});
+  $('#opts').querySelectorAll('.opt').forEach(b=>b.onclick=()=>{const k=+b.dataset.k;if(L.id==='tk'&&chk){if(game.sel===k&&!game.locked){$('#checkBtn').click();return}if(!q.noOptSay){const t=optSpeech(q,k);if(t)say(t)}}else if(chk&&earlyReader()&&!q.noOptSay){const t=optSpeech(q,k);if(t)say(spokenTx(t))}chk?selectOpt(k):answer(k)});
   $('#checkBar').hidden=!chk;$('#checkBtn').disabled=true;
   const card=$('#qcard');card.classList.remove('pop','shake');void card.offsetWidth;card.classList.add('pop');
   clearInterval(timerId);$('#timer').hidden=true;
@@ -6752,6 +6761,7 @@ function answer(k){
   const last=game.i===game.qs.length-1||game.lives<=0;
   $('#nextBtn').textContent=game.lesson?(last?'Selesai':'Lanjut'):last?(team?'Lihat klasemen →':'Lihat rapor →'):'Lanjut →';
   try{rpBtn()}catch(e){}
+  if(L.id!=='tk'&&earlyReader()&&soundOn){const ai=q.opts.indexOf(q.ans);const at=ai>=0?spokenTx(optSpeech(q,ai)):'';say(ok?pick(['Benar!','Hebat, betul!','Pintar!']):'Belum tepat.'+(at?' Jawabannya '+at+'.':''))}
   if(L.id==='tk'){const ai=q.opts.indexOf(q.ans);const mine=k>=0?optSpeech(q,k):'';say((mine?mine+'. ':'')+(ok?pick(['Hebat, benar!','Pintar sekali!','Hore, betul!']):(q.match||q.warna||q.trace)?'Tidak apa-apa. Ayo lebih teliti lagi, ya.':`Belum tepat. Jawabannya, ${optSpeech(q,ai)||'yang ditandai hijau'}.`))}
   $('#nextBtn').focus({preventScroll:true});
 }
@@ -9046,8 +9056,11 @@ function guideBody(m){const sec=x=>`<section class="gsec"><h4>${x.h}</h4>`+(x.p?
 function openGuide(ui){openGuideText(ui)}
 function openGuideText(ui){const c=CLS(),s=SUBJ(),u=s.units[ui];const ex=unitQs(u,3);const key=u._k||`${c.id}/${s.id}/${ui}`;
   $('#modal').classList.add('gsheet');
-  openModal(`<div class="ghead"><span class="eyebrow">Unit ${ui+1} · ${esc(s.name||s.t||'')}</span><h3>${esc(u.t)}</h3></div><div class="gb"><div class="tipbox"><div class="mascot" data-mascot data-mood="happy"></div><div><b>Tips dari ${esc(petName())}</b><br>${esc(u.tip||u.d)}</div></div><div id="gMat"><div class="gload">Memuat materi…</div></div><h4 class="gexh">Contoh soal</h4>`+
-   ex.map(q=>`<div class="ex"><div class="qq">${q.q}</div><div class="aa">Jawaban: ${q.ans}</div>${q.exp?`<div class="ee">${q.exp}</div>`:''}</div>`).join('')+`</div><button class="primary" id="mClose">Mengerti!</button>`);$('#mClose').onclick=closeModal;
+  openModal(`<div class="ghead"><span class="eyebrow">Unit ${ui+1} · ${esc(s.name||s.t||'')}</span><h3>${esc(u.t)}</h3><button class="speak glisten" id="gSay" type="button">🔊 Dengarkan materi</button></div><div class="gb"><div class="tipbox"><div class="mascot" data-mascot data-mood="happy"></div><div><b>Tips dari ${esc(petName())}</b><br>${esc(u.tip||u.d)}</div></div><div id="gMat"><div class="gload">Memuat materi…</div></div><h4 class="gexh">Contoh soal</h4>`+
+   ex.map(q=>`<div class="ex"><div class="qq">${q.q}</div><div class="aa">Jawaban: ${q.ans}</div>${q.exp?`<div class="ee">${q.exp}</div>`:''}</div>`).join('')+`</div><button class="primary" id="mClose">Mengerti!</button>`);$('#mClose').onclick=()=>{try{speechSynthesis.cancel()}catch(e){}closeModal()};
+  {let on=false;$('#gSay').onclick=()=>{const b=$('#gSay');if(on){try{speechSynthesis.cancel()}catch(e){}on=false;b.textContent='🔊 Dengarkan materi';return}
+    const box=$('#mbox'),parts=[...box.querySelectorAll('.tipbox, #gMat .gintro, #gMat p, #gMat h4, #gMat li, #gMat tr, #gMat .gsum li')].map(e=>e.matches('tr')?[...e.children].map(x=>x.textContent).join(', ')+'.':(e.innerText||e.textContent).trim().replace(/\s*\n+\s*/g,'. ')).filter(Boolean);
+    const txt=spokenTx([...new Set(parts)].join('. ').replace(/\.\s*\./g,'.').replace(/ - /g,' '));if(!txt)return;on=true;b.textContent='⏹ Berhenti';sayLong(txt)}}
   loadMateri().then(M=>{const el=$('#gMat');if(!el)return;const m=M[key];el.innerHTML=m?guideBody(m):''}).catch(()=>{const el=$('#gMat');if(el)el.innerHTML='<div class="gload">Materi lengkap belum bisa dimuat. Periksa internet, lalu buka lagi.</div>'})}
 
 /* ---------- VIDEO BELAJAR: panduan unit sebagai video animasi dengan narasi, karakter, dan gambar ---------- */
@@ -11824,7 +11837,7 @@ function folBind(root,list,after){root.querySelectorAll('[data-follow]').forEach
   try{await folDo(f,on);if(on){try{sfx.ok()}catch(_){}toast('team',`Kamu mengikuti ${f.name}.`)}b.outerHTML=folBtn(f,b.classList.contains('sm'));folBind(root,list,after);after&&after()}catch(err){b.disabled=false;toast('lock',fbErr(err))}})}
 const shareIcon='<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M12 3 V15 M7 8 L12 3 L17 8 M5 13 V19 C5 20 6 21 7 21 H17 C18 21 19 20 19 19 V13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const qrIcon='<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><path d="M14 14h3v3h-3zM18 18h3v3h-3zM18 14h3M14 18v3" stroke-linecap="round"/></svg>';
-let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=225';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
+let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=226';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
 function qrMatrix(text){const Q=window.QRCodeLib,q=new Q(-1,Q.ECL.M);q.addData(text);q.make();const n=q.getModuleCount(),m=[];for(let r=0;r<n;r++){m.push([]);for(let c=0;c<n;c++)m[r].push(q.isDark(r,c))}return m}
 function qrSvgOf(m){const n=m.length;let d='';for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(m[r][c])d+=`M${c} ${r}h1.02v1.02h-1.02z`;
   return `<svg viewBox="-2 -2 ${n+4} ${n+4}" class="pcqr" shape-rendering="crispEdges" aria-label="Kode QR profil"><rect x="-2" y="-2" width="${n+4}" height="${n+4}" fill="#fff"/><path d="${d}" fill="#1C1E3D"/></svg>`}
