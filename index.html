@@ -3481,6 +3481,26 @@ html[data-theme=malam] .adrwhy{background:#3b2a0a;color:#fbbf24}html[data-theme=
 @media (max-width:899px){#adminPanel .admain .adflat .tablewrap{background:none;border:0;box-shadow:none;padding:0;margin:0}
  #adminPanel .ttable td.adact{white-space:normal!important;display:flex!important;flex-wrap:wrap;gap:8px;justify-content:flex-start}#adminPanel .ttable td.adact::before{display:none!important}
  #adminPanel .ttable td.adact .smallbtn{flex:1 1 120px;min-height:42px;margin:0}#adminPanel .ttable td.nm small{word-break:break-all}}
+/* Modul guru */
+.mdh{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.mdk{font:800 12px var(--display);padding:4px 10px;border-radius:999px;letter-spacing:.02em}
+.mdk-m{background:#DCFCE7;color:#166534}.mdk-k{background:#DBEAFE;color:#1E40AF}.mdk-c{background:#F3E8FF;color:#6B21A8}
+.mdacts{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}.mdacts button{min-height:42px}
+.mdpick{display:flex;flex-direction:column;gap:8px;max-height:52vh;overflow:auto;padding:2px}.mdpk{display:flex;gap:12px;align-items:flex-start;padding:12px 14px;border:2px solid var(--line,#E5E5E5);border-radius:14px;cursor:pointer;background:var(--card,#fff);font-size:15px}
+.mdpk input{width:20px;height:20px;flex:none;accent-color:#7C4DFF;margin-top:2px}.mdpk b{color:var(--muted);margin-right:4px}
+.mdbh{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.mdbh .mdbt{flex:1 1 220px}.mdno{width:34px;height:34px;flex:none;border-radius:50%;display:grid;place-items:center;background:#7C4DFF;color:#fff;font:900 15px var(--title)}
+.mdbt{flex:1;min-width:0;min-height:44px;border-radius:12px;border:2px solid var(--line,#E5E5E5);padding:0 12px;font:800 16px var(--display);background:var(--card,#fff);color:var(--ink)}
+.mdmv{display:flex;gap:4px}.mdmv .smallbtn{min-width:36px}
+.fbmod{margin:10px 0 6px;padding:14px 16px;display:flex;flex-direction:column;gap:8px}
+.fbmod-r{display:flex;align-items:center;gap:12px;width:100%;text-align:left;padding:10px 12px;border-radius:14px;border:2px solid var(--line,#E5E5E5);background:var(--card,#fff);color:var(--ink);cursor:pointer}
+.fbmod-r small{display:block;color:var(--muted);font-size:12px}.fbmod-r .mini{display:block;height:6px;border-radius:6px;background:var(--soft,#EEE);margin-top:6px;overflow:hidden}.fbmod-r .mini i{display:block;height:100%;background:#7C4DFF}.fbmod-r .chev{font-size:22px;color:var(--muted)}
+#modOv{background:var(--bg,#fff)}.modin{max-width:640px;margin:0 auto;padding:16px 16px 60px}.modtop{display:flex;align-items:center;gap:12px;position:sticky;top:0;background:var(--bg,#fff);padding:6px 0 12px;z-index:2}.modtop b{display:block;font-size:18px}.modtop small{color:var(--muted)}
+.modpath{display:flex;flex-direction:column;align-items:center;gap:22px;padding:20px 0}
+.modnode{display:flex;align-items:center;gap:14px;transform:translateX(var(--x));background:none;border:0;cursor:pointer;color:var(--ink);text-align:left;max-width:100%}
+.modnode .mn{width:70px;height:64px;flex:none;border-radius:50%;display:grid;place-items:center;font:900 24px var(--title);color:#fff;background:#C9B8F5;box-shadow:0 7px 0 #A58BE6}
+.modnode.mdone .mn{background:#FFC800;box-shadow:0 7px 0 #E5A800}.modnode.mcur .mn{background:#7C4DFF;box-shadow:0 7px 0 #5B2FD9;outline:6px solid rgba(124,77,255,.18)}
+.modnode .ml{max-width:200px}.modnode .ml b{display:block;font-size:14.5px;line-height:1.3}.modnode .ml small{color:var(--muted);font-size:12px}
+html[data-theme=malam] .mdpk,html[data-theme=malam] .fbmod-r,html[data-theme=malam] .mdbt{background:#111a2e;border-color:#24324f}
+@media (max-width:480px){.modnode{transform:translateX(calc(var(--x) * .5))}}
 /* Toko: judul bagian besar gelap */
 html body:not(.teacher) #vShop .shopsec h3{font-size:22px!important;color:var(--ink)!important;text-transform:none!important;letter-spacing:0!important}
 /* Profil: ringkasan tanpa kotak */
@@ -3862,7 +3882,7 @@ html[data-theme=malam] .plstick{background:#0a0f1e}
 <div class="syncpill" id="syncPill" hidden></div>
 <div class="toast" id="toast" hidden></div>
 
-<script src="av.js?v=218"></script>
+<script src="av.js?v=221"></script>
 <script>
 /* ---------- visual assets ---------- */
 const INK='#1B1E3D';
@@ -10460,7 +10480,7 @@ function tdTools(v){const head=v.querySelector('.thead');if(!head||head.querySel
   const bell=tools.querySelector('#tdBell'),pop=tools.querySelector('#tdPop');
   bell.onclick=e=>{e.stopPropagation();pop.hidden=!pop.hidden;bell.setAttribute('aria-expanded',!pop.hidden);res.hidden=true};
   const inp=tools.querySelector('#tdSearch'),res=tools.querySelector('#tdRes');let hits=[];
-  const menu=[['tdash','Dasbor'],['tatt','Absensi'],['teval','Evaluasi di TV'],['tbank','Bank soal'],['trapor','Rapor'],['ttask','Tugas'],['tstud','Murid'],['tset','Pengaturan']];
+  const menu=[['tdash','Dasbor'],['tatt','Absensi'],['teval','Evaluasi di TV'],['tbank','Bank soal'],['trapor','Rapor'],['ttask','Tugas'],['tmod','Modul'],['tstud','Murid'],['tset','Pengaturan']];
   const run=()=>{const q=inp.value.trim().toLowerCase();if(!q){res.hidden=true;return}
     const st=students().filter(p=>(p.name||'').toLowerCase().split(/\s+/).some(w=>w.startsWith(q))||(p.name||'').toLowerCase().includes(q)).slice(0,6);
     const mn=menu.filter(([k,l])=>l.toLowerCase().includes(q));
@@ -10797,6 +10817,114 @@ function taskNag(){const ts=(FBX.tasks||[]).filter(x=>!x.mine&&x.due>=dayKey());
   $('#mNo').onclick=closeModal;$('#mbox').querySelectorAll('[data-nag]').forEach(b=>b.onclick=()=>{closeModal();fbStartTask(ts.find(x=>x.id===b.dataset.nag))})}
 document.addEventListener('visibilitychange',()=>{if(!document.hidden&&FBX.user&&!isT()){FBX.tasksAt=0;fbLoadTasks().then(()=>{if(curTab==='learn')fbTaskBanner();FBX.nagAt=0;taskNag()})}});
 window.fbOpenTask=function(tid){const go2=()=>{const x=(FBX.tasks||[]).find(t=>t.id===tid);if(x)fbStartTask(x);else toast('target','Tugas ini sudah tidak ada.')};if((FBX.tasks||[]).length)go2();else fbLoadTasks().then(go2)};
+/* ===================== MODUL GURU (K13, Kurikulum Merdeka, Custom) ===================== */
+const KUR_NAME={m:'Kurikulum Merdeka',k:'Kurikulum 2013',c:'Custom'};
+const KUR_GROUP={sd1:['k1','k2','k3'],sd2:['k4','k5','k6'],smp:['k7','k8','k9'],sma:['k10','k11','k12']};
+let KUR_P=null;function kurLoad(){if(window.KURIKULUM)return Promise.resolve(window.KURIKULUM);if(KUR_P)return KUR_P;
+  KUR_P=new Promise((r,j)=>{const sc=document.createElement('script');sc.src='kurikulum.js?v=1';sc.onload=()=>r(window.KURIKULUM||{m:{},k:{}});sc.onerror=()=>{sc.remove();KUR_P=null;j(new Error('Daftar kurikulum belum bisa dimuat. Periksa internet.'))};document.head.appendChild(sc)});return KUR_P}
+const MOD={list:null,cid:null,edit:null};window.MOD=MOD;
+const modGrades=c=>KUR_GROUP[c.id]||[c.id];
+const gradeName=g=>{const c=COURSE.find(x=>x.id===g);return c?(c.full||c.name):g};
+/* cari unit soal JELAS yang paling cocok dengan judul bab */
+function modSrc(grade,subj,title,pos,tot){const words=t=>String(t||'').toLowerCase().replace(/[^a-z0-9à-ÿ ]/g,' ').split(/\s+/).filter(w=>w.length>3&&!['tema','dengan','untuk','dalam','sederhana','sekitar','kita','kami'].includes(w));
+  const tw=new Set(words(title));let best=null,bs=0;const grp=Object.keys(KUR_GROUP).filter(k=>KUR_GROUP[k].includes(grade));const pools=[grade].concat(grp,grp.length?KUR_GROUP[grp[0]].filter(g=>g!==grade):[]);
+  pools.forEach((cid,pi)=>{const c=COURSE.find(x=>x.id===cid),s=c&&c.subjects.find(x=>x.id===subj);if(!s)return;s.units.forEach((u,ui)=>{const sc=words(u.t+' '+(u.d||'')).filter(w=>tw.has(w)||[...tw].some(x=>x.slice(0,5)===w.slice(0,5))).length*10-pi;if(sc>bs){bs=sc;best={cls:cid,subj,ui}}})});
+  if(best)return best;for(const cid of pools){const c=COURSE.find(x=>x.id===cid),s=c&&c.subjects.find(x=>x.id===subj);if(s&&s.units.length)return {cls:cid,subj,ui:tot?Math.min(s.units.length-1,Math.floor((pos||0)/tot*s.units.length)):0}}return null}
+function modUnit(src){if(!src)return null;const c=COURSE.find(x=>x.id===src.cls),s=c&&c.subjects.find(x=>x.id===src.subj);return s?s.units[src.ui]||null:null}
+async function modFetch(force){const cid=tcid();if(!force&&MOD.list&&MOD.cid===cid)return MOD.list;const q=await FB.db.collection('classes/'+cid+'/mods').get();MOD.cid=cid;MOD.list=q.docs.map(d=>Object.assign({id:d.id},d.data())).sort((a,b)=>(a.created||0)-(b.created||0));return MOD.list}
+async function modSave(m){const cid=tcid();m.upd=Date.now();const d=Object.assign({},m);delete d.id;await FB.db.doc('classes/'+cid+'/mods/'+m.id).set(d);const i=MOD.list.findIndex(x=>x.id===m.id);if(i<0)MOD.list.push(m);else MOD.list[i]=m}
+function renderTMod(){const v=$('#vTMod');if(!v)return;const c=tCls();
+  if(MOD.edit){const m=(MOD.list||[]).find(x=>x.id===MOD.edit);if(m)return renderModEditor(m)}
+  v.innerHTML=thead(['Modul Kelas','book'],'',`<button class="ghost" id="mdNew" style="color:var(--ink);background:var(--card)">+ Modul baru</button>`)+`<div id="mdList"><div class="tcard"><p class="note" style="margin:0">Memuat modul…</p></div></div>`;hydrate(v);
+  $('#mdNew').onclick=()=>modWizard(c);
+  modFetch().then(list=>{const host=$('#mdList');if(!host)return;
+    host.innerHTML=list.length?list.map(m=>{const n=(m.babs||[]).length;return `<div class="tcard mdcard"><div class="mdh"><span class="mdk mdk-${m.kur}">${KUR_NAME[m.kur]||'Modul'}</span><span class="pill ${m.pub?'ok':'mute'}">${m.pub?'Tampil di murid':'Draf'}</span></div><h3 style="margin:4px 0 0">${esc(m.title)}</h3><p class="sub" style="margin:0">${esc(m.subjName||'')} · ${esc(gradeName(m.grade))} · ${n} bab</p>
+      <div class="mdacts"><button class="primary press" data-mde="${m.id}">Buka dan ubah</button><button class="ghost press" data-mdp="${m.id}">${m.pub?'Sembunyikan dari murid':'Tampilkan ke murid'}</button><button class="ghost press" data-mdx="${m.id}" style="color:var(--bad)">Hapus</button></div></div>`}).join(''):
+      `<div class="tcard" style="align-items:center;text-align:center"><span style="width:72px;display:block">${ICONS.book}</span><h3 style="margin:6px 0 0">Belum ada modul</h3><p class="sub" style="margin:0;max-width:440px">Pilih bab dari Kurikulum Merdeka atau K13, atau susun modul sendiri. Modul yang ditampilkan muncul sebagai jalur <b>Modul Guru</b> di halaman Belajar murid kelas ini.</p><button class="primary press" id="mdNew2" style="margin-top:6px">Buat modul pertama</button></div>`;
+    const n2=$('#mdNew2');if(n2)n2.onclick=()=>modWizard(c);
+    host.querySelectorAll('[data-mde]').forEach(b=>b.onclick=()=>{MOD.edit=b.dataset.mde;renderTMod();window.scrollTo(0,0)});
+    host.querySelectorAll('[data-mdp]').forEach(b=>b.onclick=()=>{const m=MOD.list.find(x=>x.id===b.dataset.mdp);if(!m.pub&&!(m.babs||[]).length){toast('lock','Tambahkan minimal satu bab dulu.');return}m.pub=!m.pub;b.disabled=true;modSave(m).then(()=>{toast('check',m.pub?'Modul tampil di halaman Belajar murid.':'Modul disembunyikan dari murid.');renderTMod()}).catch(e=>{m.pub=!m.pub;b.disabled=false;toast('lock',fbErr(e))})});
+    host.querySelectorAll('[data-mdx]').forEach(b=>b.onclick=()=>{const m=MOD.list.find(x=>x.id===b.dataset.mdx);openModal(`<h3>Hapus modul "${esc(m.title)}"?</h3><p>Modul hilang dari halaman Belajar murid. Nilai yang sudah didapat murid tetap tersimpan.</p><div class="acts"><button class="ghost" id="mNo">Batal</button><button class="primary" id="mYes" style="background:var(--bad)">Hapus</button></div>`);$('#mNo').onclick=closeModal;
+      $('#mYes').onclick=()=>FB.db.doc('classes/'+tcid()+'/mods/'+m.id).delete().then(()=>{MOD.list=MOD.list.filter(x=>x!==m);closeModal();renderTMod();toast('check','Modul dihapus.')}).catch(e=>toast('lock',fbErr(e)))})})
+   .catch(e=>{const host=$('#mdList');if(host)host.innerHTML=`<div class="tcard"><p class="note" style="margin:0;color:var(--bad)">${esc(fbErr(e))}</p></div>`})}
+function modWizard(c){const grades=modGrades(c);const st={kur:'m',grade:grades[0],sid:c.subjects[0].id,title:'',pick:null,K:null};const SB=s=>c.subjects.find(x=>x.id===s.sid);
+  const babsOf=s=>{const g=s.K&&s.K[s.kur]&&s.K[s.kur][s.grade];return g&&g[s.sid]?g[s.sid].split('|'):[]};
+  wizard({title:'Modul baru',state:st,steps:[
+    {t:'Pakai kurikulum apa?',html:s=>wzOpts([{v:'m',l:'Kurikulum Merdeka',s:'Bab mengikuti buku Kurikulum Merdeka'},{v:'k',l:'Kurikulum 2013 (K13)',s:'Bab atau tema mengikuti buku K13'},{v:'c',l:'Custom',s:'Susun bab, materi, dan soal sendiri'}],s.kur),pick:(s,v)=>{s.kur=v;s.pick=null}},
+    {t:'Untuk kelas berapa?',skip:s=>grades.length<2,html:s=>wzOpts(grades.map(g=>({v:g,l:gradeName(g)})),s.grade),pick:(s,v)=>{s.grade=v;s.pick=null}},
+    {t:'Mata pelajaran apa?',html:s=>wzOpts(c.subjects.map(x=>({v:x.id,l:x.name,g:x.glyph,c:x.color})),s.sid),pick:(s,v)=>{s.sid=v;s.pick=null}},
+    {t:'Pilih bab yang dipakai',skip:s=>s.kur==='c',auto:false,sub:'Semua bab sudah dicentang. Hilangkan centang bab yang tidak dipakai. Nanti bab bisa diubah, ditambah, atau diurutkan ulang.',
+     html:s=>{const L=babsOf(s);if(!s.K)return '<p class="note">Memuat daftar bab…</p>';if(!L.length)return `<p class="note">Daftar bab ${KUR_NAME[s.kur]} untuk ${esc(SB(s).name)} ${esc(gradeName(s.grade))} belum tersedia. Pilih <b>Custom</b> untuk menyusun sendiri.</p>`;if(!s.pick)s.pick=L.map(()=>true);
+       return `<div class="mdpick">${L.map((t,i)=>`<label class="mdpk"><input type="checkbox" data-pk="${i}" ${s.pick[i]?'checked':''}><span><b>Bab ${i+1}</b> ${esc(t)}</span></label>`).join('')}</div>`},
+     bind:(el,s)=>{if(!s.K){kurLoad().then(K=>{s.K=K;const body=el.querySelector('.wzbody');if(body){body.innerHTML=(()=>{const L=babsOf(s);if(!L.length)return `<p class="note">Daftar bab ${KUR_NAME[s.kur]} untuk ${esc(SB(s).name)} ${esc(gradeName(s.grade))} belum tersedia. Pilih <b>Custom</b> untuk menyusun sendiri.</p>`;s.pick=L.map(()=>true);return `<div class="mdpick">${L.map((t,i)=>`<label class="mdpk"><input type="checkbox" data-pk="${i}" checked><span><b>Bab ${i+1}</b> ${esc(t)}</span></label>`).join('')}</div>`})();body.querySelectorAll('[data-pk]').forEach(x=>x.onchange=()=>{s.pick[+x.dataset.pk]=x.checked})}}).catch(e=>{const body=el.querySelector('.wzbody');if(body)body.innerHTML=`<p class="note" style="color:var(--bad)">${esc(e.message)}</p>`});return}
+       el.querySelectorAll('[data-pk]').forEach(x=>x.onchange=()=>{s.pick[+x.dataset.pk]=x.checked})},
+     ok:s=>{if(!s.K)return 'Tunggu sebentar, daftar bab sedang dimuat.';const L=babsOf(s);if(!L.length)return 'Belum ada daftar bab untuk pilihan ini. Kembali dan pilih Custom.';return s.pick&&s.pick.some(Boolean)?true:'Centang minimal satu bab.'}},
+    {t:'Beri nama modul',auto:false,html:s=>{if(!s.title)s.title=`${SB(s).name} ${gradeName(s.grade)}${s.kur==='c'?'':' · '+(s.kur==='m'?'Merdeka':'K13')}`;return `<div class="tfield"><label for="mdTitle">Nama modul</label><input id="mdTitle" maxlength="60" value="${esc(s.title)}"></div>`},
+     bind:(el,s)=>{$('#mdTitle').oninput=e=>s.title=e.target.value},ok:s=>s.title.trim()?true:'Tulis nama modul.'}],
+   summary:s=>`<b>${KUR_NAME[s.kur]}</b> · ${esc(SB(s).name)} · ${esc(gradeName(s.grade))}${s.kur==='c'?' · bab disusun sendiri':` · ${(s.pick||[]).filter(Boolean).length} bab`}`,
+   finish:{label:'Buat modul',run:async(s,b,close)=>{const sb=SB(s);const babs=s.kur==='c'?[]:babsOf(s).filter((t,i)=>s.pick[i]).map((t,i,a)=>({t,materi:'',video:'',src:modSrc(s.grade,sb.id,t,i,a.length),bank:null}));
+     const m={id:'m'+Date.now().toString(36)+R(10,99),kur:s.kur,grade:s.grade,subj:sb.id,subjName:sb.name,title:s.title.trim().slice(0,60),babs,pub:false,created:Date.now()};
+     await modFetch();try{await modSave(m)}catch(e){throw new Error(fbErr(e))}close();MOD.edit=m.id;renderTMod();toast('check','Modul dibuat. Periksa babnya, lalu tekan "Tampilkan ke murid".')}}});
+  try{kurLoad().then(K=>{st.K=K}).catch(()=>{})}catch(e){}
+}
+function renderModEditor(m){const v=$('#vTMod'),c=tCls();m.babs=m.babs||[];
+  const unitOpts=(sel)=>{const opts=[];const pools=[m.grade].concat(Object.keys(KUR_GROUP).filter(k=>KUR_GROUP[k].includes(m.grade)));pools.forEach(cid=>{const cc=COURSE.find(x=>x.id===cid),s=cc&&cc.subjects.find(x=>x.id===m.subj);if(s)s.units.forEach((u,ui)=>opts.push([`u:${cid}:${ui}`,`Soal JELAS · ${cc.name}: ${u.t}`]))});
+    (typeof bankOf==='function'?bankOf(m.subj):[]).filter(b=>b.qs.length).forEach(b=>opts.push([`b:${b.id}`,`Paket soal saya: ${b.title} (${b.qs.length} soal)`]));opts.push(['none','Tanpa soal (hanya materi)']);
+    return opts.map(([v2,l])=>`<option value="${v2}" ${v2===sel?'selected':''}>${esc(l)}</option>`).join('')};
+  const selOf=bb=>bb.bank?`b:${bb.bank.id}`:bb.src?`u:${bb.src.cls}:${bb.src.ui}`:'none';
+  v.innerHTML=`<button class="back" id="mdBack" style="align-self:flex-start">← Semua modul</button>
+   <div class="tcard"><div class="mdh"><span class="mdk mdk-${m.kur}">${KUR_NAME[m.kur]}</span><span class="pill ${m.pub?'ok':'mute'}">${m.pub?'Tampil di murid':'Draf'}</span></div>
+    <div class="tform"><div class="tfield"><label for="meTitle">Nama modul</label><input id="meTitle" maxlength="60" value="${esc(m.title)}"></div><div class="tfield"><label>Mata pelajaran dan kelas</label><input value="${esc(m.subjName)} · ${esc(gradeName(m.grade))}" disabled></div></div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap"><button class="primary press" id="mePub">${m.pub?'Sembunyikan dari murid':'Tampilkan ke murid'}</button><button class="ghost press" id="meAdd">+ Tambah bab</button></div><p class="note" id="meSave" style="margin:0"></p></div>
+   ${m.babs.length?m.babs.map((bb,i)=>`<div class="tcard mdbab" data-bi="${i}"><div class="mdbh"><span class="mdno">${i+1}</span><input class="mdbt" data-f="t" maxlength="80" value="${esc(bb.t)}" aria-label="Judul bab ${i+1}"><span class="mdmv"><button class="smallbtn" data-up="${i}" ${i?'':'disabled'} aria-label="Naikkan">↑</button><button class="smallbtn" data-dn="${i}" ${i<m.babs.length-1?'':'disabled'} aria-label="Turunkan">↓</button><button class="smallbtn danger" data-rm="${i}" aria-label="Hapus bab">✕</button></span></div>
+     <div class="tfield"><label>Ringkasan materi (tidak wajib)</label><textarea class="note-area" data-f="materi" maxlength="3000" style="min-height:70px" placeholder="Tulis inti materi bab ini. Murid membacanya sebelum latihan.">${esc(bb.materi||'')}</textarea></div>
+     <div class="tform"><div class="tfield"><label>Video YouTube (tidak wajib)</label><input data-f="video" maxlength="200" value="${esc(bb.video?'https://youtu.be/'+bb.video:'')}" placeholder="https://youtu.be/…"></div><div class="tfield"><label>Soal latihan</label><select data-f="src">${unitOpts(selOf(bb))}</select></div></div></div>`).join(''):
+     `<div class="tcard"><p class="note" style="margin:0">Belum ada bab. Tekan <b>+ Tambah bab</b>.</p></div>`}`;
+  hydrate(v);let tm=null;const saveSoon=()=>{$('#meSave').textContent='Menyimpan…';clearTimeout(tm);tm=setTimeout(()=>modSave(m).then(()=>{const e=$('#meSave');if(e)e.textContent='Tersimpan ✓'}).catch(e=>{const x=$('#meSave');if(x)x.textContent=fbErr(e)}),700)};
+  $('#mdBack').onclick=()=>{MOD.edit=null;renderTMod()};
+  $('#meTitle').onchange=e=>{const t=e.target.value.trim();if(t){m.title=t.slice(0,60);saveSoon()}};
+  $('#mePub').onclick=()=>{if(!m.pub&&!m.babs.length){toast('lock','Tambahkan minimal satu bab dulu.');return}m.pub=!m.pub;modSave(m).then(()=>{toast('check',m.pub?'Modul tampil di halaman Belajar murid.':'Modul disembunyikan dari murid.');renderModEditor(m)}).catch(e=>{m.pub=!m.pub;toast('lock',fbErr(e))})};
+  $('#meAdd').onclick=()=>{m.babs.push({t:'Bab baru',materi:'',video:'',src:modSrc(m.grade,m.subj,''),bank:null});saveSoon();renderModEditor(m);setTimeout(()=>{const l=v.querySelector('.mdbab:last-of-type .mdbt');if(l){l.focus();l.select()}},50)};
+  v.querySelectorAll('.mdbab').forEach(card=>{const i=+card.dataset.bi,bb=m.babs[i];
+    card.querySelectorAll('[data-f]').forEach(inp=>inp.onchange=()=>{const f=inp.dataset.f,val=inp.value;
+      if(f==='t'){bb.t=val.trim().slice(0,80)||bb.t}else if(f==='materi')bb.materi=val.slice(0,3000);
+      else if(f==='video'){const id=ytId(val);if(val.trim()&&!id){toast('lock','Tautan YouTube tidak dikenali.');return}bb.video=id}
+      else if(f==='src'){if(val==='none'){bb.src=null;bb.bank=null}else if(val.startsWith('u:')){const [,cid,ui]=val.split(':');bb.src={cls:cid,subj:m.subj,ui:+ui};bb.bank=null}else{const b=(APP.bank||[]).find(x=>x.id===val.slice(2));if(b){bb.bank={id:b.id,title:b.title,qs:b.qs.slice(0,40).map(q=>({q:q.q,opts:q.opts,a:q.a,exp:q.exp||''}))};bb.src=null}}}
+      saveSoon()})});
+  v.querySelectorAll('[data-up]').forEach(b=>b.onclick=()=>{const i=+b.dataset.up;[m.babs[i-1],m.babs[i]]=[m.babs[i],m.babs[i-1]];saveSoon();renderModEditor(m)});
+  v.querySelectorAll('[data-dn]').forEach(b=>b.onclick=()=>{const i=+b.dataset.dn;[m.babs[i+1],m.babs[i]]=[m.babs[i],m.babs[i+1]];saveSoon();renderModEditor(m)});
+  v.querySelectorAll('[data-rm]').forEach(b=>b.onclick=()=>{const i=+b.dataset.rm;m.babs.splice(i,1);saveSoon();renderModEditor(m)})}
+/* tab guru */
+document.querySelector('.nav.tnav[data-tab=tstud]').insertAdjacentHTML('beforebegin','<button class="nav tnav" data-tab="tmod"><i data-icon="book"></i><span>Modul</span></button>');
+$('#vTStud').insertAdjacentHTML('afterend','<section id="vTMod" class="view" hidden style="flex-direction:column;gap:16px"></section>');
+TEACH_R.tmod=()=>renderTMod();TAB_VIEW.tmod='vTMod';views.push('vTMod');
+
+/* ---------- murid: jalur Modul Guru ---------- */
+FBX.mods=[];FBX.modsAt=0;
+async function fbLoadMods(){const m=FBX.me||{};FBX.modsAt=Date.now();if(!m.classId||!FBX.user){FBX.mods=[];return}
+  try{const q=await FB.db.collection('classes/'+m.classId+'/mods').where('pub','==',true).get();FBX.mods=q.docs.map(d=>Object.assign({id:d.id},d.data())).sort((a,b)=>(a.created||0)-(b.created||0))}catch(e){FBX.mods=[]}}
+const modKey=(mid,i)=>mid+':'+i;
+function modDone(mid,i){return P&&P.modDone&&P.modDone[modKey(mid,i)]}
+function fbModBanner(){let el=$('#fbMods');if(!el){const t=$('#fbTasks')||$('#path');if(!t)return;t.insertAdjacentHTML(t.id==='fbTasks'?'afterend':'beforebegin','<div id="fbMods"></div>');el=$('#fbMods')}
+  const ms=(FBX.mods||[]).filter(m=>(m.babs||[]).length);if(isT()||!P||!ms.length){el.innerHTML='';return}
+  el.innerHTML=`<div class="card fbmod"><div class="fbtask-h"><span style="width:30px;flex:none">${ICONS.book}</span><b>Modul Guru</b><span class="pill mid">${esc((FBX.me&&FBX.me.clsName)||'Kelasmu')}</span></div>${ms.map(m=>{const n=m.babs.length,d=m.babs.filter((_,i)=>modDone(m.id,i)).length;
+    return `<button class="fbmod-r press" data-mod="${m.id}"><span class="grow"><b>${esc(m.title)}</b><small>${KUR_NAME[m.kur]||''} · ${d}/${n} bab selesai</small><span class="mini"><i style="width:${d/n*100}%"></i></span></span><span class="chev">›</span></button>`}).join('')}</div>`;
+  el.querySelectorAll('[data-mod]').forEach(b=>b.onclick=()=>modOpen(ms.find(x=>x.id===b.dataset.mod)))}
+function modOpen(m){if(!m)return;let ov=$('#modOv');if(!ov){document.body.insertAdjacentHTML('beforeend','<div id="modOv" class="bdov" hidden role="dialog" aria-modal="true"></div>');ov=$('#modOv')}
+  const firstOpen=m.babs.findIndex((_,i)=>!modDone(m.id,i));
+  ov.innerHTML=`<div class="modin"><div class="modtop"><button class="back" id="modX" aria-label="Kembali">←</button><div class="grow"><b>${esc(m.title)}</b><small>${KUR_NAME[m.kur]||''} · ${esc(m.subjName||'')}</small></div></div>
+   <div class="modpath">${m.babs.map((bb,i)=>{const d=modDone(m.id,i),cur=i===firstOpen;return `<button class="modnode${d?' mdone':''}${cur?' mcur':''}" data-bab="${i}" style="--x:${[0,40,60,40,0,-40,-60,-40][i%8]}px"><span class="mn">${d?'✓':i+1}</span><span class="ml"><b>${esc(bb.t)}</b><small>${d?`Nilai ${d.score}`:bb.src||bb.bank?'Materi dan latihan':'Materi'}</small></span></button>`}).join('')}</div></div>`;
+  ov.hidden=false;hydrate(ov);$('#modX').onclick=()=>{ov.hidden=true};ov.querySelectorAll('[data-bab]').forEach(b=>b.onclick=()=>modBab(m,+b.dataset.bab))}
+function modBab(m,i){const bb=m.babs[i];const go2=()=>{const qs=bb.bank?bankQs({qs:bb.bank.qs},5):(()=>{const u=modUnit(bb.src);return u?unitQs(u,5):null})();
+    if(!qs||!qs.length){P.modDone=P.modDone||{};P.modDone[modKey(m.id,i)]={score:100,at:Date.now()};save();toast('check','Bab ini selesai dibaca.');modOpen(m);fbModBanner();return}
+    const c=COURSE.find(x=>x.id===(bb.src?bb.src.cls:P.cls)),s=c&&c.subjects.find(x=>x.id===m.subj);$('#modOv').hidden=true;
+    beginRun({kind:'practice',qs,mode:'kuis',title:`${m.title} · Bab ${i+1}`,subj:s,cls:c?c.id:P.cls,modBab:{mid:m.id,i},noReask:false})};
+  if(bb.materi||bb.video){openModal(`<div class="tkmat"><span class="pill" style="align-self:flex-start">📘 Bab ${i+1}</span><h3 style="margin:6px 0 0">${esc(bb.t)}</h3>${bb.video?`<div class="tkvid"><iframe src="https://www.youtube-nocookie.com/embed/${esc(bb.video)}?rel=0" title="Video materi" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>`:''}${bb.materi?`<div class="tkmtx"><p>${esc(bb.materi).replace(/\n{2,}/g,'</p><p>').replace(/\n/g,'<br>')}</p></div>`:''}</div><div class="acts"><button class="ghost" id="mNo">Tutup</button><button class="primary" id="mYes">${bb.src||bb.bank?'Mulai latihan':'Selesai membaca'}</button></div>`);
+    $('#mNo').onclick=closeModal;$('#mYes').onclick=()=>{closeModal();setTimeout(go2,120)};return}
+  go2()}
+window.modOpen=modOpen;
+
+{const _frMod=finishRun;finishRun=function(){const o=game&&game.lesson;if(o&&o.modBab&&P){try{const ok=Math.max(0,o.target-Math.min(o.target,o.wrong)),sc=Math.round(ok/Math.max(1,o.target)*100);P.modDone=P.modDone||{};const k=modKey(o.modBab.mid,o.modBab.i),pv=P.modDone[k];if(!pv||sc>pv.score)P.modDone[k]={score:sc,at:Date.now()};save()}catch(e){}}return _frMod.apply(this,arguments)}}
 function fbTaskBanner(){let el=$('#fbTasks');if(!el){$('#path').insertAdjacentHTML('beforebegin','<div id="fbTasks"></div>');el=$('#fbTasks')}
   const ts=(FBX.tasks||[]).filter(x=>!x.mine);if(isT()||!P||!ts.length){el.innerHTML='';el.classList.remove('on');document.documentElement.style.setProperty('--taskH','0px');return}el.classList.add('on');const today=dayKey();requestAnimationFrame(()=>{try{document.documentElement.style.setProperty('--taskH',(el.offsetHeight+8)+'px')}catch(e){}});
   el.innerHTML=`<div class="card fbtask"><div class="fbtask-h"><span style="width:30px;flex:none">${ICONS.target}</span><b>Tugas dari guru</b><span class="pill bad">${ts.length} belum</span></div>
@@ -10840,7 +10968,7 @@ function fbSubmitTask(tid,score,correct,total,ex){const m=FBX.me||{};if(!m.class
 const _finishRun=finishRun;
 finishRun=function(){const o=game&&game.lesson;if(o&&o.task&&FBX.user&&!isT()){const ok=Math.max(0,o.target-Math.min(o.target,o.wrong));fbSubmitTask(o.task,Math.round(ok/o.target*100),ok,o.target,{viol:EXAM?EXAM.viol:0});examEnd();setTimeout(()=>{if(curTab==='learn')fbTaskBanner()},300)}_finishRun()};
 const _renderPath=renderPath;
-renderPath=function(){_renderPath();if(!FBX.user||isT())return;try{annStudent()}catch(e){}examRecover();fbTaskBanner();notifBanner();if(Date.now()-FBX.tasksAt>60000)fbLoadTasks().then(()=>{if(curTab==='learn')fbTaskBanner()})};
+renderPath=function(){_renderPath();if(!FBX.user||isT())return;try{annStudent()}catch(e){}examRecover();fbTaskBanner();try{fbModBanner()}catch(e){}notifBanner();if(Date.now()-FBX.tasksAt>60000)fbLoadTasks().then(()=>{if(curTab==='learn')fbTaskBanner()});if(Date.now()-FBX.modsAt>120000)fbLoadMods().then(()=>{if(curTab==='learn')try{fbModBanner()}catch(e){}})};
 
 /* ---------- peringkat kelas online ---------- */
 const _rL=renderLeague;
@@ -11259,7 +11387,7 @@ function folBind(root,list,after){root.querySelectorAll('[data-follow]').forEach
   try{await folDo(f,on);if(on){try{sfx.ok()}catch(_){}toast('team',`Kamu mengikuti ${f.name}.`)}b.outerHTML=folBtn(f,b.classList.contains('sm'));folBind(root,list,after);after&&after()}catch(err){b.disabled=false;toast('lock',fbErr(err))}})}
 const shareIcon='<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M12 3 V15 M7 8 L12 3 L17 8 M5 13 V19 C5 20 6 21 7 21 H17 C18 21 19 20 19 19 V13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const qrIcon='<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><path d="M14 14h3v3h-3zM18 18h3v3h-3zM18 14h3M14 18v3" stroke-linecap="round"/></svg>';
-let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=218';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
+let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=221';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
 function qrMatrix(text){const Q=window.QRCodeLib,q=new Q(-1,Q.ECL.M);q.addData(text);q.make();const n=q.getModuleCount(),m=[];for(let r=0;r<n;r++){m.push([]);for(let c=0;c<n;c++)m[r].push(q.isDark(r,c))}return m}
 function qrSvgOf(m){const n=m.length;let d='';for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(m[r][c])d+=`M${c} ${r}h1.02v1.02h-1.02z`;
   return `<svg viewBox="-2 -2 ${n+4} ${n+4}" class="pcqr" shape-rendering="crispEdges" aria-label="Kode QR profil"><rect x="-2" y="-2" width="${n+4}" height="${n+4}" fill="#fff"/><path d="${d}" fill="#1C1E3D"/></svg>`}

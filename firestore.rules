@@ -82,6 +82,11 @@ service cloud.firestore {
       allow delete: if signedIn() && (resource.data.teacherUid == request.auth.uid || isAdmin());
 
       // Tugas dari guru pemilik kelas.
+      // Modul guru (K13, Merdeka, Custom): dibaca murid kelas, ditulis guru pemilik kelas.
+      match /mods/{mid} {
+        allow read: if signedIn() && (ownsCls(cid) || memberOf(cid));
+        allow write: if ownsCls(cid);
+      }
       match /tasks/{tid} {
         allow read: if signedIn() && (ownsCls(cid) || memberOf(cid));
         allow write: if ownsCls(cid);
