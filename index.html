@@ -3899,7 +3899,7 @@ html[data-theme=malam] .plstick{background:#0a0f1e}
 <div class="syncpill" id="syncPill" hidden></div>
 <div class="toast" id="toast" hidden></div>
 
-<script src="av.js?v=238"></script>
+<script src="av.js?v=239"></script>
 <script>
 /* ---------- visual assets ---------- */
 const INK='#1B1E3D';
@@ -8412,6 +8412,182 @@ for(const [cid,list] of [['k10',[['Eksponen dan logaritma','Sifat eksponen, bent
    ['Kombinatorik dan peluang','Aturan pengisian tempat, permutasi, kombinasi',[t12Komb],'Permutasi memperhatikan urutan, kombinasi tidak.']]]]){
   const c=COURSE.find(x=>x.id===cid),s=c&&c.subjects.find(x=>x.id==='mtk');if(!s)continue;CUR_OLDU[cid+'/mtk']=s.units;
   s.units=list.map(([t,d,gens,tip],i)=>U(t,d,gens,{tip,_k:'a'+cid.slice(1)+'/mtk/'+i,merdeka:true}));s.merdeka=true}
+
+/* ===================== Kelas 10 SMA: B. Indonesia, Pancasila, PAI, IPA (fisika, kimia-biologi), IPS (ekonomi, geografi, sosiologi, sejarah) ===================== */
+const BI10=[
+ [bb('Teks yang menyajikan hasil pengamatan secara objektif disebut teks …','laporan hasil observasi',['anekdot','hikayat','negosiasi'],'Berisi fakta.'),
+  bb('Penulisan "di" yang benar sebagai imbuhan adalah …','ditulis',['di tulis','di-tulis','dit ulis'],'Imbuhan di- ditulis serangkai; kata depan di dipisah.'),
+  bb('Kalimat yang menjelaskan arti suatu istilah disebut kalimat …','definisi',['perintah','seru','tanya'],'Contoh: Mamalia adalah hewan menyusui.'),
+  bb('Kutipan yang menulis ulang pendapat orang dengan kata-kata sendiri disebut kutipan …','tidak langsung',['langsung','petikan','blok'],'Tetap cantumkan sumber.')],
+ [bb('Cerita singkat lucu yang berisi sindiran atau kritik disebut …','anekdot',['hikayat','biografi','negosiasi'],'Anekdot menghibur sekaligus mengkritik.'),
+  bb('Bagian anekdot yang berisi puncak kelucuan disebut …','krisis',['abstraksi','orientasi','koda'],'Struktur: abstraksi, orientasi, krisis, reaksi, koda.'),
+  bb('Pernyataan yang berdasarkan pendapat pribadi disebut …','opini',['fakta','data','bukti'],'Fakta dapat dibuktikan.')],
+ [bb('Cerita lama yang berisi keajaiban dan kehidupan istana disebut …','hikayat',['cerpen','novel','anekdot'],'Contoh: Hikayat Hang Tuah.'),
+  bb('Ciri hikayat adalah …','istana sentris dan ada kemustahilan',['selalu nyata','berlatar modern','tanpa tokoh'],'Juga anonim.'),
+  bb('Konjungsi urutan waktu adalah …','kemudian, lalu, setelah itu',['karena, sebab','tetapi, namun','jika, maka'],'Penanda kronologis.'),
+  bb('Nilai dalam cerita yang berkaitan dengan agama disebut nilai …','religius',['sosial','budaya','estetika'],'Nilai moral, sosial, budaya, religius.')],
+ [bb('Teks yang berisi interaksi untuk mencapai kesepakatan disebut teks …','negosiasi',['eksposisi','anekdot','biografi'],'Ada pengajuan, penawaran, persetujuan.'),
+  bb('Bagian negosiasi yang berisi tawaran balik disebut …','penawaran',['orientasi','penutup','koda'],'Struktur: orientasi, pengajuan, penawaran, persetujuan, penutup.'),
+  bb('Kamus yang berisi kata-kata bersinonim disebut …','tesaurus',['KBBI','ensiklopedia','glosarium'],'Membantu memilih kata.')],
+ [bb('Teks yang menceritakan riwayat hidup tokoh disebut …','biografi',['anekdot','hikayat','negosiasi'],'Ditulis orang lain.'),
+  bb('Teks yang menceritakan kembali peristiwa masa lalu secara urut disebut teks …','rekon (recount)',['prosedur','eksplanasi','deskripsi'],'Biografi termasuk teks rekon.'),
+  bb('Kata "kualitas" berasal dari bahasa Inggris "quality". Kata ini disebut kata …','serapan',['baku asli','arkais','daerah'],'Disesuaikan dengan ejaan Indonesia.')],
+ [bb('Pilihan kata dalam puisi disebut …','diksi',['rima','tipografi','citraan'],'Diksi memengaruhi makna.'),
+  bb('Kata-kata yang membangkitkan pengalaman indra disebut …','citraan (imaji)',['rima','tipografi','majas'],'Citraan penglihatan, pendengaran, dll.'),
+  bb('Tata wajah atau bentuk tulisan puisi disebut …','tipografi',['diksi','citraan','amanat'],'Susunan larik di halaman.'),
+  bb('Persamaan bunyi dalam puisi disebut …','rima',['diksi','majas','tema'],'Rima awal, tengah, akhir.')]];
+const PP10=[
+ [bb('Dalam pidato 1 Juni 1945, Sukarno mengusulkan lima dasar yang disebut …','Pancasila',['Trisila','Ekasila','Piagam Jakarta'],'Juga bisa diperas menjadi Trisila dan Ekasila.'),
+  bb('Pancasila sebagai dasar negara berarti Pancasila menjadi …','sumber dari segala sumber hukum',['hiasan','lagu wajib','simbol saja'],'Norma dasar negara.'),
+  bb('Pancasila sebagai ideologi berarti Pancasila berisi …','cita-cita dan arah perjuangan bangsa',['daftar hukuman','resep','peraturan lalu lintas'],'Ideologi terbuka.'),
+  bb('Pengesahan Pancasila dan UUD 1945 dilakukan oleh PPKI pada …','18 Agustus 1945',['17 Agustus 1945','1 Juni 1945','22 Juni 1945'],'Sehari setelah proklamasi.')],
+ [bb('Kesadaran untuk mematuhi hukum disebut …','kesadaran hukum',['sanksi','hak asasi','pelanggaran'],'Taat hukum tanpa paksaan.'),
+  bb('Hukum yang mengatur hubungan antarindividu disebut hukum …','perdata',['pidana','tata negara','internasional'],'Pidana mengatur kejahatan.'),
+  bb('Urutan tertinggi peraturan perundang-undangan adalah …','UUD NRI 1945',['UU','TAP MPR','Perda'],'UU No. 12 Tahun 2011.'),
+  bb('Faktor penyebab pelanggaran hak antara lain …','sikap egois dan rendahnya kesadaran',['toleransi','musyawarah','gotong royong'],'Perlu kesadaran hak dan kewajiban.')],
+ [bb('Semboyan Bhinneka Tunggal Ika diambil dari kitab Sutasoma karya …','Mpu Tantular',['Mpu Prapanca','Mpu Kanwa','Mpu Sedah'],'Masa Majapahit.'),
+  bb('Ekonomi Pancasila menekankan asas …','kekeluargaan dan gotong royong',['persaingan bebas','monopoli','individualisme'],'UUD Pasal 33.'),
+  bb('Kebinekaan dapat menjadi modal sosial jika dikelola dengan …','gotong royong dan toleransi',['diskriminasi','kekerasan','monopoli'],'Harmoni dalam keragaman.')],
+ [bb('Sistem pertahanan Indonesia bersifat semesta yang disebut …','Sishankamrata',['wajib militer total','pertahanan swasta','aliansi militer'],'Sistem pertahanan dan keamanan rakyat semesta.'),
+  bb('Politik luar negeri Indonesia bersifat …','bebas aktif',['blok barat','blok timur','tertutup'],'Tidak memihak blok mana pun.'),
+  bb('Indonesia menjadi salah satu pendiri organisasi …','ASEAN',['NATO','Uni Eropa','OPEC saja'],'Didirikan 1967.'),
+  bb('Contoh tanggung jawab warga negara adalah …','membayar pajak dan menaati hukum',['merusak fasilitas umum','golput karena malas','menyebar hoaks'],'Warga negara yang baik.')]];
+const PAI10=[
+ [bb('Q.S. Al-Mā’idah ayat 48 memerintahkan kita untuk …','berlomba-lomba dalam kebaikan',['bermalas-malasan','bermusuhan','menumpuk harta'],'Fastabiqul khairāt.'),
+  bb('Q.S. At-Taubah ayat 105 mendorong umat Islam untuk …','bekerja keras (etos kerja)',['berdiam diri','meminta-minta','bergantung pada orang lain'],'Allah melihat pekerjaanmu.')],
+ [bb('Cabang iman menurut hadis berjumlah …','77 (lebih dari 70)',['5','6','99'],'Yang tertinggi kalimat tauhid, terendah menyingkirkan gangguan di jalan.'),
+  bb('Cabang iman yang paling rendah adalah …','menyingkirkan gangguan dari jalan',['salat','zakat','berhaji'],'Rasa malu juga bagian dari iman.')],
+ [bb('Sikap ingin dipuji orang lain dalam beribadah disebut …','riya',['ikhlas','tawaduk','qana‘ah'],'Merusak pahala amal.'),
+  bb('Memperdengarkan amal agar dipuji disebut …','sum‘ah',['riya','hasad','takabur'],'Mirip riya tetapi lewat ucapan.'),
+  bb('Iri hati terhadap nikmat orang lain disebut …','hasad',['tawaduk','syukur','sabar'],'Hasad memakan kebaikan.'),
+  bb('Menghambur-hamburkan harta disebut …','boros (israf/tabzir)',['hemat','zuhud','qana‘ah'],'Pemboros saudara setan.')],
+ [bb('Bank yang beroperasi tanpa bunga dan memakai bagi hasil disebut bank …','syariah',['konvensional','sentral','perkreditan biasa'],'Prinsip mudarabah dan musyarakah.'),
+  bb('Akad bagi hasil antara pemilik modal dan pengelola disebut …','mudarabah',['riba','gadai','ijarah'],'Keuntungan dibagi sesuai kesepakatan.'),
+  bb('Asuransi syariah berprinsip …','saling menanggung (takaful)',['untung sepihak','judi','riba'],'Tolong-menolong.')],
+ [bb('Islam masuk ke Nusantara terutama melalui jalur …','perdagangan',['peperangan','penjajahan','pemaksaan'],'Juga pernikahan, pendidikan, kesenian.'),
+  bb('Kerajaan Islam pertama di Indonesia adalah …','Samudra Pasai',['Demak','Mataram Islam','Banten'],'Di Aceh, abad ke-13.')],
+ [bb('Q.S. Al-Isrā’ ayat 32 melarang kita …','mendekati zina',['berdagang','bersedekah','belajar'],'Termasuk pergaulan bebas.'),
+  bb('Menjaga diri dari pergaulan bebas berarti menjaga …','kehormatan dan martabat',['harta saja','jabatan','popularitas'],'Islam melindungi martabat manusia.')],
+ [bb('Rasa takut akan azab Allah disebut …','khauf',['raja’','tawakal','mahabbah'],'Khauf mencegah maksiat.'),
+  bb('Rasa berharap akan rahmat Allah disebut …','raja’',['khauf','riya','hasad'],'Raja’ mendorong amal.'),
+  bb('Mencintai Allah disebut …','mahabbah',['khauf','sum‘ah','takabur'],'Cinta tertinggi kepada Allah.')],
+ [bb('Akhlak terpuji disebut akhlak …','maḥmūdah',['mażmūmah','sayyi’ah','qabīḥah'],'Mażmūmah = tercela.'),
+  bb('Menahan amarah adalah ciri orang …','bertakwa',['munafik','sombong','zalim'],'Q.S. Āli ‘Imrān 134.'),
+  bb('Berani membela kebenaran disebut sifat …','syaja‘ah',['jubn','takabur','riya'],'Syaja‘ah = berani.')],
+ [bb('Lima tujuan pokok syariat disebut …','al-kulliyyāt al-khams (maqāṣid syarī‘ah)',['rukun Islam','rukun iman','asmaulhusna'],'Menjaga agama, jiwa, akal, keturunan, harta.'),
+  bb('Larangan minuman keras bertujuan menjaga …','akal',['harta','keturunan','agama'],'Ḥifẓ al-‘aql.'),
+  bb('Larangan mencuri bertujuan menjaga …','harta',['akal','jiwa','agama'],'Ḥifẓ al-māl.')],
+ [bb('Wali Songo menyebarkan Islam di pulau …','Jawa',['Sumatra','Kalimantan','Sulawesi'],'Sembilan wali.'),
+  bb('Sunan Kalijaga berdakwah melalui …','wayang dan tembang',['peperangan','pemaksaan','perdagangan budak'],'Dakwah kultural.'),
+  bb('Wali Songo yang dianggap tertua adalah …','Sunan Gresik (Maulana Malik Ibrahim)',['Sunan Kudus','Sunan Muria','Sunan Gunung Jati'],'Wafat 1419 di Gresik.')]];
+const FIS10=[
+ [bb('Satuan SI untuk waktu adalah …','sekon (detik)',['menit','jam','hari'],'Besaran pokok.'),
+  bb('Kecepatan termasuk besaran …','turunan',['pokok','tak berdimensi','dasar'],'Diturunkan dari panjang dan waktu.'),
+  bb('Banyak angka penting pada 0,00450 adalah …','3',['5','6','2'],'Nol di depan tidak penting; nol di belakang angka bukan nol penting.'),
+  bb('Notasi ilmiah dari 45.000 adalah …','4,5 × 10⁴',['45 × 10³','4,5 × 10³','0,45 × 10⁵'],'Satu angka di depan koma.'),
+  bb('Dimensi kecepatan adalah …','[L][T]⁻¹',['[M][L]','[L][T]','[M][T]⁻²'],'m/s.')],
+ [bb('Energi tidak dapat diciptakan atau dimusnahkan, hanya berubah bentuk. Ini hukum …','kekekalan energi',['Newton I','Ohm','Archimedes'],'Konversi energi.'),
+  bb('Contoh energi terbarukan adalah …','panas bumi (geotermal)',['batu bara','minyak bumi','gas alam'],'Indonesia kaya panas bumi.'),
+  bb('Panel surya mengubah energi cahaya menjadi energi …','listrik',['kimia','bunyi','gerak'],'Sel fotovoltaik.'),
+  bb('Dampak penggunaan bahan bakar fosil berlebihan adalah …','pemanasan global',['udara makin bersih','es kutub bertambah','hutan bertambah'],'Emisi CO₂.')],
+ [bb('Gas utama penyebab efek rumah kaca adalah …','CO₂',['O₂','N₂','He'],'Karbon dioksida.'),
+  bb('Fenomena memanasnya suhu laut Pasifik yang menyebabkan kemarau di Indonesia disebut …','El Niño',['La Niña','monsun','tsunami'],'La Niña menyebabkan curah hujan tinggi.'),
+  bb('Salah satu solusi pemanasan global adalah …','beralih ke energi terbarukan',['membakar hutan','menambah kendaraan','boros listrik'],'Kurangi emisi.')]];
+const KB10=[
+ [bb('Materi genetik virus berupa …','DNA atau RNA saja',['DNA dan RNA sekaligus','protein saja','lemak'],'Virus hanya punya satu jenis asam nukleat.'),
+  bb('Selubung protein virus disebut …','kapsid',['membran','dinding sel','nukleus'],'Melindungi asam nukleat.'),
+  bb('Siklus virus yang langsung menghancurkan sel inang disebut siklus …','litik',['lisogenik','Krebs','Calvin'],'Lisogenik menyisip ke DNA inang.'),
+  bb('Manfaat virus dalam bidang kesehatan adalah untuk membuat …','vaksin',['racun','antibiotik','minyak'],'Vaksin dari virus yang dilemahkan.')],
+ [bb('Kimia hijau bertujuan …','mengurangi zat berbahaya bagi lingkungan',['menambah limbah','memakai bahan beracun','boros energi'],'Pembangunan berkelanjutan.'),
+  bb('Bahan bakar nabati pengganti solar disebut …','biosolar (biodiesel)',['bensin','avtur','LPG'],'Dari minyak sawit.'),
+  bb('SDGs ditargetkan tercapai pada tahun …','2030',['2025','2045','2050'],'Agenda pembangunan berkelanjutan.')],
+ [bb('Massa zat sebelum dan sesudah reaksi sama. Ini hukum …','kekekalan massa (Lavoisier)',['perbandingan tetap (Proust)','Dalton','Avogadro'],'Hukum dasar kimia.'),
+  bb('Perbandingan massa unsur dalam senyawa selalu tetap. Ini hukum …','Proust',['Lavoisier','Gay-Lussac','Boyle'],'Hukum perbandingan tetap.'),
+  bb('Ciri terjadinya reaksi kimia adalah …','terbentuk gas, endapan, atau perubahan warna',['benda pindah tempat','benda dipotong','air dibekukan'],'Terbentuk zat baru.'),
+  bb('Penyetaraan reaksi kimia berdasarkan hukum …','kekekalan massa',['Ohm','Newton','Archimedes'],'Jumlah atom kiri = kanan.')],
+ [bb('Partikel bermuatan positif di inti atom adalah …','proton',['elektron','neutron','foton'],'Neutron tidak bermuatan.'),
+  bb('Nomor atom menunjukkan jumlah …','proton',['neutron','nukleon','massa'],'Juga elektron pada atom netral.'),
+  bb('Konfigurasi elektron atom Na (nomor atom 11) adalah …','2 8 1',['2 9','2 8 2','8 2 1'],'Kulit K = 2, L = 8, M = 1.'),
+  bb('Teknologi material berukuran sangat kecil (1–100 nm) disebut …','nanoteknologi',['bioteknologi','geoteknologi','astroteknologi'],'Contoh: logam tanah jarang.')],
+ [bb('Tingkat keanekaragaman hayati adalah gen, jenis, dan …','ekosistem',['sel','organ','atom'],'Tiga tingkat.'),
+  bb('Perbedaan warna bunga mawar merupakan keanekaragaman tingkat …','gen',['jenis','ekosistem','kingdom'],'Dalam satu spesies.'),
+  bb('Makhluk hidup yang membuat makanan sendiri disebut …','produsen',['konsumen','pengurai','parasit'],'Tumbuhan hijau.'),
+  bb('Piramida yang menggambarkan aliran energi antar tingkat trofik disebut piramida …','energi',['jumlah saja','usia','penduduk'],'Energi berkurang di tiap tingkat.')]];
+const SEJ10=[
+ [bb('Ilmu yang mempelajari peristiwa masa lampau manusia disebut …','sejarah',['geografi','ekonomi','sosiologi'],'Dimensi manusia, ruang, waktu.'),
+  bb('Bapak sejarah dunia adalah …','Herodotus',['Aristoteles','Plato','Socrates'],'Sejarawan Yunani.'),
+  bb('Pembabakan waktu sejarah disebut …','periodisasi',['kronologi','historiografi','heuristik'],'Kronologi = urutan waktu.'),
+  bb('Cara berpikir sejarah yang memanjang dalam waktu disebut …','diakronis',['sinkronis','kausalitas','spasial'],'Sinkronis = meluas dalam ruang.')],
+ [bb('Tahap mengumpulkan sumber sejarah disebut …','heuristik',['verifikasi','interpretasi','historiografi'],'Langkah pertama penelitian sejarah.'),
+  bb('Arsip dan wawancara pelaku termasuk sumber …','primer',['sekunder','tersier','fiksi'],'Sezaman dengan peristiwa.'),
+  bb('Penulisan sejarah disebut …','historiografi',['heuristik','kritik','periodisasi'],'Tradisional, kolonial, modern.'),
+  bb('Historiografi kolonial bersifat …','Eropa-sentris',['Indonesia-sentris','istana-sentris','netral'],'Dari sudut pandang penjajah.')]];
+const SOS10=[
+ [bb('Bapak sosiologi dunia adalah …','Auguste Comte',['Max Weber','Karl Marx','Émile Durkheim'],'Ia memperkenalkan istilah sosiologi.'),
+  bb('Paradigma yang melihat masyarakat dari struktur dan lembaga sosial disebut paradigma …','fakta sosial',['definisi sosial','perilaku sosial','individual'],'Tokohnya Durkheim.'),
+  bb('Syarat terjadinya interaksi sosial adalah kontak sosial dan …','komunikasi',['konflik','persaingan','pertentangan'],'Dua syarat interaksi.'),
+  bb('Penelitian sosial harus menjunjung …','etika penelitian',['kebohongan data','plagiat','manipulasi'],'Jujur dan menghormati responden.')],
+ [bb('Lembaga sosial terbentuk dari …','norma yang melembaga',['undang-undang saja','pemerintah asing','kebetulan'],'Proses institusionalisasi.'),
+  bb('Perilaku yang tidak sesuai norma disebut …','penyimpangan sosial',['sosialisasi','tertib sosial','asimilasi'],'Deviasi.'),
+  bb('Pembedaan masyarakat secara bertingkat disebut …','stratifikasi (pelapisan) sosial',['diferensiasi sosial','integrasi','mobilitas'],'Diferensiasi bersifat horizontal.'),
+  bb('Contoh diferensiasi sosial adalah perbedaan …','suku dan agama',['kaya dan miskin','pejabat dan rakyat','tinggi dan rendah jabatan'],'Tidak bertingkat.')]];
+const EKO10=[
+ [bb('Masalah pokok ekonomi muncul karena kebutuhan tidak terbatas sedangkan sumber daya …','terbatas (langka)',['melimpah','tak terbatas','gratis'],'Kelangkaan.'),
+  bb('Menyusun kebutuhan dari yang paling penting disebut …','skala prioritas',['konsumerisme','inflasi','deflasi'],'Bertindak ekonomis.'),
+  bb('Kegiatan menyalurkan barang dari produsen ke konsumen disebut …','distribusi',['produksi','konsumsi','investasi'],'Distributor.'),
+  bb('Bapak ilmu ekonomi adalah …','Adam Smith',['John Maynard Keynes','Karl Marx','David Ricardo'],'The Wealth of Nations.')],
+ [bb('Menurut hukum permintaan, jika harga naik maka jumlah permintaan …','turun',['naik','tetap','dua kali lipat'],'Ceteris paribus.'),
+  bb('Menurut hukum penawaran, jika harga naik maka jumlah penawaran …','naik',['turun','tetap','nol'],'Produsen menambah barang.'),
+  bb('Harga yang terbentuk saat permintaan sama dengan penawaran disebut harga …','keseimbangan',['eceran','grosir','diskon'],'Titik ekuilibrium.'),
+  bb('Lembaga yang mengawasi industri jasa keuangan di Indonesia adalah …','OJK',['BI saja','BPK','KPK'],'Otoritas Jasa Keuangan.'),
+  bb('Tempat jual beli saham disebut …','pasar modal',['pasar tradisional','pasar uang kertas','pasar induk'],'Bursa Efek Indonesia.')]];
+const GEO10=[
+ [bb('Objek formal geografi adalah fenomena geosfer dilihat dari sudut pandang …','keruangan (spasial)',['sejarah','ekonomi','biologi'],'Pendekatan keruangan, ekologi, kompleks wilayah.'),
+  bb('Teknologi memperoleh data permukaan bumi tanpa kontak langsung disebut …','penginderaan jauh',['SIG','kartografi','survei lapangan'],'Contoh: citra satelit.'),
+  bb('Sistem komputer untuk mengolah data geografis disebut …','SIG (Sistem Informasi Geografis)',['GPS saja','radar','sonar'],'Menggabungkan peta dan data.'),
+  bb('Upaya mengurangi risiko bencana sebelum terjadi disebut …','mitigasi',['rehabilitasi','rekonstruksi','evakuasi'],'Contoh: membangun tanggul.')],
+ [bb('Lapisan batuan pembentuk kulit bumi disebut …','litosfer',['atmosfer','hidrosfer','biosfer'],'Lito = batu.'),
+  bb('Lapisan tanah disebut …','pedosfer',['litosfer','atmosfer','antroposfer'],'Tempat tumbuhnya tanaman.'),
+  bb('Lapisan udara yang menyelimuti bumi disebut …','atmosfer',['hidrosfer','litosfer','biosfer'],'Troposfer lapisan terbawah.'),
+  bb('Seluruh air di bumi disebut …','hidrosfer',['atmosfer','pedosfer','biosfer'],'Laut, sungai, danau, air tanah.'),
+  bb('Manusia sebagai bagian geosfer disebut …','antroposfer',['biosfer','litosfer','atmosfer'],'Kajian kependudukan.')]];
+curInstall('k10',{
+ bindo:[['Laporan hasil observasi','Kalimat definisi, di- dan di, kutipan',[kb(BI10[0])],'Imbuhan di- serangkai, kata depan di dipisah.'],
+  ['Anekdot','Struktur anekdot, fakta dan opini',[kb(BI10[1])],'Abstraksi, orientasi, krisis, reaksi, koda.'],
+  ['Hikayat dan cerpen','Nilai dan kaidah bahasa narasi',[kb(BI10[2])],'Hikayat: istana sentris dan kemustahilan.'],
+  ['Teks negosiasi','Struktur negosiasi dan tesaurus',[kb(BI10[3])],'Pengajuan, penawaran, persetujuan.'],
+  ['Biografi pahlawan','Teks rekon dan kata serapan',[kb(BI10[4])],'Biografi termasuk teks rekon.'],
+  ['Puisi','Diksi, citraan, rima, tipografi',[kb(BI10[5])],'Unsur pembangun puisi.']],
+ pancasila:[['Pancasila sebagai pemersatu bangsa','Gagasan, kelahiran, kedudukan Pancasila',[kb(PP10[0])],'Dasar negara, pandangan hidup, ideologi.'],
+  ['Budaya taat hukum','Kesadaran hukum dan hierarki peraturan',[kb(PP10[1])],'UUD NRI 1945 hukum tertinggi.'],
+  ['Mengelola kebinekaan','Bhinneka Tunggal Ika dan ekonomi Pancasila',[kb(PP10[2])],'Gotong royong modal sosial.'],
+  ['Warga negara yang baik','Hak-kewajiban, hankam, hubungan internasional',[kb(PP10[3])],'Politik luar negeri bebas aktif.']],
+ pai:[['Kompetisi dalam kebaikan','Al-Mā’idah 48, At-Taubah 105',[kb(PAI10[0])],'Fastabiqul khairāt.'],
+  ['Cabang-cabang iman','Syu‘abul īmān',[kb(PAI10[1])],'Iman lebih dari 70 cabang.'],
+  ['Hidup penuh manfaat','Menghindari boros, riya, hasad',[kb(PAI10[2])],'Riya merusak amal.'],
+  ['Asuransi, bank, koperasi syariah','Prinsip ekonomi syariah',[kb(PAI10[3])],'Bagi hasil, bukan bunga.'],
+  ['Ulama penyebar Islam di Indonesia','Masuknya Islam dan kesultanan',[kb(PAI10[4])],'Samudra Pasai.'],
+  ['Menjauhi pergaulan bebas','Al-Isrā’ 32',[kb(PAI10[5])],'Jaga kehormatan.'],
+  ['Mencintai Allah, khauf, raja’, tawakal','Sikap hati kepada Allah',[kb(PAI10[6])],'Takut dan berharap seimbang.'],
+  ['Akhlak terpuji','Mengendalikan amarah dan berani',[kb(PAI10[7])],'Maḥmūdah vs mażmūmah.'],
+  ['Al-kulliyyāt al-khams','Lima tujuan syariat',[kb(PAI10[8])],'Agama, jiwa, akal, keturunan, harta.'],
+  ['Wali Songo','Dakwah Islam di Jawa',[kb(PAI10[9])],'Dakwah damai dan kultural.']],
+ fisika:[['Pengukuran dalam kerja ilmiah','Besaran, satuan, angka penting, notasi ilmiah',[kb(FIS10[0])],'Besaran pokok dan turunan.'],
+  ['Energi terbarukan','Kekekalan energi dan sumber energi',[kb(FIS10[1])],'Energi hanya berubah bentuk.'],
+  ['Pemanasan global','Efek rumah kaca dan solusinya',[kb(FIS10[2])],'Kurangi emisi CO₂.']],
+ kimbio:[['Virus dan peranannya','Ciri, replikasi, peranan virus',[kb(KB10[0])],'Litik dan lisogenik.'],
+  ['Kimia hijau','Pembangunan berkelanjutan 2030',[kb(KB10[1])],'Kurangi bahan berbahaya.'],
+  ['Hukum dasar kimia','Lavoisier, Proust, reaksi kimia',[kb(KB10[2])],'Massa sebelum = sesudah reaksi.'],
+  ['Struktur atom dan nanomaterial','Proton, elektron, konfigurasi',[kb(KB10[3])],'Nomor atom = jumlah proton.'],
+  ['Keanekaragaman hayati dan ekosistem','Tingkat keanekaragaman, rantai makanan',[kb(KB10[4])],'Gen, jenis, ekosistem.']],
+ sejarah:[['Manusia, ruang, dan waktu','Pengantar ilmu sejarah',[kb(SEJ10[0])],'Diakronis dan sinkronis.'],
+  ['Penelitian dan penulisan sejarah','Sumber, heuristik, historiografi',[kb(SEJ10[1])],'Heuristik, kritik, interpretasi, historiografi.']],
+ sosiologi:[['Individu dan masyarakat','Pengantar sosiologi, paradigma, interaksi',[kb(SOS10[0])],'Kontak dan komunikasi.'],
+  ['Lembaga sosial','Norma, penyimpangan, stratifikasi',[kb(SOS10[1])],'Stratifikasi vertikal, diferensiasi horizontal.']],
+ ekonomi:[['Manusia dan kebutuhan','Kelangkaan, kegiatan ekonomi',[kb(EKO10[0])],'Skala prioritas.'],
+  ['Pasar dan lembaga keuangan','Permintaan, penawaran, OJK',[kb(EKO10[1])],'Harga keseimbangan.']],
+ geografi:[['Pengantar ilmu geografi','Pendekatan, peta, SIG, bencana',[kb(GEO10[0])],'Pendekatan keruangan.'],
+  ['Fenomena geosfer','Litosfer sampai antroposfer',[kb(GEO10[1])],'Enam lapisan geosfer.']]},'g10');
 const COURSE_VIS=()=>COURSE.filter(c=>!c.hidden);
 const clsGrp=id=>{const c=COURSE.find(x=>x.id===id);return c&&c.grp||id};
 
@@ -13889,7 +14065,7 @@ function folBind(root,list,after){root.querySelectorAll('[data-follow]').forEach
   try{await folDo(f,on);if(on){try{sfx.ok()}catch(_){}toast('team',`Kamu mengikuti ${f.name}.`)}b.outerHTML=folBtn(f,b.classList.contains('sm'));folBind(root,list,after);after&&after()}catch(err){b.disabled=false;toast('lock',fbErr(err))}})}
 const shareIcon='<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M12 3 V15 M7 8 L12 3 L17 8 M5 13 V19 C5 20 6 21 7 21 H17 C18 21 19 20 19 19 V13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const qrIcon='<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><path d="M14 14h3v3h-3zM18 18h3v3h-3zM18 14h3M14 18v3" stroke-linecap="round"/></svg>';
-let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=238';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
+let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=239';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
 function qrMatrix(text){const Q=window.QRCodeLib,q=new Q(-1,Q.ECL.M);q.addData(text);q.make();const n=q.getModuleCount(),m=[];for(let r=0;r<n;r++){m.push([]);for(let c=0;c<n;c++)m[r].push(q.isDark(r,c))}return m}
 function qrSvgOf(m){const n=m.length;let d='';for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(m[r][c])d+=`M${c} ${r}h1.02v1.02h-1.02z`;
   return `<svg viewBox="-2 -2 ${n+4} ${n+4}" class="pcqr" shape-rendering="crispEdges" aria-label="Kode QR profil"><rect x="-2" y="-2" width="${n+4}" height="${n+4}" fill="#fff"/><path d="${d}" fill="#1C1E3D"/></svg>`}
