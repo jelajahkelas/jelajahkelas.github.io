@@ -1,0 +1,31 @@
+# Pengirim notifikasi cadangan JELAS: antrean notifikasi, pengingat tugas, dan pengingat runtunan.
+# Berjalan otomatis setiap ±10 menit memakai kunci FIREBASE_SERVICE_ACCOUNT di GitHub Secrets.
+name: Notifikasi
+on:
+  schedule:
+    - cron: '*/10 * * * *'
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: 'run = kirim, cek = uji izin kunci'
+        default: run
+concurrency:
+  group: notifikasi
+  cancel-in-progress: false
+jobs:
+  kirim:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            notif
+            .github
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Kirim notifikasi
+        run: node .github/scripts/notif.mjs ${{ github.event.inputs.mode || 'run' }}
+        env:
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
