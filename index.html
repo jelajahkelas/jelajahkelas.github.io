@@ -3534,6 +3534,7 @@ body.arcfs.tkmode .qcard>#qtext .objs,body.arcfs.tkmode .qcard>#qtext .big{font-
 /* Petualangan Blok: otomatis mendatar walau HP tegak (tampilan diputar 90°) */
 body.lprotate #vPlay{position:fixed!important;top:var(--rw,100vh)!important;left:0!important;right:auto!important;bottom:auto!important;width:var(--rw,100vh)!important;height:var(--rh,100vw)!important;max-width:none!important;margin:0!important;transform-origin:0 0;transform:rotate(-90deg);z-index:60;background:var(--bg,#fff);overflow:hidden}
 body.lprotate{overflow:hidden}
+body.lprotate.lprotR #vPlay{top:0!important;left:var(--rh,100vw)!important;transform:rotate(90deg)}
 /* Toko: judul bagian besar gelap */
 html body:not(.teacher) #vShop .shopsec h3{font-size:22px!important;color:var(--ink)!important;text-transform:none!important;letter-spacing:0!important}
 /* Profil: ringkasan tanpa kotak */
@@ -3916,7 +3917,7 @@ html[data-theme=malam] .plstick{background:#0a0f1e}
 <div class="syncpill" id="syncPill" hidden></div>
 <div class="toast" id="toast" hidden></div>
 
-<script src="av.js?v=254"></script>
+<script src="av.js?v=256"></script>
 <script>
 /* ---------- visual assets ---------- */
 const INK='#1B1E3D';
@@ -10171,15 +10172,15 @@ function gameFS(mode){if(!isTouchDev()||DUEL)return;const ori=GAME_ORI[mode]||'l
   document.body.classList.add('arcfs');document.body.dataset.ori=ori;GFS.on=true;
   const hint=()=>{if(mode==='lompat')return;if(ori==='landscape'&&innerHeight>innerWidth&&!GFS.hinted){GFS.hinted=true;toast('bolt','Putar HP ke posisi mendatar agar layar game lebih luas')}};
   const lock=()=>{try{const so=screen.orientation;if(so&&so.lock){const r=so.lock(ori);if(r&&r.then)r.then(()=>setTimeout(gameFit,300),()=>hint());}else hint()}catch(e){hint()}};
-  /* Petualangan Blok tidak memakai layar penuh browser (muncul pesan 'Untuk keluar dari layar penuh…' yang menutupi tombol); posisi mendatar dibuat dengan memutar tampilan */
-  if(mode==='lompat'){setTimeout(gameFit,350);setTimeout(gameFit,900);return}
+  /* Semua game tidak memakai layar penuh browser (muncul pesan 'Untuk keluar dari layar penuh…' yang menutupi tombol); posisi mendatar dibuat dengan memutar tampilan */
+  {setTimeout(gameFit,350);setTimeout(gameFit,900);return}
   try{const d=document.documentElement;if(ori==='landscape'&&!document.fullscreenElement&&d.requestFullscreen){const r=d.requestFullscreen({navigationUI:'hide'});GFS.mine=true;if(r&&r.then)r.then(lock,()=>{GFS.mine=false;lock()});else lock()}else lock()}catch(e){lock()}
   setTimeout(gameFit,350);setTimeout(gameFit,900)}
-function gameFSOff(){if(!GFS.on)return;GFS.on=false;document.body.classList.remove('arcfs');delete document.body.dataset.ori;
+function gameFSOff(){document.body.classList.remove('lprotate');if(!GFS.on)return;GFS.on=false;document.body.classList.remove('arcfs');delete document.body.dataset.ori;
   try{screen.orientation&&screen.orientation.unlock&&screen.orientation.unlock()}catch(e){}
   if(GFS.mine){GFS.mine=false;try{if(document.fullscreenElement&&document.exitFullscreen){const r=document.exitFullscreen();r&&r.catch&&r.catch(()=>{})}}catch(e){}}}
 function gameFit(){if(!GFS.on||!arc.running||!M)return;const w=$('#stage').clientWidth;if(Math.abs(w-arc.lastW)>2||Math.abs(arc.H-gameH())>4){arcSize();M.setup()}}
-function gameH(){const st=$('#stage');const z=arc.z||1;if(lpRotOn())return Math.max(200,Math.floor((innerWidth-st.getBoundingClientRect().left-1)/z));return Math.max(200,Math.floor((window.innerHeight-st.getBoundingClientRect().top-1)/z))}
+function gameH(){const st=$('#stage');const z=arc.z||1;if(lpRotOn())return Math.max(200,Math.floor((lpRotR()?st.getBoundingClientRect().right-1:innerWidth-st.getBoundingClientRect().left-1)/z));return Math.max(200,Math.floor((window.innerHeight-st.getBoundingClientRect().top-1)/z))}
 window.addEventListener('orientationchange',()=>setTimeout(gameFit,400));
 document.addEventListener('fullscreenchange',()=>setTimeout(gameFit,300));
 function arcSize(){
@@ -10210,7 +10211,7 @@ window.addEventListener('pagehide',()=>pauseGame(true));
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&$('#modal').hidden){if(PAUSE.on){e.preventDefault();e.stopImmediatePropagation();resumeGame();return}if(pauseCan()&&document.activeElement&&!/INPUT|TEXTAREA/.test(document.activeElement.tagName)){e.preventDefault();e.stopImmediatePropagation();pauseGame(false);return}}
   if(PAUSE.on){if(e.key==='Enter'||e.key===' '){e.preventDefault();e.stopImmediatePropagation();resumeGame();return}e.stopImmediatePropagation()}},true);
 function arcBegin(){
-  M=MODES[MODE];if(MODE==='lompat')document.body.classList.add('lpx');lpOrient();gameFS(MODE);
+  M=MODES[MODE];if(MODE==='lompat')document.body.classList.add('lpx');gameFS(MODE);lpOrient();
   $('#opts').hidden=true;$('#feedback').hidden=true;$('#stage').hidden=false;$('#qcard').classList.add('arcade');
   $('#arcHint').hidden=false;$('#arcHint').textContent=modeInfo().help;
   $('#arcFb').hidden=true;
@@ -10225,7 +10226,7 @@ function arcIntro(first){
   $('#asText').textContent=first?modeInfo().help:`Soal ${game.i+1} dari ${game.qs.length}. Perwakilan ${t.name} silakan maju.`;
   $('#arcStart').hidden=false;setTimeout(()=>$('#asGo').focus({preventScroll:true}),50);
 }
-function arcGo(){$('#arcStart').hidden=true;arc.state='play';tone([523,784],.08);if(MODE!=='lompat'){const sp=qSpeech(arc.q);if(sp)say(sp)}}
+function arcGo(){lpTiltPerm();$('#arcStart').hidden=true;arc.state='play';tone([523,784],.08);if(MODE!=='lompat'){const sp=qSpeech(arc.q);if(sp)say(sp)}}
 function arcShowQ(){
   if(MODE==='urut'&&game.qs[game.i]&&!game.qs[game.i].urut)game.qs[game.i]=urutQ(game.qs[game.i]);
   const q=game.qs[game.i];renderHUD();showQText(q);
@@ -11102,8 +11103,12 @@ function lpGem(n){try{if(!P)return;P.gems=(P.gems||0)+n;clearTimeout(lpGem.t);lp
 function lpPortrait(){return false}
 /* trik: kalau HP tetap tegak, tampilan game diputar 90° lewat CSS sehingga langsung tampil mendatar tanpa perlu memutar HP */
 function lpRotOn(){return document.body.classList.contains('lprotate')}
-function lpOrient(){try{const on=document.body.classList.contains('lpx')&&isTouchDev()&&innerHeight>innerWidth;document.body.classList.toggle('lprotate',on);if(on)dlRotVars()}catch(e){}}
-addEventListener('resize',()=>{const was=lpRotOn();lpOrient();if(was!==lpRotOn()&&arc.running&&M&&MODE==='lompat')setTimeout(()=>{try{arcSize();M.setup()}catch(e){}},60)});
+function lpRotR(){return document.body.classList.contains('lprotR')}
+/* arah putar mengikuti kemiringan HP: miring ke kanan (sisi kanan turun) → game ikut miring ke kanan, dan sebaliknya */
+addEventListener('deviceorientation',e=>{const g=e.gamma;if(g==null)return;const b=document.body;if(g<-35&&!lpRotR())b.classList.add('lprotR');else if(g>35&&lpRotR())b.classList.remove('lprotR')});
+function lpTiltPerm(){try{if(lpRotOn()&&typeof DeviceOrientationEvent!=='undefined'&&DeviceOrientationEvent.requestPermission&&!lpTiltPerm.asked){lpTiltPerm.asked=true;DeviceOrientationEvent.requestPermission().catch(()=>{})}}catch(e){}}
+function lpOrient(){try{const on=document.body.classList.contains('arcfs')&&!DUEL&&isTouchDev()&&innerHeight>innerWidth;document.body.classList.toggle('lprotate',on);if(on)dlRotVars()}catch(e){}}
+addEventListener('resize',()=>{const was=lpRotOn();lpOrient();if(was!==lpRotOn()&&arc.running&&M)setTimeout(()=>{try{arcSize();M.setup()}catch(e){}},60)});
 function lpLand(){try{const d=document.documentElement,lock=()=>{try{const r=screen.orientation&&screen.orientation.lock&&screen.orientation.lock('landscape');r&&r.catch&&r.catch(()=>{})}catch(e){}};
   if(!document.fullscreenElement&&d.requestFullscreen){const r=d.requestFullscreen({navigationUI:'hide'});GFS.mine=true;r&&r.then?r.then(lock,lock):lock()}else lock()}catch(e){}}
 function lpRotUI(){let el=document.getElementById('lpRot');if(!el){document.body.insertAdjacentHTML('beforeend','<div class="lprot" id="lpRot"><div><div class="rotph">📱</div><b>Putar HP ke posisi mendatar</b><span>Petualangan Blok dimainkan mendatar agar jalannya lebih luas dan tombolnya mudah dijangkau.</span><button class="primary press" id="lpRotGo">Putar layar</button><small>Kalau layar tidak berputar, nyalakan putar otomatis di HP lalu miringkan HP-mu.</small></div></div>');el=document.getElementById('lpRot');document.getElementById('lpRotGo').onclick=lpLand}}
@@ -11124,7 +11129,7 @@ const Lompat={
  setup(){const{W,H}=arc;this.G=H-60;this.k=clamp(Math.min(W,H)/360,1,1.35);this.hh=54*this.k;this.grav=2100;
   if(!this.w||this.w.qs!==game.qs){this.build();this.th=null;this.hero={x:130,y:0,vx:0,vy:0,face:1,run:0,blink:0};this.cam=0;this.clouds=Array.from({length:6},(_,k)=>({x:k*260+Math.random()*80,y:24+Math.random()*70,s:.6+Math.random()*.6}))}
   this.asking=false;this.opts=null;this.pads={};this.padT={};this.stick=null;document.body.classList.add('lpx');this.lay()},
- lay(){const{W,H}=arc,s=Math.min(60,W*.15),t=(typeof isTouchDev==='function'&&isTouchDev());this.G0=t?H-Math.max(60,s*1.25+28):H-60;this.G=this.G0+(this.camY||0);this.btn={l:{x:12,y:H-s-10,w:s,h:s},r:{x:24+s,y:H-s-10,w:s,h:s},j:{x:W-s*1.25-12,y:H-s*1.25-10,w:s*1.25,h:s*1.25}}},
+ lay(){const{W,H}=arc,s=Math.min(60,W*.15),t=(typeof isTouchDev==='function'&&isTouchDev());const mx=this.mx=Math.round(Math.max(28,W*.07)),my=this.my=Math.round(Math.max(16,H*.06));this.G0=t?H-Math.max(60,s*1.25+20+my):H-60;this.G=this.G0+(this.camY||0);this.btn={l:{x:12,y:H-s-10,w:s,h:s},r:{x:24+s,y:H-s-10,w:s,h:s},j:{x:W-s*1.25-mx,y:H-s*1.25-my,w:s*1.25,h:s*1.25}}},
  gy(x){const w=this.w;return w.pits.some(p=>x>p.x+6&&x<p.x+p.w-6)?null:0},
  inB(b,x,y,pad){pad=pad||0;return x>=b.x-pad&&x<=b.x+b.w+pad&&y>=b.y-pad&&y<=b.y+b.h+pad},
  pdown(id,x,y){if(this.asking){this.pick(x,y);return}const B=this.btn;if(this.inB(B.j,x,y,22)){this.jump();this.pads[id]='j';return}
@@ -11241,7 +11246,7 @@ const Lompat={
   c.fillStyle='rgba(27,30,61,.72)';rr(c,8,8,170,30,15);c.fill();c.fillStyle='#fff';c.font=`800 14px ${FONT}`;c.textAlign='left';c.textBaseline='middle';c.fillText(`❓ ${w.opened}/${w.N}   💎 ${w.stars}`,20,24);
   if(!w.finishOn&&!this.asking&&w.opened<w.N){const nb=w.boxes.find(b=>!b.open);if(nb&&X(nb.x)>W){c.fillStyle='rgba(27,30,61,.72)';rr(c,W-122,8,114,30,15);c.fill();c.fillStyle='#fff';c.textAlign='center';c.fillText('Kotak tanya ▶',W-65,24)}}
   // tombol sentuh
-  if(!this.asking&&isTouchDev&&isTouchDev()){const st=this.stick,R=46,bx=st?st.ox:16+R+6,byy=st?st.oy:H-R-18;
+  if(!this.asking&&isTouchDev&&isTouchDev()){const st=this.stick,R=46,bx=st?st.ox:(this.mx||22)+R,byy=st?st.oy:H-R-(this.my||16);
    c.save();c.globalAlpha=st?.9:.55;c.fillStyle='rgba(255,255,255,.35)';c.strokeStyle='rgba(27,30,61,.45)';c.lineWidth=3;c.beginPath();c.arc(bx,byy,R,0,7);c.fill();c.stroke();
    c.fillStyle='rgba(27,30,61,.35)';c.font=`900 16px ${FONT}`;c.textAlign='center';c.textBaseline='middle';c.fillText('◀',bx-R+14,byy);c.fillText('▶',bx+R-14,byy);c.fillText('▲',bx,byy-R+13);
    let kx=bx,ky=byy;if(st){const dx=st.x-st.ox,dy=st.y-st.oy,d=Math.hypot(dx,dy)||1,m=Math.min(R,d);kx=bx+dx/d*m;ky=byy+dy/d*m}
@@ -15355,7 +15360,7 @@ function folBind(root,list,after){root.querySelectorAll('[data-follow]').forEach
   try{await folDo(f,on);if(on){try{sfx.ok()}catch(_){}toast('team',`Kamu mengikuti ${f.name}.`)}b.outerHTML=folBtn(f,b.classList.contains('sm'));folBind(root,list,after);after&&after()}catch(err){b.disabled=false;toast('lock',fbErr(err))}})}
 const shareIcon='<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M12 3 V15 M7 8 L12 3 L17 8 M5 13 V19 C5 20 6 21 7 21 H17 C18 21 19 20 19 19 V13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const qrIcon='<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><path d="M14 14h3v3h-3zM18 18h3v3h-3zM18 14h3M14 18v3" stroke-linecap="round"/></svg>';
-let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=254';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
+let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=256';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
 function qrMatrix(text){const Q=window.QRCodeLib,q=new Q(-1,Q.ECL.M);q.addData(text);q.make();const n=q.getModuleCount(),m=[];for(let r=0;r<n;r++){m.push([]);for(let c=0;c<n;c++)m[r].push(q.isDark(r,c))}return m}
 function qrSvgOf(m){const n=m.length;let d='';for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(m[r][c])d+=`M${c} ${r}h1.02v1.02h-1.02z`;
   return `<svg viewBox="-2 -2 ${n+4} ${n+4}" class="pcqr" shape-rendering="crispEdges" aria-label="Kode QR profil"><rect x="-2" y="-2" width="${n+4}" height="${n+4}" fill="#fff"/><path d="${d}" fill="#1C1E3D"/></svg>`}
@@ -16453,7 +16458,7 @@ function openAvatarEditor(){if(!P)return;P.avatar=avNorm(P.avatar);P.avOwned=P.a
 
 /* ---------- wiring ---------- */
 const cvEl=$('#cv');
-function ptr(e){const r=cvEl.getBoundingClientRect(),z=arc.z||1;if(lpRotOn())return [(r.bottom-e.clientY)/z,(e.clientX-r.left)/z];return [(e.clientX-r.left)/z,(e.clientY-r.top)/z]}
+function ptr(e){const r=cvEl.getBoundingClientRect(),z=arc.z||1;if(lpRotOn())return lpRotR()?[(e.clientY-r.top)/z,(r.right-e.clientX)/z]:[(r.bottom-e.clientY)/z,(e.clientX-r.left)/z];return [(e.clientX-r.left)/z,(e.clientY-r.top)/z]}
 cvEl.addEventListener('pointerdown',e=>{if(!arc.running||!M||(arc.state!=='play'&&!(MODE==='lompat'&&arc.state==='resolved')))return;e.preventDefault();try{cvEl.setPointerCapture(e.pointerId)}catch(_){}arc.pdown=true;const [x,y]=ptr(e);M.pdown&&M.pdown(e.pointerId,x,y,e.pointerType);M.down&&M.down(x,y)});
 cvEl.addEventListener('pointermove',e=>{if(!arc.running||!M||(arc.state!=='play'&&!(MODE==='lompat'&&arc.state==='resolved')))return;const [x,y]=ptr(e);M.pmove&&M.pmove(e.pointerId,x,y,e.pointerType);M.move&&M.move(x,y,e.pointerType==='mouse'||arc.pdown)});
 ['pointerup','pointercancel','lostpointercapture'].forEach(t=>cvEl.addEventListener(t,e=>{arc.pdown=false;if(M&&M.pup)M.pup(e.pointerId,e.pointerType)}));
