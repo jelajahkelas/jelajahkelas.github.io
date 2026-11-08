@@ -505,220 +505,241 @@ Object.assign(MATERI,{
  sum:['Tasamuh = toleransi; Al-Kafirun.','Husnuzan lawan suuzan.','Ukhuwah Islamiyah, Wathaniyah, Basyariyah.']}
 });
 
-/* Materi Matematika SD Kelas 1–6, jalur Kurikulum Merdeka (bab mengikuti buku SIBI 2022, isi ditulis sendiri) */
+/* Materi Matematika SD Kelas 1–6, jalur Kurikulum Merdeka (subbab mengikuti buku siswa SIBI 2022, isi ditulis sendiri) */
 Object.assign(MATERI,{
-'m1/mtk/0':{intro:'Kita belajar menghitung benda sampai 10, membandingkan banyaknya, dan menghitung maju-mundur.',s:[
- {h:'Menghitung benda',li:['Tunjuk benda satu per satu sambil menyebut angkanya.','Setiap benda dihitung satu kali saja.','Angka terakhir yang disebut adalah banyaknya benda.'],ex:[['🍎🍎🍎🍎🍎🍎 ada berapa?','Satu, dua, …, enam. Ada <b>6</b>.']]},
- {h:'Lebih banyak dan lebih sedikit',p:'Hitung tiap kelompok, lalu bandingkan angkanya. Angka yang lebih besar berarti lebih banyak.'},
- {h:'Maju dan mundur',p:'Maju: 3, 4, 5, 6. Mundur: 9, 8, 7, 6.'},
- {h:'Pasangan bilangan 10',tb:[['Bilangan','Pasangannya'],['1','9'],['2','8'],['3','7'],['4','6'],['5','5']]}],
- sum:['Hitung satu per satu.','Angka besar = lebih banyak.','Pasangan 10: 1–9, 2–8, 3–7, 4–6, 5–5.']},
+'m1/mtk/0':{intro:'Bab ini mengajak kita menghitung benda sampai 10, membandingkan, menghitung maju-mundur, dan mengenal pasangan bilangan.',s:[
+ {h:'A. Menghitung, membaca, menulis bilangan',li:['Tunjuk benda satu per satu sambil menyebut angkanya.','Angka terakhir yang disebut adalah banyaknya benda.','Jika tidak ada benda sama sekali, banyaknya <b>0 (nol)</b>.','Bingkai 10 (dua baris berisi lima kotak) membantu melihat berapa lagi agar genap 10.']},
+ {h:'B. Membandingkan banyak benda',p:'Hitung tiap kelompok. Kata yang dipakai: <b>lebih banyak</b>, <b>lebih sedikit</b>, dan <b>sama banyak</b>.'},
+ {h:'C. Menghitung maju dan mundur',p:'Maju: 4, 5, 6, 7. Mundur: 9, 8, 7, 6.'},
+ {h:'D. Pasangan bilangan',p:'Satu bilangan bisa dipisah menjadi dua bagian. 7 bisa menjadi 1 dan 6, 2 dan 5, atau 3 dan 4.',tb:[['Pasangan 10'],['1 dan 9'],['2 dan 8'],['3 dan 7'],['4 dan 6'],['5 dan 5']]}],
+ sum:['Nol berarti tidak ada.','Pasangan bilangan: bagian + bagian = keseluruhan.']},
 'm1/mtk/1':{intro:'Menjumlah artinya menggabungkan dua kelompok benda.',s:[
- {h:'Cara menjumlah',li:['Gabungkan semua benda lalu hitung.','Atau mulai dari bilangan yang lebih besar, lalu hitung maju.','Contoh 6 + 3: mulai dari 6, lanjut 7, 8, 9.'],ex:[['4 + 3 = …','Mulai dari 4: 5, 6, 7. Jawabannya <b>7</b>.']]},
- {h:'Soal cerita',p:'Kata "diberi", "bertambah", atau "lagi" biasanya berarti penjumlahan.',ex:[['Dina punya 5 permen, diberi 2 lagi. Jadi?','5 + 2 = <b>7</b> permen.']]}],
- sum:['Menjumlah = menggabungkan.','Mulai dari bilangan besar, hitung maju.']},
-'m1/mtk/2':{intro:'Mengurangi artinya mengambil sebagian dari sekelompok benda.',s:[
- {h:'Cara mengurangi',li:['Ambil (coret) benda sebanyak yang dikurangi.','Hitung sisanya.','Atau hitung mundur dari bilangan pertama.'],ex:[['8 − 3 = …','Mundur dari 8: 7, 6, 5. Jawabannya <b>5</b>.']]},
- {h:'Hubungan dengan penjumlahan',p:'Jika 4 + 5 = 9, maka 9 − 5 = 4 dan 9 − 4 = 5.'},
- {h:'Soal cerita',p:'Kata "hilang", "dimakan", "diberikan", atau "sisa" biasanya berarti pengurangan.'}],
- sum:['Mengurangi = mengambil.','Pengurangan kebalikan dari penjumlahan.']},
+ {h:'A. Cerita penjumlahan',p:'Tanda <b>+</b> dibaca "ditambah", tanda <b>=</b> dibaca "hasilnya".'},
+ {h:'B. Berbagai cara menjumlah',li:['Pasangan bilangan: bagian + bagian = keseluruhan.','Hitung maju pada garis bilangan: 5 + 3 → lompat dari 5 ke 6, 7, 8.','Penjumlahan berulang: 3 + 3 = 6, 4 + 4 = 8.','Pasangan yang hasilnya 10, dibantu bingkai 10.']},
+ {h:'C. Soal cerita',li:['Baca ceritanya.','Tulis kalimat penjumlahannya.','Hitung.','Tulis kalimat jawaban.'],ex:[['Ada 4 mobil, datang 3 mobil lagi. Ada berapa?','4 + 3 = 7. Jadi ada <b>7</b> mobil.']]}],
+ sum:['Menjumlah = menggabungkan.','Hitung maju dari bilangan pertama.']},
+'m1/mtk/2':{intro:'Mengurangi artinya mengambil atau berkurang dari jumlah awal.',s:[
+ {h:'A. Cerita pengurangan',p:'Tanda <b>−</b> dibaca "dikurangi". Kata dalam cerita: sisa, berkurang, diambil. Hasilnya bisa 0 jika semua diambil.'},
+ {h:'B. Berbagai cara mengurangi',li:['Pasangan bilangan: keseluruhan − satu bagian = bagian lain.','Hitung mundur pada garis bilangan.','Mengurangi dari 10 dengan bingkai 10.']},
+ {h:'C. Hubungan penjumlahan dan pengurangan',p:'Dari 3, 4, dan 7 kita dapat menulis: 3 + 4 = 7, 4 + 3 = 7, 7 − 3 = 4, 7 − 4 = 3.'},
+ {h:'D. Soal cerita',ex:[['Ada 9 burung, 4 terbang. Sisa berapa?','9 − 4 = <b>5</b> burung.']]}],
+ sum:['Pengurangan kebalikan penjumlahan.','Hitung mundur untuk mengurangi.']},
 'm1/mtk/3':{intro:'Benda di sekitar kita punya bentuk yang berbeda-beda.',s:[
- {h:'Bangun ruang',tb:[['Bentuk','Contoh benda'],['Kubus','dadu 🎲'],['Balok','kotak susu, lemari 📦'],['Tabung','kaleng 🥫'],['Bola','bola ⚽, jeruk'],['Kerucut','topi ulang tahun, es krim 🍦']]},
- {h:'Bangun datar',tb:[['Bentuk','Banyak sisi'],['Segitiga','3'],['Persegi','4 (sama panjang)'],['Persegi panjang','4'],['Lingkaran','tidak punya sisi lurus']]},
- {h:'Mengelompokkan',p:'Benda dengan bentuk yang sama bisa dikelompokkan bersama, misalnya bola dan jeruk sama-sama berbentuk bola.'}],
- sum:['Dadu = kubus, kaleng = tabung, bola = bola.','Segitiga 3 sisi, persegi 4 sisi.']},
-'m1/mtk/4':{intro:'Sekarang kita menghitung sampai 20.',s:[
- {h:'Bilangan belasan',p:'Bilangan 11 sampai 19 terdiri dari 1 puluhan dan beberapa satuan.',tb:[['Bilangan','Puluhan','Satuan'],['13','1','3'],['16','1','6'],['20','2','0']]},
- {h:'Membaca dan menulis',p:'11 sebelas, 12 dua belas, 15 lima belas, 20 dua puluh.'},
- {h:'Membandingkan',li:['Tanda &gt; artinya lebih dari.','Tanda &lt; artinya kurang dari.','Contoh: 17 &gt; 14 dan 12 &lt; 19.']}],
- sum:['Belasan = 10 + satuan.','Mulut tanda &gt; atau &lt; menghadap bilangan yang lebih besar.']},
-'m1/mtk/5':{intro:'Kita menjumlah dan mengurangi bilangan sampai 20.',s:[
- {h:'Menjumlah sampai 20',p:'Genapkan ke 10 dulu. Contoh 8 + 5 = 8 + 2 + 3 = 10 + 3 = 13.'},
- {h:'Mengurangi sampai 20',p:'Kurangi sampai 10 dulu. Contoh 15 − 7 = 15 − 5 − 2 = 10 − 2 = 8.'},
- {h:'Selisih',p:'Selisih adalah beda dua bilangan: bilangan besar dikurangi bilangan kecil.',ex:[['Selisih 18 dan 11?','18 − 11 = <b>7</b>.']]}],
- sum:['Genapkan ke 10 supaya mudah.','Selisih = besar − kecil.']},
+ {h:'A. Mendeskripsikan benda menurut bentuk',tb:[['Bentuk','Contoh benda'],['Lengkung','jam dinding, piring, uang logam'],['Segitiga','penggaris segitiga, tenda, rambu peringatan'],['Segi empat','buku, pintu, jendela, bingkai foto']]},
+ {h:'B. Mengelompokkan benda',p:'Benda dapat dikelompokkan menurut bentuk, warna, atau ukuran (besar dan kecil).'},
+ {h:'C. Menyusun dan mengurai bentuk',p:'Dua segitiga yang sama dapat disusun menjadi segi empat. Gambar seperti kereta tersusun dari beberapa segi empat dan bentuk lengkung.'}],
+ sum:['Lengkung, segitiga, segi empat.','Bentuk bisa digabung menjadi bentuk baru.']},
+'m1/mtk/4':{intro:'Sekarang kita membilang sampai 20.',s:[
+ {h:'A. Menghitung, membaca, menulis',p:'Kelompokkan 10 benda lebih dulu, lalu hitung sisanya. 10 dan 6 menjadi 16 (enam belas).'},
+ {h:'B. Menghitung maju dan mundur',p:'Maju: 14, 15, 16, 17. Mundur: 20, 19, 18, 17.'},
+ {h:'C. Nilai tempat',tb:[['Bilangan','Puluhan','Satuan'],['13','1','3'],['18','1','8'],['20','2','0']],p:'Sepuluh benda yang diikat dihitung 1 puluhan.'},
+ {h:'D. Membandingkan bilangan',p:'Tanda &gt; berarti lebih dari, &lt; berarti kurang dari. Urutkan dari terkecil: 9, 12, 17. Coba tebak dulu banyaknya benda, lalu buktikan dengan menghitung.'}],
+ sum:['11–19 = 1 puluhan + satuan.','Bandingkan puluhan dulu, lalu satuan.']},
+'m1/mtk/5':{intro:'Kita menjumlah dan mengurangi sampai 20.',s:[
+ {h:'A. Lebih dari, kurang dari, selisih',p:'Selisih adalah beda dua bilangan. Selisih 15 dan 9 = 15 − 9 = 6, artinya 15 lebih 6 dari 9.'},
+ {h:'B. Penjumlahan sampai 20',li:['Hitung maju.','Buat 10 dulu: 8 + 5 = 8 + 2 + 3 = 13.','Penjumlahan berulang: 6 + 7 = 6 + 6 + 1 = 13.','Nilai tempat: 12 + 5 → satuan 2 + 5 = 7, jadi 17.']},
+ {h:'C. Pengurangan sampai 20',li:['Hitung mundur.','Pecah puluhan: 14 − 6 = 10 − 6 + 4 = 8.','Nilai tempat: 18 − 5 → satuan 8 − 5 = 3, jadi 13.']}],
+ sum:['Buat 10 supaya mudah.','Selisih = besar − kecil.']},
 'm1/mtk/6':{intro:'Kita membandingkan dan mengukur panjang benda.',s:[
- {h:'Membandingkan panjang',p:'Letakkan dua benda sejajar dengan ujung yang sama. Yang ujung lainnya lebih jauh adalah yang lebih panjang.'},
- {h:'Mengukur dengan benda',li:['Gunakan benda yang sama, misalnya klip, jengkal, atau langkah.','Pasang berderet tanpa celah.','Hitung berapa banyak benda yang dipakai.'],ex:[['Pensil sepanjang 6 klip, penghapus 2 klip. Selisihnya?','6 − 2 = <b>4</b> klip.']]}],
- sum:['Sejajarkan ujungnya saat membandingkan.','Ukur dengan satuan yang sama.']},
-'m1/mtk/7':{intro:'Diagram membantu kita membaca banyak benda dengan cepat.',s:[
- {h:'Mengelompokkan data',p:'Kumpulkan benda yang sama ke dalam satu kelompok, lalu hitung banyaknya.'},
- {h:'Diagram gambar',p:'Setiap gambar mewakili satu benda. Hitung gambar di setiap baris.',tb:[['Buah','Gambar','Banyak'],['Apel','🍎🍎🍎','3'],['Pisang','🍌🍌🍌🍌🍌','5']]}],
- sum:['Satu gambar = satu benda.','Baris terpanjang = paling banyak.']},
-'m2/mtk/0':{intro:'Kita menghitung sampai 50 dan mengenal nilai tempat.',s:[
- {h:'Puluhan dan satuan',tb:[['Bilangan','Puluhan','Satuan'],['24','2','4'],['37','3','7'],['50','5','0']]},
- {h:'Membandingkan',li:['Bandingkan puluhan dulu.','Jika puluhannya sama, bandingkan satuan.','Contoh: 42 &gt; 38 karena 4 puluhan lebih dari 3 puluhan.']}],
- sum:['Bilangan dua angka = puluhan + satuan.','Bandingkan puluhan dulu.']},
-'m2/mtk/1':{intro:'Kita menjumlah dan mengurangi bilangan dua angka.',s:[
- {h:'Menjumlah bersusun',li:['Jumlahkan satuan dulu.','Jika lebih dari 9, simpan 1 puluhan.','Lalu jumlahkan puluhan.'],ex:[['27 + 15','7 + 5 = 12, tulis 2 simpan 1. 2 + 1 + 1 = 4. Hasilnya <b>42</b>.']]},
- {h:'Mengurangi bersusun',li:['Kurangi satuan dulu.','Jika satuan atas lebih kecil, pinjam 1 puluhan.'],ex:[['52 − 18','Pinjam: 12 − 8 = 4, 4 − 1 = 3. Hasilnya <b>34</b>.']]}],
- sum:['Mulai dari satuan.','Simpan saat menjumlah, pinjam saat mengurangi.']},
-'m2/mtk/2':{intro:'Mengenal bangun datar dan bangun ruang di sekitar kita.',s:[
- {h:'Bangun datar',tb:[['Bangun','Sisi','Sudut'],['Segitiga','3','3'],['Persegi','4','4'],['Persegi panjang','4','4'],['Segi lima','5','5'],['Segi enam','6','6'],['Lingkaran','–','0']]},
- {h:'Bangun ruang',p:'Kubus seperti dadu, balok seperti kotak, tabung seperti kaleng, kerucut seperti topi ulang tahun, bola seperti bola.'}],
- sum:['Banyak sisi = banyak sudut pada segi banyak.','Bangun ruang punya isi.']},
-'m2/mtk/3':{intro:'Kita belajar letak benda dan pola.',s:[
- {h:'Posisi benda',li:['Atas – bawah','Depan – belakang','Kiri – kanan','Di dalam – di luar']},
- {h:'Pola bilangan',p:'Pola adalah susunan yang berulang atau berubah dengan aturan tetap.',ex:[['5, 10, 15, 20, …','Bertambah 5. Berikutnya <b>25</b>.']]}],
- sum:['Cari selisih dua bilangan berurutan.','Aturan pola harus sama di semua langkah.']},
-'m2/mtk/4':{intro:'Pecahan menunjukkan bagian dari benda utuh atau kumpulan.',s:[
- {h:'Setengah',p:'Benda dibagi menjadi 2 bagian sama besar. Satu bagian disebut setengah (1/2).',ex:[['Setengah dari 10 kelereng?','10 : 2 = <b>5</b> kelereng.']]},
- {h:'Seperempat',p:'Benda dibagi menjadi 4 bagian sama besar. Satu bagian disebut seperempat (1/4).',ex:[['Seperempat dari 12 apel?','12 : 4 = <b>3</b> apel.']]}],
- sum:['Bagian harus sama besar.','Setengah = bagi 2, seperempat = bagi 4.']},
-'m2/mtk/5':{intro:'Kita membandingkan berat dan membaca waktu.',s:[
- {h:'Berat',p:'Timbangan atau tangan kita bisa membandingkan berat. Benda yang lebih berat membuat timbangan turun.'},
- {h:'Membaca jam',li:['Jarum pendek menunjukkan jam.','Jarum panjang menunjukkan menit.','Jarum panjang di 12: tepat (misal 7.00).','Jarum panjang di 6: setengah jam (misal 7.30).']}],
- sum:['Timbangan turun = lebih berat.','Jarum panjang di 6 = lewat 30 menit.']},
-'m2/mtk/6':{intro:'Sekarang kita menghitung sampai 100.',s:[
- {h:'Membaca bilangan',tb:[['Lambang','Dibaca'],['36','tiga puluh enam'],['71','tujuh puluh satu'],['100','seratus']]},
- {h:'Membandingkan dan mengurutkan',p:'Bandingkan puluhan dulu, lalu satuan. Contoh urutan naik: 29, 47, 63, 85.'}],
- sum:['Puluhan ditulis di kiri.','Seratus = 10 puluhan.']},
-'m2/mtk/7':{intro:'Data bisa disajikan dengan turus atau gambar.',s:[
- {h:'Turus',p:'Setiap garis turus mewakili satu data. Garis kelima dibuat menyilang sehingga satu ikat = 5.',tb:[['Warna','Turus','Banyak'],['Merah','|||| |||','8'],['Biru','||||','4']]},
- {h:'Diagram gambar',p:'Hitung gambar pada setiap baris untuk mengetahui banyaknya.'}],
- sum:['Satu ikat turus = 5.','Hitung ikat dulu, lalu sisa garisnya.']},
-'m3/mtk/0':{intro:'Kita mengenal bilangan sampai 1.000 dan operasi hitungnya.',s:[
- {h:'Nilai tempat',tb:[['Bilangan','Ratusan','Puluhan','Satuan'],['482','4 (400)','8 (80)','2 (2)'],['705','7 (700)','0 (0)','5 (5)']]},
- {h:'Membandingkan dan mengurutkan',p:'Bandingkan ratusan dulu, lalu puluhan, lalu satuan.'},
- {h:'Perkalian dan pembagian',p:'Perkalian adalah penjumlahan berulang: 4 × 3 = 3 + 3 + 3 + 3 = 12. Pembagian adalah kebalikannya: 12 : 4 = 3.'}],
- sum:['Ratusan – puluhan – satuan.','Pembagian kebalikan dari perkalian.']},
-'m3/mtk/1':{intro:'Kalimat matematika memakai angka dan tanda untuk menuliskan sebuah cerita.',s:[
- {h:'Mencari bilangan yang hilang',li:['… + 15 = 40 → 40 − 15 = 25.','50 − … = 32 → 50 − 32 = 18.']},
- {h:'Dari cerita ke kalimat',ex:[['Rani punya beberapa stiker, diberi 12, menjadi 30.','Kalimatnya … + 12 = 30, jadi stiker awal <b>18</b>.']]}],
- sum:['Gunakan operasi kebalikan.','Periksa jawaban dengan memasukkannya kembali.']},
-'m3/mtk/2':{intro:'Satuan baku membuat hasil pengukuran sama di mana pun.',s:[
- {h:'Satuan panjang',tb:[['Satuan','Sama dengan'],['1 cm','10 mm'],['1 m','100 cm'],['1 km','1.000 m']]},
- {h:'Satuan berat',tb:[['Satuan','Sama dengan'],['1 kg','1.000 g']]},
- {h:'Memilih satuan',p:'Pensil diukur dengan cm, kelas dengan m, jarak antarkota dengan km. Beras ditimbang dengan kg, gula sedikit dengan g.'}],
- sum:['Besar ke kecil: kali.','Kecil ke besar: bagi.']},
-'m3/mtk/3':{intro:'Bangun datar punya sisi dan sudut.',s:[
- {h:'Jenis sudut',tb:[['Sudut','Besar'],['Lancip','kurang dari 90°'],['Siku-siku','tepat 90°'],['Tumpul','antara 90° dan 180°']]},
- {h:'Garis sejajar dan tegak lurus',li:['Sejajar: tidak pernah bertemu, seperti rel kereta.','Tegak lurus: bertemu membentuk sudut siku-siku, seperti sudut buku.']}],
- sum:['Sudut siku-siku = 90°.','Sejajar tidak berpotongan.']},
-'m3/mtk/4':{intro:'Tabel membantu menyusun data agar mudah dibaca.',s:[
- {h:'Membaca tabel',li:['Baca judul kolom.','Cari baris yang ditanyakan.','Bandingkan angkanya.'],tb:[['Nama','Nilai'],['Andi','78'],['Cici','92'],['Dewi','85']]},
- {h:'Contoh',ex:[['Siapa nilainya tertinggi?','Cici dengan nilai <b>92</b>.'],['Selisih nilai Cici dan Andi?','92 − 78 = <b>14</b>.']]}],
- sum:['Kolom ke bawah, baris ke samping.','Selisih = besar − kecil.']},
-'m4/mtk/0':{intro:'Kita mengenal bilangan sampai 10.000, faktor, dan kelipatan.',s:[
- {h:'Nilai tempat',p:'5.276 = 5.000 + 200 + 70 + 6 (5 ribuan, 2 ratusan, 7 puluhan, 6 satuan).'},
- {h:'Faktor',p:'Faktor adalah bilangan yang membagi habis. Faktor 12: 1, 2, 3, 4, 6, 12.'},
- {h:'Kelipatan',p:'Kelipatan adalah hasil perkalian berurutan. Kelipatan 4: 4, 8, 12, 16, 20, …'}],
- sum:['Uraikan bilangan menurut nilai tempat.','Faktor membagi habis, kelipatan hasil kali.']},
-'m4/mtk/1':{intro:'Pecahan bisa ditulis sebagai pecahan biasa, desimal, atau persen.',s:[
- {h:'Penyebut sama',p:'Jika penyebutnya sama, cukup jumlahkan atau bandingkan pembilangnya: 2/7 + 3/7 = 5/7.'},
- {h:'Pecahan senilai',p:'Kalikan atau bagi pembilang dan penyebut dengan bilangan yang sama: 1/2 = 2/4 = 3/6.'},
- {h:'Desimal dan persen',tb:[['Pecahan','Desimal','Persen'],['3/10','0,3','30%'],['25/100','0,25','25%'],['1/2','0,5','50%']]}],
- sum:['Persen = per seratus.','Pecahan senilai: kali atas dan bawah dengan angka yang sama.']},
-'m4/mtk/2':{intro:'Pola punya aturan yang terus berulang.',s:[
- {h:'Pola bilangan',li:['Tambah tetap: 3, 7, 11, 15 (+4).','Kurang tetap: 50, 44, 38 (−6).','Kali tetap: 2, 4, 8, 16 (×2).']},
- {h:'Pola gambar',p:'Perhatikan bagian yang berulang, lalu lanjutkan urutannya.'}],
- sum:['Cari aturannya dari dua suku berurutan.','Cek aturannya pada suku lain.']},
-'m4/mtk/3':{intro:'Luas mengukur daerah, volume mengukur isi.',s:[
- {h:'Luas',p:'Luas dihitung dengan persegi satuan. Persegi panjang: L = panjang × lebar. Persegi: L = sisi × sisi.',ex:[['Persegi panjang 7 cm × 4 cm','L = 7 × 4 = <b>28 cm²</b>.']]},
- {h:'Volume',p:'Volume dihitung dengan kubus satuan. Balok: V = panjang × lebar × tinggi.'}],
- sum:['Satuan luas: cm², m².','Satuan volume: cm³, m³.']},
-'m4/mtk/4':{intro:'Setiap bangun datar punya ciri khusus.',s:[
- {h:'Ciri-ciri',tb:[['Bangun','Ciri'],['Persegi','4 sisi sama, 4 sudut siku-siku'],['Persegi panjang','sisi berhadapan sama, 4 sudut siku-siku'],['Belah ketupat','4 sisi sama, diagonal tegak lurus'],['Jajar genjang','sisi berhadapan sejajar dan sama panjang']]},
- {h:'Menyusun dan mengurai',p:'Dua segitiga siku-siku yang sama bisa disusun menjadi persegi panjang. Segi enam bisa diurai menjadi 6 segitiga.'}],
- sum:['Perhatikan sisi, sudut, dan sisi sejajar.','Bangun besar bisa diurai jadi bangun kecil.']},
-'m4/mtk/5':{intro:'Piktogram dan diagram batang menyajikan data dengan gambar.',s:[
- {h:'Piktogram',p:'Satu gambar mewakili sejumlah data. Perhatikan keterangan, misalnya 1 gambar = 2 buku.'},
- {h:'Diagram batang',li:['Sumbu datar berisi kategori.','Tinggi batang menunjukkan banyaknya.','Batang tertinggi = paling banyak.']}],
- sum:['Baca keterangan atau skala dulu.','Bandingkan tinggi batang.']},
-'m5/mtk/0':{intro:'Bilangan sampai 100.000 dan operasi hitung bersusun.',s:[
- {h:'Nilai tempat',p:'64.381 = 60.000 + 4.000 + 300 + 80 + 1.'},
- {h:'Perkalian bersusun',li:['Kalikan dengan angka satuan pengali.','Kalikan dengan angka puluhan, geser satu tempat ke kiri.','Jumlahkan hasilnya.'],ex:[['234 × 12','234 × 2 = 468; 234 × 10 = 2.340; jumlah <b>2.808</b>.']]}],
- sum:['Tulis angka sesuai nilai tempatnya.','Cek dengan perkiraan.']},
-'m5/mtk/1':{intro:'KPK dan FPB dipakai untuk soal jadwal dan pembagian sama rata.',s:[
- {h:'Faktorisasi prima',p:'Tulis bilangan sebagai perkalian bilangan prima. 36 = 2 × 2 × 3 × 3 = 2² × 3².'},
- {h:'KPK',p:'Kelipatan persekutuan terkecil. KPK 4 dan 6 = 12.'},
- {h:'FPB',p:'Faktor persekutuan terbesar. FPB 12 dan 18 = 6.'}],
- sum:['KPK: kapan bertemu lagi.','FPB: dibagi rata sebanyak mungkin.']},
-'m5/mtk/2':{intro:'Menjumlah, mengurangi, dan membandingkan pecahan berpenyebut beda.',s:[
- {h:'Samakan penyebut',p:'Gunakan KPK penyebut. 1/3 + 1/4 = 4/12 + 3/12 = 7/12.'},
- {h:'Membandingkan',p:'Samakan penyebutnya, lalu bandingkan pembilang. 2/3 = 8/12 dan 3/4 = 9/12, jadi 3/4 lebih besar.'}],
- sum:['Penyebut disamakan dulu.','Sederhanakan hasil akhirnya.']},
-'m5/mtk/3':{intro:'Keliling adalah panjang garis yang mengelilingi bangun.',s:[
- {h:'Rumus keliling',tb:[['Bangun','Keliling'],['Persegi','4 × sisi'],['Persegi panjang','2 × (p + l)'],['Segitiga','sisi + sisi + sisi'],['Segi-n beraturan','n × sisi']]}],
- sum:['Keliling = jumlah semua sisi.','Satuannya cm atau m, bukan cm².']},
-'m5/mtk/4':{intro:'Luas berbagai bangun datar.',s:[
- {h:'Rumus luas',tb:[['Bangun','Luas'],['Segitiga','½ × alas × tinggi'],['Jajar genjang','alas × tinggi'],['Trapesium','½ × (a + b) × tinggi'],['Layang-layang / belah ketupat','½ × d1 × d2']]},
- {h:'Bangun gabungan',p:'Bagi bangun menjadi bagian-bagian sederhana, hitung luas masing-masing, lalu jumlahkan atau kurangkan.'}],
- sum:['Tinggi selalu tegak lurus alas.','Satuan luas: cm².']},
-'m5/mtk/5':{intro:'Sudut diukur dengan derajat menggunakan busur.',s:[
- {h:'Ukuran sudut',li:['Satu putaran penuh = 360°.','Setengah putaran (sudut lurus) = 180°.','Sudut siku-siku = 90°.']},
- {h:'Sudut pada jam',p:'Jarak antara dua angka jam = 360° : 12 = 30°. Pukul 3.00 membentuk 90°.'}],
- sum:['Lancip &lt; 90° &lt; tumpul &lt; 180°.','Tiap angka jam = 30°.']},
-'m5/mtk/6':{intro:'Membandingkan ciri segitiga dan segiempat.',s:[
- {h:'Segitiga',tb:[['Jenis','Ciri'],['Sama sisi','3 sisi sama, tiap sudut 60°'],['Sama kaki','2 sisi sama'],['Siku-siku','satu sudut 90°']]},
- {h:'Segiempat',tb:[['Jenis','Ciri'],['Trapesium','tepat sepasang sisi sejajar'],['Layang-layang','dua pasang sisi berdekatan sama'],['Jajar genjang','dua pasang sisi sejajar']]}],
- sum:['Jumlah sudut segitiga 180°.','Jumlah sudut segiempat 360°.']},
-'m5/mtk/7':{intro:'Mengumpulkan dan menyajikan data.',s:[
- {h:'Langkah pengolahan',li:['Kumpulkan data (bertanya, mengamati).','Catat dengan turus atau tabel.','Sajikan dengan piktogram atau diagram batang.','Tarik kesimpulan.']},
- {h:'Membaca diagram',p:'Perhatikan skala pada sumbu tegak sebelum membaca tinggi batang.'}],
- sum:['Data dicatat dulu, baru disajikan.','Skala menentukan nilai batang.']},
-'m5/mtk/8':{intro:'Bilangan sampai satu juta dan pembulatan.',s:[
- {h:'Nilai tempat besar',p:'1.000.000 dibaca satu juta. 452.718 = 4 ratus ribuan, 5 puluh ribuan, 2 ribuan, 7 ratusan, 1 puluhan, 8 satuan.'},
- {h:'Pembulatan',li:['Lihat angka di kanan tempat pembulatan.','Jika 5 atau lebih, bulatkan ke atas.','Jika kurang dari 5, bulatkan ke bawah.'],ex:[['453.718 ke ribuan terdekat','Angka ratusan 7 ≥ 5, jadi <b>454.000</b>.']]}],
- sum:['Beri titik setiap tiga angka dari kanan.','5 ke atas dibulatkan naik.']},
+ {h:'A. Membandingkan dan mengurutkan',p:'Kata yang dipakai: lebih panjang, lebih pendek, sama panjang, paling panjang, paling pendek; juga lebih tinggi, lebih rendah, paling tinggi.'},
+ {h:'B. Mengukur panjang',li:['Gunakan satuan tidak baku: jengkal, depa, stik es krim, klip.','Mulai dari ujung benda.','Alat ukur dipasang rapat, tidak bertumpuk, tidak miring.','Alat ukur berbeda menghasilkan angka berbeda.']}],
+ sum:['Ukur dari ujung, rapat dan lurus.','Satuan berbeda → hasil berbeda.']},
+'m1/mtk/7':{intro:'Data dapat dikelompokkan lalu disajikan dalam tabel atau diagram gambar.',s:[
+ {h:'A. Mengelompokkan data',p:'Kelompokkan benda yang sama, hitung, lalu tulis di tabel. Tabel punya judul, baris, dan kolom.',tb:[['Hewan','Banyak'],['Kucing','4'],['Ikan','6']]},
+ {h:'B. Diagram gambar',p:'Satu gambar mewakili satu benda atau satu anak. Bandingkan baris untuk tahu yang paling banyak.'}],
+ sum:['Data = keterangan yang dikumpulkan.','Baris terpanjang = paling banyak.']},
+'m2/mtk/0':{intro:'Membilang sampai 50 dengan mengelompokkan per sepuluh.',s:[
+ {h:'A. Menghitung, membaca, menulis',p:'Kelompokkan benda per sepuluh (diikat atau dimasukkan wadah), lalu hitung kelompok dan sisanya.'},
+ {h:'B. Nilai tempat',p:'Satu bilangan dapat ditulis dengan beberapa cara.',tb:[['34 ditulis sebagai'],['3 puluhan dan 4 satuan'],['2 puluhan dan 14 satuan'],['30 + 4']]},
+ {h:'C. Membandingkan',p:'Bandingkan banyak puluhan dulu, lalu satuan. Urutkan dari terkecil atau terbesar.'}],
+ sum:['1 puluhan = 10 satuan.','Bandingkan puluhan dulu.']},
+'m2/mtk/1':{intro:'Berbagai cara menjumlah dan mengurangi bilangan dua angka.',s:[
+ {h:'A. Penjumlahan',li:['Hitung maju dari bilangan pertama.','Bersusun: jumlahkan satuan; jika 10 atau lebih, jadikan 1 puluhan.','Pasangan bilangan: 27 + 15 = 27 + 3 + 12 = 30 + 12 = 42.']},
+ {h:'B. Pengurangan',li:['Hitung mundur.','Bersusun: jika satuan tidak cukup, ambil 1 puluhan menjadi 10 satuan.','Pisahkan puluhan dan satuan, lalu kurangkan masing-masing.']},
+ {h:'C. Soal cerita',p:'Perhatikan kata kunci: jumlah, lebih, kurang, selisih. Tulis yang diketahui, yang ditanya, cara, dan kesimpulan.'}],
+ sum:['Simpan saat menjumlah, pinjam saat mengurangi.','Selisih → pengurangan.']},
+'m2/mtk/2':{intro:'Mengenal bangun datar dan bangun ruang.',s:[
+ {h:'A. Bangun datar',p:'Bangun yang dibatasi garis lurus disebut segi banyak dan dinamai dari banyak sisinya. Bangun yang dibatasi garis lengkung, seperti lingkaran, disebut bentuk lengkung.',tb:[['Nama','Sisi'],['Segitiga','3'],['Segi empat','4'],['Segi lima','5'],['Segi enam','6']]},
+ {h:'B. Mengurai dan menyusun',p:'Persegi dipotong diagonal menjadi 2 segitiga. Segi enam beraturan dapat diurai menjadi 6 segitiga. Tangram menyusun bentuk baru dari potongan.'},
+ {h:'C. Bangun ruang',p:'Bangun ruang punya lebih dari satu permukaan dan bisa diisi: kubus, balok, tabung, kerucut, bola. Yang berpermukaan lengkung bisa menggelinding.'}],
+ sum:['Segi banyak dibatasi garis lurus.','Tabung, kerucut, bola bisa menggelinding.']},
+'m2/mtk/3':{intro:'Menyebut letak benda dan mengenal pola berulang.',s:[
+ {h:'A. Posisi benda',li:['atas – bawah','depan – belakang','kiri – kanan (dilihat dari arah kita sendiri)']},
+ {h:'B. Pola',p:'Pola adalah keteraturan yang berulang. Ada pola bentuk, warna, gerakan, dan suara, misalnya tepuk, tepuk, hentak, tepuk, tepuk, hentak.'}],
+ sum:['Kiri-kanan tergantung arah pandang.','Temukan bagian yang berulang.']},
+'m2/mtk/4':{intro:'Mengenal setengah dan seperempat.',s:[
+ {h:'A. Setengah dari benda utuh',p:'Benda dibagi menjadi 2 bagian yang <b>sama besar</b>. Jika tidak sama besar, bukan setengah.'},
+ {h:'B. Setengah dari kumpulan benda',p:'Kumpulan dibagi menjadi 2 kelompok sama banyak. Setengah dari 6 ikan = 3 ikan.'},
+ {h:'C. Seperempat',p:'Bagi dua, lalu bagi dua lagi. Didapat 4 bagian sama besar, satu bagiannya seperempat.'}],
+ sum:['Bagian harus sama besar.','Seperempat = 1 dari 4 bagian.']},
+'m2/mtk/5':{intro:'Membandingkan berat dan membaca waktu.',s:[
+ {h:'A. Berat',p:'Bandingkan dengan timbangan jungkat-jungkit atau kedua tangan: lebih berat, lebih ringan, sama berat. Berat juga bisa diukur dengan satuan tidak baku, misalnya banyak kelereng yang seimbang.'},
+ {h:'B. Waktu',li:['Jarum pendek menunjuk jam, jarum panjang menunjuk menit.','Jarum panjang di 12 berarti jam tepat, misalnya pukul 7.00.','Jam digital menulis pukul tujuh sebagai 07.00.','Kegiatan harian terjadi pagi, siang, sore, atau malam.']}],
+ sum:['Timbangan turun pada sisi yang lebih berat.','Jarum panjang di 12 = jam tepat.']},
+'m2/mtk/6':{intro:'Membilang sampai 100.',s:[
+ {h:'A. Menghitung, membaca, menulis',p:'Kelompokkan per sepuluh sampai 10 kelompok = 100. 73 = 7 puluhan dan 3 satuan, dibaca tujuh puluh tiga.'},
+ {h:'B. Membandingkan bilangan',li:['Bilangan di kanan pada deret 1–100 lebih besar.','Bandingkan puluhan, lalu satuan.','"Dua lebihnya dari 40" = 42, "tiga kurangnya dari 40" = 37.']}],
+ sum:['100 = 10 puluhan.','Lebihnya → tambah, kurangnya → kurang.']},
+'m2/mtk/7':{intro:'Menyajikan data dengan turus dan gambar.',s:[
+ {h:'A. Diagram turus',p:'Setiap data ditulis satu garis. Garis kelima dibuat melintang, sehingga satu kelompok = 5.'},
+ {h:'B. Diagram gambar',p:'Satu gambar mewakili satu benda. Jika kuncinya 1 gambar = 2, kalikan banyak gambar dengan 2.'}],
+ sum:['Turus dikelompokkan per lima.','Baca kunci gambar.']},
+'m3/mtk/0':{intro:'Bilangan sampai 1.000 dan empat operasi hitung sampai 100.',s:[
+ {h:'A–B. Lambang dan nilai tempat',p:'Nilai angka tergantung tempatnya. 602 = 600 + 0 + 2 (6 ratusan, 0 puluhan, 2 satuan).'},
+ {h:'C. Membandingkan dan mengurutkan',p:'Bandingkan ratusan, lalu puluhan, lalu satuan. Gunakan tanda &lt;, &gt;, =.'},
+ {h:'D–E. Penjumlahan dan pengurangan',p:'Susun pendek (menyimpan atau meminjam) atau susun panjang (memecah puluhan dan satuan).'},
+ {h:'F–G. Perkalian dan pembagian',li:['Perkalian = penjumlahan berulang: 4 × 3 = 3 + 3 + 3 + 3.','Perkalian bisa ditukar: 5 × 6 = 6 × 5.','Pembagian = pengurangan berulang sampai 0: 12 : 3 = 4.','Hasil bagi × pembagi = bilangan yang dibagi.']}],
+ sum:['Ratusan, puluhan, satuan.','Pembagian kebalikan perkalian.']},
+'m3/mtk/1':{intro:'Menuliskan cerita sebagai kalimat matematika dengan bilangan yang belum diketahui.',s:[
+ {h:'A. Kalimat penjumlahan',p:'Kotak kosong mewakili bilangan yang dicari. □ + 15 = 40 → □ = 40 − 15 = 25.'},
+ {h:'B. Kalimat pengurangan',p:'Bilangan yang hilang bisa di tiga tempat: □ − 8 = 12 (□ = 20), 20 − □ = 12 (□ = 8), 20 − 8 = □ (□ = 12).'}],
+ sum:['Gunakan operasi kebalikan.','Cek dengan memasukkan jawaban.']},
+'m3/mtk/2':{intro:'Mengukur dengan satuan baku.',s:[
+ {h:'A–B. Panjang',p:'Penggaris untuk benda pendek, meteran untuk benda panjang. 1 m = 100 cm, jadi 1 m 20 cm = 120 cm.'},
+ {h:'C–D. Berat',tb:[['Satuan','Sama dengan'],['1 kg','1.000 g'],['1 kg','10 ons'],['1 ons','100 g']],p:'Alat: timbangan digital, timbangan dapur, timbangan badan, timbangan pasar.'}],
+ sum:['1 m = 100 cm.','1 kg = 10 ons = 1.000 g.']},
+'m3/mtk/3':{intro:'Unsur bangun datar: sisi, sudut, serta garis tegak lurus dan sejajar.',s:[
+ {h:'A. Sisi',tb:[['Istilah','Arti'],['Garis','memanjang ke dua arah'],['Sinar garis','punya satu pangkal, memanjang ke satu arah'],['Ruas garis','punya dua ujung, panjangnya tertentu']],p:'Ruas garis diukur dengan penggaris. 1 cm = 10 mm.'},
+ {h:'B. Sudut',tb:[['Jenis','Besar'],['Lancip','kurang dari 90°'],['Siku-siku','90°'],['Tumpul','antara 90° dan 180°'],['Lurus','180°'],['Refleks','antara 180° dan 360°']],p:'Sudut diukur dengan busur derajat.'},
+ {h:'C. Garis tegak lurus dan sejajar',p:'Tegak lurus: berpotongan membentuk siku-siku (⊥). Sejajar: tidak pernah bertemu karena jaraknya sama (//). Huruf H punya garis sejajar.'}],
+ sum:['Siku-siku = 90°.','Sejajar tidak pernah bertemu.']},
+'m3/mtk/4':{intro:'Mengurutkan, membandingkan, dan menyajikan data dalam tabel.',s:[
+ {h:'A. Mengurutkan dan membandingkan data',p:'Urutkan dari terkecil sampai terbesar. <b>Jangkauan</b> = data terbesar − data terkecil.',ex:[['Nilai: 70, 85, 60, 95','Urut: 60, 70, 85, 95. Jangkauan 95 − 60 = <b>35</b>.']]},
+ {h:'B. Menyajikan dalam tabel',p:'Hitung tiap jenis data dengan turus, lalu tulis di kolom banyaknya.',tb:[['Huruf pada MATEMATIKA','Turus','Banyak'],['A','|||','3'],['M','||','2'],['T','||','2']]}],
+ sum:['Jangkauan = terbesar − terkecil.','Turus memudahkan menghitung.']},
+'m4/mtk/0':{intro:'Bilangan sampai 10.000 dan operasi hitungnya.',s:[
+ {h:'A–D. Membaca, nilai tempat, membandingkan, mengurai',p:'5.276 dibaca lima ribu dua ratus tujuh puluh enam = 5.000 + 200 + 70 + 6. Bandingkan dari ribuan.'},
+ {h:'E–F. Penjumlahan dan pengurangan sampai 1.000',p:'Susun panjang (uraikan bilangan) atau susun pendek (menyimpan/meminjam).'},
+ {h:'G–H. Perkalian dan pembagian sampai 100',li:['12 × 4 = 10 × 4 + 2 × 4 = 48.','Pembagian bisa bersisa: 23 : 5 = 4 sisa 3.']},
+ {h:'I. Faktor dan kelipatan',p:'Faktor 12: 1, 2, 3, 4, 6, 12 (membagi habis). Kelipatan 4: 4, 8, 12, 16, …'}],
+ sum:['Bandingkan dari nilai tempat terbesar.','Faktor membagi habis.']},
+'m4/mtk/1':{intro:'Pecahan, desimal, dan persen.',s:[
+ {h:'A. Pembilang satu',p:'1/2 &gt; 1/3 &gt; 1/4: penyebut makin besar, bagiannya makin kecil.'},
+ {h:'B. Penyebut sama',p:'Bandingkan pembilangnya: 5/8 &gt; 3/8.'},
+ {h:'C. Pecahan senilai',p:'Kalikan atau bagi pembilang dan penyebut dengan bilangan sama: 1/2 = 2/4 = 4/8.'},
+ {h:'D–E. Desimal dan persen',tb:[['Pecahan','Desimal','Persen'],['3/10','0,3','30%'],['25/100','0,25','25%']],p:'Desimal → persen: kalikan 100% (geser koma dua langkah ke kanan). Diskon 25% dari Rp40.000 = Rp10.000.'}],
+ sum:['Persen = per seratus.','Senilai: kali/bagi atas-bawah dengan bilangan sama.']},
+'m4/mtk/2':{intro:'Pola gambar dan pola bilangan dengan selisih tetap.',s:[
+ {h:'A. Pola gambar',p:'Pola membesar: banyak benda bertambah tetap (2, 4, 6, …). Pola mengecil: berkurang tetap (10, 8, 6, …).'},
+ {h:'B. Pola bilangan',p:'Cari selisih dua bilangan berurutan, lalu tambahkan atau kurangkan. 7, 11, 15, 19, … selisih 4, berikutnya 23.'}],
+ sum:['Cari selisih tetapnya.']},
+'m4/mtk/3':{intro:'Mengukur luas dan volume.',s:[
+ {h:'A. Luas',p:'Luas = banyak persegi satuan yang menutup bidang tanpa celah. Satuan baku cm² dan m² (1 m² = 10.000 cm²). Persegi panjang 5 × 3 petak = 15 cm².'},
+ {h:'B. Volume',li:['Satuan tidak baku: berapa gelas untuk mengisi botol.','Cairan: liter dan mililiter (1 l = 1.000 ml).','Benda padat: kubus satuan cm³ atau m³. 1 cm³ = 1 ml, 1 m³ = 1.000 liter.']}],
+ sum:['Luas → persegi satuan.','Volume → kubus satuan atau liter.']},
+'m4/mtk/4':{intro:'Mengenal segi banyak, segitiga, dan segi empat.',s:[
+ {h:'Segi banyak',p:'Kurva tertutup yang dibatasi minimal tiga ruas garis. Beraturan jika semua sisi dan sudutnya sama.'},
+ {h:'Segitiga',tb:[['Menurut sisi','Menurut sudut'],['sama sisi','lancip'],['sama kaki','siku-siku'],['sembarang','tumpul']]},
+ {h:'Segi empat',p:'Persegi, persegi panjang, jajargenjang, belah ketupat, layang-layang, trapesium. Bandingkan ciri sisi, sudut, dan sisi sejajar.'},
+ {h:'Komposisi dan dekomposisi',p:'Bangun dapat digabung (seperti tangram) atau diurai menjadi bangun sederhana.'}],
+ sum:['Segitiga dikelompokkan menurut sisi dan sudut.']},
+'m4/mtk/5':{intro:'Menyajikan data dengan piktogram dan diagram batang.',s:[
+ {h:'A. Piktogram',p:'Gambar mewakili jumlah tertentu sesuai kunci, misalnya 1 gambar = 4 siswa. 3 gambar = 12 siswa.'},
+ {h:'B. Diagram batang',p:'Batang tegak atau mendatar. Tentukan skala sumbu, lalu baca tinggi atau panjang batang.'}],
+ sum:['Selalu baca kunci atau skala.']},
+'m5/mtk/0':{intro:'Bilangan sampai 100.000.',s:[
+ {h:'A–B. Nilai tempat dan membandingkan',p:'64.381 = 6 puluh ribuan, 4 ribuan, 3 ratusan, 8 puluhan, 1 satuan. Bandingkan dari nilai tempat terbesar.'},
+ {h:'C. Komposisi dan dekomposisi',p:'Rp45.300 = 4 lembar Rp10.000 + 5 lembar Rp1.000 + 3 keping Rp100.'},
+ {h:'D. Operasi hitung',p:'Jumlahkan/kurangkan per nilai tempat atau bersusun. Perkalian dengan memisah pengali per nilai tempat; pembagian bersusun.'}],
+ sum:['Uraikan menurut nilai tempat.']},
+'m5/mtk/1':{intro:'Kelipatan, faktor, KPK, FPB, dan bilangan prima.',s:[
+ {h:'A–B. Kelipatan dan KPK',p:'Daftar kelipatan, tandai yang sama, ambil yang terkecil. KPK 4 dan 6 = 12. Dipakai untuk jadwal yang bertemu lagi.'},
+ {h:'C–D. Faktor dan FPB',p:'Daftar faktor, ambil faktor sama yang terbesar. FPB 24 dan 36 = 12. Dipakai untuk membagi sama banyak.'},
+ {h:'E. Prima dan faktorisasi prima',p:'Bilangan prima hanya habis dibagi 1 dan dirinya. Pohon faktor: 36 = 2 × 2 × 3 × 3 = 2² × 3².'}],
+ sum:['KPK → bertemu lagi.','FPB → bagi sama banyak.']},
+'m5/mtk/2':{intro:'Membandingkan, menjumlah, dan mengurangi pecahan.',s:[
+ {h:'Pecahan campuran',p:'2 1/3 = (2 × 3 + 1)/3 = 7/3.'},
+ {h:'A. Membandingkan',p:'Samakan penyebut dengan KPK, lalu bandingkan pembilang.'},
+ {h:'B–C. Menjumlah dan mengurangi',li:['Penyebut sama: jumlahkan/kurangkan pembilang.','Penyebut beda: samakan dengan KPK. 1/2 − 1/6 = 3/6 − 1/6 = 2/6 = 1/3.','Pecahan campuran: bagian bulat dan pecahan dihitung terpisah, atau ubah ke pecahan biasa.']}],
+ sum:['Samakan penyebut.','Sederhanakan hasil.']},
+'m5/mtk/3':{intro:'Keliling adalah jumlah panjang semua sisi luar bangun.',s:[
+ {h:'B–D. Rumus keliling',tb:[['Bangun','Keliling'],['Segitiga','sisi + sisi + sisi'],['Persegi panjang','2 × (p + l)'],['Persegi','4 × s'],['Segi banyak beraturan','banyak sisi × panjang sisi']]},
+ {h:'E. Bangun gabungan',p:'Cari sisi yang belum diketahui dari sisi sejajarnya, lalu jumlahkan semua sisi luar.'}],
+ sum:['Keliling memakai satuan panjang (cm, m).']},
+'m5/mtk/4':{intro:'Luas daerah bangun datar.',s:[
+ {h:'B. Rumus luas',tb:[['Bangun','Luas'],['Persegi panjang','p × l'],['Segitiga','½ × a × t'],['Jajargenjang','a × t'],['Trapesium','½ × (jumlah sisi sejajar) × t'],['Belah ketupat, layang-layang','½ × d1 × d2']]},
+ {h:'C. Bangun gabungan',p:'Bagi menjadi bangun dasar, hitung tiap bagian, lalu jumlahkan.'},
+ {h:'D. Keliling dan luas',p:'Dua bangun dengan keliling sama bisa punya luas berbeda.'}],
+ sum:['Tinggi selalu tegak lurus alas.']},
+'m5/mtk/5':{intro:'Sudut terbentuk dari dua kaki sudut yang bertemu di titik sudut.',s:[
+ {h:'Jenis sudut',tb:[['Jenis','Besar'],['Nol','0°'],['Lancip','kurang dari 90°'],['Siku-siku','90°'],['Tumpul','90°–180°'],['Lurus','180°'],['Refleks','180°–360°'],['Penuh','360°']]},
+ {h:'Mengukur dan melukis',p:'Pusat busur di titik sudut, garis dasar sejajar satu kaki, baca skala di kaki lainnya. Pada jam, jarak antar angka = 30°.'}],
+ sum:['Siku-siku dapat dicek dengan kertas dilipat dua kali.']},
+'m5/mtk/6':{intro:'Membandingkan ciri segitiga dan segi empat.',s:[
+ {h:'A. Segitiga',li:['Dua sisi terpendek dijumlah harus lebih dari sisi terpanjang.','Jumlah ketiga sudut = 180°.','Sama sisi: tiap sudut 60°, juga termasuk sama kaki.']},
+ {h:'B. Segi empat',li:['Trapesium: setidaknya sepasang sisi sejajar.','Jajargenjang: sisi berhadapan sejajar dan sama panjang; tidak punya simetri lipat.','Persegi panjang: jajargenjang dengan sudut siku-siku.','Belah ketupat: jajargenjang dengan semua sisi sama.','Persegi: belah ketupat sekaligus persegi panjang.']}],
+ sum:['Persegi juga persegi panjang dan belah ketupat.']},
+'m5/mtk/7':{intro:'Mengumpulkan, menyajikan, dan membaca data.',s:[
+ {h:'Pengumpulan data',p:'Catat dengan turus, lalu susun tabel frekuensi. Frekuensi = berapa kali data muncul.'},
+ {h:'Penyajian data',li:['Piktogram dengan kunci.','Diagram batang tegak atau mendatar.','Diagram batang ganda untuk membandingkan dua data.']},
+ {h:'Membaca data',p:'Cari tertinggi, terendah, kenaikan, penurunan, selisih, dan total.'}],
+ sum:['Frekuensi = banyak kemunculan.']},
+'m5/mtk/8':{intro:'Bilangan sampai satu juta.',s:[
+ {h:'Membaca dan nilai tempat',p:'Pisahkan dengan titik setiap tiga angka. 452.718 = 4 ratus ribuan, 5 puluh ribuan, 2 ribuan, 7 ratusan, 1 puluhan, 8 satuan.'},
+ {h:'Membandingkan dan membulatkan',p:'Bandingkan dari nilai tempat terbesar. Pembulatan: lihat angka di kanannya, 5 ke atas dibulatkan naik.'}],
+ sum:['Titik setiap tiga angka dari kanan.']},
 'm6/mtk/0':{intro:'Simetri lipat dan simetri putar.',s:[
- {h:'Simetri lipat',p:'Garis yang membagi bangun menjadi dua bagian yang sama persis saat dilipat.'},
- {h:'Tabel simetri',tb:[['Bangun','Simetri lipat','Simetri putar'],['Persegi','4','4'],['Persegi panjang','2','2'],['Segitiga sama sisi','3','3'],['Jajar genjang','0','2'],['Layang-layang','1','1 (tidak punya)']]}],
- sum:['Simetri putar: berapa kali kembali ke posisi awal dalam satu putaran.']},
-'m6/mtk/1':{intro:'Huruf dapat mewakili bilangan yang belum diketahui.',s:[
- {h:'Menghitung nilai',p:'Jika x = 4, maka 3 × x + 2 = 3 × 4 + 2 = 14.'},
- {h:'Mencari nilai x',li:['x + 9 = 20 → x = 20 − 9 = 11.','5 × x = 35 → x = 35 : 5 = 7.']}],
- sum:['Ganti huruf dengan bilangannya.','Gunakan operasi kebalikan untuk mencari x.']},
-'m6/mtk/2':{intro:'Mengalikan pecahan.',s:[
- {h:'Pecahan × pecahan',p:'Pembilang × pembilang, penyebut × penyebut. 2/3 × 3/5 = 6/15 = 2/5.'},
- {h:'Bilangan × pecahan',p:'Kalikan bilangan dengan pembilang. 4 × 2/3 = 8/3.'}],
- sum:['Sederhanakan hasilnya dengan FPB.']},
+ {h:'1. Simetri lipat',p:'Bangun dilipat pada sumbu simetri sehingga kedua bagian berimpit. Titik, sisi, dan sudut yang bersesuaian sama ukurannya.'},
+ {h:'2. Simetri putar',p:'Bangun tetap sama setelah diputar 180° pada titik pusat simetri.'},
+ {h:'3. Segi banyak dan simetri',tb:[['Bangun','Sumbu simetri lipat','Simetri putar'],['Persegi','4','ya'],['Persegi panjang','2','ya'],['Jajargenjang','0','ya'],['Belah ketupat','2','ya'],['Layang-layang','1','tidak'],['Segitiga sama sisi','3','tidak']]}],
+ sum:['Simetri putar: sama setelah diputar 180°.']},
+'m6/mtk/1':{intro:'Huruf atau simbol mewakili bilangan yang belum diketahui.',s:[
+ {h:'Menyusun kalimat',p:'Harga 3 kue masing-masing x rupiah: 3 × x.'},
+ {h:'Mencari nilai',p:'Seperti timbangan seimbang: x + 9 = 20 → x = 11; 5 × x = 35 → x = 7.'}],
+ sum:['Gunakan operasi kebalikan.']},
+'m6/mtk/2':{intro:'Mengalikan pecahan dan bilangan kebalikan.',s:[
+ {h:'1. Pecahan × pecahan',p:'Pembilang × pembilang, penyebut × penyebut: 2/3 × 3/5 = 6/15 = 2/5. Pecahan campuran diubah dulu ke pecahan biasa.'},
+ {h:'2. Bilangan kebalikan',p:'Dua bilangan saling kebalikan jika hasil kalinya 1. Kebalikan 3/4 adalah 4/3; kebalikan 5 adalah 1/5.'}],
+ sum:['Kali pecahan dengan pecahan kurang dari 1 → hasil lebih kecil.']},
 'm6/mtk/3':{intro:'Membagi pecahan.',s:[
- {h:'Kebalikan',p:'Kebalikan 3/4 adalah 4/3.'},
- {h:'Pembagian',p:'Membagi dengan pecahan sama dengan mengalikan dengan kebalikannya. 2/3 : 1/6 = 2/3 × 6/1 = 12/3 = 4.'}],
- sum:['Bagi → kali kebalikan.','Sederhanakan hasilnya.']},
-'m6/mtk/4':{intro:'Kelipatan dan perbandingan dua besaran.',s:[
- {h:'Berapa kali lipat',p:'Bandingkan dengan pembagian. Pita 36 cm dan 12 cm: 36 : 12 = 3 kali.'},
- {h:'Bagian dari',p:'2/3 dari 18 = 2/3 × 18 = 12.'}],
- sum:['"Berapa kali" → bagi.','"Bagian dari" → kali pecahan.']},
+ {h:'1. Pecahan : pecahan',p:'Kalikan dengan kebalikan pembagi: 2/3 : 1/6 = 2/3 × 6 = 4.'},
+ {h:'2. Besaran per satuan',p:'Pita 2/5 m beratnya 6/5 g → berat per meter = 6/5 : 2/5 = 3 g.'}],
+ sum:['Bagi = kali kebalikan.']},
+'m6/mtk/4':{intro:'Menyatakan perbandingan sebagai kelipatan dari nilai dasar.',s:[
+ {h:'Kelipatan',p:'Lemparan 36 m dan 12 m: 36 : 12 = 3 kali. Kelipatan bisa berupa desimal atau pecahan, misalnya 0,5 kali atau 2/3 kali.'},
+ {h:'Mencari nilai',p:'Nilai dasar × kelipatan = nilai yang dibandingkan.'}],
+ sum:['Kelipatan = nilai yang dibandingkan : nilai dasar.']},
 'm6/mtk/5':{intro:'Menghitung dengan desimal dan pecahan biasa.',s:[
- {h:'Mengubah bentuk',tb:[['Pecahan','Desimal'],['1/2','0,5'],['1/4','0,25'],['3/4','0,75'],['1/5','0,2'],['1/8','0,125']]},
- {h:'Menjumlah desimal',p:'Luruskan tanda koma, lalu jumlahkan seperti biasa. 2,4 + 1,7 = 4,1.'}],
- sum:['Samakan bentuknya dulu.','Luruskan koma saat menjumlah.']},
+ {h:'1. Desimal',p:'Luruskan koma saat menjumlah: 2,4 + 1,7 = 4,1.'},
+ {h:'2. Pecahan',p:'Samakan penyebut untuk menjumlah atau mengurangi.'},
+ {h:'3. Campuran',p:'Samakan bentuknya dulu. Jika desimalnya tidak berhenti, gunakan pecahan.',tb:[['Pecahan','Desimal'],['1/2','0,5'],['1/4','0,25'],['3/4','0,75'],['1/5','0,2']]}],
+ sum:['Samakan bentuk bilangan.']},
 'm6/mtk/6':{intro:'Luas lingkaran dan memperkirakan luas.',s:[
- {h:'Luas lingkaran',p:'L = π × r × r. Gunakan π = 22/7 jika jari-jari kelipatan 7, atau 3,14 untuk lainnya.',ex:[['r = 14 cm','22/7 × 14 × 14 = <b>616 cm²</b>.']]},
- {h:'Memperkirakan luas',p:'Untuk bangun tidak beraturan, hitung kotak penuh dan setengah kotak pada kertas berpetak.'}],
- sum:['Diameter = 2 × jari-jari.','Satuan luas: cm².']},
-'m6/mtk/7':{intro:'Menghitung banyak cara menyusun dan memilih.',s:[
- {h:'Urutan',p:'Jika urutan penting, kalikan banyak pilihan di setiap posisi. 3 anak berbaris: 3 × 2 × 1 = 6 cara.'},
- {h:'Pasangan',p:'3 baju dan 2 celana: 3 × 2 = 6 pasangan.'},
- {h:'Kombinasi',p:'Jika urutan tidak penting, misalnya pertandingan antar 5 tim: 5 × 4 : 2 = 10 pertandingan.'}],
- sum:['Urutan penting → kalikan saja.','Tidak penting → bagi untuk menghapus yang kembar.']},
-'m6/mtk/8':{intro:'Kecepatan menunjukkan jarak yang ditempuh setiap satuan waktu.',s:[
+ {h:'1. Luas lingkaran',p:'Lingkaran dipotong kecil-kecil dan disusun mendekati jajargenjang, sehingga L = π × r × r (π ≈ 3,14 atau 22/7). Keliling = 2 × π × r, diameter = 2 × r.'},
+ {h:'2. Memperkirakan luas',p:'Hitung petak penuh dan setengah petak pada kertas berpetak, atau dekati bentuknya dengan segitiga/trapesium.'}],
+ sum:['L = π × r × r.','Setengah lingkaran = ½ luas lingkaran.']},
+'m6/mtk/7':{intro:'Menghitung banyak susunan dan pilihan.',s:[
+ {h:'1. Urutan',p:'Gunakan diagram pohon atau tabel. 3 anak berlari: 3 × 2 × 1 = 6 urutan.'},
+ {h:'2. Kombinasi',p:'Urutan tidak diperhatikan. 5 tim saling bertanding sekali: 5 × 4 : 2 = 10 pertandingan.'}],
+ sum:['Urutan → kalikan.','Kombinasi → hapus yang sama.']},
+'m6/mtk/8':{intro:'Kecepatan = jarak per satuan waktu.',s:[
  {h:'Rumus',tb:[['Dicari','Rumus'],['Kecepatan','jarak : waktu'],['Jarak','kecepatan × waktu'],['Waktu','jarak : kecepatan']]},
- {h:'Contoh',ex:[['180 km dalam 3 jam','180 : 3 = <b>60 km/jam</b>.']]}],
- sum:['Perhatikan satuan: km/jam, m/detik.']},
-'m6/mtk/9':{intro:'Volume balok dan tabung.',s:[
- {h:'Balok',p:'V = panjang × lebar × tinggi.'},
- {h:'Tabung',p:'V = luas alas × tinggi = π × r × r × t.',ex:[['r = 7 cm, t = 10 cm','22/7 × 7 × 7 × 10 = <b>1.540 cm³</b>.']]}],
- sum:['Volume = luas alas × tinggi.','1 liter = 1.000 cm³.']},
-'m6/mtk/10':{intro:'Perbandingan (rasio) membandingkan dua besaran.',s:[
- {h:'Menyederhanakan',p:'Bagi kedua bilangan dengan FPB-nya. 12 : 18 = 2 : 3.'},
- {h:'Membagi menurut perbandingan',p:'Perbandingan 2 : 3 dengan jumlah 25: bagian pertama = 2/5 × 25 = 10.'}],
- sum:['Rasio ditulis a : b.','Jumlah bagian = a + b.']},
-'m6/mtk/11':{intro:'Gambar bisa diperbesar atau diperkecil dengan skala.',s:[
- {h:'Skala peta',p:'Skala 1 : 100.000 artinya 1 cm di peta = 100.000 cm = 1 km sebenarnya.'},
- {h:'Perbesaran',p:'Jika gambar diperbesar 2 kali, setiap sisinya menjadi 2 kali lebih panjang.'}],
- sum:['Jarak sebenarnya = jarak peta × skala.','Ubah cm ke km: bagi 100.000.']},
+ {h:'Mengubah satuan',p:'60 km/jam = 60.000 m per 60 menit = 1.000 m/menit.'}],
+ sum:['Samakan satuan dulu.']},
+'m6/mtk/9':{intro:'Volume bangun ruang.',s:[
+ {h:'Balok dan prisma',p:'Balok = p × l × t. Prisma = luas alas × tinggi (alas segitiga, trapesium, dll).'},
+ {h:'Tabung',p:'Luas alas lingkaran × tinggi = π × r × r × t.'},
+ {h:'Limas dan kerucut',p:'⅓ × luas alas × tinggi. Volumenya sepertiga prisma/tabung yang alas dan tingginya sama.'}],
+ sum:['Prisma, tabung: alas × tinggi.','Limas, kerucut: ⅓ × alas × tinggi.']},
+'m6/mtk/10':{intro:'Perbandingan dua besaran ditulis A : B.',s:[
+ {h:'1. Perbandingan',p:'Nilai perbandingan = A dibagi B.'},
+ {h:'2. Kesamaan dan penyederhanaan',p:'Kalikan atau bagi kedua suku dengan bilangan sama: 12 : 18 = 2 : 3.'},
+ {h:'3. Penerapan',p:'Membagi 25 menurut 2 : 3 → bagian pertama 2/5 × 25 = 10. Bayangan benda sebanding dengan tingginya.'}],
+ sum:['Jumlah bagian = jumlah suku perbandingan.']},
+'m6/mtk/11':{intro:'Memperbesar dan memperkecil gambar.',s:[
+ {h:'1–2. Bangun sebangun',p:'Sudut bersesuaian sama, sisi bersesuaian sebanding. Cara menggambar: kertas petak, sisi dan sudut, atau titik pusat.'},
+ {h:'3. Skala',p:'Skala 1 : 1.000 artinya 1 cm di gambar = 1.000 cm = 10 m sebenarnya.'}],
+ sum:['Sebenarnya = gambar × skala.']},
 'm6/mtk/12':{intro:'Perbandingan senilai dan berbalik nilai.',s:[
- {h:'Senilai',p:'Jika satu bertambah, yang lain ikut bertambah. Contoh: banyak buku dan harga total.'},
- {h:'Berbalik nilai',p:'Jika satu bertambah, yang lain berkurang. Contoh: 6 pekerja selesai 10 hari, 12 pekerja selesai 5 hari (6 × 10 = 12 × 5).'}],
- sum:['Senilai: bagi lalu kali.','Berbalik nilai: hasil kalinya tetap.']},
+ {h:'1–3. Senilai',p:'Jika x menjadi n kali, y juga n kali. Grafiknya garis lurus melalui titik O. Bentuk umum y = k × x.'},
+ {h:'4. Berbalik nilai',p:'Jika x menjadi n kali, y menjadi 1/n kali; x × y tetap. Contoh: panjang × lebar persegi panjang dengan luas tetap.'}],
+ sum:['Senilai: bagi lalu kali.','Berbalik nilai: hasil kali tetap.']},
 'm6/mtk/13':{intro:'Mengolah data dengan rata-rata dan sebaran.',s:[
- {h:'Rata-rata (mean)',p:'Jumlah semua data dibagi banyak data. Data 70, 80, 90 → (70 + 80 + 90) : 3 = 80.'},
- {h:'Sebaran',p:'Jangkauan = data terbesar − data terkecil. Semakin besar, data semakin tersebar.'}],
- sum:['Mean = jumlah : banyak.','Jangkauan = terbesar − terkecil.']},
-'m6/mtk/14':{intro:'Besaran dan satuan dalam kehidupan sehari-hari.',s:[
- {h:'Hubungan satuan',tb:[['Satuan','Sama dengan'],['1 km','1.000 m'],['1 ton','1.000 kg'],['1 liter','1.000 ml = 1 dm³'],['1 m³','1.000 liter'],['1 m²','10.000 cm²']]}],
- sum:['Turun satu tangga: kali; naik: bagi.','Satuan luas lompat 100, volume lompat 1.000.']}
+ {h:'1. Mean',p:'Mean = jumlah data : banyak data. Rata-rata bisa menyesatkan jika datanya sangat tidak merata.'},
+ {h:'2. Sebaran data',p:'Urutkan data di garis bilangan, buat tabel frekuensi dengan kelas interval, lalu histogram. Jangkauan = terbesar − terkecil.'}],
+ sum:['Mean = jumlah : banyak.']},
+'m6/mtk/14':{intro:'Besaran dan satuan dalam sistem metrik.',s:[
+ {h:'Besaran',p:'Diskret: dihitung (banyak siswa). Kontinu: diukur (tinggi, berat).'},
+ {h:'Hubungan satuan',tb:[['Jenis','Hubungan'],['Panjang','1 km = 1.000 m, 1 m = 100 cm, 1 cm = 10 mm'],['Luas','1 a = 100 m², 1 ha = 10.000 m²'],['Volume','1 m³ = 1.000 l = 1 kl, 1 l = 10 dl = 1.000 ml'],['Berat','1 t = 1.000 kg, 1 kg = 1.000 g, 1 g = 1.000 mg']]}],
+ sum:['Awalan kilo = ribu, senti = perseratus, mili = perseribu.']}
 });

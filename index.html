@@ -3892,7 +3892,7 @@ html[data-theme=malam] .plstick{background:#0a0f1e}
 <div class="syncpill" id="syncPill" hidden></div>
 <div class="toast" id="toast" hidden></div>
 
-<script src="av.js?v=223"></script>
+<script src="av.js?v=224"></script>
 <script>
 /* ---------- visual assets ---------- */
 const INK='#1B1E3D';
@@ -6095,58 +6095,157 @@ const m6Data=()=>{const n=R(4,6),v=Array.from({length:n},()=>R(60,95));const s=v
   if(r<.6)return Q(`Rata-rata dari ${v.join(', ')} adalah …`,numOpts(m,3,0),`Jumlah ${v.reduce((a,b)=>a+b,0)} : ${n} = ${m}.`);const sv=[...v].sort((a,b)=>a-b);return Q(`Nilai terbesar dikurangi terkecil (jangkauan) dari ${v.join(', ')} …`,numOpts(sv[n-1]-sv[0],3,0),`${sv[n-1]} − ${sv[0]} = ${sv[n-1]-sv[0]}.`)};
 const m6Besaran=()=>{const t=pick([['m³','liter',1000],['liter','ml',1000],['ton','kg',1000],['km','m',1000],['m²','cm²',10000],['dl','ml',100]]),n=R(2,9);return Q(`${n} ${t[0]} = … ${t[1]}`,mmCh(fmtN(n*t[2]),[fmtN(n*t[2]/10),fmtN(n*t[2]*10),fmtN(n*100===n*t[2]?n*10:n*100)]),`1 ${t[0]} = ${fmtN(t[2])} ${t[1]}.`)};
 /* --- susunan jalur per kelas (Bab buku SIBI) --- */
+/* --- tambahan agar sesuai subbab buku Kurikulum Merdeka (SIBI 2022) --- */
+const mmTerb=n=>{const s=['nol','satu','dua','tiga','empat','lima','enam','tujuh','delapan','sembilan','sepuluh','sebelas'];if(n<12)return s[n];if(n<20)return s[n-10]+' belas';
+  if(n<100)return s[Math.floor(n/10)]+' puluh'+(n%10?' '+s[n%10]:'');if(n<200)return 'seratus'+(n-100?' '+mmTerb(n-100):'');if(n<1000)return s[Math.floor(n/100)]+' ratus'+(n%100?' '+mmTerb(n%100):'');
+  if(n<2000)return 'seribu'+(n-1000?' '+mmTerb(n-1000):'');if(n<1e6)return mmTerb(Math.floor(n/1000))+' ribu'+(n%1000?' '+mmTerb(n%1000):'');return 'satu juta'};
+const mmYT=(ans,q,exp)=>Q(q,mmCh(ans?'Ya':'Tidak',['Ya','Tidak']),exp);
+const mmBS=(ans,q,exp)=>Q(q,mmCh(ans?'Benar':'Salah',['Benar','Salah']),exp);
+const mmDec=x=>String(Math.round(x*1000)/1000).replace('.',',');
+/* Kelas 1 */
+const m1Nol=()=>{const e=pick(['🍎','🐟','🍊']);return Q(`Keranjang ini kosong 🧺. Ada berapa ${e}?`,numOpts(0,3,0),`Tidak ada benda sama sekali ditulis 0 (nol).`)};
+const m1Bingkai=()=>{const n=R(3,9);const f=Array.from({length:10},(_,i)=>i<n?'🔴':'⚪');return Q(`Bingkai 10:<span class="big" style="display:block;letter-spacing:2px">${f.slice(0,5).join('')}<br>${f.slice(5).join('')}</span>Berapa lagi agar penuh 10?`,numOpts(10-n,2,0),`Ada ${n} bulatan merah. ${n} + ${10-n} = 10.`)};
+const m1Banding2=()=>{if(Math.random()<.35){const a=R(2,9),e=pick(MM_EMO),f=pick(MM_EMO.filter(x=>x!==e));return Q(`Bandingkan!<span class="big" style="display:block">${objs(e,a)}<br>${objs(f,a)}</span>`,mmCh('sama banyak',['atas lebih banyak','bawah lebih banyak']),`Keduanya ada ${a}, jadi sama banyak.`)}return m1Banding()};
+const MM_B1=[['🕐','jam dinding','lengkung'],['🍽️','piring','lengkung'],['🪙','uang logam','lengkung'],['🍪','kue bulat','lengkung'],['📖','buku','segi empat'],['🚪','pintu','segi empat'],['🖼️','bingkai foto','segi empat'],['📱','layar ponsel','segi empat'],['📐','penggaris segitiga','segitiga'],['⚠️','rambu peringatan','segitiga'],['⛺','tenda','segitiga']];
+const m1Bentuk2=()=>{const r=Math.random();if(r<.55){const t=pick(MM_B1);return Q(`${t[1][0].toUpperCase()+t[1].slice(1)} berbentuk …<span class="big">${t[0]}</span>`,mmCh(t[2],['lengkung','segitiga','segi empat']),`${t[1]} berbentuk ${t[2]}.`)}
+  if(r<.8){const k=pick(['lengkung','segitiga','segi empat']),y=pick(MM_B1.filter(x=>x[2]===k)),n=shuffle(MM_B1.filter(x=>x[2]!==k)).slice(0,3);return Q(`Mana yang berbentuk ${k}?`,mmCh(`${y[0]} ${y[1]}`,n.map(x=>`${x[0]} ${x[1]}`)),`${y[1]} berbentuk ${k}.`)}
+  return Q(pick(['Dua segitiga yang sama disatukan dapat membentuk …','Dua segitiga sama besar digabung sisinya dapat menjadi …']),mmCh('segi empat',['lingkaran','bentuk lengkung','segitiga besar']),`Dua segitiga yang sama dapat disusun menjadi segi empat.`)};
+const m1Kelompok2=()=>{const t=pick([['🔴','🔵','warna'],['🐘','🐭','ukuran']]);const n=R(1,3),m=4-n;const it=shuffle(Array(n).fill(t[0]).concat(Array(m).fill(t[1])));return Q(`Kelompokkan menurut ${t[2]}. Berapa banyak ${t[0]}?<span class="big">${it.join(' ')}</span>`,numOpts(n,2,0),`Ada ${n} ${t[0]}.`)};
+const m1Maju20=()=>{const up=Math.random()<.5,n=up?R(10,16):R(14,20),s=up?[n,n+1,n+2,'?']:[n,n-1,n-2,'?'],a=up?n+3:n-3;return Q(mmF(s.join(', ')),numOpts(a,2,0),`Hitung ${up?'maju':'mundur'}: ${a}.`)};
+const m1Urut20=()=>{const L=[...new Set([R(5,20),R(5,20),R(5,20)])];if(L.length<3)return m1Urut20();const s=[...L].sort((a,b)=>a-b);return Q(`Urutkan dari yang terkecil: ${L.join(', ')}`,mmCh(s.join(', '),[[...s].reverse().join(', '),[s[1],s[0],s[2]].join(', '),[s[0],s[2],s[1]].join(', ')]),`Terkecil ${s[0]}, lalu ${s[1]}, terbesar ${s[2]}.`)};
+const m1Lebih=()=>{const a=R(10,20),b=R(3,a-1),x=pick(['Rani','Dodi','Wati']),y=pick(['Bimo','Sela','Tia']);return Q(`${x} punya ${a} kelereng, ${y} punya ${b}. Kelereng ${x} lebih banyak … buah.`,numOpts(a-b,3,0),`Selisih = ${a} − ${b} = ${a-b}.`)};
+const m1Buat10=()=>{const a=R(6,9),b=R(11-a,9);return Q(`${mmF(`${a} + ${b} = ?`)}Pakai cara membuat 10.`,numOpts(a+b,3,0),`${a} + ${10-a} = 10, sisa ${b-(10-a)}. 10 + ${b-(10-a)} = ${a+b}.`)};
+const m1Ganda=()=>{const a=R(1,5);return Q(mmF(`${a} + ${a} = ?`),numOpts(a+a,2,0),`Penjumlahan berulang: ${a} + ${a} = ${a*2}.`)};
+const m1Tinggi=()=>{const nm=shuffle(['Tanaman A','Tanaman B','Tanaman C']),v=shuffle([R(2,4),R(5,7),R(8,10)]);const hi=Math.random()<.5,i=v.indexOf(hi?Math.max(...v):Math.min(...v));return Q(`Tinggi ${nm[0]} ${v[0]} kotak, ${nm[1]} ${v[1]} kotak, ${nm[2]} ${v[2]} kotak. Mana yang paling ${hi?'tinggi':'pendek'}?`,mmCh(nm[i],nm),`${nm[i]} ${v[i]} kotak.`)};
+const m1Ukur=()=>{const t=pick([['Mengukur panjang meja dengan jengkal harus dimulai dari …','ujung meja',['tengah meja','mana saja','kaki meja']],['Saat mengukur dengan klip, klip harus disusun …','rapat dan lurus',['berjarak','bertumpuk','miring']],['Meja diukur dengan pensil dan dengan penghapus. Angka hasilnya …','berbeda',['selalu sama','nol','tidak bisa diukur']]]);return Q(t[0],mmCh(t[1],t[2]),`${t[0].replace(' …','')} ${t[1]}.`)};
+const m1Tabel=()=>{const it=shuffle([['Kucing','🐱'],['Ikan','🐟'],['Burung','🐦']]),v=it.map(()=>R(1,7));const tb=`<table class="mmtab"><tr><th>Hewan</th><th>Banyak</th></tr>${it.map((x,i)=>`<tr><td>${x[1]} ${x[0]}</td><td>${v[i]}</td></tr>`).join('')}</table>`;
+  if(Math.random()<.5)return Q(`Hewan peliharaan murid kelas 1:${tb}Jumlah ${it[0][0].toLowerCase()} dan ${it[1][0].toLowerCase()} …`,numOpts(v[0]+v[1],3,0),`${v[0]} + ${v[1]} = ${v[0]+v[1]}.`);return Q(`Hewan peliharaan murid kelas 1:${tb}Banyak ${it[2][0].toLowerCase()} …`,numOpts(v[2],2,0),`Lihat baris ${it[2][0]}: ${v[2]}.`)};
+/* Kelas 2 */
+const m2Tempat3=()=>{const p=R(2,4),s=R(0,9),n=p*10+s;return Q(`${n} = ${p-1} puluhan dan … satuan`,numOpts(s+10,3,0),`${n} = ${(p-1)*10} + ${s+10}. Satu puluhan bisa ditukar 10 satuan.`)};
+const m2Story2=()=>{const r=Math.random();if(r<.5){const a=R(10,25),b=R(10,25),c=R(5,20);return Q(`Ada ${a} apel merah, ${b} apel hijau, dan ${c} apel kuning. Jumlah semua apel …`,numOpts(a+b+c,6,0),`${a} + ${b} + ${c} = ${a+b+c}.`)}
+  const a=R(30,60),b=R(10,a-5);return Q(`Kelas A mengumpulkan ${a} botol, kelas B ${b} botol. Selisih botolnya …`,numOpts(a-b,5,0),`Selisih = ${a} − ${b} = ${a-b}.`)};
+const m2Urai=()=>{const t=pick([['Persegi dipotong menurut garis diagonalnya menjadi … segitiga',2],['Segi enam beraturan dapat diurai menjadi … segitiga sama besar',6],['Persegi panjang dipotong dua garis diagonalnya menjadi … segitiga',4]]);return Q(t[0],numOpts(t[1],2,1),`Jawabannya ${t[1]}.`)};
+const m2Ruang2=()=>{const r=R(0,2);if(r===0)return Q(`Bangun ruang yang bisa menggelinding adalah …`,mmCh(pick(['tabung','bola','kerucut']),['kubus','balok']),`Bangun dengan permukaan lengkung bisa menggelinding.`);
+  if(r===1)return Q(`Bangun ruang yang semua permukaannya datar adalah …`,mmCh(pick(['kubus','balok']),['bola','tabung','kerucut']),`Kubus dan balok hanya punya permukaan datar.`);return Q(`Bangun yang dibatasi garis lengkung (tanpa sisi lurus) adalah …`,mmCh('lingkaran',['segitiga','segi empat','segi lima']),`Lingkaran adalah bentuk lengkung.`)};
+const m2Kiri=()=>{const it=shuffle([['📚','buku'],['✏️','pensil'],['🎒','tas'],['🧢','topi']]).slice(0,3),i=1,kn=Math.random()<.5;return Q(`Dari kiri ke kanan: ${it.map(x=>x[0]).join(' ')}<br>Benda di sebelah ${kn?'kanan':'kiri'} ${it[i][1]} adalah …`,mmCh(it[kn?2:0][1],it.map(x=>x[1]).concat(['topi','buku']).filter((x,j,a)=>a.indexOf(x)===j)),`Di sebelah ${kn?'kanan':'kiri'} ${it[i][1]} ada ${it[kn?2:0][1]}.`)};
+const m2PolaSuara=()=>{const t=pick([['tepuk','hentak'],['lompat','duduk'],['🔴','🔵'],['▲','●']]),k=pick([[0,0,1],[0,1],[0,1,1]]);const seq=[];for(let i=0;i<k.length*2+1;i++)seq.push(t[k[i%k.length]]);const nx=t[k[seq.length%k.length]];return Q(`Lanjutkan pola: ${seq.join(', ')}, …`,mmCh(nx,t),`Bagian yang berulang: ${k.map(j=>t[j]).join(', ')}.`)};
+const m2Pecahan2=()=>Math.random()<.3?mmYT(false,`Roti dipotong menjadi 2 bagian, satu besar dan satu kecil. Apakah setiap bagian bernilai setengah?`,`Setengah harus 2 bagian yang sama besar.`):m2Pecahan();
+const m2Jam=()=>{const r=R(0,2),h=R(1,12);if(r===0)return Q(`Jarum pendek menunjuk angka ${h} dan jarum panjang menunjuk angka 12. Pukul …`,mmCh(`${h}.00`,[`12.${String(h*5).padStart(2,'0')}`,`${h===12?1:h+1}.00`,`${h===1?12:h-1}.00`]),`Jarum panjang di 12 berarti jam tepat: pukul ${h}.00.`);
+  if(r===1){const t=pick([['Sarapan','pagi'],['Makan siang','siang'],['Tidur malam','malam'],['Bermain sepulang sekolah','sore']]);return Q(`${t[0]} biasanya dilakukan pada waktu …`,mmCh(t[1],['pagi','siang','sore','malam']),`${t[0]}: ${t[1]}.`)}
+  const t=pick([['tidur malam','mandi'],['bersekolah','menggosok gigi'],['menonton film','memakai sepatu']]);return Q(`Mana yang lebih lama?`,mmCh(t[0],[t[1]]),`${t[0]} lebih lama daripada ${t[1]}.`)};
+const m2BeratTB=()=>{const a=R(4,12),b=R(2,12);if(a===b)return m2BeratTB();return Q(`Buku seimbang dengan ${a} kelereng. Kotak pensil seimbang dengan ${b} kelereng. Mana yang lebih berat?`,mmCh(a>b?'buku':'kotak pensil',['buku','kotak pensil']),`${Math.max(a,b)} kelereng lebih banyak, jadi lebih berat.`)};
+const m2Lebihnya=()=>{const n=R(20,95),k=R(1,5),up=Math.random()<.5;return Q(`Bilangan ${mmTerb(k)} ${up?'lebihnya':'kurangnya'} dari ${n} adalah …`,numOpts(up?n+k:n-k,3,0),`${n} ${up?'+':'−'} ${k} = ${up?n+k:n-k}.`)};
+const m2PiktoKey=()=>{const k=2,it=shuffle([['Kelereng','🔵'],['Layang-layang','🪁'],['Gasing','🌀']]),v=it.map(()=>R(1,5));const tb=`<span class="mmtbl">${it.map((x,i)=>`<span><b>${x[0]}</b> ${x[1].repeat(v[i])}</span>`).join('')}</span><small>1 gambar = ${k} anak</small>`;const i=R(0,2);
+  return Q(`Permainan kesukaan:${tb}Banyak anak yang suka ${it[i][0].toLowerCase()} …`,numOpts(v[i]*k,2,0),`${v[i]} gambar × ${k} = ${v[i]*k} anak.`)};
+/* Kelas 3 */
+const m3Tukar=()=>{const a=R(2,9),b=R(2,9);if(Math.random()<.5)return Q(mmF(`${a} × ${b} = ${b} × …`),numOpts(a,2,1),`Perkalian bisa ditukar: ${a} × ${b} = ${b} × ${a}.`);const c=R(2,6),n=a*c;return Q(`${n} dikurangi ${a} berulang-ulang sampai habis. Berapa kali pengurangan?`,numOpts(c,2,1),`Pembagian = pengurangan berulang: ${n} : ${a} = ${c}.`)};
+const m3Kalimat2=()=>{const a=R(10,40),b=R(5,30),c=a+b;return Math.random()<.5?Q(mmF(`… − ${b} = ${a}`),numOpts(c,5,0),`… = ${a} + ${b} = ${c}.`):m3Kalimat()};
+const m3Satuan2=()=>{const r=R(0,3);if(r===0){const n=R(2,9);return Q(`${n} kg = … ons`,numOpts(n*10,5,0),`1 kg = 10 ons.`)}if(r===1){const n=R(2,9);return Q(`${n} ons = … gram`,numOpts(n*100,100,0),`1 ons = 100 gram.`)}
+  if(r===2){const m=R(1,3),c=R(5,95);return Q(`${m} m ${c} cm = … cm`,numOpts(m*100+c,10,0),`${m} m = ${m*100} cm. ${m*100} + ${c} = ${m*100+c} cm.`)}const n=R(2,9);return Q(`${n} m = … cm`,numOpts(n*100,50,0),`1 m = 100 cm.`)};
+const m3Alat=()=>{const t=pick([['panjang pensil','penggaris'],['tinggi badan','pengukur tinggi badan'],['berat gula','timbangan dapur'],['panjang lapangan','meteran gulung']]);return Q(`Alat yang tepat untuk mengukur ${t[0]} adalah …`,mmCh(t[1],['penggaris','meteran gulung','timbangan dapur','pengukur tinggi badan','jam'].filter(x=>x!==t[1])),`${t[0]}: ${t[1]}.`)};
+const m3Garis3=()=>{const r=R(0,2);if(r===0){const t=pick([['memanjang ke dua arah tanpa ujung','garis'],['punya satu pangkal dan memanjang ke satu arah','sinar garis'],['punya dua ujung dan panjangnya tertentu','ruas garis']]);return Q(`Garis yang ${t[0]} disebut …`,mmCh(t[1],['garis','sinar garis','ruas garis']),`${t[1]}: ${t[0]}.`)}
+  if(r===1){const n=R(2,9);return Q(`${n} cm = … mm`,numOpts(n*10,5,0),`1 cm = 10 mm.`)}const y=pick(['H','N','E']);return Q(`Huruf mana yang memiliki garis sejajar?`,mmCh(y,['A','V','X','O']),`Huruf ${y} punya garis yang tidak pernah bertemu.`)};
+const m3Sudut3=()=>{if(Math.random()<.4){const t=pick([[180,'lurus'],[pick([200,250,300]),'refleks'],[90,'siku-siku']]);return Q(`Sudut ${t[0]}° disebut sudut …`,mmCh(t[1],['lurus','refleks','siku-siku','lancip','tumpul'].filter(x=>x!==t[1]).slice(0,3)),`${t[0]}° → sudut ${t[1]}.`)}return m3Sudut()};
+const m3Turus=()=>{const w=pick(['MATEMATIKA','STATISTIKA','INDONESIA','PANCASILA','BELAJAR']),L=[...new Set(w)].filter(c=>w.split(c).length>2),c=pick(L.length?L:[w[0]]),n=w.split(c).length-1;return Q(`Pada kata <b>${w}</b>, huruf ${c} muncul … kali`,numOpts(n,2,1),`Hitung dengan turus: ${'|'.repeat(n)} = ${n}.`)};
+const m3Jangkau=()=>{const v=Array.from({length:5},()=>R(55,100)),mx=Math.max(...v),mn=Math.min(...v);if(mx===mn)return m3Jangkau();return Q(`Nilai ulangan: ${v.join(', ')}. Jangkauannya …`,numOpts(mx-mn,4,0),`Jangkauan = terbesar − terkecil = ${mx} − ${mn} = ${mx-mn}.`)};
+/* Kelas 4 */
+const m4Baca=()=>{const n=R(1101,8899),w=[n+100,n+10,n+1000].map(mmTerb);return Math.random()<.5?Q(`${fmtN(n)} dibaca …`,mmCh(mmTerb(n),w),`Baca dari kiri: ${mmTerb(n)}.`)
+  :Q(`"${mmTerb(n)}" ditulis …`,mmCh(fmtN(n),[n+10,n+100,n-1000].map(fmtN)),`Ditulis ${fmtN(n)}.`)};
+const m4Sisa=()=>{const b=R(3,9),q=R(3,11),s=R(1,b-1),n=b*q+s;return Q(`${n} : ${b} = ${q} sisa …`,numOpts(s,2,0),`${b} × ${q} = ${b*q}. ${n} − ${b*q} = ${s}.`)};
+const m4Pec1=()=>{let a=R(2,10),b=R(2,10);if(a===b)b=a+1;return Q(`Mana yang lebih besar: 1/${a} atau 1/${b}?`,mmCh(`1/${Math.min(a,b)}`,[`1/${Math.max(a,b)}`,'sama besar']),`Pembilang 1: penyebut lebih kecil berarti bagiannya lebih besar.`)};
+const m4Persen=()=>{const r=R(0,2);if(r===0){const n=R(5,95);return Q(`${mmDec(n/100)} = … %`,numOpts(n,5,0),`Kalikan 100%: geser koma 2 langkah ke kanan.`)}if(r===1){const n=pick([10,20,25,50,75]);return Q(`${n}% ditulis sebagai desimal …`,mmCh(mmDec(n/100),[mmDec(n/10),mmDec(n/1000),String(n)]),`${n}% = ${n}/100 = ${mmDec(n/100)}.`)}
+  const p=pick([10,20,25,50]),h=pick([20000,40000,60000,80000]);return Q(`Harga baju Rp${fmtN(h)} mendapat diskon ${p}%. Besar diskonnya …`,mmCh('Rp'+fmtN(h*p/100),['Rp'+fmtN(h*p/1000),'Rp'+fmtN(h-h*p/100),'Rp'+fmtN(h*p/100+1000)]),`${p}% × ${fmtN(h)} = ${fmtN(h*p/100)}.`)};
+const m4PolaB=()=>{const up=Math.random()<.6,e=pick(['🔵','⭐','🟩']),d=R(1,3),st=up?R(1,3):R(8,10);const c=[0,1,2].map(i=>up?st+i*d:st-i*d);const nx=up?st+3*d:st-3*d;if(nx<1)return m4PolaB();
+  return Q(`Pola ${up?'membesar':'mengecil'}:<span class="big" style="display:block;font-size:22px">${c.map(n=>e.repeat(n)).join('&nbsp;&nbsp;|&nbsp;&nbsp;')}</span>Banyak ${e} pada kumpulan berikutnya …`,numOpts(nx,2,1),`Selisihnya tetap ${d}. ${c[2]} ${up?'+':'−'} ${d} = ${nx}.`)};
+const m4PolaN=()=>{const st=R(2,40),d=pick([3,4,5,6,7,9,11,25]),dn=Math.random()<.35;const s=[0,1,2,3].map(i=>dn?st+80-i*d:st+i*d),nx=dn?st+80-4*d:st+4*d;return Q(mmF(`${s.join(', ')}, …`),numOpts(nx,d,0),`Selisih tetap ${d}: ${s[3]} ${dn?'−':'+'} ${d} = ${nx}.`)};
+const m4Cair=()=>{const r=R(0,3);if(r===0){const n=R(2,9);return Q(`${n} liter = … ml`,numOpts(n*1000,500,0),`1 liter = 1.000 ml.`)}if(r===1){const a=R(1,3),b=pick([250,500,750]);return Q(`${a} liter + ${b} ml = … ml`,numOpts(a*1000+b,250,0),`${a*1000} + ${b} = ${a*1000+b} ml.`)}
+  if(r===2){const n=pick([100,250,500]);return Q(`${n} cm³ = … ml`,numOpts(n,50,0),`1 cm³ = 1 ml.`)}const n=R(2,6);return Q(`${n} m² = … cm²`,mmCh(fmtN(n*10000),[fmtN(n*100),fmtN(n*1000),fmtN(n*100000)]),`1 m² = 10.000 cm².`)};
+const m4Segitiga=()=>{const r=R(0,1);if(r===0){const t=pick([['tiga sisinya sama panjang','sama sisi'],['dua sisinya sama panjang','sama kaki'],['ketiga sisinya berbeda','sembarang']]);return Q(`Segitiga yang ${t[0]} disebut segitiga …`,mmCh(t[1],['sama sisi','sama kaki','sembarang','siku-siku']),`Segitiga ${t[1]}: ${t[0]}.`)}
+  const t=pick([['salah satu sudutnya 90°','siku-siku'],['ketiga sudutnya kurang dari 90°','lancip'],['salah satu sudutnya lebih dari 90°','tumpul']]);return Q(`Segitiga yang ${t[0]} disebut segitiga …`,mmCh(t[1],['siku-siku','lancip','tumpul','sama sisi']),`Segitiga ${t[1]}: ${t[0]}.`)};
+const m4PiktoKey=()=>{const k=pick([2,4,5]),it=shuffle([['Naik bus','🚌'],['Naik sepeda','🚲'],['Jalan kaki','🚶']]),v=it.map(()=>R(1,6));const tb=`<span class="mmtbl">${it.map((x,i)=>`<span><b>${x[0]}</b> ${x[1].repeat(v[i])}</span>`).join('')}</span><small>Kunci: 1 gambar = ${k} siswa</small>`;const i=R(0,2);
+  return Q(`Cara berangkat sekolah:${tb}Banyak siswa yang ${it[i][0].toLowerCase()} …`,numOpts(v[i]*k,k,0),`${v[i]} × ${k} = ${v[i]*k} siswa.`)};
+/* Kelas 5 */
+const m5Uang=()=>{const a=R(1,9),b=R(1,9),c=R(1,9),n=a*10000+b*1000+c*100,k=R(0,2),nm=['lembar Rp10.000','lembar Rp1.000','keping Rp100'][k];return Q(`Rp${fmtN(n)} disusun dari uang Rp10.000, Rp1.000, dan Rp100 sesedikit mungkin. Banyak ${nm} …`,numOpts([a,b,c][k],2,0),`Rp${fmtN(n)} = ${a} × 10.000 + ${b} × 1.000 + ${c} × 100.`)};
+const MM_PRIMA=[2,3,5,7,11,13,17,19,23,29,31,37,41,43,47];
+const m5Prima2=()=>{const p=pick(MM_PRIMA.slice(3)),bad=shuffle([9,15,21,25,27,33,35,39,49,51]).slice(0,3);return Q(`Manakah bilangan prima?`,mmCh(p,bad),`${p} hanya habis dibagi 1 dan ${p}.`)};
+const m5Cerita=()=>{if(Math.random()<.5){let a=pick([3,4,5,6]),b=pick([4,6,8,9,10]);if(a===b)b=a+2;return Q(`Andi berenang setiap ${a} hari, Budi setiap ${b} hari. Hari ini mereka berenang bersama. Mereka akan bersama lagi setelah … hari`,numOpts(lcm(a,b),a,1),`KPK ${a} dan ${b} = ${lcm(a,b)}.`)}
+  const g=pick([4,6,8,12]),x=pick([2,3,5]),y=pick([3,4,7].filter(v=>v!==x&&gcd(v,x)===1));return Q(`Ada ${g*x} mawar dan ${g*y} melati dibagi sama banyak ke beberapa vas. Paling banyak ada … vas`,numOpts(g,3,1),`FPB ${g*x} dan ${g*y} = ${g}.`)};
+const m5Campuran=()=>{const b=R(1,4),d=pick([3,4,5,6]);let a=R(1,d-1);while(gcd(a,d)>1)a=R(1,d-1);if(Math.random()<.5)return Q(`${b} ${a}/${d} diubah menjadi pecahan biasa …`,mmCh(`${b*d+a}/${d}`,[`${b+a}/${d}`,`${b*a+d}/${d}`,`${b*d}/${d}`]),`${b} × ${d} + ${a} = ${b*d+a}, jadi ${b*d+a}/${d}.`);
+  const q=R(1,d-2),p=R(q+1,d-1),x=mmFr(p-q,d);return Q(mmF(`${b+1} ${p}/${d} − ${b} ${q}/${d} = ?`),mmCh(`1 ${x}`,[x,`2 ${x}`,`${2*b+1} ${x}`]),`Bagian bulat: ${b+1} − ${b} = 1. Pecahan: ${p}/${d} − ${q}/${d} = ${x}. Hasilnya 1 ${x}.`)};
+const m5Kurang=()=>{const d1=pick([2,3,4]),d2=pick([6,8,12].filter(x=>x%d1===0||lcm(x,d1)<=24)),a=R(1,d1-1),b=R(1,d2-1),L=lcm(d1,d2),n=a*L/d1-b*L/d2;if(n<=0)return m5Kurang();return Q(mmF(`${a}/${d1} − ${b}/${d2} = ?`),mmCh(mmFr(n,L),[`${Math.abs(a-b)}/${Math.abs(d1-d2)||1}`,mmFr(n+1,L),mmFr(a*L/d1+b*L/d2,L)]),`Samakan penyebut ${L}: ${a*L/d1}/${L} − ${b*L/d2}/${L} = ${n}/${L}.`)};
+const m5LuasDiag=()=>{const d1=R(2,10)*2,d2=R(3,12),nm=pick(['belah ketupat','layang-layang']);return Q(`Luas ${nm} dengan diagonal ${d1} cm dan ${d2} cm adalah … cm²`,numOpts(d1*d2/2,d2,0),`L = ½ × ${d1} × ${d2} = ${d1*d2/2} cm².`)};
+const m5Sudut3=()=>{if(Math.random()<.5){const t=pick([[180,'lurus'],[360,'penuh'],[0,'nol'],[pick([210,270,320]),'refleks']]);return Q(`Sudut ${t[0]}° disebut sudut …`,mmCh(t[1],['lurus','penuh','refleks','tumpul','nol'].filter(x=>x!==t[1]).slice(0,3)),`${t[0]}° = sudut ${t[1]}.`)}return m5Sudut()};
+const m5Segitiga=()=>{const r=R(0,2);if(r===0){const a=R(30,80),b=R(30,150-a);return Q(`Dua sudut segitiga ${a}° dan ${b}°. Sudut ketiga …`,mmCh(`${180-a-b}°`,[`${360-a-b}°`,`${90-Math.min(a,b)}°`,`${180-a}°`]),`Jumlah sudut segitiga 180°: 180° − ${a}° − ${b}° = ${180-a-b}°.`)}
+  if(r===1){const a=R(3,8),b=R(3,8),ok=Math.random()<.5,c=ok?R(Math.abs(a-b)+1,a+b-1):a+b+R(0,4);return mmYT(ok,`Apakah lidi ${a} cm, ${b} cm, dan ${c} cm dapat membentuk segitiga?`,`Dua sisi terpendek dijumlahkan harus lebih dari sisi terpanjang.`)}
+  const t=pick([[true,'Persegi juga termasuk persegi panjang.'],[true,'Segitiga sama sisi juga termasuk segitiga sama kaki.'],[false,'Jajargenjang memiliki sumbu simetri lipat.'],[true,'Belah ketupat termasuk jajargenjang.'],[false,'Semua persegi panjang adalah persegi.']]);return mmBS(t[0],t[1],t[0]?'Pernyataan ini benar.':'Pernyataan ini salah.')};
+/* Kelas 6 */
+const MM_PUTAR=[['persegi',true],['persegi panjang',true],['jajargenjang',true],['belah ketupat',true],['segi enam beraturan',true],['segitiga sama sisi',false],['layang-layang',false],['trapesium sama kaki',false],['segi lima beraturan',false]];
+const m6Simetri2=()=>{if(Math.random()<.5)return m6SimLipat();const t=pick(MM_PUTAR);return mmYT(t[1],`Apakah ${t[0]} memiliki simetri putar (tetap sama setelah diputar 180° pada titik pusatnya)?`,`${t[0]} ${t[1]?'memiliki':'tidak memiliki'} simetri putar.`)};
+const m6SimLipat=()=>{const t=pick(MM_SIM);return Q(`Banyak sumbu simetri lipat ${t[0]} adalah …`,numOpts(t[1],2,0),`${t[0]} punya ${t[1]} sumbu simetri lipat.`)};
+const m6Kebalikan=()=>{const a=R(1,6),b=R(a+1,9);if(Math.random()<.5){const n=R(2,9);return Q(`Kebalikan dari ${n} adalah …`,mmCh(`1/${n}`,[String(n),`${n}/${n}`,`-${n}`]),`${n} × 1/${n} = 1.`)}return Q(`Kebalikan dari ${a}/${b} adalah …`,mmCh(a===1?String(b):`${b}/${a}`,[`${a}/${b}`,`${a}/${b*2}`,`${b+a}/${b}`]),`${a}/${b} × ${b}/${a} = 1.`)};
+const m6PerSatuan=()=>{const a=pick([2,3,4]),k=R(2,6),b=a*k;return Q(`Pita ${a}/5 m beratnya ${b}/5 g. Berat pita per 1 m … g`,numOpts(k,2,1),`(${b}/5) : (${a}/5) = ${b} : ${a} = ${k} g.`)};
+const m6Lingkaran2=()=>{const r=Math.random();if(r<.4)return m6Lingkaran();if(r<.7){const j=pick([7,14,21]);return Q(`Keliling lingkaran dengan jari-jari ${j} cm (π = 22/7) adalah … cm`,mmCh(fmtN(2*22/7*j),[fmtN(22/7*j*j),fmtN(22/7*j),fmtN(4*22/7*j)]),`K = 2 × π × r = 2 × 22/7 × ${j} = ${fmtN(2*22/7*j)} cm.`)}
+  const j=pick([10,20]);return Q(`Luas setengah lingkaran dengan jari-jari ${j} cm (π = 3,14) adalah … cm²`,mmCh(mmDec(3.14*j*j/2),[mmDec(3.14*j*j),mmDec(3.14*j),mmDec(3.14*j*j/4)]),`½ × 3,14 × ${j} × ${j} = ${mmDec(3.14*j*j/2)} cm².`)};
+const m6Kec2=()=>{if(Math.random()<.5)return m6Kecepatan();const v=pick([6,12,30,60]);return Q(`${v} km/jam = … m/menit`,numOpts(v*1000/60,50,0),`${v} km = ${fmtN(v*1000)} m, 1 jam = 60 menit. ${fmtN(v*1000)} : 60 = ${v*1000/60} m/menit.`)};
+const m6Volume2=()=>{const r=R(0,3);if(r===0)return m6Volume();if(r===1){const a=R(3,8)*2,t=R(3,8),T=R(5,12);return Q(`Prisma segitiga: alas segitiga ${a} cm, tinggi segitiga ${t} cm, tinggi prisma ${T} cm. Volumenya … cm³`,numOpts(a*t/2*T,T*2,0),`V = luas alas × tinggi = (½ × ${a} × ${t}) × ${T} = ${a*t/2*T} cm³.`)}
+  if(r===2){const j=7,t=pick([3,6,9,12]);return Q(`Volume kerucut dengan jari-jari 7 cm dan tinggi ${t} cm (π = 22/7) adalah … cm³`,mmCh(fmtN(22/7*49*t/3),[fmtN(22/7*49*t),fmtN(22/7*7*t/3),fmtN(22/7*49*t/2)]),`V = ⅓ × π × r × r × t = ⅓ × 22/7 × 7 × 7 × ${t} = ${fmtN(22/7*49*t/3)} cm³.`)}
+  const s=R(3,10),t=pick([3,6,9]);return Q(`Volume limas persegi dengan sisi alas ${s} cm dan tinggi ${t} cm adalah … cm³`,numOpts(s*s*t/3,s,0),`V = ⅓ × ${s} × ${s} × ${t} = ${s*s*t/3} cm³.`)};
+const m6Besaran2=()=>{const t=pick([['ha','m²',10000],['a','m²',100],['l','dl',10],['g','mg',1000],['kl','l',1000],['t','kg',1000],['km','m',1000]]),n=R(2,9);return Q(`${n} ${t[0]} = … ${t[1]}`,mmCh(fmtN(n*t[2]),[fmtN(n*t[2]/10),fmtN(n*t[2]*10),fmtN(n+t[2])]),`1 ${t[0]} = ${fmtN(t[2])} ${t[1]}.`)};
+const m6Diskret=()=>{const t=pick([['banyak siswa','dihitung (diskret)'],['banyak kursi','dihitung (diskret)'],['tinggi badan','diukur (kontinu)'],['berat beras','diukur (kontinu)']]);return Q(`Besaran "${t[0]}" termasuk besaran yang …`,mmCh(t[1],['dihitung (diskret)','diukur (kontinu)']),`${t[0]}: ${t[1]}.`)};
+const m6Denah=()=>{const s=pick([100,200,500,1000]),cm=R(2,9);return Q(`Denah berskala 1 : ${fmtN(s)}. Panjang pada denah ${cm} cm. Panjang sebenarnya … m`,numOpts(cm*s/100,s/100,0),`${cm} × ${fmtN(s)} = ${fmtN(cm*s)} cm = ${cm*s/100} m.`)};
+const m6Berbalik2=()=>{const L=pick([24,36,48,60]),ps=[2,3,4,6,8,12].filter(x=>L%x===0&&x*x<L),p=pick(ps);return Q(`Persegi panjang dengan luas tetap ${L} cm². Jika lebarnya ${p} cm, panjangnya … cm`,numOpts(L/p,3,1),`Berbalik nilai: panjang × lebar = ${L}, jadi panjang = ${L} : ${p} = ${L/p} cm.`)};
 const MM_MERDEKA={
- 1:[['Ayo membilang sampai dengan 10','Menghitung, membandingkan, maju-mundur, pasangan bilangan',[m1Hitung,m1Banding,m1Maju,m1Pasang],'Hitung benda satu per satu sambil menunjuk. Pasangan bilangan 10: 1+9, 2+8, 3+7, 4+6, 5+5.'],
-    ['Penjumlahan sampai dengan 10','Cerita dan berbagai cara menjumlah',[m1Add10,m1AddStory],'Menjumlah = menggabungkan. Mulai dari bilangan yang besar, lalu hitung maju.'],
-    ['Pengurangan sampai dengan 10','Cerita, cara mengurangi, dan hubungannya dengan penjumlahan',[m1Sub10,m1SubRel,m1SubStory],'Mengurangi = mengambil. Jika 3 + 4 = 7, maka 7 − 4 = 3.'],
-    ['Mengenal bentuk','Bangun datar, bangun ruang, dan mengelompokkan benda',[m1Bentuk,m1Kelompok],'Bola dan kelereng berbentuk bola; dadu berbentuk kubus; kaleng susu berbentuk tabung.'],
-    ['Ayo membilang sampai dengan 20','Membaca, menulis, nilai tempat, dan membandingkan',[m1Baca20,m1Tempat20,m1Banding20],'Belasan = 1 puluhan + satuan. Contoh: 15 = 10 + 5.'],
-    ['Penjumlahan dan pengurangan sampai dengan 20','Lebih dari, kurang dari, dan selisih',[m1Add20,m1Sub20,m1Selisih],'Selisih = bilangan besar dikurangi bilangan kecil.'],
-    ['Mengukur panjang benda','Membandingkan dan mengukur dengan satuan tidak baku',[m1Panjang],'Ukur dengan benda yang sama, misalnya klip atau jengkal.'],
-    ['Mengenal diagram','Mengelompokkan data dan diagram gambar',[m1Diagram],'Hitung gambar di setiap baris untuk tahu banyaknya.']],
- 2:[['Ayo membilang sampai dengan 50','Nilai tempat dan membandingkan bilangan',[m2Tempat(50),m2Banding(50)],'Bilangan dua angka = puluhan + satuan. 37 = 3 puluhan + 7 satuan.'],
-    ['Penjumlahan dan pengurangan','Berbagai cara dan soal cerita',[m2Add,m2Sub,m2Story],'Jumlahkan satuan dulu, lalu puluhan. Jika satuan lebih dari 9, simpan 1 ke puluhan.'],
-    ['Bentuk di sekitar kita','Bangun datar dan bangun ruang',[m2Datar,m2Ruang],'Segitiga 3 sisi, persegi 4 sisi sama panjang, lingkaran tidak punya sudut.'],
-    ['Posisi benda dan pola','Letak benda dan pola bilangan',[m2Posisi,m2Pola],'Cari selisih dua bilangan berurutan untuk menemukan polanya.'],
-    ['Pecahan','Setengah dan seperempat',[m2Pecahan],'Setengah = dibagi 2 sama besar. Seperempat = dibagi 4 sama besar.'],
-    ['Pengukuran berat dan waktu','Lebih berat, lebih ringan, dan membaca jam',[m2Berat,m2Waktu],'Jarum pendek menunjukkan jam, jarum panjang menunjukkan menit.'],
-    ['Ayo membilang sampai dengan 100','Membaca, menulis, dan membandingkan',[m2Baca100,m2Banding(100),m2Tempat(100)],'Bandingkan puluhan dulu. Jika sama, bandingkan satuan.'],
-    ['Berbagai diagram','Diagram turus dan diagram gambar',[m2Diagram],'Satu ikat turus berisi 5 garis.']],
- 3:[['Bilangan cacah sampai 1.000','Nilai tempat, urutan, dan operasi hitung',[m3Tempat,m3Urut,m3Ops],'Nilai tempat: ratusan, puluhan, satuan. 482 = 400 + 80 + 2.'],
-    ['Kalimat matematika','Kalimat penjumlahan dan pengurangan',[m3Kalimat,m3KalimatStory],'Bilangan yang hilang dicari dengan operasi kebalikannya.'],
-    ['Pengukuran panjang dan berat','Satuan baku dan hubungan antarsatuan',[m3Satuan,m3Ukur],'1 m = 100 cm, 1 km = 1.000 m, 1 kg = 1.000 g.'],
-    ['Unsur-unsur bangun datar','Sisi, sudut, garis sejajar dan tegak lurus',[m3Sisi,m3Sudut,m3Garis],'Sudut siku-siku = 90°. Lancip kurang dari 90°, tumpul lebih dari 90°.'],
-    ['Penyajian data dalam tabel','Mengurutkan, membandingkan, dan membaca tabel',[m3Tabel],'Baca judul kolom dulu, lalu cari baris yang ditanyakan.']],
- 4:[['Bilangan cacah sampai 10.000','Nilai tempat, operasi hitung, faktor dan kelipatan',[mmTempatBesar(4),mmBandingBesar(10000),m4Urai,m4Ops,m4Faktor],'Faktor = bilangan yang membagi habis. Kelipatan = hasil perkalian berurutan.'],
-    ['Pecahan','Pecahan senilai, desimal, dan persen',[m4PecSama,m4Senilai,m4Desimal],'Pecahan senilai: kalikan pembilang dan penyebut dengan bilangan yang sama.'],
-    ['Pola gambar dan pola bilangan','Menemukan aturan pola',[m4Pola,m4PolaGambar],'Cari aturannya: ditambah, dikurangi, atau dikali berapa?'],
-    ['Pengukuran luas dan volume','Luas dengan persegi satuan dan volume dengan kubus satuan',[m4Luas,m4Volume],'Luas persegi panjang = p × l. Volume balok = p × l × t.'],
-    ['Bangun datar','Ciri-ciri, menyusun, dan mengurai bangun datar',[m4Ciri,m4Susun],'Persegi: 4 sisi sama panjang dan 4 sudut siku-siku.'],
-    ['Piktogram dan diagram batang','Membaca dan membandingkan data',[m4Diagram],'Tinggi batang menunjukkan banyaknya data.']],
- 5:[['Bilangan cacah sampai 100.000','Nilai tempat, membandingkan, dan operasi hitung',[mmTempatBesar(5),mmBandingBesar(100000),m5Ops],'Kerjakan perkalian bersusun dari satuan ke kiri.'],
-    ['KPK dan FPB','Kelipatan, faktor, dan faktorisasi prima',[sdKPK,sdFPB,m5Prima],'KPK = kelipatan bersama terkecil. FPB = faktor bersama terbesar.'],
-    ['Pecahan','Membandingkan, menjumlah, dan mengurangi pecahan',[m5Pecahan,m4Senilai],'Samakan penyebut dengan KPK sebelum menjumlahkan.'],
-    ['Keliling bangun datar','Segitiga, segiempat, dan segi banyak',[m5Keliling],'Keliling = jumlah semua panjang sisi.'],
-    ['Luas bangun datar','Segitiga, jajar genjang, trapesium, dan gabungan',[m5Luas,m4Luas],'Luas segitiga = ½ × alas × tinggi.'],
-    ['Sudut','Mengenal, mengukur, dan membandingkan sudut',[m5Sudut],'Satu putaran penuh 360°. Tiap angka pada jam = 30°.'],
-    ['Membandingkan karakteristik bangun datar','Segitiga dan segiempat',[m5Karakter,m4Ciri],'Trapesium punya tepat sepasang sisi sejajar.'],
-    ['Data','Mengumpulkan data, piktogram, dan diagram batang',[m5Data],'Baca skala pada diagram sebelum menghitung.'],
-    ['Bilangan cacah sampai 1.000.000','Nilai tempat, membandingkan, dan membulatkan',[mmTempatBesar(6),mmBandingBesar(1000000),m5Bulat],'Pembulatan: lihat angka di sebelah kanannya, 5 ke atas dibulatkan naik.']],
- 6:[['Simetri','Simetri lipat dan simetri putar',[m6Simetri],'Persegi: 4 sumbu simetri lipat dan simetri putar tingkat 4.'],
-    ['Simbol dan kalimat matematika','Memakai huruf sebagai pengganti bilangan',[m6Simbol],'Huruf x mewakili bilangan yang belum diketahui.'],
-    ['Perkalian pecahan','Pecahan × pecahan dan bilangan × pecahan',[m6KaliPec],'Kalikan pembilang dengan pembilang, penyebut dengan penyebut.'],
-    ['Pembagian pecahan','Pecahan : pecahan dan bilangan kebalikan',[m6BagiPec],'Membagi pecahan = mengalikan dengan kebalikannya.'],
-    ['Kelipatan dan perbandingan','Berapa kali lipat dan bagian dari',[m6Kelipatan],'"Berapa kali" dicari dengan pembagian.'],
-    ['Pecahan desimal dan pecahan biasa','Operasi campuran desimal dan pecahan',[m6Desimal],'Ubah ke bentuk yang sama dulu: semua desimal atau semua pecahan.'],
-    ['Luas berbagai bangun datar','Luas lingkaran dan memperkirakan luas',[m6Lingkaran,m5Luas],'Luas lingkaran = π × r × r. π ≈ 22/7 atau 3,14.'],
-    ['Urutan dan kombinasi','Banyak cara menyusun dan memilih',[m6Urutan],'Urutan diperhatikan → kalikan pilihan tiap posisi.'],
-    ['Kecepatan','Jarak, waktu, dan kecepatan',[m6Kecepatan],'Kecepatan = jarak : waktu.'],
-    ['Volume','Balok dan tabung',[m6Volume],'Volume tabung = luas alas × tinggi = π × r × r × t.'],
-    ['Perbandingan dan penerapannya','Rasio dan menyederhanakan perbandingan',[m6Rasio],'Sederhanakan perbandingan dengan membagi FPB-nya.'],
-    ['Perbesaran dan perkecilan gambar','Skala dan gambar berskala',[m6Skala],'Jarak sebenarnya = jarak peta × skala.'],
-    ['Perbandingan senilai dan berbalik nilai','Harga barang dan pekerja',[m6Senilai],'Senilai: satu naik, yang lain ikut naik. Berbalik nilai: satu naik, yang lain turun.'],
-    ['Pengolahan data','Rata-rata dan sebaran data',[m6Data,m5Data],'Rata-rata = jumlah semua data : banyak data.'],
-    ['Besaran dan satuan','Satuan panjang, luas, volume, dan berat',[m6Besaran,m3Satuan],'1 liter = 1.000 ml = 1 dm³; 1 m³ = 1.000 liter.']]};
+ 1:[['Ayo membilang sampai dengan 10','Menghitung, membandingkan, maju-mundur, pasangan bilangan',[m1Hitung,m1Nol,m1Bingkai,m1Banding2,m1Maju,m1Pasang],'Hitung benda satu per satu. Bingkai 10 membantu melihat berapa lagi agar genap 10.'],
+    ['Penjumlahan sampai dengan 10','Cerita penjumlahan, berbagai cara, soal cerita',[m1Add10,m1Ganda,m1Pasang,m1AddStory],'Menjumlah = menggabungkan. Hitung maju dari bilangan pertama, atau pakai pasangan bilangan.'],
+    ['Pengurangan sampai dengan 10','Cerita pengurangan, berbagai cara, hubungan dengan penjumlahan',[m1Sub10,m1SubRel,m1SubStory],'Mengurangi = mengambil. Jika 3 + 4 = 7, maka 7 − 4 = 3 dan 7 − 3 = 4.'],
+    ['Mengenal bentuk','Bentuk lengkung, segitiga, segi empat; mengelompokkan; menyusun',[m1Bentuk2,m1Kelompok2],'Jam dan piring berbentuk lengkung, buku segi empat, tenda segitiga.'],
+    ['Ayo membilang sampai dengan 20','Membaca, maju-mundur, nilai tempat, membandingkan',[m1Baca20,m1Maju20,m1Tempat20,m1Banding20,m1Urut20],'Bilangan 11–20 = 10 dan beberapa satuan. 15 = 1 puluhan dan 5 satuan.'],
+    ['Penjumlahan dan pengurangan sampai dengan 20','Lebih dari, kurang dari, selisih; membuat 10',[m1Buat10,m1Add20,m1Sub20,m1Selisih,m1Lebih],'Buat 10 dulu: 8 + 5 = 8 + 2 + 3 = 13. Selisih = besar − kecil.'],
+    ['Mengukur panjang benda','Membandingkan, mengurutkan, mengukur dengan satuan tidak baku',[m1Panjang,m1Tinggi,m1Ukur],'Ukur dari ujung benda, alat ukur rapat dan lurus.'],
+    ['Mengenal diagram','Mengelompokkan data, tabel, diagram gambar',[m1Tabel,m1Diagram],'Satu gambar mewakili satu benda. Hitung tiap baris.']],
+ 2:[['Ayo membilang sampai dengan 50','Membaca-menulis, nilai tempat, membandingkan',[m2Tempat(50),m2Tempat3,m2Banding(50)],'Kelompokkan per sepuluh. 34 = 3 puluhan 4 satuan = 2 puluhan 14 satuan.'],
+    ['Penjumlahan dan pengurangan','Berbagai cara dan soal cerita',[m2Add,m2Sub,m2Story,m2Story2],'Jumlahkan satuan dulu. Jika satuan 10 atau lebih, jadikan 1 puluhan.'],
+    ['Bentuk di sekitar kita','Bangun datar, mengurai-menyusun, bangun ruang',[m2Datar,m2Urai,m2Ruang,m2Ruang2],'Segi banyak dinamai dari banyak sisinya. Bangun ruang berpermukaan lengkung bisa menggelinding.'],
+    ['Posisi benda dan pola','Atas-bawah, depan-belakang, kiri-kanan; pola berulang',[m2Kiri,m2Posisi,m2PolaSuara,tkPola],'Pola = susunan yang berulang. Cari bagian yang berulang, lalu lanjutkan.'],
+    ['Pecahan','Setengah benda utuh, setengah kumpulan, seperempat',[m2Pecahan2],'Setengah = 2 bagian sama besar. Seperempat = bagi dua, lalu bagi dua lagi.'],
+    ['Pengukuran','Berat dan waktu (jam tepat)',[m2Berat,m2BeratTB,m2Jam],'Jarum pendek menunjuk jam. Jarum panjang di 12 berarti jam tepat.'],
+    ['Ayo membilang sampai dengan 100','Membaca-menulis dan membandingkan bilangan',[m2Baca100,m2Banding(100),m2Tempat(100),m2Lebihnya],'Bandingkan puluhan dulu. "Dua lebihnya" berarti ditambah 2.'],
+    ['Berbagai diagram','Diagram turus dan diagram gambar',[m2Turus,mmPikto.bind(null,2),m2PiktoKey],'Turus dikelompokkan per lima. Perhatikan kunci: 1 gambar bisa mewakili lebih dari 1.']],
+ 3:[['Bilangan cacah sampai 1.000','Nilai tempat, membandingkan, +, −, ×, : sampai 100',[m3Tempat,m3Urut,m3Ops,m3Tukar],'602 = 600 + 0 + 2. Perkalian = penjumlahan berulang, pembagian = pengurangan berulang.'],
+    ['Kalimat matematika','Kalimat penjumlahan dan pengurangan',[m3Kalimat,m3Kalimat2,m3KalimatStory],'Cari bilangan yang hilang dengan operasi kebalikannya.'],
+    ['Pengukuran panjang dan berat','cm, m, g, kg, ons dan hubungannya',[m3Satuan2,m3Alat],'1 m = 100 cm. 1 kg = 10 ons = 1.000 g. 1 ons = 100 g.'],
+    ['Unsur-unsur bangun datar','Sisi, sudut, garis tegak lurus dan sejajar',[m3Sisi,m3Garis3,m3Sudut3,m3Garis],'Sinar garis punya satu pangkal. Siku-siku 90°, lurus 180°.'],
+    ['Penyajian data dalam tabel','Mengurutkan, membandingkan, jangkauan, tabel turus',[m3Tabel,m3Turus,m3Jangkau],'Jangkauan = data terbesar − data terkecil.']],
+ 4:[['Bilangan cacah sampai 10.000','Membaca, nilai tempat, operasi hitung, faktor dan kelipatan',[m4Baca,mmTempatBesar(4),mmBandingBesar(10000),m4Urai,m4Ops,m4Sisa,m4Faktor],'Faktor membagi habis. Kelipatan = hasil kali dengan 1, 2, 3, …'],
+    ['Pecahan','Pembilang satu, penyebut sama, senilai, desimal, persen',[m4Pec1,m4PecSama,m4Senilai,m4Desimal,m4Persen],'Pembilang 1: penyebut makin besar, bagian makin kecil. Persen = per seratus.'],
+    ['Pola gambar dan pola bilangan','Pola membesar, mengecil, dan selisih tetap',[m4PolaB,m4PolaN],'Cari selisih tetapnya, lalu tambah atau kurangi.'],
+    ['Pengukuran luas dan volume','Luas dengan persegi satuan, volume liter-ml dan kubus satuan',[m4Luas,m4Volume,m4Cair],'1 m² = 10.000 cm². 1 liter = 1.000 ml. 1 cm³ = 1 ml.'],
+    ['Bangun datar','Segi banyak, segitiga, segi empat, menyusun dan mengurai',[m4Segitiga,m4Ciri,m4Susun],'Segitiga dikelompokkan menurut sisi dan menurut sudutnya.'],
+    ['Piktogram dan diagram batang','Membaca kunci piktogram dan skala diagram batang',[m4PiktoKey,mmBatang.bind(null,4)],'Perhatikan kunci piktogram: 1 gambar = berapa?']],
+ 5:[['Bilangan cacah sampai 100.000','Nilai tempat, membandingkan, komposisi, operasi hitung',[mmTempatBesar(5),mmBandingBesar(100000),m5Uang,m5Ops],'Bandingkan dari nilai tempat terbesar.'],
+    ['KPK dan FPB','Kelipatan, faktor, bilangan prima, faktorisasi prima',[sdKPK,sdFPB,m5Prima,m5Prima2,m5Cerita],'Pohon faktor membantu mencari faktorisasi prima. KPK untuk jadwal bersama, FPB untuk membagi sama banyak.'],
+    ['Bilangan pecahan','Membandingkan, menjumlah, mengurangi, pecahan campuran',[m5Pecahan,m5Kurang,m5Campuran],'Samakan penyebut dengan KPK. Pecahan campuran bisa diubah ke pecahan biasa.'],
+    ['Keliling bangun datar','Segitiga, segi empat, segi banyak, bangun gabungan',[m5Keliling],'Keliling = jumlah semua sisi luar.'],
+    ['Luas daerah bangun datar','Rumus luas, bangun gabungan, keliling dan luas',[m5Luas,m5LuasDiag,m4Luas],'Luas belah ketupat dan layang-layang = ½ × d1 × d2.'],
+    ['Sudut','Jenis sudut, mengukur dengan busur, sudut pada jam',[m5Sudut3],'Sudut lurus 180°, sudut penuh 360°, refleks antara 180° dan 360°.'],
+    ['Membandingkan ciri-ciri bangun datar','Ciri segitiga dan segi empat',[m5Segitiga,m5Karakter],'Jumlah sudut segitiga 180°. Persegi juga termasuk persegi panjang.'],
+    ['Data','Turus, tabel frekuensi, piktogram, diagram batang',[mmBatang.bind(null,5),mmTabel.bind(null,100),m4PiktoKey],'Frekuensi = berapa kali data muncul.'],
+    ['Bilangan cacah sampai 1.000.000','Nilai tempat, membandingkan, membulatkan',[mmTempatBesar(6),mmBandingBesar(1000000),m5Bulat],'Beri titik setiap tiga angka dari kanan.']],
+ 6:[['Simetri','Simetri lipat dan simetri putar',[m6Simetri2],'Simetri putar: bangun tetap sama setelah diputar 180° pada titik pusatnya.'],
+    ['Simbol dan kalimat matematika','Huruf sebagai pengganti bilangan',[m6Simbol],'Bayangkan timbangan seimbang: lakukan operasi yang sama di kedua sisi.'],
+    ['Perkalian pecahan','Pecahan × pecahan dan bilangan kebalikan',[m6KaliPec,m6Kebalikan],'Dua bilangan saling kebalikan jika hasil kalinya 1.'],
+    ['Pembagian pecahan','Pecahan : pecahan dan besaran per satuan',[m6BagiPec,m6PerSatuan],'Membagi pecahan = mengalikan dengan kebalikan pembaginya.'],
+    ['Kelipatan dan perbandingan','Berapa kali lipat dan bagian dari',[m6Kelipatan],'"Berapa kali" dicari dengan membagi dengan nilai dasarnya.'],
+    ['Perhitungan pecahan desimal dan pecahan biasa','Operasi desimal, pecahan, dan campuran',[m6Desimal,m5Pecahan],'Samakan bentuknya dulu: semua desimal atau semua pecahan.'],
+    ['Menghitung luas berbagai bangun datar','Luas lingkaran dan memperkirakan luas',[m6Lingkaran2,m5Luas],'Luas lingkaran = π × r × r, keliling = 2 × π × r.'],
+    ['Urutan dan kombinasi','Banyak susunan dan banyak pilihan',[m6Urutan],'Urutan diperhatikan: kalikan pilihan tiap posisi. Kombinasi: hapus yang sama.'],
+    ['Kecepatan','Jarak, waktu, kecepatan, dan perubahan satuan',[m6Kec2],'Ubah satuan dulu, lalu kecepatan = jarak : waktu.'],
+    ['Volume','Balok, prisma, tabung, limas, kerucut',[m6Volume2],'Prisma dan tabung: luas alas × tinggi. Limas dan kerucut: ⅓ × luas alas × tinggi.'],
+    ['Perbandingan dan penerapannya','Perbandingan, kesamaan perbandingan, membagi',[m6Rasio],'Sederhanakan dengan membagi kedua suku dengan bilangan yang sama.'],
+    ['Perbesaran dan perkecilan gambar','Faktor perbesaran dan skala',[m6Skala,m6Denah],'Ukuran sebenarnya = ukuran gambar × skala.'],
+    ['Perbandingan senilai dan berbalik nilai','Tabel, grafik, dan penerapan',[m6Senilai,m6Berbalik2],'Senilai: y = k × x. Berbalik nilai: x × y tetap.'],
+    ['Pengolahan data','Mean dan sebaran data',[m6Data],'Mean = jumlah data : banyak data.'],
+    ['Besaran dan satuan','Satuan panjang, luas, volume, berat, sistem metrik',[m6Besaran2,m6Besaran,m6Diskret],'1 ha = 10.000 m², 1 a = 100 m², 1 l = 10 dl, 1 g = 1.000 mg.']]};
 /* pasang ke kelas 1–6; unit lama disimpan supaya tugas/modul lama tetap bisa dibuka dan progres bisa dipindahkan */
 var MM_OLDU={};
 for(let g=1;g<=6;g++){const c=COURSE.find(x=>x.id==='k'+g);if(!c)continue;const s=c.subjects.find(x=>x.id==='mtk');if(!s)continue;MM_OLDU[c.id]=s.units;
@@ -8835,7 +8934,7 @@ function nodePop(ui,ni,row){const s=SUBJ(),u=s.units[ui],nd=NODES[ni],idx=ui*NOD
   {const np=row.querySelector('.npop'),rr=row.getBoundingClientRect(),bottom=rr.bottom+18+np.offsetHeight,limit=window.innerHeight-(innerWidth<1000?120:30);if(bottom>limit)window.scrollBy({top:bottom-limit+10,behavior:'smooth'})}}
 var MATERI_P=null;
 function loadMateri(){if(window.MATERI&&Object.keys(window.MATERI).length)return Promise.resolve(window.MATERI);if(MATERI_P)return MATERI_P;
-  MATERI_P=new Promise((r,j)=>{const sc=document.createElement('script');sc.src='materi.js?v=2';sc.onload=()=>r(window.MATERI||{});sc.onerror=()=>{sc.remove();MATERI_P=null;j(new Error('materi'))};document.head.appendChild(sc)});return MATERI_P}
+  MATERI_P=new Promise((r,j)=>{const sc=document.createElement('script');sc.src='materi.js?v=3';sc.onload=()=>r(window.MATERI||{});sc.onerror=()=>{sc.remove();MATERI_P=null;j(new Error('materi'))};document.head.appendChild(sc)});return MATERI_P}
 function guideBody(m){const sec=x=>`<section class="gsec"><h4>${x.h}</h4>`+(x.p?`<p>${x.p}</p>`:'')+
     (x.li?`<ul class="gli">${x.li.map(t=>`<li>${t}</li>`).join('')}</ul>`:'')+
     (x.tb?`<div class="gtb"><table><thead><tr>${x.tb[0].map(t=>`<th>${t}</th>`).join('')}</tr></thead><tbody>${x.tb.slice(1).map(r=>`<tr>${r.map(t=>`<td>${t}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`:'')+
@@ -11623,7 +11722,7 @@ function folBind(root,list,after){root.querySelectorAll('[data-follow]').forEach
   try{await folDo(f,on);if(on){try{sfx.ok()}catch(_){}toast('team',`Kamu mengikuti ${f.name}.`)}b.outerHTML=folBtn(f,b.classList.contains('sm'));folBind(root,list,after);after&&after()}catch(err){b.disabled=false;toast('lock',fbErr(err))}})}
 const shareIcon='<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M12 3 V15 M7 8 L12 3 L17 8 M5 13 V19 C5 20 6 21 7 21 H17 C18 21 19 20 19 19 V13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const qrIcon='<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><path d="M14 14h3v3h-3zM18 18h3v3h-3zM18 14h3M14 18v3" stroke-linecap="round"/></svg>';
-let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=223';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
+let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=224';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
 function qrMatrix(text){const Q=window.QRCodeLib,q=new Q(-1,Q.ECL.M);q.addData(text);q.make();const n=q.getModuleCount(),m=[];for(let r=0;r<n;r++){m.push([]);for(let c=0;c<n;c++)m[r].push(q.isDark(r,c))}return m}
 function qrSvgOf(m){const n=m.length;let d='';for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(m[r][c])d+=`M${c} ${r}h1.02v1.02h-1.02z`;
   return `<svg viewBox="-2 -2 ${n+4} ${n+4}" class="pcqr" shape-rendering="crispEdges" aria-label="Kode QR profil"><rect x="-2" y="-2" width="${n+4}" height="${n+4}" fill="#fff"/><path d="${d}" fill="#1C1E3D"/></svg>`}
