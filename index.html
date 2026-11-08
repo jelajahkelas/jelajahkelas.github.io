@@ -3923,7 +3923,7 @@ html[data-theme=malam] .plstick{background:#0a0f1e}
 <div class="syncpill" id="syncPill" hidden></div>
 <div class="toast" id="toast" hidden></div>
 
-<script src="av.js?v=260"></script>
+<script src="av.js?v=262"></script>
 <script>
 /* ---------- visual assets ---------- */
 const INK='#1B1E3D';
@@ -9815,7 +9815,7 @@ const MODE_LIST=[
   icon:'<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><rect x="15" y="6" width="18" height="36" rx="6"/><path d="M19 15h10M19 33h10"/><path d="M9 11v8M39 11v8M9 29v8M39 29v8"/></svg>'},
  {id:'pancing',name:'Pancing Ikan',desc:'Lempar kail, tangkap ikan yang benar',help:'Ketuk di atas ikan untuk menggerakkan perahu dan menurunkan kail. Keyboard: ← → menggeser perahu, Spasi menurunkan kail. Jangan sampai ikan yang salah tersangkut!',
   icon:'<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M10 4v16a5 5 0 0 0 10 0"/><path d="M20 34c6-7 15-7 22 0-7 7-16 7-22 0z"/><path d="M20 34l-7-5v10z"/></svg>'},
- {id:'katak',name:'Lompat Katak',desc:'Lompat ke daun teratai yang benar',help:'Ketuk daun teratai dengan jawaban benar supaya katak melompat ke sana. Daun yang salah akan tenggelam! Keyboard: tekan angka pada daun.',
+ {id:'katak',name:'Lompat Katak',desc:'Seberangi kolam lewat daun jawaban sampai FINIS',help:'Seberangi kolam sampai tepi FINIS! Ketuk daun dengan jawaban benar supaya katak melompat ke sana. Daun yang salah tenggelam dan katak tercebur. Saat main bersama, katak temanmu ikut terlihat, tapi jawabannya tidak. Keyboard: angka 1–4.',
   icon:'<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><ellipse cx="24" cy="34" rx="19" ry="9"/><circle cx="17" cy="15" r="5"/><circle cx="31" cy="15" r="5"/><path d="M15 25c5 4 13 4 18 0"/></svg>'},
  {id:'ular',name:'Cacing Lapar',desc:'Kendalikan cacing memakan bola jawaban',help:'Tangan kiri: sentuh dan geser di sisi kiri layar untuk mengarahkan cacing. Tangan kanan: tahan tombol NOS untuk ngebut. Di laptop: cacing mengikuti mouse, klik atau Spasi untuk ngebut. Makan bola berhuruf jawaban yang benar!',
   icon:'<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 38h15a6 6 0 0 0 0-12h-8a6 6 0 0 1 0-12h22"/><circle cx="40" cy="14" r="4" fill="currentColor"/></svg>'},
@@ -10171,7 +10171,7 @@ const lvHex=()=>CUR?CUR.color:getComputedStyle(document.documentElement).getProp
 
 /* ---------- layar penuh saat main game di HP + posisi layar sesuai game ---------- */
 /* posisi layar tiap game di HP: mendatar untuk game yang bergerak ke samping/arena lebar, tegak untuk game yang jatuh/naik atau berbentuk kartu */
-const GAME_ORI={lompat:'landscape',katak:'landscape',tembak:'landscape',ular:'landscape',penalti:'landscape',labirin:'landscape',zona:'landscape',
+const GAME_ORI={lompat:'landscape',katak:'portrait',tembak:'landscape',ular:'landscape',penalti:'landscape',labirin:'landscape',zona:'landscape',
   lari:'portrait',pacu:'portrait',balon:'portrait',tikus:'portrait',balap:'portrait',pancing:'portrait',basket:'portrait',buah:'portrait',layang:'portrait',
   memori:'portrait',benarsalah:'portrait',susun:'portrait',kelompok:'portrait',urut:'portrait',kuis:'portrait'};
 const GFS={on:false,mine:false};
@@ -10567,44 +10567,80 @@ const Pancing={
 
 /* ---- game 7: Lompat Katak ---- */
 const Katak={
- setup(){const{W,H,ctx}=arc,n=arc.labels.length;this.bank=H-34;const rows=n>2?2:1,per=Math.ceil(n/rows);this.pw=Math.min(W*.44,210);
-  const fits=arc.labels.map(l=>fit(ctx,l,this.pw-44,52,20,10));this.ph=Math.max(52,Math.max(...fits.map(f=>f.lines.length*f.s*1.08))+26);
-  const ys=rows===2?[H*.22,H*.52]:[H*.38];this.Lp=Math.max(W+this.pw+20,per*(this.pw+24));
+ /* Lompat Katak (tegak): katak di daun bawah, daun jawaban A/B/C/D di depannya. Lompat ke jawaban benar untuk maju menyeberangi kolam sampai tepi FINIS.
+    Jawaban salah: daun tenggelam dan katak tercebur. Setiap soal, kolam bergeser maju; pada soal terakhir tepi FINIS terlihat di atas. */
+ setup(){const{W,H,ctx}=arc,n=arc.labels.length;if(!game.kat||game.kat.qs!==game.qs)game.kat={qs:game.qs,step:0};const K=game.kat;
+  this.r=Math.round(clamp(Math.min(W*.19,H*.095),42,78));const r=this.r;this.bx=W/2;this.by=H-Math.max(r+12,H*.1);
+  const lay=n<=2?[[.27,2.3],[.73,2.3]]:n===3?[[.2,1.75],[.5,3.5],[.8,1.75]]:[[.17,1.95],[.29,4.1],[.71,4.1],[.83,1.95]];
   const order=shuffle([...Array(n).keys()]);
-  this.pads=order.map((ai,k)=>{const r=k%rows,slot=Math.floor(k/rows);return {i:ai,f:fits[ai],y:ys[r],x0:slot*this.Lp/per+Math.random()*20,v:(22+Math.random()*14)*arc.speed*(r%2?-1:1),sink:0}});
-  this.clock=0;this.frog={x:W/2,y:this.bank,jump:null,on:null}},
- padX(p){const m=((p.x0+this.clock*p.v)%this.Lp+this.Lp)%this.Lp;return m-this.pw/2-10},
- hit(p,x,y){const px=this.padX(p);return Math.abs(x-px)<this.pw/2&&Math.abs(y-p.y)<this.ph/2+6},
- jumpTo(p){if(this.frog.jump||this.frog.on)return;this.frog.jump={p,t:0,x0:this.frog.x,y0:this.frog.y};tone([660,990],.06)},
+  this.pads=order.map((ai,k)=>{const [fx,fy]=lay[k];const x=clamp(W*fx,r+6,W-r-16),y=Math.max(r+30,this.by-fy*r);
+   return {i:ai,x,y,f:fit(ctx,arc.labels[ai],r*1.42,r*1.15,18,9),sink:0,L:'ABCD'[k]}});
+  this.frog={x:this.bx,y:this.by,jump:null,on:null,fall:0,fin:null};this.slide=K.step>0?1:0;this.fallT=0;
+  this.last=K.step>=game.qs.length-1;this.seed=K.step},
+ hit(p,x,y){return Math.hypot(x-p.x,y-p.y)<this.r+8},
+ jumpTo(p){const fr=this.frog;if(fr.jump||fr.on||this.slide>.05||arc.state!=='play')return;fr.jump={p,t:0,x0:fr.x,y0:fr.y,x1:p.x,y1:p.y};tone([660,990],.06)},
  down(x,y){const p=this.pads.find(p=>this.hit(p,x,y));if(p)this.jumpTo(p)},
- key(k){if(/^[1-4]$/.test(k)){const p=this.pads.find(p=>p.i===+k-1);if(p)this.jumpTo(p)}},
- step(dt){this.clock+=dt;const fr=this.frog;
-  if(fr.jump){const j=fr.jump;j.t+=dt;const u=Math.min(1,j.t/.55),tx=this.padX(j.p),ty=j.p.y;fr.x=j.x0+(tx-j.x0)*u;fr.y=j.y0+(ty-j.y0)*u-Math.sin(u*Math.PI)*60;
-   if(u>=1){fr.jump=null;fr.on=j.p;if(arc.state==='play'){burst(fr.x,fr.y,'#BFE3FF',14);arcResolve(j.p.i)}}}
-  else if(fr.on){fr.x=this.padX(fr.on);fr.y=fr.on.y;if(fr.on.i!==arc.ci&&arc.state==='resolved')fr.on.sink=Math.min(1,fr.on.sink+dt*1.2)}},
+ key(k){if(/^[1-4]$/.test(k)){const p=this.pads.find(p=>p.L==='ABCD'[+k-1]);if(p)this.jumpTo(p)}},
+ step(dt){const fr=this.frog;this.slide=Math.max(0,this.slide-dt*2.2);
+  if(fr.jump){const j=fr.jump;j.t+=dt;const u=Math.min(1,j.t/.5);fr.x=j.x0+(j.x1-j.x0)*u;fr.y=j.y0+(j.y1-j.y0)*u;fr.h=Math.sin(u*Math.PI);
+   if(u>=1){fr.jump=null;fr.h=0;if(j.fin){fr.fin=1;burst(fr.x,fr.y,'#FFD54A',22);tone([523,659,784,1046],.06);return}
+    fr.on=j.p;if(arc.state==='play'){const ok=j.p.i===arc.ci;burst(fr.x,fr.y,ok?'#BFE3FF':'#7FB8E0',14);game.kat.step++;arcResolve(j.p.i)}}}
+  else if(fr.on){if(fr.on.i!==arc.ci){fr.on.sink=Math.min(1,fr.on.sink+dt*1.6);fr.fall=Math.min(1,fr.fall+dt*1.6)}
+   else if(this.last&&!fr.fin){this.fallT+=dt;if(this.fallT>.35&&!fr.jump){fr.on=null;fr.jump={t:0,x0:fr.x,y0:fr.y,x1:arc.W/2,y1:Math.max(28,this.bankY()+30),fin:true};tone([660,990],.06)}}}},
+ bankY(){return 6},
+ ghosts(c,oy){if(!(game.lesson&&game.lesson.room&&window.roomPlayers))return;let ps=[];try{ps=roomPlayers()}catch(e){return}const me=ps.find(p=>p.me);if(!me)return;
+  const{W,H}=arc,r=this.r,gap=Math.max(r*2.2,this.by-Math.min(...this.pads.map(p=>p.y)));let same=0;
+  ps.filter(p=>!p.me&&!p.left).forEach((p,k)=>{const d=p.i-me.i;let h=0;for(const ch of p.uid)h=(h*31+ch.charCodeAt(0))>>>0;
+   let x,y,arrow='';if(d===0){same++;x=this.bx+(same%2?1:-1)*r*.75*Math.ceil(same/2);y=this.by+oy-r*.25}
+   else if(d>0){const top=Math.min(...this.pads.map(p=>p.y))-r*1.75;x=W*(.2+(h%3)*.3);y=top+oy-(d-1)*r*1.5;if(y<r*.7){y=r*.7+6;arrow='▲'}}
+   else{x=W*(.12+(h%2)*.74);y=H-r*.95;arrow='▼'}
+   if(d!==0){
+    if(!arrow){c.save();c.globalAlpha=.6;c.fillStyle='#2E7D32';c.beginPath();c.moveTo(x,y);c.arc(x,y,r*.7,-Math.PI/2+.25,-Math.PI/2-.25+Math.PI*2);c.closePath();c.fill();c.restore()}}
+   drawFrogTop(c,x,y-4,(r/62)*(d<0?.55:.72),p.col||'#FF8A3D',d===0?.95:.8);
+   const nm=(arrow?arrow+' ':'')+String(p.name).split(' ')[0];c.font=`800 11px ${FONT}`;const tw=c.measureText(nm).width+12;c.fillStyle=p.col||'#FF8A3D';rr(c,x-tw/2,y+r*.42,tw,18,9);c.fill();c.fillStyle='#fff';c.textAlign='center';c.textBaseline='middle';c.fillText(nm,x,y+r*.42+9)})},
  update(dt){this.step(dt)},idle(dt){this.step(dt)},
- draw(c){const{W,H}=arc;const tm=performance.now()/1000;
-  c.fillStyle='#6DB65B';c.fillRect(0,0,W,24);c.fillRect(0,this.bank-10,W,H-this.bank+10);
-  const g=c.createLinearGradient(0,24,0,this.bank-10);g.addColorStop(0,'#3FA9DB');g.addColorStop(1,'#2A86BD');c.fillStyle=g;c.fillRect(0,24,W,this.bank-34);
-  c.strokeStyle='rgba(255,255,255,.3)';c.lineWidth=2;for(let k=0;k<10;k++){const y=34+k*(this.bank-50)/10,x=((k*97+tm*30)%(W+80))-40;c.beginPath();c.moveTo(x,y);c.quadraticCurveTo(x+15,y-4,x+30,y);c.stroke()}
-  c.fillStyle='#5AA24B';for(let x=8;x<W;x+=26){c.beginPath();c.moveTo(x,this.bank-10);c.lineTo(x+5,this.bank-24);c.lineTo(x+10,this.bank-10);c.fill()}
+ draw(c){const{W,H}=arc,tm=performance.now()/1000,r=this.r,sl=this.slide,oy=sl*sl*(this.by-this.pads[0].y);
+  const g=c.createLinearGradient(0,0,0,H);g.addColorStop(0,'#2FB4E8');g.addColorStop(1,'#1E9AD6');c.fillStyle=g;c.fillRect(0,0,W,H);
+  c.strokeStyle='rgba(255,255,255,.22)';c.lineWidth=2;for(let k=0;k<14;k++){const y=((k*71+tm*14+oy)%(H+40))-20,x=((k*137)%W);c.beginPath();c.moveTo(x-30,y);c.quadraticCurveTo(x,y-8,x+30,y);c.stroke()}
+  /* daun hiasan di kolam (ikut bergeser saat maju) */
+  const step=this.seed,gap=Math.max(78,r*1.75),cols=Math.max(3,Math.round(W/gap));
+  for(let row=-2;row<Math.ceil(H/gap)+2;row++){const wy=row+step*2,y=H-row*gap-((step*2*gap)%gap)+oy-((step*0)%1);
+   for(let col=0;col<cols;col++){const h=((wy*7+col*13)%11+11)%11;if(h<5)continue;const x=(col+.5+(wy%2?.35:-.15))*W/cols,rr2=r*(.62+((h%3)*.08));
+    if(this.pads.some(p=>Math.hypot(p.x-x,p.y+oy-y)<r+rr2)||Math.hypot(this.bx-x,this.by+oy-y)<r+rr2)continue;
+    c.fillStyle='#1F5A2E';c.beginPath();c.moveTo(x,y);c.arc(x,y,rr2,.35+h*.4,Math.PI*2-.25+h*.4);c.closePath();c.fill()}}
+  /* tepi FINIS (soal terakhir) */
+  if(this.last){const by=this.bankY();c.fillStyle='#E9C982';c.fillRect(0,0,W,by+46);c.fillStyle='#6DB65B';c.fillRect(0,0,W,by+28);
+   c.fillStyle='#5AA24B';for(let x=6;x<W;x+=22){c.beginPath();c.moveTo(x,by+28);c.lineTo(x+5,by+16);c.lineTo(x+10,by+28);c.fill()}
+   const fx=W/2+70;c.fillStyle='#14213D';c.fillRect(fx,by+2,4,40);for(let a=0;a<3;a++)for(let b=0;b<4;b++){c.fillStyle=(a+b)%2?'#14213D':'#fff';c.fillRect(fx+4+b*9,by+2+a*7,9,7)}
+   c.fillStyle='#fff';rr(c,W/2-120,by+8,96,24,12);c.fill();c.fillStyle='#14213D';c.font=`900 14px ${FONT}`;c.textAlign='center';c.textBaseline='middle';c.fillText('FINIS 🏁',W/2-72,by+21)}
+  /* daun tempat katak berdiri */
+  const leaf=(x,y,rad,col,edge)=>{c.save();c.shadowColor='rgba(0,0,0,.25)';c.shadowBlur=8;c.shadowOffsetY=4;c.fillStyle=col;c.beginPath();c.moveTo(x,y);c.arc(x,y,rad,-Math.PI/2+.22,-Math.PI/2-.22+Math.PI*2);c.closePath();c.fill();c.restore();
+   c.strokeStyle=edge;c.lineWidth=3;c.beginPath();c.arc(x,y,rad-3,-Math.PI/2+.3,-Math.PI/2-.3+Math.PI*2);c.stroke()};
+  if(!(this.frog.on===null&&this.frog.fin))leaf(this.bx,this.by+oy,r*.95,'#2E7D32','#1B5E20');
   const done=arc.state==='resolved';
-  for(const p of this.pads){const x=this.padX(p),y=p.y,w=this.pw,h=this.ph;c.save();c.globalAlpha=1-p.sink*.85;
-   let pad='#4CAF50',card='#F5FFF0',txt='#14213D';if(done&&p.i===arc.ci){card='#1C8A57';txt='#fff'}else if(p.sink>0){card='#C9362A';txt='#fff'}
-   c.fillStyle=pad;c.beginPath();c.ellipse(x,y+p.sink*10,w/2,h/2,0,.25,Math.PI*2-.05);c.lineTo(x,y+p.sink*10);c.closePath();c.fill();
-   c.strokeStyle='#2E7D32';c.lineWidth=2;c.stroke();
-   rr(c,x-w/2+16,y-h/2+9+p.sink*10,w-32,h-18,8);c.fillStyle=card;c.fill();
-   c.fillStyle='#2E7D32';c.beginPath();c.arc(x-w/2+14,y-h/2+10,9,0,7);c.fill();c.fillStyle='#fff';c.font=`800 12px ${FONT}`;c.textAlign='center';c.textBaseline='middle';c.fillText(p.i+1,x-w/2+14,y-h/2+11);
-   drawFit(c,p.f,x,y+p.sink*10,txt);c.restore()}
-  // frog
-  const fr=this.frog,x=fr.x,y=fr.y-6,s=fr.jump?1.15:1;
-  c.fillStyle='#3E9B3A';c.beginPath();c.ellipse(x,y,16*s,13*s,0,0,7);c.fill();
-  if(fr.jump){c.strokeStyle='#3E9B3A';c.lineWidth=5;c.beginPath();c.moveTo(x-10,y+8);c.lineTo(x-18,y+22);c.moveTo(x+10,y+8);c.lineTo(x+18,y+22);c.stroke()}
-  else{c.fillStyle='#358A31';c.beginPath();c.ellipse(x-14,y+8,8,5,0,0,7);c.ellipse(x+14,y+8,8,5,0,0,7);c.fill()}
-  [-1,1].forEach(d=>{c.fillStyle='#3E9B3A';c.beginPath();c.arc(x+d*8,y-11,6,0,7);c.fill();c.fillStyle='#fff';c.beginPath();c.arc(x+d*8,y-11,4,0,7);c.fill();c.fillStyle='#1A2233';c.beginPath();c.arc(x+d*8,y-11,2,0,7);c.fill()});
-  c.strokeStyle='#1A2233';c.lineWidth=1.5;c.beginPath();c.arc(x,y-2,6,.2,Math.PI-.2);c.stroke();
-  if(fr.on&&fr.on.sink>.3){c.strokeStyle='rgba(255,255,255,.8)';c.lineWidth=2;for(let k=1;k<=2;k++){c.beginPath();c.ellipse(x,y+10,18*k*fr.on.sink+10,6*k,0,0,7);c.stroke()}}}
+  for(const p of this.pads){const y=p.y+oy+p.sink*14,ok=done&&p.i===arc.ci,bad=p.sink>0;c.save();c.globalAlpha=1-p.sink*.8;
+   leaf(p.x,y,r,ok?'#22B85C':bad?'#B23A2E':'#2E7D32',ok?'#14833F':bad?'#7D2219':'#1B5E20');
+   c.fillStyle='#8BC34A';c.beginPath();c.arc(p.x,y-r+4,12,0,7);c.fill();c.fillStyle='#fff';c.font=`900 13px ${FONT}`;c.textAlign='center';c.textBaseline='middle';c.fillText(p.L,p.x,y-r+5);
+   drawFit(c,p.f,p.x,y+4,'#fff');c.restore()}
+  /* teman di Ruang Tanding: katak lain tampil sesuai kemajuannya (jawabannya tidak terlihat) */
+  this.ghosts(c,oy);
+  /* katak (dilihat dari atas) */
+  const fr=this.frog;let x=fr.x,y=fr.y+(fr.jump?0:oy)-4;const s=(1+(fr.h||0)*.35)*(r/62)*(1-fr.fall*.5);
+  if(fr.fall>0){c.strokeStyle=`rgba(255,255,255,${.9-fr.fall*.4})`;c.lineWidth=2;for(let k=1;k<=3;k++){c.beginPath();c.ellipse(x,y+6,(14+k*12)*fr.fall,(5+k*4)*fr.fall,0,0,7);c.stroke()}}
+  drawFrogTop(c,x,y,s,'#8E44AD',1-fr.fall*.75,fr.h||0);
+  if(fr.fin){c.fillStyle='rgba(20,33,61,.75)';rr(c,W/2-80,H/2-24,160,48,24);c.fill();c.fillStyle='#FFD54A';c.font=`900 22px ${FONT}`;c.textAlign='center';c.textBaseline='middle';c.fillText('Sampai FINIS!',W/2,H/2)}
+  /* penunjuk jarak ke FINIS */
+  const tot=game.qs.length,st=Math.min(tot,game.kat?game.kat.step:0),x0=W-12,y0=24,y1=H-24;c.fillStyle='rgba(255,255,255,.35)';rr(c,x0-4,y0,8,y1-y0,4);c.fill();
+  c.fillStyle='#FFD54A';const py=y1-(y1-y0)*st/tot;rr(c,x0-4,py,8,y1-py,4);c.fill();c.font='14px sans-serif';c.textAlign='center';c.textBaseline='middle';c.fillText('🏁',x0-2,y0-10);
+  c.fillStyle='#5DBB4A';c.beginPath();c.arc(x0,py,7,0,7);c.fill();c.strokeStyle='#fff';c.lineWidth=2;c.stroke()}
 };
+function drawFrogTop(c,x,y,s,vest,alpha,h){h=h||0;c.save();c.translate(x,y);c.scale(s,s);c.globalAlpha=alpha==null?1:alpha;
+  c.fillStyle='rgba(0,0,0,.18)';c.beginPath();c.ellipse(0,24+h*18,26,8,0,0,7);c.fill();
+  c.fillStyle='#4CAF50';[[-22,14],[22,14],[-18,-10],[18,-10]].forEach(([a,b])=>{c.beginPath();c.ellipse(a,b,9,6,a>0?.5:-.5,0,7);c.fill()});
+  c.fillStyle='#5DBB4A';c.beginPath();c.ellipse(0,4,22,24,0,0,7);c.fill();c.fillStyle=vest;rr(c,-12,-2,24,20,7);c.fill();c.fillStyle='#F4D03F';c.beginPath();c.arc(0,8,5,0,7);c.fill();
+  c.fillStyle='#5DBB4A';c.beginPath();c.ellipse(0,-18,18,13,0,0,7);c.fill();
+  [-1,1].forEach(d=>{c.fillStyle='#5DBB4A';c.beginPath();c.arc(d*10,-27,8,0,7);c.fill();c.fillStyle='#fff';c.beginPath();c.arc(d*10,-27,6,0,7);c.fill();c.fillStyle='#14213D';c.beginPath();c.arc(d*10,-27,3,0,7);c.fill()});
+  c.strokeStyle='#1B5E20';c.lineWidth=2;c.beginPath();c.arc(0,-16,7,.25,Math.PI-.25);c.stroke();c.restore()}
 
 /* ---- game 8: Ular Lapar ---- */
 const UCOL=['#FF5A5F','#3DA5D9','#FFB627','#B57EDC'];
@@ -15137,6 +15173,7 @@ function roomRender(){const d=ROOM.doc,el=$('#room'),uid=FBX.user.uid,me=d.playe
   if(!lobby&&all&&rows.length>1&&rows[0].uid===uid&&!(P.roomWins||[]).includes(ROOM.code)){P.roomWins=(P.roomWins||[]).concat(ROOM.code).slice(-50);P.gems+=10;save();renderTop();toast('gem','Juara tantangan! +10 permata');sfx.win&&sfx.win();burstConfetti&&burstConfetti()}}
 const fmtSec=t=>t?`${Math.floor(t/60)}:${String(t%60).padStart(2,'0')}`:'';
 function roomStart(){const d=ROOM.doc;if(ROOM.mm){ROOM.mm=false;MM.on=false;clearInterval(MM.hb);MM.my=null;try{mmWaitClose()}catch(e){}try{const op=Object.entries(d.players||{}).find(([u])=>u!==FBX.user.uid);if(op)toast('team','Lawan ditemukan: '+op[1].name+'!')}catch(e){}}let qs=[];try{qs=JSON.parse(d.qs)}catch(e){}if(!qs.length){toast('lock','Soal tantangan tidak bisa dibuka.');return}
+  if(!(d.mode==='acak'&&d.modes)&&roomFmt(d)!=='ox'){let h=0;for(const ch of FBX.user.uid+(d.round||1))h=(h*31+ch.charCodeAt(0))>>>0;const rnd=()=>{h=(h*1103515245+12345)>>>0;return h/4294967296};for(let i=qs.length-1;i>0;i--){const j=Math.floor(rnd()*(i+1));[qs[i],qs[j]]=[qs[j],qs[i]]}}
   const c=COURSE.find(x=>x.id===d.cls)||CLS(),s=c.subjects.find(x=>x.id===d.subj)||SUBJ();
   ROOM.playing=true;$('#room').hidden=true;closeModal();
   ROOM.segs=d.mode==='acak'&&d.modes?d.modes.map((m,k)=>({mode:m,qs:qs.slice(k*2,k*2+2)})).filter(x=>x.qs.length):[{mode:d.mode||'kuis',qs}];
@@ -15152,7 +15189,7 @@ function roomPlayers(){const d=ROOM.doc;if(!d)return [];const uid=FBX.user.uid,a
   return Object.entries(d.players||{}).sort((a,b)=>(a[1].joined||0)-(b[1].joined||0)).map(([u,p],k)=>{const me=u===uid;const i=me?(p.done?d.n:Math.min(d.n,acc.done+((game&&game.i)||0))):(p.i||0);const c=me?(p.done?p.c:acc.correct+((game&&game.correct)||0)):(p.c||0);
     return {uid:u,name:p.name||'Teman',av:p.av||null,me,i,c,done:!!p.done,left:!!p.left,col:RR_COL[k%RR_COL.length]}})}
 window.roomPlayers=roomPlayers;
-function roomLive(){const d=ROOM.doc;let el=$('#roomRace');if(!d||!ROOM.playing||MODE==='pacu'||MODE==='lari'){if(el){if(!el.hidden&&(MODE==='pacu'||MODE==='lari'))setTimeout(()=>{try{gameFit()}catch(e){}},80);el.hidden=true}return}
+function roomLive(){const d=ROOM.doc;let el=$('#roomRace');if(!d||!ROOM.playing||MODE==='pacu'||MODE==='lari'||MODE==='katak'){if(el){if(!el.hidden&&(MODE==='pacu'||MODE==='lari'||MODE==='katak'))setTimeout(()=>{try{gameFit()}catch(e){}},80);el.hidden=true}return}
   let fresh=false;if(!el){const pb=$('#vPlay .playbar');if(!pb)return;pb.insertAdjacentHTML('afterend','<div class="roomrace" id="roomRace"><div class="rrlist"></div></div>');el=$('#roomRace');fresh=true}
   if(el.hidden)fresh=true;el.hidden=false;const box=el.querySelector('.rrlist'),n=Math.max(1,d.n||1);
   const ps=roomPlayers().sort((a,b)=>(a.left-b.left)||(b.c-a.c)||(b.i-a.i));const old={};box.querySelectorAll('.rrp').forEach(a=>old[a.dataset.u]=a.getBoundingClientRect().left);
@@ -15375,7 +15412,7 @@ function folBind(root,list,after){root.querySelectorAll('[data-follow]').forEach
   try{await folDo(f,on);if(on){try{sfx.ok()}catch(_){}toast('team',`Kamu mengikuti ${f.name}.`)}b.outerHTML=folBtn(f,b.classList.contains('sm'));folBind(root,list,after);after&&after()}catch(err){b.disabled=false;toast('lock',fbErr(err))}})}
 const shareIcon='<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M12 3 V15 M7 8 L12 3 L17 8 M5 13 V19 C5 20 6 21 7 21 H17 C18 21 19 20 19 19 V13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const qrIcon='<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><path d="M14 14h3v3h-3zM18 18h3v3h-3zM18 14h3M14 18v3" stroke-linecap="round"/></svg>';
-let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=260';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
+let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=262';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
 function qrMatrix(text){const Q=window.QRCodeLib,q=new Q(-1,Q.ECL.M);q.addData(text);q.make();const n=q.getModuleCount(),m=[];for(let r=0;r<n;r++){m.push([]);for(let c=0;c<n;c++)m[r].push(q.isDark(r,c))}return m}
 function qrSvgOf(m){const n=m.length;let d='';for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(m[r][c])d+=`M${c} ${r}h1.02v1.02h-1.02z`;
   return `<svg viewBox="-2 -2 ${n+4} ${n+4}" class="pcqr" shape-rendering="crispEdges" aria-label="Kode QR profil"><rect x="-2" y="-2" width="${n+4}" height="${n+4}" fill="#fff"/><path d="${d}" fill="#1C1E3D"/></svg>`}
