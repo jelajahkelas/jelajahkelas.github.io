@@ -3899,7 +3899,7 @@ html[data-theme=malam] .plstick{background:#0a0f1e}
 <div class="syncpill" id="syncPill" hidden></div>
 <div class="toast" id="toast" hidden></div>
 
-<script src="av.js?v=228"></script>
+<script src="av.js?v=229"></script>
 <script>
 /* ---------- visual assets ---------- */
 const INK='#1B1E3D';
@@ -6272,7 +6272,9 @@ function mmMigrate(p){if(!p)return;try{curMigrate(p)}catch(e){}if(p.mmv)return;c
 /* ===================== Bahasa Indonesia SD Kelas 1 sesuai Kurikulum Merdeka =====================
    Bab mengikuti buku siswa "Bahasa Indonesia: Aku Bisa!" Kelas I Edisi Revisi 2023 (SIBI). Soal ditulis sendiri. */
 const biQ=(q,ans,wr,exp,say)=>Q(q,mmCh(ans,wr),exp,{say:say||plainTx(q).replace(/\s*…\s*/g,' apa? ').replace(/[“”"]/g,'').replace(/[\p{Extended_Pictographic}\uFE0F\u200D]/gu,'').replace(/\s+/g,' ').trim()});
-const biBank=list=>()=>{const t=pick(list);return biQ(t[0],t[1],t[2],t[3]||'',t[4])};
+const biBank=list=>{const f=()=>{const t=pick(list);return biQ(t[0],t[1],t[2],t[3]||'',t[4])};f.items=list;return f};
+/* materi otomatis dari penjelasan soal (dipakai jika materi tertulis belum ada) */
+function autoMateri(u){const it=(u.g||[]).flatMap(f=>f.items||[]);if(!it.length)return null;const li=[...new Set(it.map(x=>x[3]).filter(Boolean))];return {intro:u.d+'.',s:[{h:'Yang perlu kamu tahu',li}],sum:u.tip?[u.tip]:[]}}
 /* kata bergambar: [emoji, kata, suku kata] */
 const BI_KATA={
  b:[['⚽','bola','bo-la'],['📚','buku','bu-ku'],['🌸','bunga','bu-nga'],['🦆','bebek','be-bek'],['🍌','pisang',null],['🎈','balon','ba-lon'],['👶','bayi','ba-yi'],['🐻','beruang','be-ru-ang'],['🌙','bulan','bu-lan'],['🐦','burung','bu-rung'],['🧸','boneka','bo-ne-ka'],['⭐','bintang','bin-tang']],
@@ -6551,6 +6553,240 @@ const K1_LAIN={
   ['Unsur rupa di sekitarku','Bentuk dasar, kolase, komposisi',[k1Bank(SR1[3])],'Gambar dapat dibuat dari bentuk dasar.']]};
 {const c=COURSE.find(x=>x.id==='k1');if(c)Object.keys(K1_LAIN).forEach(sid=>{const s=c.subjects.find(x=>x.id===sid);if(!s)return;CUR_OLDU['k1/'+sid]=s.units;
   s.units=K1_LAIN[sid].map(([t,d,gens,tip],i)=>U(t,d,gens,{tip,_k:'g1/'+sid+'/'+i,merdeka:true}));s.merdeka=true})}
+
+/* ===================== Kelas 2: B. Indonesia, Pancasila, PAI, PJOK, Seni Rupa — bab mengikuti buku Kurikulum Merdeka, bahasa disederhanakan ===================== */
+function curInstall(cid,map,pre){const c=COURSE.find(x=>x.id===cid);if(!c)return;Object.keys(map).forEach(sid=>{const s=c.subjects.find(x=>x.id===sid);if(!s)return;CUR_OLDU[cid+'/'+sid]=s.units;
+  s.units=map[sid].map(([t,d,gens,tip],i)=>U(t,d,gens,{tip,_k:pre+'/'+sid+'/'+i,merdeka:true}));s.merdeka=true})}
+const kb=a=>biBank(a);
+/* --- Bahasa Indonesia Kelas 2 ("Keluargaku Unik", 8 bab) --- */
+const BI2=[
+ [bb('Dina mendapat hadiah dari nenek. Perasaan Dina …','senang',['sedih','marah','takut'],'Mendapat hadiah membuat senang.'),
+  bb('Layang-layang Beni putus dan hilang. Beni merasa …','sedih',['senang','bangga','lucu'],'Kehilangan membuat sedih.'),
+  bb('Ada suara petir keras di malam hari. Adik merasa …','takut',['senang','lapar','bangga'],'Suara keras bisa membuat takut.'),
+  bb('Huruf pertama dalam kalimat ditulis dengan huruf …','kapital',['kecil','miring','angka'],'Kalimat diawali huruf kapital.'),
+  bb('Kalimat berita diakhiri tanda …','titik (.)',['tanya (?)','seru (!)','koma (,)'],'Kalimat berita diakhiri titik.'),
+  bb('Penulisan yang benar adalah …','Aku senang hari ini.',['aku senang hari ini.','Aku senang hari ini','aku Senang hari ini'],'Huruf kapital di awal, titik di akhir.'),
+  bb('Nama orang ditulis dengan huruf awal …','kapital',['kecil','angka','tanda titik'],'Contoh: Dina, Beni.')],
+ [bb('Kata tanya untuk menanyakan orang adalah …','siapa',['di mana','kapan','berapa'],'Siapa untuk orang.'),
+  bb('Kata tanya untuk menanyakan tempat adalah …','di mana',['siapa','kapan','mengapa'],'Di mana untuk tempat.'),
+  bb('Kata tanya untuk menanyakan waktu adalah …','kapan',['siapa','berapa','apa'],'Kapan untuk waktu.'),
+  bb('Kata tanya untuk menanyakan jumlah adalah …','berapa',['siapa','kapan','di mana'],'Berapa untuk jumlah.'),
+  bb('"Adik minum susu." Siapa yang minum susu?','Adik',['susu','minum','ibu'],'Pelaku (subjek) kalimat itu adalah Adik.'),
+  bb('"Ibu memasak sayur." Apa yang dimasak ibu?','sayur',['ibu','memasak','dapur'],'Yang dimasak (objek) adalah sayur.'),
+  bb('Agar tubuh sehat, kita sebaiknya …','makan sayur dan buah',['jajan sembarangan','tidur larut','malas bergerak'],'Makanan bergizi menjaga kesehatan.'),
+  bb('Susunan kalimat yang benar adalah …','Kakak mencuci tangan.',['Mencuci kakak tangan.','Tangan kakak mencuci.','Kakak tangan mencuci.'],'Pelaku – kegiatan – benda.')],
+ [bb('Tanda baca untuk kalimat peringatan adalah …','tanda seru (!)',['tanda titik (.)','tanda tanya (?)','tanda koma (,)'],'Contoh: Awas, lantai licin!'),
+  bb('Penulisan "di" yang benar untuk tempat adalah …','di sekolah',['disekolah','di-sekolah','disekolahan'],'"di" untuk tempat ditulis terpisah.'),
+  bb('Penulisan yang benar adalah …','di rumah',['dirumah','di-rumah','dirumahh'],'"di" + nama tempat ditulis terpisah.'),
+  bb('Saat menyeberang jalan, kita harus …','menengok kiri dan kanan',['berlari tanpa melihat','bermain ponsel','menutup mata'],'Hati-hati di jalan.'),
+  bb('Berbicara di perpustakaan sebaiknya dengan suara …','pelan',['keras','berteriak','bernyanyi'],'Perpustakaan tempat yang tenang.'),
+  bb('Tempat untuk meminjam buku disebut …','perpustakaan',['pasar','kebun','stasiun'],'Buku dipinjam di perpustakaan.'),
+  bb('Cerita yang baik punya bagian awal, tengah, dan …','akhir',['judul saja','gambar saja','angka'],'Cerita punya awal, tengah, dan akhir.')],
+ [bb('Setiap keluarga berbeda. Sikap kita …','menghargai keluarga orang lain',['mengejek','membandingkan','menjauhi'],'Setiap keluarga unik.'),
+  bb('"Ayah membaca koran." Kalimat ini termasuk kalimat …','aktif',['pasif','tanya','perintah'],'Pelaku (Ayah) melakukan kegiatan: kalimat aktif.'),
+  bb('Kalimat pasif dari "Kakak menyiram bunga" adalah …','Bunga disiram kakak.',['Kakak disiram bunga.','Bunga menyiram kakak.','Kakak bunga menyiram.'],'Kalimat pasif memakai awalan di-.'),
+  bb('"Rumahku bercat biru." Kalimat ini adalah …','fakta',['pendapat','pertanyaan','perintah'],'Fakta dapat dibuktikan.'),
+  bb('"Rumahku paling indah." Kalimat ini adalah …','pendapat',['fakta','pertanyaan','perintah'],'Pendapat adalah pikiran seseorang, bisa berbeda.'),
+  bb('Kakak dari ayah atau ibu yang laki-laki disebut …','paman',['kakek','sepupu','bibi'],'Saudara laki-laki orang tua: paman.')],
+ [bb('Menyimpan uang di celengan atau bank disebut …','menabung',['berbelanja','meminjam','membuang'],'Menabung untuk keperluan nanti.'),
+  bb('Bijak memakai uang berarti membeli barang yang …','dibutuhkan',['paling mahal','tidak berguna','sama terus'],'Utamakan kebutuhan.'),
+  bb('Kata tanya untuk menanyakan harga adalah …','berapa',['siapa','di mana','mengapa'],'Berapa harganya?'),
+  bb('Uang Rp5.000 dibaca …','lima ribu rupiah',['lima ratus rupiah','lima puluh rupiah','lima juta rupiah'],'5.000 = lima ribu.'),
+  bb('Contoh kebutuhan adalah …','buku tulis untuk sekolah',['mainan kesepuluh','permen banyak','stiker lucu'],'Kebutuhan lebih penting dari keinginan.')],
+ [bb('Teman kita bisa berbeda suku dan agama. Kita harus …','saling menghargai',['saling mengejek','memilih-milih','bermusuhan'],'Berbeda tetap berteman.'),
+  bb('Ucapan saat bertemu teman di pagi hari adalah …','Selamat pagi!',['Selamat malam!','Selamat tidur!','Selamat jalan!'],'Salam sesuai waktu.'),
+  bb('Saat teman berbicara, kita sebaiknya …','mendengarkan',['memotong pembicaraannya','pergi','berteriak'],'Mendengarkan adalah sikap menghargai.'),
+  bb('Kata sapaan untuk guru perempuan adalah …','Ibu',['Kakak','Adik','Om'],'Kita memanggil guru perempuan "Ibu".'),
+  bb('Bhinneka Tunggal Ika artinya …','berbeda-beda tetapi tetap satu',['semua harus sama','satu suku saja','tidak boleh berbeda'],'Semboyan bangsa Indonesia.')],
+ [bb('Kegiatan yang kita sukai di waktu luang disebut …','hobi',['tugas','hukuman','pekerjaan rumah'],'Hobi = kegemaran.'),
+  bb('Rina suka menggambar. Alat yang ia perlukan adalah …','pensil warna dan kertas',['bola','raket','pancing'],'Menggambar butuh kertas dan pensil warna.'),
+  bb('Kata yang menunjukkan kegiatan adalah …','menari',['meja','cantik','tinggi'],'Menari adalah kata kerja.'),
+  bb('Agar hobi menjadi prestasi, kita harus …','rajin berlatih',['malas','mudah menyerah','berlatih sekali saja'],'Latihan membuat mahir.'),
+  bb('Hobi bermain bulu tangkis memerlukan …','raket dan kok',['kuas','gitar','kail'],'Bulu tangkis memakai raket dan kok.')],
+ [bb('Sampah daun dan sisa makanan termasuk sampah …','organik',['anorganik','logam','kaca'],'Sampah organik mudah membusuk.'),
+  bb('Botol plastik termasuk sampah …','anorganik',['organik','daun','makanan'],'Plastik sulit membusuk.'),
+  bb('Kalimat ajakan menjaga lingkungan adalah …','Ayo, buang sampah pada tempatnya!',['Sampah itu kotor.','Di mana sampahnya?','Aku punya sampah.'],'Kalimat ajakan memakai kata "ayo".'),
+  bb('Menanam pohon bermanfaat agar udara …','segar',['kotor','panas','berasap'],'Pohon membuat udara segar.'),
+  bb('Memakai kembali botol bekas menjadi pot disebut …','daur ulang',['membuang','membakar','merusak'],'Daur ulang mengurangi sampah.')]];
+/* --- Pendidikan Pancasila Kelas 2 (4 bab) --- */
+const PP2=[
+ [bb('Contoh aturan di keluarga adalah …','mencuci tangan sebelum makan',['tidur sangat larut','bermain sambil makan','tidak belajar'],'Aturan membuat keluarga sehat dan tertib.'),
+  bb('Manfaat mematuhi aturan adalah …','hidup tertib dan nyaman',['sering dimarahi','berantakan','sakit'],'Patuh aturan membuat nyaman.'),
+  bb('Jika melanggar aturan bermain, akibatnya …','teman merasa kecewa',['semua senang','dapat hadiah','dipuji'],'Melanggar aturan merugikan orang lain.'),
+  bb('Daftar kegiatan harian dari pagi sampai malam disebut …','jadwal',['denda','hadiah','hukuman'],'Jadwal membantu kita disiplin.'),
+  bb('Belajar setiap malam sesuai jadwal menunjukkan sikap …','disiplin',['malas','boros','curang'],'Disiplin = patuh pada waktu dan aturan.')],
+ [bb('Lambang negara kita adalah …','Garuda Pancasila',['Harimau Sumatra','Komodo','Burung Cenderawasih'],'Garuda Pancasila lambang negara.'),
+  bb('Di dada Garuda terdapat …','perisai',['bintang besar','mahkota','pedang'],'Perisai berisi lima simbol sila.'),
+  bb('Bunyi sila pertama adalah …','Ketuhanan Yang Maha Esa',['Persatuan Indonesia','Kemanusiaan yang adil dan beradab','Keadilan sosial bagi seluruh rakyat Indonesia'],'Sila pertama berlambang bintang.'),
+  bb('Sila ketiga berbunyi …','Persatuan Indonesia',['Ketuhanan Yang Maha Esa','Kerakyatan yang dipimpin oleh hikmat kebijaksanaan dalam permusyawaratan/perwakilan','Keadilan sosial bagi seluruh rakyat Indonesia'],'Sila ketiga berlambang pohon beringin.'),
+  bb('Lambang rantai ada pada sila ke …','dua',['satu','tiga','lima'],'Rantai melambangkan kemanusiaan.'),
+  bb('Lambang kepala banteng ada pada sila ke …','empat',['satu','dua','lima'],'Banteng melambangkan musyawarah.'),
+  bb('Bermusyawarah memilih tempat liburan keluarga sesuai sila ke …','empat',['satu','dua','tiga'],'Sila keempat tentang musyawarah.'),
+  bb('Salah satu perumus Pancasila adalah …','Ir. Soekarno',['Kartini','Cut Nyak Dien','Ki Hajar Dewantara'],'Soekarno, Moh. Yamin, dan Soepomo turut merumuskan dasar negara.'),
+  bb('Meneladani pahlawan bisa dengan …','jujur dan berani',['berbohong','malas','penakut'],'Pahlawan jujur, berani, dan cinta tanah air.')],
+ [bb('Kegiatan yang kita sukai saat waktu luang disebut …','hobi',['tugas','piket','ulangan'],'Hobi = kegemaran.'),
+  bb('Temanmu berbeda warna kulit dan rambut. Sikapmu …','tetap berteman rukun',['mengejeknya','menjauhinya','menertawakannya'],'Perbedaan fisik tidak menghalangi pertemanan.'),
+  bb('Tempat ibadah umat Islam adalah …','masjid',['gereja','pura','vihara'],'Umat Islam beribadah di masjid.'),
+  bb('Tempat ibadah umat Hindu adalah …','pura',['masjid','klenteng','gereja'],'Umat Hindu beribadah di pura.'),
+  bb('Tempat ibadah umat Kristen dan Katolik adalah …','gereja',['vihara','pura','masjid'],'Umat Kristen dan Katolik beribadah di gereja.'),
+  bb('Tempat ibadah umat Buddha adalah …','vihara',['gereja','masjid','pura'],'Umat Buddha beribadah di vihara.'),
+  bb('Tempat ibadah umat Khonghucu adalah …','klenteng',['pura','vihara','masjid'],'Umat Khonghucu beribadah di klenteng (litang).'),
+  bb('Saat teman beda agama sedang beribadah, kita …','menghormati dan tidak mengganggu',['mengganggu','mengejek','berteriak'],'Itu sikap toleransi.')],
+ [bb('Contoh perilaku merusak lingkungan adalah …','membuang sampah ke sungai',['menanam pohon','menyiram tanaman','memilah sampah'],'Sampah di sungai menyebabkan banjir.'),
+  bb('Akibat membuang sampah sembarangan adalah …','banjir dan penyakit',['udara segar','air jernih','tanaman subur'],'Lingkungan kotor merugikan kita.'),
+  bb('Menjaga lingkungan sekolah bisa dengan …','piket kelas',['mencoret meja','membuang sampah di laci','merusak tanaman'],'Piket membuat kelas bersih.'),
+  bb('Memisahkan sampah organik dan anorganik disebut …','memilah sampah',['membakar sampah','menimbun sampah','membuang sampah'],'Sampah dipilah agar mudah diolah.'),
+  bb('Kerja bakti membersihkan lingkungan adalah contoh …','kerja sama',['bermusuhan','malas','egois'],'Bekerja sama membuat pekerjaan ringan.')]];
+/* --- PAI Kelas 2 (10 bab) --- */
+const PAI2=[
+ [bb('Surah An-Nās berisi permohonan … kepada Allah','perlindungan',['makanan','mainan','hujan'],'An-Nās mengajarkan kita berlindung kepada Allah.'),
+  bb('Surah An-Nās terdiri atas … ayat','6',['4','5','7'],'An-Nās punya 6 ayat.'),
+  bb('An-Nās adalah surah ke … dalam Al-Qur\'an','114 (terakhir)',['1 (pertama)','112','2'],'An-Nās surah terakhir.'),
+  bb('Tempat keluarnya huruf hijaiah disebut …','makharijul huruf',['harakat','tajwid saja','tanwin'],'Makharijul huruf = tempat keluarnya huruf.')],
+ [bb('Al-Ḥafīẓ artinya Allah Maha …','Memelihara',['Melindungi','Mengetahui','Teliti'],'Allah menjaga semua makhluk.'),
+  bb('Al-Walī artinya Allah Maha …','Melindungi',['Memelihara','Teliti','Pengasih'],'Allah pelindung orang beriman.'),
+  bb('Al-‘Alīm artinya Allah Maha …','Mengetahui',['Melindungi','Kuat','Melihat'],'Allah mengetahui segala sesuatu.'),
+  bb('Al-Khabīr artinya Allah Maha …','Teliti',['Pengasih','Pemberi','Memelihara'],'Tidak ada yang luput dari Allah.'),
+  bb('Karena Allah Maha Mengetahui, kita harus …','selalu jujur',['berbohong diam-diam','mencontek','mengambil milik teman'],'Allah tahu walau tidak ada yang melihat.')],
+ [bb('Bertutur kata lembut termasuk perilaku …','terpuji',['tercela','buruk','kasar'],'Kata-kata lembut menyenangkan hati.'),
+  bb('Ikut merasakan kesedihan teman disebut …','empati',['iri','sombong','marah'],'Empati = ikut merasakan perasaan orang lain.'),
+  bb('Mengakui kesalahan dengan berkata benar disebut …','jujur',['bohong','malas','sombong'],'Jujur adalah cerminan iman.'),
+  bb('Teman sakit di rumah. Sikap kita …','menjenguk dan mendoakannya',['mengejeknya','tidak peduli','senang'],'Itu wujud kasih sayang.')],
+ [bb('Panggilan untuk salat disebut …','azan',['ikamah','doa','zikir'],'Azan memanggil orang untuk salat.'),
+  bb('Tanda salat akan segera dimulai disebut …','ikamah',['azan','takbir','salam'],'Ikamah dikumandangkan sebelum salat dimulai.'),
+  bb('Salat fardu sehari semalam ada …','5 waktu',['3 waktu','4 waktu','6 waktu'],'Subuh, zuhur, asar, magrib, isya.'),
+  bb('Salat subuh terdiri atas … rakaat','2',['3','4','1'],'Subuh 2 rakaat.'),
+  bb('Salat magrib terdiri atas … rakaat','3',['2','4','5'],'Magrib 3 rakaat.'),
+  bb('Gerakan salat diawali dengan …','takbiratul ihram',['salam','sujud','rukuk'],'Salat dimulai dengan takbiratul ihram.'),
+  bb('Salat diakhiri dengan …','salam',['takbir','rukuk','iktidal'],'Salat ditutup dengan salam.'),
+  bb('Salah satu yang membatalkan salat adalah …','berbicara dengan sengaja',['membaca Al-Fatihah','rukuk','sujud'],'Berbicara saat salat membatalkan salat.')],
+ [bb('Nabi Nuh a.s. diperintah Allah membuat …','kapal besar',['rumah','menara','sumur'],'Kapal untuk menyelamatkan orang beriman dari banjir.'),
+  bb('Kaum Nabi Nuh yang tidak mau beriman ditimpa …','banjir besar',['kemarau','gempa','salju'],'Banjir besar menenggelamkan kaum yang ingkar.'),
+  bb('Nabi Nuh a.s. berdakwah dengan sangat …','sabar',['marah','malas','kasar'],'Nabi Nuh berdakwah ratusan tahun dengan sabar.'),
+  bb('Meneladani Nabi Nuh a.s. berarti kita …','sabar dan bekerja keras',['mudah menyerah','pemarah','malas'],'Sabar dan kerja keras adalah teladan Nabi Nuh.')],
+ [bb('Surah Al-Falaq berisi permohonan perlindungan dari …','kejahatan',['hujan','kebaikan','teman'],'Kita berlindung kepada Allah dari segala kejahatan.'),
+  bb('Surah Al-Falaq terdiri atas … ayat','5',['3','6','7'],'Al-Falaq punya 5 ayat.'),
+  bb('Surah Al-Kauṡar terdiri atas … ayat','3',['4','5','6'],'Al-Kauṡar adalah surah terpendek dengan 3 ayat.'),
+  bb('Surah Al-Kauṡar mengajarkan kita untuk salat dan …','berkurban',['tidur','bermain','berbohong'],'Salatlah dan berkurbanlah.')],
+ [bb('Malaikat diciptakan Allah dari …','cahaya (nur)',['tanah','api','air'],'Malaikat diciptakan dari cahaya.'),
+  bb('Malaikat yang menyampaikan wahyu adalah …','Jibril',['Mikail','Israfil','Izrail'],'Jibril menyampaikan wahyu kepada nabi.'),
+  bb('Malaikat yang membagi rezeki dan menurunkan hujan adalah …','Mikail',['Jibril','Malik','Ridwan'],'Mikail membagi rezeki.'),
+  bb('Malaikat yang meniup sangkakala adalah …','Israfil',['Jibril','Munkar','Rakib'],'Israfil meniup sangkakala.'),
+  bb('Malaikat yang mencatat amal baik adalah …','Rakib',['Atid','Malik','Ridwan'],'Rakib mencatat amal baik, Atid mencatat amal buruk.'),
+  bb('Malaikat penjaga surga adalah …','Ridwan',['Malik','Izrail','Mikail'],'Ridwan menjaga surga.'),
+  bb('Karena malaikat mencatat amal, kita harus …','selalu berbuat baik',['berbuat curang','berbohong','malas'],'Itu tanda beriman kepada malaikat.')],
+ [bb('Contoh hidup bersih adalah …','mandi dua kali sehari',['jarang mandi','membuang sampah di kolong meja','tidak sikat gigi'],'Kebersihan sebagian dari iman.'),
+  bb('Hidup rapi berarti …','meletakkan barang pada tempatnya',['menaruh barang sembarangan','tidak membereskan mainan','mencoret dinding'],'Barang mudah dicari jika rapi.'),
+  bb('Hidup teratur berarti …','melakukan kegiatan sesuai waktunya',['bangun siang terus','lupa salat','belajar kalau ingat'],'Teratur membuat hidup tenang.'),
+  bb('Pakaian kotor sebaiknya …','dimasukkan ke keranjang cucian',['dibiarkan di lantai','dipakai lagi','disimpan di lemari'],'Rapi dan bersih itu terpuji.'),
+  bb('Kuku yang panjang sebaiknya …','dipotong',['dibiarkan','digigit','dicat hitam'],'Kuku pendek lebih bersih.')],
+ [bb('Mengingat Allah dengan bacaan tertentu disebut …','zikir',['azan','ikamah','salam'],'Zikir dibaca setelah salat.'),
+  bb('Bacaan "Astagfirullāh" artinya …','aku memohon ampun kepada Allah',['Maha Suci Allah','segala puji bagi Allah','Allah Maha Besar'],'Istigfar = memohon ampun.'),
+  bb('Bacaan "Subḥānallāh" artinya …','Maha Suci Allah',['Allah Maha Besar','segala puji bagi Allah','aku memohon ampun'],'Tasbih = Maha Suci Allah.'),
+  bb('Bacaan "Allāhu akbar" artinya …','Allah Maha Besar',['Maha Suci Allah','dengan nama Allah','segala puji bagi Allah'],'Takbir = Allah Maha Besar.'),
+  bb('Setelah zikir, kita berdoa untuk diri sendiri dan …','orang tua',['musuh saja','tidak perlu siapa-siapa','mainan'],'Kita mendoakan orang tua.')],
+ [bb('Nabi Ibrahim a.s. dijuluki …','bapak para nabi',['nabi terakhir','manusia pertama','pembuat kapal'],'Banyak nabi adalah keturunan Nabi Ibrahim.'),
+  bb('Sejak kecil Nabi Ibrahim a.s. mencari …','Tuhan yang sebenarnya',['harta karun','teman bermain','mainan baru'],'Ibrahim yakin hanya Allah Tuhan yang benar.'),
+  bb('Saat dibakar Raja Namrud, Nabi Ibrahim a.s. …','selamat karena api menjadi dingin',['terluka parah','lari','bersembunyi'],'Allah menjadikan api dingin.'),
+  bb('Teladan dari Nabi Ibrahim a.s. adalah …','berani membela kebenaran',['penakut','pembohong','pemalas'],'Nabi Ibrahim berani dan teguh pendirian.')]];
+/* --- PJOK Kelas 2 (8 unit) --- */
+const PJ2=[
+ [bb('Berjalan, berlari, dan melompat termasuk gerak …','lokomotor (berpindah tempat)',['nonlokomotor','manipulatif','diam'],'Lokomotor = berpindah tempat.'),
+  bb('Saat melompat jauh, kita mendarat dengan …','kedua kaki ditekuk',['kepala','tangan saja','lutut lurus kaku'],'Mendarat dengan lutut ditekuk agar aman.'),
+  bb('Meloncati kardus atau tali melatih …','kekuatan dan kelincahan kaki',['suara','penglihatan','penciuman'],'Meloncat menguatkan kaki.'),
+  bb('Melompat memakai dua kaki, meloncat memakai …','satu kaki untuk tolakan',['tangan','kepala','punggung'],'Meloncat bertolak dengan satu kaki.'),
+  bb('Sebelum lari cepat, tubuh perlu …','pemanasan',['makan banyak','tidur','minum soda'],'Pemanasan mencegah cedera.')],
+ [bb('Memutar lengan dan meliukkan badan termasuk gerak …','nonlokomotor (di tempat)',['lokomotor','manipulatif','berenang'],'Tubuh bergerak tanpa berpindah tempat.'),
+  bb('Memutar simpai di pinggang adalah gerak …','memutar',['menendang','melempar','berlari'],'Pinggang diputar agar simpai berputar.'),
+  bb('Menekuk lutut lalu meluruskannya melatih …','otot kaki',['otot mata','otot telinga','gigi'],'Gerak ini menguatkan kaki.'),
+  bb('Contoh gerak nonlokomotor adalah …','meliukkan badan',['berlari','melompat jauh','merangkak'],'Meliuk dilakukan di tempat.'),
+  bb('Mengayunkan lengan ke depan dan belakang dilakukan dengan kaki …','diam di tempat',['berlari','melompat','berjalan'],'Gerak di tempat: kaki tidak berpindah.')],
+ [bb('Melempar dan menangkap bola termasuk gerak …','manipulatif',['lokomotor','nonlokomotor','tidur'],'Manipulatif = gerak memakai benda.'),
+  bb('Menggiring bola dengan kaki seperti dalam permainan …','sepak bola',['basket','voli','renang'],'Bola digiring dengan kaki.'),
+  bb('Saat menangkap bola, kedua tangan …','siap di depan dada',['di saku','di belakang','di kepala'],'Tangan siap menangkap bola.'),
+  bb('Menendang bola memakai kaki bagian …','dalam atau punggung kaki',['tumit saja','lutut','jari tangan'],'Kaki bagian dalam membuat tendangan terarah.'),
+  bb('Saat melempar bola ke teman, mata melihat …','teman yang dituju',['langit','sepatu','tanah'],'Lihat sasaran agar lemparan tepat.')],
+ [bb('Lompat tali termasuk gerak dominan …','senam',['renang','sepak bola','catur'],'Senam melatih kelenturan dan keseimbangan.'),
+  bb('Guling ke belakang dilakukan di atas …','matras',['lantai keras','jalan raya','meja'],'Matras membuat berguling aman.'),
+  bb('Meloncat sambil berputar melatih …','keseimbangan',['penciuman','suara','tulisan'],'Berputar butuh keseimbangan.'),
+  bb('Saat lompat tali, tali diayunkan lalu kita …','melompat ketika tali di bawah kaki',['diam saja','duduk','menangkap tali'],'Lompat tepat waktu agar tidak tersangkut.'),
+  bb('Sebelum berguling, dagu ditempelkan ke …','dada',['lantai','lutut','punggung'],'Dagu ke dada melindungi leher.')],
+ [bb('Bergerak mengikuti irama musik disebut gerak …','berirama',['bebas tanpa musik','diam','tidur'],'Gerak berirama mengikuti ketukan lagu.'),
+  bb('Saat senam irama, gerakan disesuaikan dengan …','ketukan lagu',['suara kendaraan','warna baju','jam dinding'],'Ikuti hitungan 1, 2, 3, 4.'),
+  bb('Melangkah maju-mundur dan bergeser kanan-kiri sesuai irama melatih …','koordinasi gerak',['penglihatan saja','suara','tidur'],'Kaki dan tangan bergerak serasi.'),
+  bb('Contoh kegiatan gerak berirama adalah …','senam irama',['lari maraton','catur','memancing'],'Senam irama diiringi musik.'),
+  bb('Satu hitungan dalam senam irama sama dengan satu …','ketukan',['langkah lari','lompatan jauh','napas panjang'],'Gerakan mengikuti ketukan.')],
+ [bb('Sebelum bermain air di kolam, kita harus …','didampingi orang dewasa',['sendirian','melompat ke kolam dalam','berlari di tepi kolam'],'Keselamatan di air sangat penting.'),
+  bb('Saat menyelam, kita menahan …','napas',['tawa','batuk','air'],'Tarik napas, tahan, lalu buang di dalam air.'),
+  bb('Tubuh yang mengapung di atas air disebut …','terapung',['tenggelam','berlari','melompat'],'Belajar terapung adalah dasar berenang.'),
+  bb('Di tepi kolam renang, kita tidak boleh …','berlari',['berjalan pelan','duduk','mendengarkan pelatih'],'Lantai tepi kolam licin.')],
+ [bb('Duduk yang baik saat belajar adalah dengan punggung …','tegak',['membungkuk','berbaring','miring'],'Sikap tubuh yang baik menjaga kesehatan punggung.'),
+  bb('Berjalan di atas garis lurus melatih …','keseimbangan',['kekuatan suara','penciuman','penglihatan warna'],'Keseimbangan penting untuk gerak.'),
+  bb('Agar tubuh bugar, kita perlu …','olahraga teratur, makan bergizi, dan tidur cukup',['tidur larut','makan permen terus','duduk seharian'],'Tiga kunci tubuh bugar.'),
+  bb('Sikap tidur terlentang berarti …','punggung di bawah, wajah ke atas',['wajah ke bawah','duduk','berdiri'],'Terlentang menghadap ke atas.'),
+  bb('Sikap tidur telungkup berarti …','perut di bawah, wajah ke bawah',['punggung di bawah','duduk tegak','berdiri jinjit'],'Telungkup menghadap ke bawah.')],
+ [bb('Alat untuk membersihkan gigi adalah …','sikat gigi dan pasta gigi',['sisir','handuk','sabun cuci'],'Gosok gigi pagi dan malam.'),
+  bb('Tempat tidur sebaiknya …','dirapikan setiap bangun tidur',['dibiarkan berantakan','dipakai untuk makan','dikotori'],'Tempat tidur bersih membuat tidur nyenyak.'),
+  bb('Bagian tubuh untuk melihat adalah …','mata',['telinga','hidung','lidah'],'Mata untuk melihat.'),
+  bb('Bagian tubuh untuk mendengar adalah …','telinga',['mata','kulit','lidah'],'Telinga untuk mendengar.'),
+  bb('Mainan yang sudah dipakai sebaiknya …','dibersihkan dan disimpan',['dilempar','dibuang','ditinggal di jalan'],'Mainan bersih tidak membawa kuman.')]];
+/* --- Seni Rupa Kelas 2 (dikelompokkan dari 10 kegiatan buku) --- */
+const SR2=[
+ [bb('Warna merah, kuning, dan biru disebut warna …','primer',['sekunder','gelap','netral'],'Warna primer tidak berasal dari campuran.'),
+  bb('Hijau, jingga, dan ungu disebut warna …','sekunder',['primer','pokok','netral'],'Warna sekunder hasil campuran dua warna primer.'),
+  bb('Merah + putih menjadi warna …','merah muda',['hijau','biru tua','hitam'],'Putih membuat warna lebih muda.'),
+  bb('Kuning + biru menjadi …','hijau',['ungu','jingga','cokelat'],'Kuning + biru = hijau.')],
+ [bb('Saat memakai gunting, kita harus …','hati-hati dan tidak bermain-main',['berlari sambil membawa gunting','mengarahkan ke teman','melempar gunting'],'Keselamatan kerja itu penting.'),
+  bb('Mencap daun yang diberi cat ke kertas adalah karya …','cetak',['lipat','anyam','pahat'],'Teknik cetak memindahkan bentuk ke kertas.'),
+  bb('Bentuk bulat pada tutup botol bisa dipakai untuk mencetak …','lingkaran',['segitiga','garis zig-zag','bintang'],'Tutup botol mencetak lingkaran.'),
+  bb('Bahan yang aman untuk anak berkarya adalah …','krayon dan kertas',['pisau tajam','cairan pembersih','paku'],'Pilih alat dan bahan yang aman.')],
+ [bb('Garis tempat benda "berdiri" dalam gambar pemandangan disebut …','garis pijak (dasar)',['garis tepi','garis putus','garis lengkung'],'Garis pijak membuat gambar terlihat berdiri di tanah.'),
+  bb('Gambar wajah seseorang disebut …','potret',['pemandangan','pola','kolase'],'Potret = gambar wajah.'),
+  bb('Motif yang diulang-ulang secara teratur disebut …','pola',['potret','titik','bayangan'],'Pola terbentuk dari pengulangan.'),
+  bb('Contoh pola yang ada di sekitar kita adalah motif …','batik',['awan','air','asap'],'Motif batik berulang teratur.')],
+ [bb('Gambar dari tempelan potongan kertas disebut …','kolase',['lukisan','patung','cetak'],'Kolase dibuat dengan menempel.'),
+  bb('Kolase bisa dipakai untuk …','bercerita',['berhitung','memasak','berenang'],'Susunan gambar kolase bisa menceritakan sesuatu.'),
+  bb('Bagian paling penting yang menarik perhatian dalam gambar disebut …','pusat perhatian (fokus)',['latar','bingkai','garis tepi'],'Fokus membuat gambar jelas maksudnya.')],
+ [bb('Melipat kertas menjadi bentuk binatang disebut …','origami',['kolase','mozaik','batik'],'Origami adalah seni melipat kertas.'),
+  bb('Benda yang punya panjang, lebar, dan tinggi disebut bentuk …','tiga dimensi',['dua dimensi','garis','titik'],'Bentuk 3D punya ruang/volume.'),
+  bb('Contoh karya tiga dimensi adalah …','patung dari tanah liat',['gambar di kertas','lukisan dinding','foto'],'Patung bisa dilihat dari segala arah.'),
+  bb('Gambar di kertas termasuk karya …','dua dimensi',['tiga dimensi','patung','bangunan'],'Gambar hanya punya panjang dan lebar.')]];
+curInstall('k2',{
+ bindo:[['Mengenal perasaan','Perasaan, huruf kapital, tanda titik',[kb(BI2[0])],'Kalimat diawali huruf kapital dan diakhiri tanda titik.'],
+  ['Menjaga kesehatan','Kata tanya dan susunan kalimat',[kb(BI2[1])],'Siapa, apa, di mana, kapan, berapa.'],
+  ['Berhati-hati di mana saja','Tanda seru, penulisan "di", cerita awal-tengah-akhir',[kb(BI2[2])],'"di" untuk tempat ditulis terpisah: di sekolah.'],
+  ['Keluargaku unik','Kalimat aktif-pasif, fakta dan pendapat',[kb(BI2[3])],'Fakta bisa dibuktikan, pendapat adalah pikiran seseorang.'],
+  ['Bijak memakai uang','Menabung, kebutuhan, membaca nilai uang',[kb(BI2[4])],'Utamakan kebutuhan, lalu menabung.'],
+  ['Berteman dalam keragaman','Salam, sapaan, menghargai perbedaan',[kb(BI2[5])],'Berbeda-beda tetapi tetap satu.'],
+  ['Hobi yang jadi prestasi','Hobi dan kata kerja',[kb(BI2[6])],'Rajin berlatih membuat hobi jadi prestasi.'],
+  ['Sayang lingkungan','Sampah organik-anorganik, kalimat ajakan',[kb(BI2[7])],'Kalimat ajakan memakai kata "ayo".']],
+ pancasila:[['Aku patuh aturan','Aturan keluarga, manfaat, jadwal',[kb(PP2[0])],'Patuh aturan membuat hidup tertib.'],
+  ['Aku berperilaku Pancasila','Lambang, bunyi sila, perumus, pahlawan',[kb(PP2[1])],'Bintang, rantai, beringin, banteng, padi dan kapas.'],
+  ['Aku dan teman-temanku','Hobi, perbedaan, keberagaman agama',[kb(PP2[2])],'Hormati teman yang berbeda, termasuk saat beribadah.'],
+  ['Aku peduli lingkungan','Menjaga lingkungan dan kerja sama',[kb(PP2[3])],'Pilah sampah dan bekerja sama menjaga lingkungan.']],
+ pai:[['Ayo belajar Al-Qur\'an','Surah An-Nās dan makharijul huruf',[kb(PAI2[0]),piHuruf],'An-Nās: berlindung kepada Allah.'],
+  ['Mari mengenal Allah','Al-Ḥafīẓ, Al-Walī, Al-‘Alīm, Al-Khabīr',[kb(PAI2[1])],'Allah Maha Mengetahui, jadi kita selalu jujur.'],
+  ['Ayo berperilaku terpuji','Kasih sayang, empati, lembut, jujur',[kb(PAI2[2])],'Empati = ikut merasakan perasaan teman.'],
+  ['Alhamdulillah, aku bisa salat','Azan, ikamah, salat fardu',[kb(PAI2[3])],'Salat fardu 5 waktu: subuh 2, zuhur 4, asar 4, magrib 3, isya 4 rakaat.'],
+  ['Kisah Nabi Nuh a.s.','Dakwah, sabar, dan kerja keras',[kb(PAI2[4])],'Nabi Nuh sabar dan bekerja keras.'],
+  ['Senang membaca Al-Qur\'an','Surah Al-Falaq dan Al-Kauṡar',[kb(PAI2[5])],'Al-Falaq 5 ayat, Al-Kauṡar 3 ayat.'],
+  ['Mengenal malaikat Allah','Nama dan tugas malaikat',[kb(PAI2[6])],'Jibril, Mikail, Israfil, Izrail, Munkar, Nakir, Rakib, Atid, Malik, Ridwan.'],
+  ['Berakhlak terpuji','Hidup bersih, rapi, dan teratur',[kb(PAI2[7])],'Kebersihan sebagian dari iman.'],
+  ['Zikir dan doa setelah salat','Istigfar, tasbih, tahmid, takbir',[kb(PAI2[8])],'Subḥānallāh, Alḥamdulillāh, Allāhu akbar.'],
+  ['Kisah Nabi Ibrahim a.s.','Bapak para nabi',[kb(PAI2[9])],'Nabi Ibrahim berani membela kebenaran.']],
+ pjok:[['Gerak lokomotor','Berjalan, berlari, melompat, meloncat',[kb(PJ2[0])],'Lokomotor = gerak berpindah tempat.'],
+  ['Gerak nonlokomotor','Memutar, meliuk, menekuk',[kb(PJ2[1])],'Nonlokomotor = gerak di tempat.'],
+  ['Gerak manipulatif','Melempar, menangkap, menendang, menggiring',[kb(PJ2[2])],'Manipulatif = gerak memakai benda.'],
+  ['Gerak dominan senam','Lompat tali, meloncat, berguling',[kb(PJ2[3])],'Lakukan guling di atas matras.'],
+  ['Gerak berirama','Bergerak mengikuti irama',[kb(PJ2[4])],'Ikuti hitungan 1, 2, 3, 4.'],
+  ['Pengenalan air','Bermain air dengan aman',[kb(PJ2[5])],'Selalu didampingi orang dewasa di kolam.'],
+  ['Kebugaran jasmani','Sikap tubuh dan keseimbangan',[kb(PJ2[6])],'Olahraga, makan bergizi, tidur cukup.'],
+  ['Menjaga kebersihan diri','Bagian tubuh dan alat kebersihan',[kb(PJ2[7])],'Bersih diri, tempat tidur, dan mainan.']],
+ seni:[['Melihat dan menggunakan warna','Warna primer dan sekunder',[kb(SR2[0])],'Merah, kuning, biru = warna primer.'],
+  ['Alat, bahan, dan karya cetak','Keselamatan dan teknik cetak',[kb(SR2[1])],'Cetak = memindahkan bentuk ke kertas.'],
+  ['Pemandangan, potret, dan pola','Garis pijak, potret, pengulangan',[kb(SR2[2])],'Pola terbentuk dari pengulangan.'],
+  ['Kolase yang bercerita','Menggunting, menempel, menyusun cerita',[kb(SR2[3])],'Kolase dibuat dengan menempel potongan.'],
+  ['Melipat dan bentuk tiga dimensi','Origami dan bentuk 3D',[kb(SR2[4])],'Bentuk 3D punya panjang, lebar, dan tinggi.']]},'g2');
 const COURSE_VIS=()=>COURSE.filter(c=>!c.hidden);
 const clsGrp=id=>{const c=COURSE.find(x=>x.id===id);return c&&c.grp||id};
 
@@ -9252,7 +9488,7 @@ function openGuideText(ui){const c=CLS(),s=SUBJ(),u=s.units[ui];const ex=unitQs(
   {let on=false;$('#gSay').onclick=()=>{const b=$('#gSay');if(on){try{speechSynthesis.cancel()}catch(e){}on=false;b.textContent='🔊 Dengarkan materi';return}
     const box=$('#mbox'),parts=[...box.querySelectorAll('.tipbox, #gMat .gintro, #gMat p, #gMat h4, #gMat li, #gMat tr, #gMat .gsum li')].map(e=>e.matches('tr')?[...e.children].map(x=>x.textContent).join(', ')+'.':(e.innerText||e.textContent).trim().replace(/\s*\n+\s*/g,'. ')).filter(Boolean);
     const txt=spokenTx([...new Set(parts)].join('. ').replace(/\.\s*\./g,'.').replace(/ - /g,' '));if(!txt)return;on=true;b.textContent='⏹ Berhenti';sayLong(txt)}}
-  loadMateri().then(M=>{const el=$('#gMat');if(!el)return;const m=M[key];el.innerHTML=m?guideBody(m):''}).catch(()=>{const el=$('#gMat');if(el)el.innerHTML='<div class="gload">Materi lengkap belum bisa dimuat. Periksa internet, lalu buka lagi.</div>'})}
+  loadMateri().then(M=>{const el=$('#gMat');if(!el)return;const m=M[key]||autoMateri(u);el.innerHTML=m?guideBody(m):''}).catch(()=>{const el=$('#gMat');if(el)el.innerHTML='<div class="gload">Materi lengkap belum bisa dimuat. Periksa internet, lalu buka lagi.</div>'})}
 
 /* ---------- VIDEO BELAJAR: panduan unit sebagai video animasi dengan narasi, karakter, dan gambar ---------- */
 const VP_IC={prev:'<svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M6 5h2.5v14H6zM20 5v14L9.5 12z"/></svg>',next:'<svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M15.5 5H18v14h-2.5zM4 5l10.5 7L4 19z"/></svg>',play:'<svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M7 4.5v15L20 12z"/></svg>',pause:'<svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M6 4.5h4.5v15H6zM13.5 4.5H18v15h-4.5z"/></svg>'};
@@ -12028,7 +12264,7 @@ function folBind(root,list,after){root.querySelectorAll('[data-follow]').forEach
   try{await folDo(f,on);if(on){try{sfx.ok()}catch(_){}toast('team',`Kamu mengikuti ${f.name}.`)}b.outerHTML=folBtn(f,b.classList.contains('sm'));folBind(root,list,after);after&&after()}catch(err){b.disabled=false;toast('lock',fbErr(err))}})}
 const shareIcon='<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M12 3 V15 M7 8 L12 3 L17 8 M5 13 V19 C5 20 6 21 7 21 H17 C18 21 19 20 19 19 V13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const qrIcon='<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><path d="M14 14h3v3h-3zM18 18h3v3h-3zM18 14h3M14 18v3" stroke-linecap="round"/></svg>';
-let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=228';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
+let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=229';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
 function qrMatrix(text){const Q=window.QRCodeLib,q=new Q(-1,Q.ECL.M);q.addData(text);q.make();const n=q.getModuleCount(),m=[];for(let r=0;r<n;r++){m.push([]);for(let c=0;c<n;c++)m[r].push(q.isDark(r,c))}return m}
 function qrSvgOf(m){const n=m.length;let d='';for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(m[r][c])d+=`M${c} ${r}h1.02v1.02h-1.02z`;
   return `<svg viewBox="-2 -2 ${n+4} ${n+4}" class="pcqr" shape-rendering="crispEdges" aria-label="Kode QR profil"><rect x="-2" y="-2" width="${n+4}" height="${n+4}" fill="#fff"/><path d="${d}" fill="#1C1E3D"/></svg>`}
