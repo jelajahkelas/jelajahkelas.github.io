@@ -3899,7 +3899,7 @@ html[data-theme=malam] .plstick{background:#0a0f1e}
 <div class="syncpill" id="syncPill" hidden></div>
 <div class="toast" id="toast" hidden></div>
 
-<script src="av.js?v=237"></script>
+<script src="av.js?v=238"></script>
 <script>
 /* ---------- visual assets ---------- */
 const INK='#1B1E3D';
@@ -8343,6 +8343,75 @@ curInstall('k9',{
   ['Jaringan, data, dan pemrograman','Modularisasi, parity bit, etika internet',[kb(INF9[2])],'Modularisasi memudahkan program.'],
   ['Dampak sosial informatika','Keamanan data',[kb(INF9[3])],'Autentikasi dua faktor.'],
   ['Praktik lintas bidang','Arduino, IoT, line follower',[kb(INF9[4])],'Internet of Things.']]},'g9');
+
+/* ===================== Matematika SMA Kelas 10–12 sesuai buku Kurikulum Merdeka ===================== */
+const fact=n=>n<=1?1:n*fact(n-1);const nPr=(n,r)=>fact(n)/fact(n-r);const nCr=(n,r)=>fact(n)/(fact(r)*fact(n-r));
+const t10Eks=()=>{const r=R(0,5);if(r===0){const a=pick([2,3,5]),m=R(2,5),n=R(1,4);return Q(mmF(`${a}<sup>${m}</sup> × ${a}<sup>${n}</sup> = ${a}<sup>…</sup>`),numOpts(m+n,2,1),`aᵐ × aⁿ = aᵐ⁺ⁿ, jadi pangkatnya ${m} + ${n} = ${m+n}.`)}
+  if(r===1){const a=pick([2,3,10]),n=R(1,3);return Q(`Nilai ${a}<sup>−${n}</sup> adalah …`,mmCh(`1/${a**n}`,[`−${a**n}`,`${a**n}`,`−1/${a**n}`]),`a⁻ⁿ = 1/aⁿ = 1/${a**n}.`)}
+  if(r===2){const b=pick([[8,3,2],[27,3,3],[16,2,4],[32,5,2],[125,3,5]]);return Q(`Nilai ${b[0]}<sup>1/${b[1]}</sup> adalah …`,numOpts(b[2],2,1),`a^(1/n) = ⁿ√a. ${b[1]}√${b[0]} = ${b[2]}.`)}
+  if(r===3){const k=pick([2,3,5]),m=pick([4,9,16,25]);return Q(`Bentuk sederhana dari √${k*m} adalah …`,mmCh(`${Math.sqrt(m)}√${k}`,[`${k}√${Math.sqrt(m)}`,`${m}√${k}`,`√${k+m}`]),`√${k*m} = √(${m} × ${k}) = ${Math.sqrt(m)}√${k}.`)}
+  if(r===4){const a=pick([2,3,5,10]),n=R(2,4);return Q(`Nilai <sup>${a}</sup>log ${fmtN(a**n)} adalah …`,numOpts(n,2,0),`ᵃlog aⁿ = n, sebab ${a}^${n} = ${a**n}.`)}
+  const p=pick([1000,2000,5000]),k=R(2,4);return Q(`Bakteri berlipat dua setiap jam. Awalnya ${fmtN(p)} bakteri. Setelah ${k} jam jumlahnya …`,mmCh(fmtN(p*2**k),[fmtN(p*2*k),fmtN(p+2**k),fmtN(p*2**(k-1))]),`Pertumbuhan eksponen: ${fmtN(p)} × 2^${k} = ${fmtN(p*2**k)}.`)};
+const t10Bar=()=>{const r=R(0,4),a=R(2,10),b=R(2,6),n=R(6,15);if(r===0)return Q(`Suku ke-${n} barisan aritmetika ${a}, ${a+b}, ${a+2*b}, … adalah …`,numOpts(a+(n-1)*b,b,0),`Uₙ = a + (n − 1)b = ${a} + ${n-1} × ${b} = ${a+(n-1)*b}.`);
+  if(r===1)return Q(`Jumlah ${n} suku pertama deret ${a} + ${a+b} + ${a+2*b} + … adalah …`,numOpts(n*(2*a+(n-1)*b)/2,b*2,0),`Sₙ = n/2 (2a + (n − 1)b) = ${n*(2*a+(n-1)*b)/2}.`);
+  if(r===2){const g=pick([2,3]),m=R(4,6),a0=R(1,3);return Q(`Suku ke-${m} barisan geometri ${a0}, ${a0*g}, ${a0*g*g}, … adalah …`,numOpts(a0*g**(m-1),g,1),`Uₙ = a·rⁿ⁻¹ = ${a0} × ${g}^${m-1} = ${a0*g**(m-1)}.`)}
+  if(r===3){const a0=pick([8,12,16,20]),rr=pick([[1,2],[1,4],[3,4]]);const S=a0/(1-rr[0]/rr[1]);return Q(`Jumlah deret geometri tak hingga dengan a = ${a0} dan r = ${rr[0]}/${rr[1]} adalah …`,mmCh(mmDec(S),[mmDec(a0*rr[0]/rr[1]),mmDec(a0*(1+rr[0]/rr[1])),mmDec(S*2)]),`S∞ = a/(1 − r) = ${mmDec(S)}.`)}
+  const M=pick([1000000,2000000,5000000]),i=pick([5,10]),t=R(2,3);return Q(`Tabungan Rp${fmtN(M)} dengan bunga tunggal ${i}% per tahun. Besar bunga setelah ${t} tahun adalah …`,mmCh('Rp'+fmtN(M*i/100*t),['Rp'+fmtN(M*i/100),'Rp'+fmtN(M*((1+i/100)**t)-M),'Rp'+fmtN(M*i/100*(t+1))].filter(x=>x!=='Rp'+fmtN(M*i/100*t))),`Bunga tunggal = M × i × t = ${fmtN(M*i/100*t)}.`)};
+const TRI=[[3,4,5],[5,12,13],[8,15,17],[6,8,10],[7,24,25]];
+const t10Trig=()=>{const r=R(0,3);if(r===0){const t=pick(TRI),f=pick([['sin','depan','miring',t[0],t[2]],['cos','samping','miring',t[1],t[2]],['tan','depan','samping',t[0],t[1]]]);return Q(`Segitiga siku-siku dengan sisi depan sudut α = ${t[0]}, sisi samping = ${t[1]}, sisi miring = ${t[2]}. Nilai ${f[0]} α adalah …`,mmCh(`${f[3]}/${f[4]}`,[`${t[0]}/${t[2]}`,`${t[1]}/${t[2]}`,`${t[0]}/${t[1]}`,`${t[2]}/${t[0]}`].filter(x=>x!==`${f[3]}/${f[4]}`)),`${f[0]} = ${f[1]}/${f[2]} = ${f[3]}/${f[4]}.`)}
+  if(r===1){const t=pick([['sin 30°','1/2'],['cos 60°','1/2'],['tan 45°','1'],['sin 90°','1'],['cos 0°','1'],['sin 60°','½√3'],['cos 30°','½√3'],['tan 60°','√3'],['sin 45°','½√2']]);return Q(`Nilai ${t[0]} adalah …`,mmCh(t[1],['1/2','1','½√3','√3','½√2','0'].filter(x=>x!==t[1])),`Sudut istimewa: ${t[0]} = ${t[1]}.`)}
+  if(r===2){const d=pick([10,20,30]);return Q(`Seseorang berdiri ${d} m dari tiang dan melihat puncaknya dengan sudut elevasi 45°. Tinggi tiang (abaikan tinggi orang) adalah … m`,numOpts(d,5,1),`tan 45° = 1, jadi tinggi = ${d} m.`)}
+  const m=pick([10,20,40]);return Q(`Tangga sepanjang ${m} m bersandar pada dinding membentuk sudut 30° dengan tanah. Tinggi ujung tangga di dinding adalah … m`,numOpts(m/2,3,1),`Tinggi = ${m} × sin 30° = ${m/2} m.`)};
+const t10SPL=()=>{const x=R(1,5),y=R(1,5),z=R(1,5),r=R(0,2);if(r===0)return Q(`Diketahui x + y + z = ${x+y+z}, x − y = ${x-y<0?'−'+(y-x):x-y}, dan y + z = ${y+z}. Nilai x adalah …`,numOpts(x,2,0),`Kurangkan persamaan 1 dengan 3: x = ${x+y+z} − ${y+z} = ${x}.`);
+  if(r===1){const a=R(1,4),b=R(1,4),c=R(6,15);const pts=[[0,0],[c,c],[R(0,2),R(0,2)],[c,0]];const ok=pts.filter(p=>a*p[0]+b*p[1]<=c);const bad=pts.filter(p=>a*p[0]+b*p[1]>c);if(!ok.length||!bad.length)return t10SPL();return Q(`Titik yang memenuhi ${cx(a)} + ${cx(b,'y')} ≤ ${c} adalah …`,mmCh(`(${ok[0][0]}, ${ok[0][1]})`,bad.map(p=>`(${p[0]}, ${p[1]})`)),`Substitusikan titik: ${a}×${ok[0][0]} + ${b}×${ok[0][1]} ≤ ${c}.`)}
+  return Q(`Sistem persamaan dengan dua garis sejajar memiliki … penyelesaian`,mmCh('tidak ada',['satu','tak hingga','dua']),`Garis sejajar tidak berpotongan.`)};
+const t10Kuad=()=>{const p=nz(-6,6),q=nz(-6,6),r=R(0,3);const b=-(p+q),c=p*q,fx=`x² ${b<0?'−':'+'} ${Math.abs(b)}x ${c<0?'−':'+'} ${Math.abs(c)}`.replace(' + 0x','').replace(' − 0x','');
+  if(r===0)return Q(`Akar-akar persamaan ${fx} = 0 adalah …`,mmCh(`${sn(Math.min(p,q))} dan ${sn(Math.max(p,q))}`,[`${sn(-Math.min(p,q))} dan ${sn(-Math.max(p,q))}`,`${sn(p+q)} dan ${sn(p*q)}`,`${sn(Math.min(p,q)-1)} dan ${sn(Math.max(p,q)+1)}`]),`Faktorkan: (x ${p<0?'+':'−'} ${Math.abs(p)})(x ${q<0?'+':'−'} ${Math.abs(q)}) = 0.`);
+  if(r===1)return Q(`Jumlah akar-akar persamaan ${fx} = 0 adalah …`,intOpts(p+q,3),`x₁ + x₂ = −b/a = ${sn(p+q)}.`);
+  if(r===2){const h=nz(-4,4),k=nz(-6,6);return Q(`Titik puncak grafik f(x) = (x ${h<0?'+':'−'} ${Math.abs(h)})² ${k<0?'−':'+'} ${Math.abs(k)} adalah …`,mmCh(`(${sn(h)}, ${sn(k)})`,[`(${sn(-h)}, ${sn(k)})`,`(${sn(h)}, ${sn(-k)})`,`(${sn(k)}, ${sn(h)})`]),`f(x) = (x − h)² + k berpuncak di (h, k).`)}
+  const a=R(1,3),bb2=R(1,6),cc=R(1,6),D=bb2*bb2-4*a*cc;return Q(`Diskriminan persamaan ${a===1?'':a}x² + ${bb2}x + ${cc} = 0 adalah … , sehingga akarnya ${D>0?'real berbeda':D===0?'kembar':'tidak real'}`,intOpts(D,5),`D = b² − 4ac = ${bb2*bb2} − ${4*a*cc} = ${sn(D)}.`)};
+const t10Data=()=>{const r=R(0,2),n=pick([5,7]),v=Array.from({length:n},()=>R(50,95)),s=[...v].sort((a,b)=>a-b);
+  if(r===0)return Q(`Median dari data ${v.join(', ')} adalah …`,numOpts(s[(n-1)/2],3,0),`Urutkan, lalu ambil nilai tengah: ${s[(n-1)/2]}.`);
+  if(r===1)return Q(`Jangkauan data ${v.join(', ')} adalah …`,numOpts(s[n-1]-s[0],3,0),`${s[n-1]} − ${s[0]} = ${s[n-1]-s[0]}.`);
+  const t=pick([['Diagram pencar yang titik-titiknya naik dari kiri ke kanan menunjukkan korelasi …','positif'],['Diagram pencar yang titik-titiknya turun dari kiri ke kanan menunjukkan korelasi …','negatif'],['Diagram yang menampilkan kuartil, median, dan pencilan adalah …','diagram kotak-garis']]);return Q(t[0],mmCh(t[1],['positif','negatif','tidak ada korelasi','diagram kotak-garis','histogram'].filter(x=>x!==t[1]).slice(0,3)),`Jawaban: ${t[1]}.`)};
+const t10Pel=()=>{const r=R(0,2);if(r===0)return Q(`Dua dadu dilempar bersamaan. Peluang jumlah mata dadu 7 adalah …`,mmCh('1/6',['1/12','7/36','1/9']),`Ada 6 pasang dari 36: 6/36 = 1/6.`);
+  if(r===1){const a=pick([['As',4],['hati',13],['kartu bergambar (J, Q, K)',12]]);return Q(`Satu kartu diambil dari 52 kartu bridge. Peluang terambil kartu ${a[0]} adalah …`,mmCh(mmFr(a[1],52),[mmFr(a[1],13),`${a[1]}/26`,mmFr(1,a[1])]),`${a[1]}/52 = ${mmFr(a[1],52)}.`)}
+  const p1=pick([[1,2],[1,3],[2,5]]),p2=pick([[1,2],[1,4],[3,5]]);return Q(`Kejadian A dan B saling bebas, P(A) = ${p1[0]}/${p1[1]} dan P(B) = ${p2[0]}/${p2[1]}. P(A ∩ B) adalah …`,mmCh(mmFr(p1[0]*p2[0],p1[1]*p2[1]),[mmFr(p1[0]*p2[1]+p2[0]*p1[1],p1[1]*p2[1]),mmFr(p1[0]+p2[0],p1[1]+p2[1]),mmFr(1,p1[1]+p2[1])]),`Saling bebas: P(A) × P(B).`)};
+const t11Fungsi=()=>{const a=nz(-4,5),b=nz(-6,6),c=nz(-3,4),d=nz(-5,5),x=R(-3,4),r=R(0,2),lin=(p,q)=>`${cx(p)} ${q<0?'−':'+'} ${Math.abs(q)}`;
+  if(r===0)return Q(`f(x) = ${lin(a,b)} dan g(x) = ${lin(c,d)}. Nilai (f ∘ g)(${sn(x)}) adalah …`,intOpts(a*(c*x+d)+b,5),`g(${sn(x)}) = ${sn(c*x+d)}, lalu f(${sn(c*x+d)}) = ${sn(a*(c*x+d)+b)}.`);
+  if(r===1){const k=pick([2,3,4,5]),m=nz(-8,8);return Q(`Invers dari f(x) = ${k}x ${m<0?'−':'+'} ${Math.abs(m)} adalah …`,mmCh(`(x ${m<0?'+':'−'} ${Math.abs(m)})/${k}`,[`(x ${m<0?'−':'+'} ${Math.abs(m)})/${k}`,`${k}x ${m<0?'+':'−'} ${Math.abs(m)}`,`x/${k} ${m<0?'−':'+'} ${Math.abs(m)}`]),`y = ${k}x ${m<0?'−':'+'} ${Math.abs(m)} → x = (y ${m<0?'+':'−'} ${Math.abs(m)})/${k}.`)}
+  const t=pick([['Fungsi yang setiap anggota kodomainnya punya pasangan disebut fungsi …','surjektif'],['Fungsi yang setiap anggota domainnya punya pasangan berbeda disebut fungsi …','injektif'],['Fungsi yang injektif sekaligus surjektif disebut fungsi …','bijektif']]);return Q(t[0],mmCh(t[1],['injektif','surjektif','bijektif','konstan'].filter(x=>x!==t[1])),`Hanya fungsi bijektif yang memiliki invers.`)};
+const t11Ling=()=>{const r=R(0,2);if(r===0){const a=R(20,80);return Q(`Sudut keliling yang menghadap busur yang sama dengan sudut pusat ${2*a}° besarnya …`,mmCh(`${a}°`,[`${2*a}°`,`${4*a}°`,`${180-a}°`]),`Sudut keliling = ½ sudut pusat.`)}
+  if(r===1)return Q(`Sudut keliling yang menghadap diameter lingkaran besarnya …`,mmCh('90°',['180°','45°','60°']),`Teorema Thales.`);
+  const t=pick(TRI);return Q(`Jarak titik P ke pusat lingkaran ${t[2]} cm dan jari-jari ${t[0]} cm. Panjang garis singgung dari P adalah … cm`,numOpts(t[1],3,1),`√(${t[2]}² − ${t[0]}²) = ${t[1]} cm.`)};
+const t11Stat=()=>{const r=R(0,2);if(r===0){const a=R(2,20),b=R(1,6),x=R(5,15);return Q(`Persamaan regresi y = ${a} + ${cx(b)}. Perkiraan nilai y untuk x = ${x} adalah …`,numOpts(a+b*x,b,0),`y = ${a} + ${b} × ${x} = ${a+b*x}.`)}
+  if(r===1){const t=pick([['0,95','kuat positif'],['−0,90','kuat negatif'],['0,05','sangat lemah']]);return Q(`Koefisien korelasi r = ${t[0]} menunjukkan hubungan …`,mmCh(t[1],['kuat positif','kuat negatif','sangat lemah','sempurna negatif'].filter(x=>x!==t[1])),`Nilai r mendekati ±1 berarti kuat.`)}
+  return Q(`Memperkirakan nilai di luar rentang data menggunakan garis regresi disebut …`,mmCh('ekstrapolasi',['interpolasi','korelasi','residu']),`Interpolasi = di dalam rentang data.`)};
+const t12Trans=()=>{const r=R(0,3),a=nz(-5,5),b=nz(-5,5);if(r===0)return Q(`Grafik y = x² digeser ${Math.abs(b)} satuan ke ${b>0?'atas':'bawah'}. Persamaannya menjadi …`,mmCh(`y = x² ${b>0?'+':'−'} ${Math.abs(b)}`,[`y = (x ${b>0?'+':'−'} ${Math.abs(b)})²`,`y = x² ${b>0?'−':'+'} ${Math.abs(b)}`,`y = ${Math.abs(b)}x²`]),`Translasi vertikal: f(x) + b.`);
+  if(r===1)return Q(`Grafik y = x² digeser ${Math.abs(a)} satuan ke ${a>0?'kanan':'kiri'}. Persamaannya menjadi …`,mmCh(`y = (x ${a>0?'−':'+'} ${Math.abs(a)})²`,[`y = (x ${a>0?'+':'−'} ${Math.abs(a)})²`,`y = x² ${a>0?'−':'+'} ${Math.abs(a)}`,`y = x² ${a>0?'+':'−'} ${Math.abs(a)}`]),`Translasi horizontal: f(x − a).`);
+  if(r===2)return Q(`Refleksi grafik y = f(x) terhadap sumbu x menghasilkan …`,mmCh('y = −f(x)',['y = f(−x)','y = f(x) + 1','y = 2f(x)']),`Terhadap sumbu y: f(−x).`);
+  const k=pick([2,3]);return Q(`Grafik y = f(x) didilatasi vertikal dengan faktor ${k}. Hasilnya …`,mmCh(`y = ${k}f(x)`,[`y = f(${k}x)`,`y = f(x) + ${k}`,`y = f(x + ${k})`]),`Dilatasi vertikal: k·f(x).`)};
+const t12Busur=()=>{const a=pick([90,180]),j=pick([7,14,21]),r=R(0,1);if(r===0)return Q(`Panjang busur dengan sudut pusat ${a}° dan jari-jari ${j} cm (π = 22/7) adalah … cm`,mmCh(fmtN(a/360*2*22/7*j),[fmtN(a/360*22/7*j*j),fmtN(2*22/7*j),fmtN(a/180*2*22/7*j)]),`(α/360°) × 2πr = ${fmtN(a/360*2*22/7*j)} cm.`);
+  return Q(`Luas juring dengan sudut pusat ${a}° dan jari-jari ${j} cm (π = 22/7) adalah … cm²`,mmCh(fmtN(a/360*22/7*j*j),[fmtN(a/360*2*22/7*j),fmtN(22/7*j*j),fmtN(a/180*22/7*j*j)]),`(α/360°) × πr² = ${fmtN(a/360*22/7*j*j)} cm².`)};
+const t12Komb=()=>{const r=R(0,3),n=R(5,8),k=R(2,3);if(r===0)return Q(`Banyak cara memilih ketua, sekretaris, dan bendahara dari ${n} orang adalah …`,numOpts(nPr(n,3),10,1),`Permutasi: ${n}P3 = ${nPr(n,3)}.`);
+  if(r===1)return Q(`Banyak cara memilih ${k} orang dari ${n} orang untuk menjadi tim adalah …`,numOpts(nCr(n,k),5,1),`Kombinasi: ${n}C${k} = ${nCr(n,k)}.`);
+  if(r===2){const w=pick([[3,2],[4,3],[5,2]]);return Q(`Plat nomor terdiri atas ${w[0]} angka berbeda dari angka 1–9. Banyak susunan yang mungkin adalah …`,numOpts(nPr(9,w[0]),20,1),`Aturan pengisian tempat: 9P${w[0]} = ${nPr(9,w[0])}.`)}
+  const m=R(3,5),b=R(2,4);return Q(`Dari ${m} bola merah dan ${b} bola biru diambil 2 bola sekaligus. Peluang keduanya merah adalah …`,mmCh(mmFr(nCr(m,2),nCr(m+b,2)),[mmFr(m,m+b),mmFr(nCr(b,2),nCr(m+b,2)),mmFr(m*b,nCr(m+b,2))]),`${m}C2 / ${m+b}C2 = ${nCr(m,2)}/${nCr(m+b,2)}.`)};
+for(const [cid,list] of [['k10',[['Eksponen dan logaritma','Sifat eksponen, bentuk akar, fungsi eksponensial',[t10Eks],'aᵐ × aⁿ = aᵐ⁺ⁿ, a⁻ⁿ = 1/aⁿ.'],
+   ['Barisan dan deret','Aritmetika, geometri, deret tak hingga, bunga',[t10Bar],'Uₙ = a + (n − 1)b; Uₙ = arⁿ⁻¹.'],
+   ['Perbandingan trigonometri','Sin, cos, tan, sudut istimewa, elevasi',[t10Trig],'sin = depan/miring, cos = samping/miring.'],
+   ['Sistem persamaan dan pertidaksamaan linear','SPLTV dan daerah penyelesaian',[t10SPL],'Eliminasi dan substitusi.'],
+   ['Persamaan dan fungsi kuadrat','Akar, diskriminan, titik puncak',[t10Kuad],'D = b² − 4ac.'],
+   ['Representasi dan interpretasi data','Statistik deskriptif dan korelasi',[t10Data],'Median = nilai tengah data terurut.'],
+   ['Peluang','Kejadian saling lepas dan saling bebas',[t10Pel],'Saling bebas: P(A ∩ B) = P(A) × P(B).']]],
+ ['k11',[['Komposisi fungsi dan fungsi invers','(f ∘ g)(x) dan f⁻¹(x)',[t11Fungsi],'(f ∘ g)(x) = f(g(x)).'],
+   ['Lingkaran','Sudut pusat, sudut keliling, garis singgung',[t11Ling],'Sudut keliling = ½ sudut pusat.'],
+   ['Statistika','Diagram pencar, regresi, korelasi',[t11Stat],'r mendekati ±1 berarti korelasi kuat.']]],
+ ['k12',[['Transformasi fungsi','Translasi, refleksi, dilatasi',[t12Trans],'f(x − a) geser kanan, f(x) + b geser atas.'],
+   ['Busur dan juring lingkaran','Panjang busur dan luas juring',[t12Busur],'Panjang busur = (α/360°) × 2πr.'],
+   ['Kombinatorik dan peluang','Aturan pengisian tempat, permutasi, kombinasi',[t12Komb],'Permutasi memperhatikan urutan, kombinasi tidak.']]]]){
+  const c=COURSE.find(x=>x.id===cid),s=c&&c.subjects.find(x=>x.id==='mtk');if(!s)continue;CUR_OLDU[cid+'/mtk']=s.units;
+  s.units=list.map(([t,d,gens,tip],i)=>U(t,d,gens,{tip,_k:'a'+cid.slice(1)+'/mtk/'+i,merdeka:true}));s.merdeka=true}
 const COURSE_VIS=()=>COURSE.filter(c=>!c.hidden);
 const clsGrp=id=>{const c=COURSE.find(x=>x.id===id);return c&&c.grp||id};
 
@@ -13820,7 +13889,7 @@ function folBind(root,list,after){root.querySelectorAll('[data-follow]').forEach
   try{await folDo(f,on);if(on){try{sfx.ok()}catch(_){}toast('team',`Kamu mengikuti ${f.name}.`)}b.outerHTML=folBtn(f,b.classList.contains('sm'));folBind(root,list,after);after&&after()}catch(err){b.disabled=false;toast('lock',fbErr(err))}})}
 const shareIcon='<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M12 3 V15 M7 8 L12 3 L17 8 M5 13 V19 C5 20 6 21 7 21 H17 C18 21 19 20 19 19 V13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const qrIcon='<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><path d="M14 14h3v3h-3zM18 18h3v3h-3zM18 14h3M14 18v3" stroke-linecap="round"/></svg>';
-let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=237';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
+let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=238';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
 function qrMatrix(text){const Q=window.QRCodeLib,q=new Q(-1,Q.ECL.M);q.addData(text);q.make();const n=q.getModuleCount(),m=[];for(let r=0;r<n;r++){m.push([]);for(let c=0;c<n;c++)m[r].push(q.isDark(r,c))}return m}
 function qrSvgOf(m){const n=m.length;let d='';for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(m[r][c])d+=`M${c} ${r}h1.02v1.02h-1.02z`;
   return `<svg viewBox="-2 -2 ${n+4} ${n+4}" class="pcqr" shape-rendering="crispEdges" aria-label="Kode QR profil"><rect x="-2" y="-2" width="${n+4}" height="${n+4}" fill="#fff"/><path d="${d}" fill="#1C1E3D"/></svg>`}
