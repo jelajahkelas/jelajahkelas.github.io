@@ -3899,7 +3899,7 @@ html[data-theme=malam] .plstick{background:#0a0f1e}
 <div class="syncpill" id="syncPill" hidden></div>
 <div class="toast" id="toast" hidden></div>
 
-<script src="av.js?v=244"></script>
+<script src="av.js?v=245"></script>
 <script>
 /* ---------- visual assets ---------- */
 const INK='#1B1E3D';
@@ -9447,6 +9447,251 @@ curInstall('k11',{eng:[['Digital literacies','Subject questions',[ke(EN11[0])],'
 curInstall('k12',{eng:[['A friendly future','Narrative, renewable energy',[ke(EN12[0])],'Build → built.'],['E-money','Argumentative text',[ke(EN12[1])],'Cashless society.'],
   ['Netiquette','Hortatory exposition',[ke(EN12[2])],'Diakhiri recommendation.'],['Carbon footprints','Discussion text, passive',[ke(EN12[3])],'Pro dan kontra.']]},'e12');
 
+/* ===================== PJOK kelas 5, 7–12 dan Seni Rupa kelas 7–12 (Kurikulum Merdeka) ===================== */
+const PJ5=[
+ [bb('Bergerak ke depan, belakang, dan samping termasuk konsep …','arah',['kekuatan','waktu','hubungan'],'Kesadaran ruang: lokasi, arah, level, jalur.'),
+  bb('Gerak dengan tubuh rendah, sedang, dan tinggi disebut …','level',['arah','tempo','jalur'],'Contoh: jongkok = level rendah.')],
+ [bb('Bergerak cepat atau lambat termasuk unsur …','waktu',['ruang','arah','level'],'Usaha: waktu, kekuatan, alur.'),
+  bb('Menendang bola dengan keras berarti memakai … besar','kekuatan',['waktu','level','arah'],'Kuat atau lemah.')],
+ [bb('Contoh gerak berpindah tempat (lokomotor) adalah …','berlari',['membungkuk','memutar badan','meregang'],'Lokomotor: jalan, lari, lompat, skipping.'),
+  bb('Saat bermain kejar-kejaran, kita berlatih …','mengejar dan menghindar',['menendang','memukul','berguling'],'Butuh kelincahan.')],
+ [bb('Contoh gerak di tempat (nonlokomotor) adalah …','menekuk dan memutar badan',['berlari','meloncat jauh','skipping'],'Tidak berpindah tempat.'),
+  bb('Saat mendarat dari lompatan, lutut sebaiknya …','ditekuk',['diluruskan kaku','dikunci','diangkat'],'Agar aman dan tidak cedera.')],
+ [bb('Berdiri dengan satu kaki melatih …','keseimbangan',['kecepatan','kekuatan lengan','daya tahan'],'Keseimbangan statis.'),
+  bb('Sebelum berguling depan, dagu sebaiknya …','ditempelkan ke dada',['diangkat ke atas','ditoleh ke samping','dibiarkan saja'],'Agar leher aman.')],
+ [bb('Saat menangkap bola, tangan sebaiknya …','terbuka dan siap',['mengepal','di belakang badan','di saku'],'Mata melihat bola.'),
+  bb('Lemparan dengan tangan diayun dari atas kepala disebut lemparan …','atas',['bawah','samping','lurus kaki'],'Lemparan atas, bawah, samping.'),
+  bb('Menggiring bola dengan kaki melatih …','koordinasi mata dan kaki',['kekuatan lengan','pendengaran','kelenturan jari'],'Bola tetap dekat kaki.')],
+ [bb('Bulu tangkis memakai alat pemukul berupa …','raket',['tongkat kasti','stik hoki','tangan kosong'],'Memukul kok melewati net.'),
+  bb('Dalam kasti, bola dipukul dengan …','tongkat pemukul',['raket','kaki','kepala'],'Pemukul panjang.')],
+ [bb('Contoh latihan untuk daya tahan jantung adalah …','lari pagi',['tidur siang','main gim','menonton TV'],'Kebugaran jasmani.'),
+  bb('Senam yang diiringi musik disebut …','senam irama',['senam lantai','lari sambung','lompat jauh'],'Gerak berirama.'),
+  bb('Sebelum olahraga kita harus …','pemanasan',['makan banyak','tidur','langsung lari kencang'],'Mencegah cedera.')]
+];
+const PJ7=[
+ [bb('Dalam bola basket, membawa bola sambil memantulkannya disebut …','dribbling',['passing','pivot','shooting'],'Memantulkan bola ke lantai.'),
+  bb('Memutar badan dengan satu kaki sebagai poros dalam basket disebut …','pivot',['lay up','dribble','rebound'],'Kaki poros tidak boleh bergeser.')],
+ [bb('Pukulan pertama untuk memulai permainan bola voli disebut …','servis',['smes','blok','passing'],'Dilakukan dari belakang garis.'),
+  bb('Pukulan keras dan menukik ke daerah lawan dalam voli disebut …','smes (spike)',['servis','passing bawah','blok'],'Serangan utama.')],
+ [bb('Dalam kasti, pemain pemukul berlari menuju …','tempat hinggap',['gawang','ring','net'],'Lalu kembali ke ruang bebas.'),
+  bb('Kasti termasuk permainan …','bola kecil',['bola besar','bela diri','senam'],'Bola kecil dan pemukul.')],
+ [bb('Sikap kaki kokoh dalam pencak silat disebut …','kuda-kuda',['tangkisan','elakan','pukulan'],'Dasar semua gerakan.'),
+  bb('Menghindari serangan dengan memindahkan tubuh disebut …','elakan',['tendangan','kuda-kuda','pukulan'],'Juga hindaran.')],
+ [bb('Lari jarak pendek disebut juga …','sprint',['maraton','estafet','jalan cepat'],'Contoh: 100 meter.'),
+  bb('Start yang dipakai untuk lari jarak pendek adalah start …','jongkok',['berdiri','melayang','duduk'],'Aba-aba: bersedia, siap, ya.')],
+ [bb('Gerakan berdiri dengan kepala sebagai tumpuan disebut …','head stand',['hand stand','sikap lilin','roll depan'],'Senam lantai.'),
+  bb('Sikap lilin bertumpu pada …','bahu dan tengkuk',['kepala','tangan','perut'],'Kaki lurus ke atas.')],
+ [bb('Senam irama dilakukan dengan iringan …','musik',['peluit saja','tanpa suara','teriakan'],'Gerak sesuai irama.'),
+  bb('Ayunan lengan dalam senam irama harus … dengan langkah kaki','serasi',['berlawanan irama','acak','terlambat'],'Koordinasi.')],
+ [bb('Kemampuan otot menahan beban berulang kali disebut …','daya tahan otot',['kelentukan','kecepatan','keseimbangan'],'Contoh: push-up.'),
+  bb('Zat gizi sumber tenaga utama adalah …','karbohidrat',['vitamin','mineral','air'],'Nasi, jagung, ubi.'),
+  bb('Protein berguna untuk …','membangun dan memperbaiki sel',['memberi rasa manis','membuat mengantuk','menghilangkan haus'],'Ikan, telur, tahu.')]
+];
+const PJ8=[
+ [bb('Gerak lurus seperti lari 100 meter disebut gerak …','linier',['angular','kurvilinier','acak'],'Angular: berputar pada poros.'),
+  bb('Gerak lengan memutar pada sendi bahu disebut gerak …','angular',['linier','lurus','diam'],'Berputar pada sumbu.')],
+ [bb('Lintasan bola yang dilempar miring berbentuk …','parabola',['lurus','lingkaran','zig-zag'],'Dipengaruhi gravitasi.'),
+  bb('Bola yang berputar ke depan disebut …','topspin',['backspin','sidespin','no spin'],'Bola cepat turun.'),
+  bb('Kaki dibuka lebar membuat tubuh lebih …','stabil',['goyah','ringan','cepat jatuh'],'Alas tumpuan lebih luas.')],
+ [bb('Rencana agar tim bisa menang disebut …','strategi',['pemanasan','servis','pendinginan'],'Menyerang dan bertahan.'),
+  bb('Sepak bola termasuk permainan …','invasi',['net','lapangan','target'],'Masuk ke daerah lawan.')],
+ [bb('Sikap jujur dan menghormati lawan dalam olahraga disebut …','fair play',['curang','egois','pasif'],'Sportif.'),
+  bb('Mengubah ukuran lapangan agar semua bisa bermain disebut …','modifikasi',['diskualifikasi','pelanggaran','tendangan bebas'],'Modifikasi alat atau aturan.')],
+ [bb('Prinsip FIT terdiri dari frekuensi, intensitas, dan …','waktu',['tempat','teman','tujuan'],'Frequency, intensity, time.'),
+  bb('Contoh aktivitas jasmani di alam adalah …','mendaki gunung',['main gim','menonton film','tidur'],'Jaga kebersihan alam.')],
+ [bb('Informasi gizi dapat dibaca pada …','label kemasan',['struk belanja','kalender','buku tulis'],'Kalori, lemak, gula.'),
+  bb('Zat yang dibutuhkan tubuh dalam jumlah banyak dan tidak berkalori adalah …','air',['lemak','gula','protein'],'Minum cukup air.')]
+];
+const PJ9=[
+ [bb('Menghentikan bola dalam sepak bola disebut …','stopping',['passing','heading','dribbling'],'Juga disebut menahan bola.'),
+  bb('Menggiring bola bertujuan …','membawa bola melewati lawan',['menghentikan permainan','membuang waktu','memukul bola'],'Bola dekat kaki.')],
+ [bb('Menahan serangan lawan di depan net voli disebut …','blok',['servis','passing','dig'],'Dilakukan dengan melompat.'),
+  bb('Passing atas dalam voli menggunakan …','jari-jari tangan',['lengan bawah','kepala','kaki'],'Passing bawah memakai lengan bawah.')],
+ [bb('Tendangan dalam taekwondo disebut …','chagi',['jireugi','makki','seogi'],'Jireugi = pukulan, makki = tangkisan.'),
+  bb('Sikap dasar berdiri dalam taekwondo disebut …','seogi',['chagi','makki','jireugi'],'Kuda-kuda taekwondo.')],
+ [bb('Gerakan berdiri dengan tangan sebagai tumpuan disebut …','hand stand',['head stand','sikap lilin','kayang'],'Badan lurus terbalik.'),
+  bb('Guling depan sambil melayang disebut …','dive roll',['roll belakang','meroda','kayang'],'Senam lantai lanjutan.')],
+ [bb('Senam aerobik melatih terutama …','daya tahan jantung dan paru',['kekuatan jari','kelenturan lidah','pendengaran'],'Gerak berirama terus-menerus.'),
+  bb('Bagian akhir latihan untuk menurunkan denyut nadi disebut …','pendinginan',['pemanasan','inti','start'],'Pemanasan → inti → pendinginan.')],
+ [bb('Latihan push-up melatih kekuatan otot …','lengan dan dada',['kaki','leher','perut saja'],'Kebugaran jasmani.'),
+  bb('Lompat tali termasuk latihan …','daya tahan',['kelenturan saja','keseimbangan statis','istirahat'],'Juga koordinasi.'),
+  bb('Contoh budaya hidup sehat adalah …','tidur cukup dan olahraga teratur',['begadang','merokok','jarang mandi'],'Hidup aktif dan sehat.')]
+];
+const PJ10=[
+ [bb('Operan bola basket setinggi dada disebut …','chest pass',['bounce pass','overhead pass','lay up'],'Bounce pass dipantulkan ke lantai.'),
+  bb('Operan basket yang dipantulkan ke lantai disebut …','bounce pass',['chest pass','overhead pass','jump shot'],'Sulit dipotong lawan.')],
+ [bb('Menembak bola ke gawang dalam sepak bola disebut …','shooting',['passing','stopping','dribbling'],'Bertujuan mencetak gol.'),
+  bb('Jumlah pemain sepak bola dalam satu tim di lapangan adalah …','11 orang',['5 orang','6 orang','7 orang'],'Termasuk penjaga gawang.')],
+ [bb('Bola tangan dimainkan terutama dengan …','tangan',['kaki','raket','kepala'],'Mirip sepak bola, tapi dengan tangan.'),
+  bb('Jumlah pemain bola tangan dalam satu tim di lapangan adalah …','7 orang',['5 orang','11 orang','6 orang'],'Termasuk penjaga gawang.')],
+ [bb('Pukulan pelan menipu di atas net voli disebut …','tip',['smes','servis','blok'],'Bola dijatuhkan pelan.'),
+  bb('Menyelamatkan bola smes lawan dengan lengan disebut …','dig',['blok','tip','servis'],'Teknik bertahan.')],
+ [bb('Pukulan bulu tangkis yang tajam menukik disebut …','smash',['dropshot','netting','lob'],'Pukulan menyerang.'),
+  bb('Pukulan pelan yang jatuh dekat net disebut …','dropshot',['smash','drive','lob'],'Menipu lawan.')],
+ [bb('Lari jarak menengah dan jauh memakai start …','berdiri',['jongkok','melayang','duduk'],'Sprint memakai start jongkok.'),
+  bb('Alat dalam nomor tolak peluru berbentuk …','bola besi',['lembing','cakram','tongkat'],'Ditolak dari bahu.'),
+  bb('Bagian lompat jauh setelah awalan adalah …','tolakan',['pendaratan','pendinginan','start'],'Awalan, tolakan, melayang, mendarat.')],
+ [bb('Gerakan menyamping bertumpu pada tangan bergantian disebut …','meroda',['kayang','sikap lilin','roll depan'],'Seperti roda berputar.'),
+  bb('Senam menggunakan alat seperti palang disebut senam …','alat',['lantai','irama','aerobik'],'Senam artistik.')],
+ [bb('Langkah dasar cha-cha-cha termasuk aktivitas …','gerak berirama',['bela diri','atletik','renang'],'Mengikuti irama musik.'),
+  bb('Lompat tali dengan irama melatih …','koordinasi dan daya tahan',['kekuatan rahang','penglihatan saja','kelenturan jari'],'Gerak berirama.')]
+];
+const PJ11=[
+ [bb('Tingkat keterampilan tertinggi disebut …','proficiency (mahir)',['pre-control','control','utilization'],'Urutan: pre-control, control, utilization, proficiency.'),
+  bb('Catatan pribadi tentang latihan dan perasaan setelahnya disebut …','jurnal refleksi',['papan skor','jadwal pertandingan','kartu kuning'],'Membantu perbaikan diri.')],
+ [bb('Kemampuan memilih tindakan tepat saat bermain disebut …','pengambilan keputusan',['pemanasan','pendinginan','servis'],'Bagian keterampilan taktis.'),
+  bb('Taktik saat tim memegang bola disebut taktik …','menyerang',['bertahan','istirahat','bertukar'],'Bertahan saat lawan menguasai bola.')],
+ [bb('Konsep gerak membantu siswa untuk …','bergerak lebih efektif',['bermalas-malasan','menghindari olahraga','menambah cedera'],'Gerak lebih efisien.'),
+  bb('Menekuk lutut saat mendarat menerapkan konsep …','penyerapan gaya',['gerak lurus','titik hilang','kecepatan cahaya'],'Mengurangi benturan.')],
+ [bb('Bersalaman dengan lawan setelah bertanding mencerminkan …','fair play',['kecurangan','egoisme','provokasi'],'Sportivitas.'),
+  bb('Manfaat jangka panjang fair play adalah …','membentuk karakter jujur dan menghargai',['membuat sering bertengkar','merusak persahabatan','merugikan tim'],'Perilaku etis.')],
+ [bb('Prinsip FITT terdiri dari frekuensi, intensitas, waktu, dan …','jenis latihan',['teman latihan','tempat latihan','tujuan hidup'],'Frequency, Intensity, Time, Type.'),
+  bb('Jam tangan pintar dapat membantu kebugaran dengan …','memantau denyut jantung',['menghitung nilai rapor','membuat soal','memasak'],'Teknologi kebugaran.')],
+ [bb('Mengajak teman hidup aktif dan sehat disebut …','advokasi',['diskriminasi','diskualifikasi','manipulasi'],'Bisa lewat media sosial.'),
+  bb('Manfaat hidup aktif bagi mental adalah …','mengurangi stres',['menambah stres','membuat malas','mengganggu tidur'],'Fisik, mental, sosial.')]
+];
+const PJ12=[
+ [bb('Serangan cepat dalam bola basket disebut …','fast break',['zone defence','man to man','jump ball'],'Menyerang sebelum lawan siap bertahan.'),
+  bb('Pertahanan satu lawan satu dalam basket disebut …','man to man',['zone defence','fast break','give and go'],'Zone defence: menjaga daerah.')],
+ [bb('Dalam formasi voli 3-1-2, jumlah pemain dalam satu tim adalah …','6',['5','7','11'],'Voli dimainkan 6 orang.'),
+  bb('Teknik membendung smes lawan disebut …','blocking',['passing','servis','dig'],'Dilakukan di depan net.')],
+ [bb('Sofbol termasuk permainan …','lapangan (bola kecil)',['net','invasi','bela diri'],'Mirip kasti.'),
+  bb('Pukulan pelan sengaja dalam sofbol disebut …','bunt',['home run','strike','double play'],'Bola dipukul pendek.')],
+ [bb('Gaya lompat tinggi dengan badan telungkup di atas mistar disebut gaya …','straddle',['scots','flop','jongkok'],'Gaya guling perut.'),
+  bb('Tahapan lompat tinggi adalah awalan, tolakan, melewati mistar, dan …','pendaratan',['start','finis','servis'],'Mendarat dengan aman.')],
+ [bb('Pola langkah pencak silat berbentuk huruf S, segitiga, dan …','U',['Z','X','O'],'Pola langkah dasar.'),
+  bb('Pertahanan dengan menghindar tanpa menyentuh serangan disebut pertahanan …','pasif',['aktif','agresif','serangan'],'Aktif: menangkis.')],
+ [bb('Gerakan melenting dari posisi guling disebut …','guling lenting',['sikap lilin','meroda','head stand'],'Senam lantai.'),
+  bb('Urutan latihan yang benar adalah …','pemanasan, inti, pendinginan',['inti, pemanasan, pendinginan','pendinginan, inti, pemanasan','inti saja'],'Sistematika latihan.')],
+ [bb('Renang gaya punggung dilakukan dengan posisi badan …','telentang',['telungkup','miring','berdiri'],'Wajah di atas air.'),
+  bb('Hal penting untuk keselamatan di kolam renang adalah …','berenang di bawah pengawasan',['berlari di tepi kolam','berenang sendirian di laut dalam','makan sambil berenang'],'Keselamatan di air.')],
+ [bb('Kelincahan adalah kemampuan …','mengubah arah dengan cepat',['mengangkat beban berat','bertahan lama','tidur nyenyak'],'Kebugaran terkait keterampilan.'),
+  bb('Contoh latihan koordinasi mata dan tangan adalah …','memantulkan bola ke dinding',['lari jarak jauh','sit-up','tidur'],'Melatih ketepatan.')],
+ [bb('HIV dapat menular melalui …','darah dan jarum suntik bekas',['bersalaman','berenang bersama','berbagi alat tulis'],'Tidak menular lewat sentuhan biasa.'),
+  bb('Cara terbaik melindungi diri dari penyakit menular seksual adalah …','menjaga diri dan tidak melakukan seks bebas',['mengabaikan informasi','berbagi jarum suntik','minum vitamin saja'],'Pencegahan.')]
+];
+const SR7=[
+ [bb('Teknik membuat gelap-terang dengan garis-garis disebut …','arsir',['kolase','mozaik','batik'],'Garis rapat = lebih gelap.'),
+  bb('Pelukis Indonesia yang terkenal dengan lukisan "Penangkapan Pangeran Diponegoro" adalah …','Raden Saleh',['Affandi','Basuki Abdullah','S. Sudjojono'],'Pelukis abad ke-19.'),
+  bb('Gambar benda mati seperti buah dan vas disebut gambar …','alam benda',['ilustrasi','karikatur','komik'],'Still life.')],
+ [bb('Hiasan berupa pola yang diulang-ulang disebut …','ragam hias (motif)',['sketsa','tipografi','logo'],'Contoh: motif kawung.'),
+  bb('Motif batik kawung termasuk motif …','geometris',['manusia','hewan','abstrak bebas'],'Bentuk bulatan berulang.')],
+ [bb('Seni mengatur huruf agar menarik dan mudah dibaca disebut …','tipografi',['ragam hias','kaligrafi Arab saja','arsir'],'Typography.'),
+  bb('Tanda gambar sebagai identitas sebuah lembaga disebut …','logo',['poster','komik','sketsa'],'Logo punya makna filosofis.'),
+  bb('Aksara Lontara berasal dari suku …','Bugis',['Jawa','Batak','Bali'],'Sulawesi Selatan.')],
+ [bb('Membuat karya seni dari sampah plastik termasuk karya yang …','berdampak bagi lingkungan',['merusak lingkungan','tidak bermanfaat','dilarang'],'Mengurangi limbah.'),
+  bb('Cara berpikir kreatif untuk memecahkan masalah disebut …','creative problem solving',['menyontek','meniru persis','menunda'],'Temukan masalah, cari solusi.')]
+];
+const SR8=[
+ [bb('Garis khayal setinggi mata dalam gambar perspektif disebut …','garis horizon',['titik hilang','garis bantu','garis tepi'],'Eye level.'),
+  bb('Titik tempat garis-garis perspektif bertemu disebut …','titik hilang',['titik api','titik tengah','titik awal'],'Vanishing point.'),
+  bb('Untuk memperbesar gambar secara tepat kita memakai …','grid (kisi-kisi)',['penghapus','cat air','gunting'],'Skala perbesaran.')],
+ [bb('Karya desain berisi informasi atau ajakan yang dipasang di tempat umum disebut …','poster',['patung','keramik','relief'],'Singkat dan menarik.'),
+  bb('Model tiruan sebuah kemasan sebelum diproduksi disebut …','mock up',['logo','tipografi','sketsa wajah'],'Dibuat dari jaring-jaring kemasan.')],
+ [bb('Pelukis Indonesia yang terkenal dengan teknik memencet cat langsung dari tube adalah …','Affandi',['Raden Saleh','Basuki Abdullah','Dede Eri Supria'],'Gaya ekspresionisme.'),
+  bb('Motif sirih gadang berasal dari daerah …','Jambi',['Papua','Bali','Aceh'],'Motif tumbuhan.')],
+ [bb('Warna kuning alami dapat diperoleh dari …','kunyit',['daun suji','mengkudu','arang'],'Pewarna alam.'),
+  bb('Warna hijau alami dapat diperoleh dari …','daun suji/pandan',['kunyit','kopi','mengkudu'],'Pewarna alam.'),
+  bb('Karya dari cangkang telur yang ditempel pada bidang termasuk karya …','mozaik/kolase bahan bekas',['patung logam','lukisan cat minyak','batik tulis'],'Bahan daur ulang.')]
+];
+const SR9=[
+ [bb('Kumpulan gambar referensi untuk ide karya disebut …','moodboard',['poster','mock up','logo'],'Sumber inspirasi.'),
+  bb('Pola gambar berulang yang rumit dengan garis-garis disebut …','zentangle',['arsir silang','pointilis','kolase'],'Teknik menggambar.'),
+  bb('Bayangan benda selalu jatuh … sumber cahaya','berlawanan arah dengan',['searah dengan','di atas','di dalam'],'Perspektif pencahayaan.')],
+ [bb('Prinsip desain yang membuat satu bagian paling menonjol disebut …','penekanan',['keseimbangan','kesejajaran','kedekatan'],'Emphasis.'),
+  bb('Tempat dan cara menata karya untuk pameran disebut …','display',['sketsa','jurnal','palet'],'Bisa dari pipa PVC atau kayu.')],
+ [bb('Buku catatan berisi sketsa, foto, dan ide karya disebut …','jurnal visual',['buku rapor','kamus','agenda kelas'],'Dokumentasi proses berkarya.'),
+  bb('Memberi masukan dengan sopan dan membangun disebut …','umpan balik',['kritik kasar','mencela','mengabaikan'],'Tangga umpan balik.')],
+ [bb('Kegiatan memperlihatkan karya kepada masyarakat disebut …','pameran',['sketsa','arsir','mewarnai'],'Perlu perencanaan.'),
+  bb('Hal pertama dalam merencanakan pameran adalah …','menentukan tema dan karya',['membongkar display','membagi hadiah','menutup acara'],'Lalu tempat dan waktu.')]
+];
+const SR10=[
+ [bb('Unsur seni rupa yang paling dasar adalah …','titik dan garis',['bingkai','harga','judul'],'Juga bidang, bentuk, warna, tekstur, ruang.'),
+  bb('Prinsip seni rupa yang menunjukkan pengulangan teratur disebut …','irama',['kontras','kesatuan','proporsi'],'Ritme.'),
+  bb('Karya seni yang lahir dari tradisi turun-temurun disebut seni …','tradisional',['modern','kontemporer','digital'],'Klasifikasi karya.')],
+ [bb('Proses berpikir desain yang dimulai dengan memahami pengguna disebut …','design thinking',['copy paste','menyontek','trial tanpa tujuan'],'Empati, definisi, ide, prototipe, uji.'),
+  bb('Tahap membuat contoh awal karya dalam design thinking disebut …','prototipe',['empati','pameran','penjualan'],'Diuji lalu diperbaiki.')],
+ [bb('Karya seni rupa dua dimensi hanya memiliki ukuran …','panjang dan lebar',['panjang, lebar, tinggi','tinggi saja','volume'],'Contoh: lukisan.'),
+  bb('Teknik cetak yang memakai kain kasa disebut …','sablon',['batik','ukir','tenun'],'Cetak saring.')],
+ [bb('Mengubah bentuk bahan dengan cara baru disebut …','manipulasi bahan',['menjiplak','memfotokopi','menghapus'],'Eksperimen berkarya.'),
+  bb('Menggabungkan berbagai teknik dalam satu karya disebut …','kombinasi (mixed media)',['monokrom','satu teknik','sketsa'],'Eksperimen medium.')],
+ [bb('Saat mempresentasikan karya, kita sebaiknya menjelaskan …','ide, proses, dan makna karya',['harga saja','nama teman','kesalahan orang lain'],'Memakai kosakata seni rupa.'),
+  bb('Penilaian karya secara mendalam dengan alasan disebut …','kritik seni',['iklan','gosip','promosi'],'Deskripsi, analisis, interpretasi, penilaian.')]
+];
+const SR11=[
+ [bb('Karya seni yang menyindir masalah lingkungan disebut karya …','satire',['dekoratif','realis murni','abstrak murni'],'Persuasi visual.'),
+  bb('Saat memakai cutter, hal terpenting adalah …','keselamatan kerja',['kecepatan','gaya','warna'],'Hati-hati alat tajam.')],
+ [bb('Lukisan tertua di Indonesia ditemukan di gua …','Maros (Sulawesi Selatan)',['Jatijajar','Lascaux','Pindul'],'Lukisan cap tangan.'),
+  bb('Karya seni yang tidak meniru bentuk nyata disebut …','nonrepresentasional (abstrak)',['realis','naturalis','potret'],'Contoh: Piet Mondrian.'),
+  bb('Relief yang menceritakan kisah terdapat pada candi …','Borobudur',['Toraja','Monas','Istiqlal'],'Seni pahat.')],
+ [bb('Menafsirkan ulang karya terkenal dengan gaya sendiri disebut …','reinterpretasi',['plagiat','duplikasi','fotokopi'],'Contoh: Monalisa versi baru.'),
+  bb('Teknik menggabungkan potongan-potongan foto disebut …','montase',['arsir','batik','ukir'],'Photomontage.')],
+ [bb('Kumpulan karya terbaik dan proses berkarya disebut …','portofolio',['kuitansi','rapor','agenda'],'Untuk dokumentasi.'),
+  bb('Gambar rancangan awal sebelum berkarya disebut …','sketsa',['bingkai','pameran','katalog'],'Buat beberapa alternatif.')],
+ [bb('Gambar yang menjelaskan suatu materi atau cerita disebut …','ilustrasi',['karikatur','logo','tipografi'],'Ilustrasi deskriptif.'),
+  bb('Lambang yang mewakili sesuatu dalam komunikasi visual disebut …','simbol',['palet','kanvas','kuas'],'Juga ikon.')]
+];
+const SR12=[
+ [bb('Contoh unsur seni rupa adalah …','garis, bentuk, tekstur, warna',['harga, merek, iklan','nada, irama, lirik','dialog, tokoh, alur'],'Elemen rupa.'),
+  bb('Prinsip desain dengan bagian kiri dan kanan sama disebut …','simetri',['asimetri','radial','kontras'],'Keseimbangan simetris.')],
+ [bb('Kriya yang dibuat dari tanah liat disebut …','keramik',['tenun','anyaman','ukir kayu'],'Dibakar agar keras.'),
+  bb('Kriya yang dibuat dengan menyilangkan bahan seperti bambu disebut …','anyaman',['batik','keramik','sablon'],'Contoh: tikar.')],
+ [bb('Kain yang dibuat dengan malam dan canting disebut …','batik',['tenun','songket','sablon'],'Warisan budaya Indonesia.'),
+  bb('Langkah pertama membuat karya kriya adalah …','merancang ide dan sketsa',['menjual karya','memamerkan','membungkus'],'Lalu menyiapkan bahan.')],
+ [bb('Menilai karya dengan menyebutkan kelebihan dan kekurangannya disebut …','apresiasi kritis',['mencela','meniru','mengabaikan'],'Apresiasi karya.')],
+ [bb('Desain yang mengutamakan kegunaan disebut memenuhi fungsi …','praktis',['hiasan saja','mahal','rumit'],'Fungsi desain.'),
+  bb('Prinsip desain dengan bagian berpusat dan menyebar disebut …','radial',['simetri','asimetri','irama'],'Seperti roda.')],
+ [bb('Tahap desain setelah sketsa adalah …','membuat desain akhir (final)',['membuang ide','berhenti','langsung menjual'],'Penciptaan desain.')],
+ [bb('Ilustrasi dalam buku cerita anak berfungsi untuk …','memperjelas cerita',['menambah harga','mengganti teks seluruhnya','membuat bingung'],'Seni ilustrasi.')],
+ [bb('Karya seni rupa terapan tiga dimensi contohnya …','vas bunga keramik',['lukisan','poster','foto'],'Punya panjang, lebar, tinggi.')],
+ [bb('Mengunggah karya ke media sosial termasuk bentuk …','publikasi',['plagiat','penghapusan','sensor'],'Juga pameran.'),
+  bb('Daftar karya yang dipamerkan disebut …','katalog',['kuitansi','rapor','resep'],'Berisi judul dan keterangan karya.')]
+];
+curInstall('k5',{pjok:[['Kesadaran ruang','Arah, level, jalur',[kb(PJ5[0])],'Kenali ruang gerak.'],['Usaha gerak','Waktu dan kekuatan',[kb(PJ5[1])],'Cepat-lambat, kuat-lemah.'],
+  ['Berpindah, mengejar, menghindar','Gerak lokomotor',[kb(PJ5[2])],'Jalan, lari, lompat.'],['Menekuk, memutar, melompat','Nonlokomotor, mendarat',[kb(PJ5[3])],'Tekuk lutut saat mendarat.'],
+  ['Keseimbangan dan berguling','Senam dasar',[kb(PJ5[4])],'Dagu ke dada.'],['Melempar, menangkap, menggiring','Gerak manipulatif',[kb(PJ5[5])],'Mata melihat bola.'],
+  ['Memukul dengan alat','Raket dan pemukul',[kb(PJ5[6])],'Bulu tangkis dan kasti.'],['Kebugaran dan gerak berirama','Hidup sehat',[kb(PJ5[7])],'Pemanasan dulu.']]},'p5');
+curInstall('k7',{pjok:[['Bola basket','Dribbling, pivot, shooting',[kb(PJ7[0])],'Permainan invasi.'],['Bola voli','Passing, servis, smes',[kb(PJ7[1])],'Permainan net.'],
+  ['Kasti','Melempar, memukul, berlari',[kb(PJ7[2])],'Permainan lapangan.'],['Pencak silat','Kuda-kuda, elakan',[kb(PJ7[3])],'Bela diri asli Indonesia.'],
+  ['Lari jarak pendek','Start jongkok',[kb(PJ7[4])],'Sprint.'],['Senam lantai','Head stand, sikap lilin',[kb(PJ7[5])],'Keseimbangan.'],
+  ['Senam irama','Langkah dan ayunan',[kb(PJ7[6])],'Sesuai musik.'],['Kebugaran dan gizi','Komponen kebugaran, zat gizi',[kb(PJ7[7])],'Karbohidrat sumber tenaga.']]},'p7');
+curInstall('k8',{pjok:[['Mengefektifkan gerak','Jenis gerak dan gaya',[kb(PJ8[0])],'Linier dan angular.'],['Menerapkan konsep gerak','Parabola, putaran, keseimbangan',[kb(PJ8[1])],'Alas lebar = stabil.'],
+  ['Strategi gerak','Invasi, net, lapangan',[kb(PJ8[2])],'Rencanakan serangan.'],['Modifikasi dan fair play','Aturan dan sportivitas',[kb(PJ8[3])],'Jujur dan menghormati.'],
+  ['Aktivitas di alam','Prinsip FIT',[kb(PJ8[4])],'Jaga alam.'],['Gizi dan makanan','Label gizi, menu sehat',[kb(PJ8[5])],'Baca label kemasan.']]},'p8');
+curInstall('k9',{pjok:[['Sepak bola','Stopping, dribbling, shooting',[kb(PJ9[0])],'Permainan invasi.'],['Bola voli','Passing, blok',[kb(PJ9[1])],'Permainan net.'],
+  ['Taekwondo','Seogi, chagi, jireugi',[kb(PJ9[2])],'Bela diri.'],['Senam lantai','Hand stand, dive roll',[kb(PJ9[3])],'Senam lanjutan.'],
+  ['Senam aerobik','Gerak berirama',[kb(PJ9[4])],'Pemanasan, inti, pendinginan.'],['Kebugaran dan hidup sehat','Push-up, lompat tali',[kb(PJ9[5])],'Tidur cukup dan olahraga.']]},'p9');
+curInstall('k10',{pjok:[['Bola basket','Chest pass, bounce pass',[kb(PJ10[0])],'Operan dada dan pantul.'],['Sepak bola','Passing, shooting',[kb(PJ10[1])],'11 pemain.'],
+  ['Bola tangan','Menggiring, menembak',[kb(PJ10[2])],'7 pemain.'],['Bola voli','Tip, dig, block',[kb(PJ10[3])],'Bertahan dan menyerang.'],
+  ['Bulu tangkis','Smash, dropshot',[kb(PJ10[4])],'Permainan net.'],['Atletik','Start, lompat jauh, tolak peluru',[kb(PJ10[5])],'Awalan, tolakan, mendarat.'],
+  ['Senam','Lantai dan alat',[kb(PJ10[6])],'Meroda.'],['Gerak berirama','Cha-cha-cha, lompat tali',[kb(PJ10[7])],'Ikuti irama.']]},'p10');
+curInstall('k11',{pjok:[['Mengoptimalkan keterampilan gerak','Tingkat keterampilan',[kb(PJ11[0])],'Pre-control sampai proficiency.'],['Keterampilan taktis','Menyerang dan bertahan',[kb(PJ11[1])],'Ambil keputusan tepat.'],
+  ['Dampak konsep gerak','Gerak efektif',[kb(PJ11[2])],'Tekuk lutut saat mendarat.'],['Fair play dan etika','Sportivitas',[kb(PJ11[3])],'Hormati lawan.'],
+  ['Kebugaran sehari-hari','Prinsip FITT',[kb(PJ11[4])],'Frekuensi, intensitas, waktu, jenis.'],['Advokasi hidup sehat','Ajak teman aktif',[kb(PJ11[5])],'Lewat media sosial.']]},'p11');
+curInstall('k12',{pjok:[['Bola basket','Pola serang dan bertahan',[kb(PJ12[0])],'Fast break, man to man.'],['Bola voli','Formasi dan blocking',[kb(PJ12[1])],'6 pemain.'],
+  ['Sofbol','Bunt, double play',[kb(PJ12[2])],'Permainan lapangan.'],['Lompat tinggi','Gaya straddle dan scots',[kb(PJ12[3])],'Awalan, tolakan, pendaratan.'],
+  ['Pencak silat','Pola langkah, pertahanan',[kb(PJ12[4])],'Aktif dan pasif.'],['Senam','Guling lenting, meroda',[kb(PJ12[5])],'Pemanasan-inti-pendinginan.'],
+  ['Renang gaya punggung','Gerak dan keselamatan',[kb(PJ12[6])],'Badan telentang.'],['Kebugaran keterampilan','Kelincahan, koordinasi',[kb(PJ12[7])],'Ubah arah cepat.'],
+  ['Mencegah PMS dan HIV','Bahaya dan pencegahan',[kb(PJ12[8])],'Jaga diri.']]},'p12');
+curInstall('k7',{seni:[['Menggambar','Arsir, alam benda, proporsi',[kb(SR7[0])],'Gelap-terang dengan arsir.'],['Mendesain ragam hias','Motif tradisional',[kb(SR7[1])],'Pola berulang.'],
+  ['Tipografi dan logo','Huruf, aksara, logo',[kb(SR7[2])],'Logo = identitas.'],['Berkarya untuk perubahan','Karya dari limbah',[kb(SR7[3])],'Seni yang berdampak.']]},'r7');
+curInstall('k8',{seni:[['Menggambar perspektif','Horizon, titik hilang, skala',[kb(SR8[0])],'Satu dan dua titik hilang.'],['Mendesain','Poster, mock up kemasan',[kb(SR8[1])],'Desain yang menarik.'],
+  ['Apresiasi','Ragam hias dan pelukis Indonesia',[kb(SR8[2])],'Bandingkan karya.'],['Berkarya dengan bahan alam','Pewarna alam, daur ulang',[kb(SR8[3])],'Kunyit, suji, mengkudu.']]},'r8');
+curInstall('k9',{seni:[['Menggambar','Moodboard, teknik, pencahayaan',[kb(SR9[0])],'Bayangan berlawanan cahaya.'],['Mendesain','Poster dan dekorasi pameran',[kb(SR9[1])],'Prinsip penekanan.'],
+  ['Mengapresiasi','Jurnal visual, umpan balik',[kb(SR9[2])],'Beri masukan sopan.'],['Pameran','Perencanaan dan pelaksanaan',[kb(SR9[3])],'Tentukan tema.']]},'r9');
+curInstall('k10',{seni:[['Unsur, prinsip, dan gaya','Elemen dan prinsip seni rupa',[kb(SR10[0])],'Titik, garis, bidang …'],['Design thinking','Menemukan gagasan',[kb(SR10[1])],'Empati sampai prototipe.'],
+  ['Ragam medium','Lukis, cetak, ragam hias',[kb(SR10[2])],'Dua dimensi.'],['Eksperimen medium','Manipulasi bahan dan teknik',[kb(SR10[3])],'Mixed media.'],
+  ['Bercerita tentang karya','Presentasi dan kritik',[kb(SR10[4])],'Ide, proses, makna.']]},'r10');
+curInstall('k11',{seni:[['Karya berdampak','Persuasi visual, keselamatan',[kb(SR11[0])],'Satire lingkungan.'],['Apresiasi seni rupa','Representasional dan abstrak',[kb(SR11[1])],'Gua Maros, Borobudur.'],
+  ['Membuat karya','Reinterpretasi, montase',[kb(SR11[2])],'Gaya sendiri.'],['Ekspresi personal','Sketsa dan portofolio',[kb(SR11[3])],'Proses kreatif.'],
+  ['Ilustrasi deskriptif','Komunikasi visual',[kb(SR11[4])],'Simbol dan ikon.']]},'r11');
+curInstall('k12',{seni:[['Seni dan keseharian','Unsur dan prinsip',[kb(SR12[0])],'Garis, bentuk, warna.'],['Kriya terapan','Keramik, anyaman',[kb(SR12[1])],'Kriya dari bahan berbeda.'],
+  ['Menciptakan kriya','Batik dan proses',[kb(SR12[2])],'Rancang dulu.'],['Apresiasi karya','Menilai karya',[kb(SR12[3])],'Kelebihan dan kekurangan.'],
+  ['Dasar desain','Fungsi dan prinsip',[kb(SR12[4])],'Radial, simetri.'],['Menciptakan desain','Sketsa ke final',[kb(SR12[5])],'Proses desain.'],
+  ['Seni ilustrasi','Ilustrasi cerita',[kb(SR12[6])],'Memperjelas cerita.'],['Karya tiga dimensi','Seni rupa terapan 3D',[kb(SR12[7])],'Panjang, lebar, tinggi.'],
+  ['Publikasi karya','Pameran dan media sosial',[kb(SR12[8])],'Katalog karya.']]},'r12');
+['k7','k8','k9','k10','k11','k12'].forEach(cid=>{const c=COURSE.find(x=>x.id===cid),s=c&&c.subjects.find(x=>x.id==='seni');if(s&&s.merdeka)s.name='Seni Rupa'});
+
 const COURSE_VIS=()=>COURSE.filter(c=>!c.hidden);
 const clsGrp=id=>{const c=COURSE.find(x=>x.id===id);return c&&c.grp||id};
 
@@ -14925,7 +15170,7 @@ function folBind(root,list,after){root.querySelectorAll('[data-follow]').forEach
   try{await folDo(f,on);if(on){try{sfx.ok()}catch(_){}toast('team',`Kamu mengikuti ${f.name}.`)}b.outerHTML=folBtn(f,b.classList.contains('sm'));folBind(root,list,after);after&&after()}catch(err){b.disabled=false;toast('lock',fbErr(err))}})}
 const shareIcon='<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M12 3 V15 M7 8 L12 3 L17 8 M5 13 V19 C5 20 6 21 7 21 H17 C18 21 19 20 19 19 V13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const qrIcon='<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><path d="M14 14h3v3h-3zM18 18h3v3h-3zM18 14h3M14 18v3" stroke-linecap="round"/></svg>';
-let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=244';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
+let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=245';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
 function qrMatrix(text){const Q=window.QRCodeLib,q=new Q(-1,Q.ECL.M);q.addData(text);q.make();const n=q.getModuleCount(),m=[];for(let r=0;r<n;r++){m.push([]);for(let c=0;c<n;c++)m[r].push(q.isDark(r,c))}return m}
 function qrSvgOf(m){const n=m.length;let d='';for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(m[r][c])d+=`M${c} ${r}h1.02v1.02h-1.02z`;
   return `<svg viewBox="-2 -2 ${n+4} ${n+4}" class="pcqr" shape-rendering="crispEdges" aria-label="Kode QR profil"><rect x="-2" y="-2" width="${n+4}" height="${n+4}" fill="#fff"/><path d="${d}" fill="#1C1E3D"/></svg>`}
