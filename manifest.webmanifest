@@ -74,5 +74,36 @@
         }
       ]
     }
+  ],
+  "prefer_related_applications": false,
+  "screenshots": [
+    {
+      "src": "playstore/ss2-belajar.png",
+      "sizes": "1082x1922",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Jalur belajar"
+    },
+    {
+      "src": "playstore/ss3-soal.png",
+      "sizes": "1082x1922",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Latihan soal"
+    },
+    {
+      "src": "playstore/ss4-liga.png",
+      "sizes": "1082x1922",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Liga mingguan"
+    },
+    {
+      "src": "playstore/ss5-profil.png",
+      "sizes": "1082x1922",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Profil dan rekor"
+    }
   ]
 }

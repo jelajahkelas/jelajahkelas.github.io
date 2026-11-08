@@ -134,6 +134,23 @@ service cloud.firestore {
       allow delete: if signedIn() && resource.data.host == request.auth.uid;
     }
 
+    // Antrean notifikasi: ditulis aplikasi, dikirim oleh pengirim cadangan (GitHub Actions). Tidak bisa dibaca aplikasi.
+    match /pushq/{id} {
+      allow create: if signedIn() && request.resource.data.uid == request.auth.uid
+        && request.resource.data.type in ['follow', 'nudge', 'fsinv', 'task', 'answer', 'invite']
+        && request.resource.data.keys().hasOnly(['type', 'id2', 'uid', 'created', 'cid', 'tid'])
+        && request.resource.data.id2 is string && request.resource.data.id2.size() <= 160;
+    }
+
+    // Catatan error otomatis dari aplikasi. Hanya admin yang bisa membaca dan menghapus.
+    match /errors/{id} {
+      allow create: if signedIn() && request.resource.data.uid == request.auth.uid
+        && request.resource.data.msg is string && request.resource.data.msg.size() <= 300
+        && request.resource.data.get('stack', '').size() <= 1000
+        && request.resource.data.keys().hasOnly(['msg', 'src', 'line', 'col', 'stack', 'ver', 'ua', 'page', 'uid', 'role', 'created']);
+      allow read, delete: if isAdmin();
+    }
+
     // Laporan soal salah dari murid/guru. Hanya admin yang bisa membaca dan mengubah.
     match /reports/{id} {
       allow create: if signedIn() && request.resource.data.uid == request.auth.uid

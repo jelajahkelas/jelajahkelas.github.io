@@ -16,13 +16,15 @@
 <meta property="og:image:alt" content="Uli si burung hantu, maskot JELAS">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://jelajahkelas.github.io/icons/og.png?v=2">
+<link rel="preconnect" href="https://www.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://firestore.googleapis.com" crossorigin>
+<link rel="preconnect" href="https://identitytoolkit.googleapis.com" crossorigin>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" type="image/png" href="icons/icon-192.png">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-messaging-compat.js"></script>
 <script src="config.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="claude:viewport-fit-sides" content="cover">
@@ -3470,6 +3472,11 @@ html[data-theme=malam] .adpanel,html[data-theme=malam] .adrep{background:#111a2e
 html[data-theme=malam] .anns{background:#1d1640;border-color:#3b2f73;color:#ddd3ff}html[data-theme=malam] .fbrep{background:rgba(255,255,255,.1)}
 html[data-theme=malam] .adrwhy{background:#3b2a0a;color:#fbbf24}html[data-theme=malam] .adropts .ok{background:#0f2e1c;color:#86efac}html[data-theme=malam] .adropts .no{background:#3a1212;color:#fca5a5}
 @media (max-width:899px){.adnb.addot::after{top:4px;left:calc(50% + 6px)}}
+.suok{display:flex;gap:10px;align-items:flex-start;padding:12px 14px;border-radius:14px;background:#F3EEFF;border:2px solid #D9CCFB;font-size:14px;line-height:1.45;cursor:pointer;text-align:left}
+.suok a{color:#6D3EF0;font-weight:700}.suok input{width:22px;height:22px;flex:none;margin-top:1px;accent-color:#7C4DFF}html[data-theme=malam] .suok{background:#1d1640;border-color:#3b2f73}
+.tkmat{display:flex;flex-direction:column;gap:10px;max-height:62vh;overflow:auto}.tkmtx p{margin:0 0 10px;line-height:1.6;font-size:15.5px}
+.tkvid{position:relative;padding-top:56.25%;border-radius:14px;overflow:hidden;background:#000}.tkvid iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.aderrst summary{cursor:pointer;font-size:13px;color:var(--muted);font-weight:700;margin-top:8px}.aderrst pre{white-space:pre-wrap;word-break:break-word;font-size:12px;background:var(--soft,#F6F4FB);padding:10px;border-radius:10px;max-height:200px;overflow:auto}
 /* Toko: judul bagian besar gelap */
 html body:not(.teacher) #vShop .shopsec h3{font-size:22px!important;color:var(--ink)!important;text-transform:none!important;letter-spacing:0!important}
 /* Profil: ringkasan tanpa kotak */
@@ -3851,7 +3858,7 @@ html[data-theme=malam] .plstick{background:#0a0f1e}
 <div class="syncpill" id="syncPill" hidden></div>
 <div class="toast" id="toast" hidden></div>
 
-<script src="av.js?v=214"></script>
+<script src="av.js?v=217"></script>
 <script>
 /* ---------- visual assets ---------- */
 const INK='#1B1E3D';
@@ -6241,6 +6248,8 @@ function tkDragMatch(box,L2){const area=box.querySelector('.mtch');if(!area)retu
       if(drag.g){drag.g.style.left=e.clientX+'px';drag.g.style.top=e.clientY+'px';area.querySelectorAll('[data-r]').forEach(r=>r.classList.remove('hov'));const t=document.elementFromPoint(e.clientX,e.clientY);const r=t&&t.closest&&t.closest('[data-r]');if(r&&!r.disabled)r.classList.add('hov')}});
     const end=e=>{if(!drag||drag.b!==b)return;const g=drag.g;drag=null;b.classList.remove('lift');area.querySelectorAll('[data-r]').forEach(r=>r.classList.remove('hov'));if(!g)return;g.remove();const t=document.elementFromPoint(e.clientX,e.clientY);const r=t&&t.closest&&t.closest('[data-r]');if(r&&!r.disabled)r.click()};
     b.addEventListener('pointerup',end);b.addEventListener('pointercancel',end)})}
+/* murid TK–SD kelas 6 (umumnya di bawah 13 tahun) perlu persetujuan orang tua/wali saat daftar */
+function suYoung(c){return c==='tk'||/^k[1-6]$/.test(String(c||''))}
 function startQ(){
   $('#turn').hidden=true;const q=game.qs[game.i];{const sp=qSpeech(q);if(sp)say(sp)}
   if(L.time&&!game.lesson){$('#timer').hidden=false;game.t0=Date.now();const bar=$('#timerBar');bar.style.width='100%';
@@ -9749,7 +9758,9 @@ function renderBankList(){const c=tCls();
 function renderBankEditor(b){const c=tCls();const e=BK.edit!=null?b.qs.find(q=>q.id===BK.edit):null;const f=e||{q:'',opts:['','','',''],a:0,exp:''};
   $('#vTBank').innerHTML=`<button class="back" id="bkBack" style="align-self:flex-start">← Semua paket</button>`+
    `<div class="tcard"><div class="tform"><div class="tfield"><label for="bkTitle">Judul paket</label><input id="bkTitle" maxlength="40" value="${esc(b.title)}"></div><div class="tfield"><label for="bkSubj">Mata pelajaran</label><select id="bkSubj">${c.subjects.map(s=>`<option value="${s.id}" ${s.id===b.subj?'selected':''}>${esc(s.name)}</option>`).join('')}</select></div></div>
-    <p class="sub" style="margin:0">${b.qs.length} soal · game yang cocok: ${FIT[bankFit(b)].games.map(gameName).join(', ')}</p><div style="display:flex;gap:10px;flex-wrap:wrap"><button class="ghost" id="bkImp">Impor dari Excel</button><button class="ghost" id="bkDel" style="color:var(--bad)">Hapus paket</button></div></div>
+    <div class="tfield"><label for="bkMat">Materi untuk murid (tidak wajib)</label><textarea id="bkMat" class="note-area" maxlength="4000" style="min-height:110px" placeholder="Tulis ringkasan materi. Jika paket ini dijadikan tugas, murid membaca materi ini dulu sebelum mengerjakan soal.">${esc(b.materi||'')}</textarea></div>
+    <div class="tfield"><label for="bkVid">Tautan video YouTube (tidak wajib)</label><input id="bkVid" maxlength="200" value="${esc(b.video||'')}" placeholder="https://youtu.be/…"></div>
+    <p class="sub" style="margin:0">${b.qs.length} soal · game yang cocok: ${FIT[bankFit(b)].games.map(gameName).join(', ')}${b.materi||b.video?' · <b>modul lengkap dengan materi</b>':''}</p><div style="display:flex;gap:10px;flex-wrap:wrap"><button class="ghost" id="bkImp">Impor dari Excel</button><button class="ghost" id="bkDel" style="color:var(--bad)">Hapus paket</button></div></div>
    <div class="tcard"><h3>${e?'Ubah soal':'Tambah soal'}</h3><div class="tfield"><label for="qText">Pertanyaan</label><textarea class="note-area" id="qText" style="min-height:70px" placeholder="Contoh: Hasil dari 3/4 + 1/4 adalah …">${esc(f.q)}</textarea></div>
     <div class="optedit">${['A','B','C','D'].map((L,i)=>`<label class="oe"><input type="radio" name="qKey" value="${i}" ${f.a===i?'checked':''} aria-label="Kunci ${L}"><b>${L}</b><input id="qO${i}" maxlength="60" value="${esc(f.opts[i]||'')}" placeholder="Pilihan ${L}${i>1?' (boleh kosong)':''}"></label>`).join('')}</div>
     
@@ -9759,6 +9770,8 @@ function renderBankEditor(b){const c=tCls();const e=BK.edit!=null?b.qs.find(q=>q
   hydrate($('#vTBank'));const touch=()=>{b.upd=Date.now();save()};
   $('#bkBack').onclick=()=>{BK.id=null;BK.edit=null;renderTBank()};
   $('#bkTitle').onchange=ev=>{const t=ev.target.value.trim();if(t){b.title=t;touch()}};
+  $('#bkMat').onchange=ev=>{b.materi=ev.target.value.slice(0,4000);touch()};
+  $('#bkVid').onchange=ev=>{const v=ev.target.value.trim();if(v&&!ytId(v)){toast('lock','Tautan YouTube tidak dikenali. Contoh: https://youtu.be/abc123');return}b.video=v;touch()};
   $('#bkSubj').onchange=ev=>{b.subj=ev.target.value;b.subjName=(c.subjects.find(s=>s.id===b.subj)||{}).name;touch();renderTBank()};
   $('#bkDel').onclick=()=>{openModal(`<h3>Hapus paket "${esc(b.title)}"?</h3><p>${b.qs.length} soal di paket ini akan dihapus. Nilai evaluasi yang sudah masuk rapor tetap tersimpan.</p><div class="acts"><button class="ghost" id="mNo">Batal</button><button class="primary" id="mYes" style="background:var(--bad)">Hapus</button></div>`);$('#mNo').onclick=closeModal;
     $('#mYes').onclick=()=>{APP.deleted=APP.deleted||[];APP.deleted.push(b.id);APP.bank=APP.bank.filter(x=>x.id!==b.id);save();closeModal();BK.id=null;renderTBank()}};
@@ -9898,13 +9911,13 @@ function startOnboarding(first,g){const t=T();const o={step:0,google:!!g,name:g?
       body=talk('Buat akunmu','')+(full?`<div class="tcard"><b>Kelas sudah penuh</b><p class="sub" style="margin:0">Batas ${licMax()} murid sudah tercapai. Minta gurumu menghubungi admin.</p></div>`:`<div class="tcard" style="gap:12px">
        <div class="tfield"><label for="suUser">Nama pengguna</label><input id="suUser" maxlength="16" autocapitalize="none" spellcheck="false" value="${esc(o.user)}"></div>
        ${o.google?'':`<div class="tfield"><label for="suPass">Sandi (4 angka)</label><input id="suPass" type="password" inputmode="numeric" maxlength="4" value="${esc(o.pass)}" autocomplete="new-password"></div>
-       <div class="tfield"><label for="suPass2">Ulangi sandi</label><input id="suPass2" type="password" inputmode="numeric" maxlength="4" value="${esc(o.pass2)}" autocomplete="new-password"></div>`}${FB?`<div class="tfield"><label for="suCode">Kode kelas dari guru (boleh dikosongkan)</label><input id="suCode" maxlength="8" autocapitalize="characters" autocomplete="off" class="fbcodein" value="${esc(o.code||'')}" placeholder="Contoh: K7B4QX"></div>`:''}<p class="note" id="suErr" style="color:var(--bad);font-weight:700;margin:0"></p></div>`);
+       <div class="tfield"><label for="suPass2">Ulangi sandi</label><input id="suPass2" type="password" inputmode="numeric" maxlength="4" value="${esc(o.pass2)}" autocomplete="new-password"></div>`}${FB?`<div class="tfield"><label for="suCode">Kode kelas dari guru (boleh dikosongkan)</label><input id="suCode" maxlength="8" autocapitalize="characters" autocomplete="off" class="fbcodein" value="${esc(o.code||'')}" placeholder="Contoh: K7B4QX"></div>`:''}${suYoung(o.cls)?`<label class="suok"><input type="checkbox" id="suOk" ${o.consent?'checked':''}><span>Saya <b>orang tua/wali</b>, atau anak ini mendaftar dengan izin orang tua atau guru, dan menyetujui <a href="privacy.html" target="_blank" rel="noopener">Kebijakan Privasi</a> serta <a href="terms.html" target="_blank" rel="noopener">Ketentuan</a> JELAS.</span></label>`:`<p class="note" style="margin:0;font-size:13px">Dengan membuat akun, kamu menyetujui <a href="terms.html" target="_blank" rel="noopener">Ketentuan</a> dan <a href="privacy.html" target="_blank" rel="noopener">Kebijakan Privasi</a> JELAS.</p>`}<p class="note" id="suErr" style="color:var(--bad);font-weight:700;margin:0"></p></div>`);
       ok=!full;btn='Buat akun'}
     if(s===5){body=talk(`Siap, ${esc(o.name.trim())}!`,`Nama penggunamu <strong>${esc(o.user)}</strong>.`)+(o.rc?`<div class="tcard" style="align-items:center;text-align:center;gap:6px"><b>Kode pemulihan</b><div class="fbcode-big" style="font-size:30px">${o.rc}</div><small style="color:var(--muted);font-weight:700">Foto layar ini atau minta orang tua mencatatnya. Kode ini dipakai jika kamu lupa sandi.</small></div>`:'')+`<div class="card" style="padding:14px;display:flex;flex-direction:column;gap:10px">${[['star','Pelajaran','5 soal singkat. Pilih jawaban, lalu tekan Periksa.'],['game','Level game','Jawab soal sambil menembak, balapan, atau memancing.'],['chest','Peti hadiah','Buka untuk mendapat permata.'],['trophy','Ujian unit','Lulus untuk membuka unit berikutnya.'],['flame','Hari beruntun','Belajar setiap hari supaya apimu terus menyala.']].map(x=>`<div style="display:flex;gap:12px;align-items:center"><span style="width:42px;height:42px;flex:none;display:grid;place-items:center;border-radius:50%;background:${x[0]==='flame'?'#FFF0DC':'var(--blue)'};color:${x[0]==='flame'?'#FF8A00':'#fff'};border:${x[0]==='chest'||x[0]==='flame'?'0':'3px solid var(--ink)'}">${ICONS[x[0]]}</span><span><b style="font-family:var(--display)">${x[1]}</b><br><small style="color:var(--muted)">${x[2]}</small></span></div>`).join('')}</div>`;btn='Ayo mulai!'}
     el.innerHTML=`<div class="onbin"><div class="onbbar"><button class="back" id="onbBack" aria-label="Kembali">←</button><span class="lbar"><i style="width:${(s+1)/steps*100}%"></i></span></div>${body}<div class="onbfoot"><button class="primary press" id="onbNext" ${ok?'':'disabled'}>${btn}</button>${s===0?'<button class="linkbtn" id="onbHave" style="width:100%;margin-top:10px">Saya sudah punya akun</button>':''}</div></div>`;hydrate(el);
     el.querySelectorAll('[data-gd]').forEach(b=>b.onclick=()=>{o.gender=b.dataset.gd;tone([660],.03);render()});
     const nm=$('#onbName');if(nm){nm.oninput=()=>{o.name=nm.value;$('#onbNext').disabled=!o.name.trim()||!o.gender};setTimeout(()=>nm.focus(),60);nm.onkeydown=e=>{if(e.key==='Enter'&&o.name.trim()&&o.gender)$('#onbNext').click()}}
-    const su=$('#suUser');if(su){su.oninput=()=>{o.user=su.value;o.userEdited=true};if($('#suPass')){$('#suPass').oninput=e=>o.pass=e.target.value;$('#suPass2').oninput=e=>o.pass2=e.target.value;setTimeout(()=>$('#suPass').focus(),60)}}
+    {const ck=$('#suOk');if(ck)ck.onchange=()=>{o.consent=ck.checked}}const su=$('#suUser');if(su){su.oninput=()=>{o.user=su.value;o.userEdited=true};if($('#suPass')){$('#suPass').oninput=e=>o.pass=e.target.value;$('#suPass2').oninput=e=>o.pass2=e.target.value;setTimeout(()=>$('#suPass').focus(),60)}}
     el.querySelectorAll('[data-c]').forEach(b=>b.onclick=()=>{o.cls=b.dataset.c;o.subj=null;render()});
     el.querySelectorAll('[data-s]').forEach(b=>b.onclick=()=>{o.subj=b.dataset.s;render()});
     el.querySelectorAll('[data-g]').forEach(b=>b.onclick=()=>{o.goal=+b.dataset.g;render()});
@@ -9913,7 +9926,7 @@ function startOnboarding(first,g){const t=T();const o={step:0,google:!!g,name:g?
     $('#onbNext').onclick=()=>{tone([660,880],.06);
       if(o.step===4){const u=String(o.user||'').trim().toLowerCase(),err=m=>{$('#suErr').textContent=m;sfx.bad()};
         if(!/^[a-z0-9_.]{3,16}$/.test(u))return err('Nama pengguna 3–16 huruf kecil atau angka, tanpa spasi.');if(userTaken(u))return err('Nama pengguna ini sudah dipakai. Coba yang lain.');
-        if(!o.google){if(!/^\d{4}$/.test(o.pass))return err('Sandi harus 4 angka.');if(o.pass!==o.pass2)return err('Sandi yang diulang tidak sama.')}o.user=u;
+        if(suYoung(o.cls)&&!o.consent)return err('Minta orang tua atau wali membaca dan mencentang persetujuan di atas dulu.');if(!o.google){if(!/^\d{4}$/.test(o.pass))return err('Sandi harus 4 angka.');if(o.pass!==o.pass2)return err('Sandi yang diulang tidak sama.')}o.user=u;
         if(FB){const sc=$('#suCode');o.code=sc?sc.value:'';window.fbSignupStudent(o,()=>{o.step++;render()},err);return}}
       if(o.step<steps-1){o.step++;render();return}
       if(o.fbDone){el.hidden=true;window.fbAfterSignup();setTimeout(()=>{const n=document.querySelector('.node.cur');if(n)n.click()},700);return}
@@ -9945,6 +9958,18 @@ function bootApp(){migrateTeacher();ensureUsers();
 const FB=(()=>{try{if(typeof window==='undefined'||!window.FB_CONFIG||!window.firebase)return null;firebase.initializeApp(window.FB_CONFIG);const db=firebase.firestore();try{const r=db.enablePersistence({synchronizeTabs:true});r&&r.catch&&r.catch(()=>{})}catch(e){}const auth=firebase.auth();auth.languageCode='id';return {auth,db,cfg:window.FB_CONFIG}}catch(e){console.error('Firebase',e);return null}})();
 if(!FB&&typeof window!=='undefined'&&window.FB_CONFIG){window.__fbFail=true}
 const FBX={user:null,me:null,admin:false,unsub:[],t:null,busy:false,cfg:{},classDoc:null,remote:[],members:{}};
+/* ===== Catatan error otomatis: error di HP pengguna masuk ke Panel Admin ===== */
+(function(){const seen=new Set();let n=0;
+  const noise=/ResizeObserver loop|^Script error\.?$|chrome-extension:|moz-extension:|safari-extension:|Failed to fetch|NetworkError|Load failed|network-request-failed|unavailable|offline|AbortError|The user aborted|Notification|messaging\/|installations\/|QuotaExceeded|play\(\) request was interrupted|NotAllowedError/i;
+  const ver=()=>{try{const sc=document.querySelector('script[src*="av.js?v="]');return sc?sc.src.split('v=')[1]:''}catch(e){return ''}};
+  function rep(msg,src,line,col,stack){try{msg=String(msg||'');if(!msg||noise.test(msg)||noise.test(String(src||''))||noise.test(String(stack||'')))return;
+    if(typeof FB==='undefined'||!FB.db||typeof FBX==='undefined'||!FBX.user)return;const key=(msg+'|'+src+'|'+line).slice(0,240);if(seen.has(key)||n>=6)return;seen.add(key);n++;
+    let role='';try{role=isT()?'teacher':(P?'student':'')}catch(e){}
+    FB.db.collection('errors').add({msg:msg.slice(0,300),src:String(src||'').replace(location.origin,'').slice(0,120),line:+line||0,col:+col||0,stack:String(stack||'').replace(new RegExp(location.origin.replace(/[.*+?^${}()|[\]\\/]/g,'\\$&'),'g'),'').slice(0,900),
+      ver:ver(),ua:navigator.userAgent.slice(0,180),page:(typeof curTab!=='undefined'?String(curTab):'')+(document.body.classList.contains('playing')?'/main':''),uid:FBX.user.uid,role,created:Date.now()}).catch(()=>{})}catch(e){}}
+  window.addEventListener('error',e=>{if(e&&e.message)rep(e.message,e.filename,e.lineno,e.colno,e.error&&e.error.stack)});
+  window.addEventListener('unhandledrejection',e=>{const r=e&&e.reason;if(!r)return;rep('Promise: '+(r.message||r.code||String(r)),'',0,0,r.stack||'')});
+  window.jelasReportError=rep})();
 if(FB){
 const FREE_MAX=+(FB.cfg.freeStudents||10);
 const MAIL_DOM='murid.jelajahkelas.app';
@@ -10242,7 +10267,7 @@ window.fbSignupStudent=async function(o,next,err){if(o.fbDone){next();return}con
       try{const h=await FB.db.doc('handles/'+o.user).get();if(h.exists&&h.data().uid!==u.uid){try{await u.delete()}catch(x){}const e=new Error('taken');e.code='auth/email-already-in-use';throw e}}catch(x){if(x.code==='auth/email-already-in-use')throw x}}
     await FB.db.doc('handles/'+o.user).set({uid:u.uid,name:o.name.trim(),av:null,cls:o.cls,kw:searchKw(o.name.trim(),o.user),upd:Date.now()}).catch(()=>{});
     const p=newProfile({name:o.name.trim(),cls:o.cls,subj:o.subj,goal:o.goal,color:o.color,gender:o.gender});p.user=o.user;p.pass=o.google?null:o.pass;
-    const me={role:'student',username:o.user,name:p.name,cls:p.cls,pin:o.google?null:o.pass,google:!!o.google,classId:null,teacherUid:null,joinCode:null,clsName:null,xp:0,lastDay:null,p:JSON.stringify(p),plan:'free',proUntil:0,created:Date.now(),upd:Date.now()};
+    const me={consent:{by:suYoung(o.cls)?'ortu':'murid',at:Date.now()},role:'student',username:o.user,name:p.name,cls:p.cls,pin:o.google?null:o.pass,google:!!o.google,classId:null,teacherUid:null,joinCode:null,clsName:null,xp:0,lastDay:null,p:JSON.stringify(p),plan:'free',proUntil:0,created:Date.now(),upd:Date.now()};
     await FB.db.doc('users/'+u.uid).set(me);FBX.user=u;FBX.me=me;
     if(!o.google){try{o.rc=await fbSetRecovery(o.user,o.pass)}catch(e){console.warn('recovery',e)}}
     APP={profiles:[p],cur:p.id,sessions:[],deleted:[],bank:[]};P=p;store.set('app',APP);setSession({role:'student',id:p.id,uid:u.uid});
@@ -10714,19 +10739,23 @@ const FREE_TASKS=2;
 document.querySelector('.nav.tnav[data-tab=tstud]').insertAdjacentHTML('beforebegin','<button class="nav tnav" data-tab="ttask"><i data-icon="target"></i><span>Tugas</span></button>');
 $('#vTStud').insertAdjacentHTML('afterend','<section id="vTTask" class="view" hidden style="flex-direction:column;gap:16px"></section>');
 TEACH_R.ttask=()=>renderTTask();TAB_VIEW.ttask='vTTask';views.push('vTTask');
+function tkBank(s){return String(s.ui||'').startsWith('bk:')?(APP.bank||[]).find(b=>b.id===s.ui.slice(3)):null}
+function ytId(u){const m=String(u||'').match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?(?:.*&)?v=|embed\/|shorts\/|live\/))([A-Za-z0-9_-]{11})/);return m?m[1]:''}
 function taskWizard(c,cid){const plus=d=>dayKey(new Date(Date.now()+d*864e5));const st={sid:c.subjects[0].id,ui:'0',n:8,due:plus(3),rem:3,hours:[7,13,19]};const SB=s=>c.subjects.find(x=>x.id===s.sid);
   wizard({title:'Tugas baru',state:st,steps:[
     {t:'Mata pelajaran apa?',html:s=>wzOpts(c.subjects.map(x=>({v:x.id,l:x.name,g:x.glyph,c:x.color})),s.sid),pick:(s,v)=>{if(s.sid!==v){s.sid=v;s.ui='0'}}},
-    {t:'Materi yang mana?',html:s=>wzOpts(SB(s).units.map((u,i)=>({v:String(i),l:`Unit ${i+1}: ${u.t}`,s:u.d||''})),s.ui),pick:(s,v)=>s.ui=v},
+    {t:'Materi yang mana?',sub:'Paket dari Bank Soal-mu tampil paling atas sebagai modul guru.',html:s=>wzOpts(bankOf(SB(s).id).filter(b=>b.qs.length>=3).map(b=>({v:'bk:'+b.id,l:`📘 Modul guru: ${b.title}`,s:`${b.qs.length} soal${b.materi||b.video?' · dengan materi':''}`})).concat(SB(s).units.map((u,i)=>({v:String(i),l:`Unit ${i+1}: ${u.t}`,s:u.d||''}))),s.ui),pick:(s,v)=>s.ui=v},
     {t:'Berapa soal?',html:s=>wzOpts([5,8,10,15].map(n=>({v:n,l:n+' soal',s:n<=5?'Sekitar 3 menit':n<=8?'Sekitar 5 menit':n<=10?'Sekitar 7 menit':'Sekitar 10 menit'})),s.n,true),pick:(s,v)=>s.n=+v},
     {t:'Kapan batas waktunya?',auto:false,html:s=>wzOpts([[1,'Besok'],[3,'3 hari lagi'],[7,'1 minggu lagi']].map(([d,l])=>({v:plus(d),l,s:fmtD(plus(d))})),s.due)+`<div class="tfield"><label for="wzDue">Atau pilih tanggal</label><input id="wzDue" type="date" min="${dayKey()}" value="${s.due}"></div>`,
      pick:(s,v)=>{s.due=v;const d=$('#wzDue');if(d)d.value=v},bind:(el,s)=>{$('#wzDue').onchange=e=>{s.due=e.target.value;el.querySelectorAll('[data-wv]').forEach(x=>x.setAttribute('aria-pressed',x.dataset.wv===s.due))}},ok:s=>s.due&&s.due>=dayKey()?true:'Batas waktu tidak boleh sebelum hari ini.'},
     {t:'Ingatkan murid?',sub:'Dikirim ke HP murid sampai tugas dikerjakan.',auto:false,
      html:s=>wzOpts([0,1,2,3].map(n=>({v:n,l:n?n+' kali sehari':'Tidak perlu'})),s.rem,true)+`<div class="tkhours" id="wzHours">${[0,1,2].map(i=>`<label ${i>=s.rem?'hidden':''}>Jam ke-${i+1}<select data-h="${i}">${Array.from({length:17},(_,k)=>k+5).map(x=>`<option value="${x}" ${x===s.hours[i]?'selected':''}>${String(x).padStart(2,'0')}.00</option>`).join('')}</select></label>`).join('')}</div>`,
      pick:(s,v)=>{s.rem=+v;document.querySelectorAll('#wzHours label').forEach((l,i)=>l.hidden=i>=s.rem)},bind:(el,s)=>el.querySelectorAll('#wzHours select').forEach(x=>x.onchange=()=>{s.hours[+x.dataset.h]=+x.value})}],
-   summary:s=>`<b>${esc(SB(s).name)}</b> · ${esc(SB(s).units[+s.ui].t)} · ${s.n} soal · batas ${fmtD(s.due)} · ${s.rem?s.rem+' pengingat/hari':'tanpa pengingat'}`,
+   summary:s=>`<b>${esc(SB(s).name)}</b> · ${esc(tkBank(s)?'Modul guru: '+tkBank(s).title:SB(s).units[+s.ui].t)} · ${tkBank(s)?Math.min(s.n,tkBank(s).qs.length):s.n} soal · batas ${fmtD(s.due)} · ${s.rem?s.rem+' pengingat/hari':'tanpa pengingat'}`,
    finish:{label:'Berikan tugas',run:async(s,b,close)=>{const sb=SB(s),ui=+s.ui,hours=s.hours.slice(0,s.rem).filter((v,i,a)=>a.indexOf(v)===i).sort((a,b)=>a-b);
-     const tk={title:sb.units[ui].t,cls:c.id,subj:sb.id,subjName:sb.name,unit:ui,n:s.n,due:s.due,hours,created:Date.now()};
+     const bk=tkBank(s);const tk=bk?{title:bk.title,cls:c.id,subj:sb.id,subjName:sb.name,unit:-1,n:Math.min(s.n,bk.qs.length),due:s.due,hours,created:Date.now(),
+       bank:{qs:bk.qs.slice(0,80).map(q=>({q:q.q,opts:q.opts,a:q.a,exp:q.exp||''})),materi:String(bk.materi||'').slice(0,4000),video:ytId(bk.video||'')||''}}
+      :{title:sb.units[ui].t,cls:c.id,subj:sb.id,subjName:sb.name,unit:ui,n:s.n,due:s.due,hours,created:Date.now()};
      let ref;try{ref=await FB.db.collection('classes/'+cid+'/tasks').add(tk)}catch(e){throw new Error(fbErr(e))}
      if(hours.length)FB.db.doc('reminders/'+ref.id).set({classId:cid,tid:ref.id,title:tk.title,subjName:tk.subjName,due:s.due,hours,tz:-new Date().getTimezoneOffset(),created:Date.now()}).catch(e=>console.warn('reminder',e));
      notifyServer('task',null,{cid,tid:ref.id});close();toast('target','Tugas diberikan. Murid melihatnya di halaman Belajar.');renderTTask()}}})}
@@ -10770,7 +10799,9 @@ function fbTaskBanner(){let el=$('#fbTasks');if(!el){$('#path').insertAdjacentHT
     ${ts.map(x=>{const d=x.mine,late=x.due<today;return `<div class="fbtask-r"><span class="grow"><b>${esc(x.title)}</b><small>${esc(x.subjName)} · ${x.n} soal · ${d?`Nilaimu <b>${d.score}</b>`:late?'Lewat batas waktu':'Batas '+fmtDs(x.due)}</small></span><button class="primary fbtask-b" data-task="${x.id}">Kerjakan</button></div>`}).join('')}</div>`;
   el.querySelectorAll('[data-task]').forEach(b=>b.onclick=()=>fbStartTask(ts.find(x=>x.id===b.dataset.task)));try{ncBadge()}catch(e){}}
 function fbStartTask(x){if(!x)return;if(x.mine){toast('lock','Tugas ini sudah kamu kerjakan dan tidak bisa diulang.');return}
-  const c=COURSE.find(k=>k.id===x.cls),s=c&&c.subjects.find(k=>k.id===x.subj),u=s&&s.units[x.unit];if(!u){toast('lock','Materi tugas ini tidak ditemukan.');return}
+  const c=COURSE.find(k=>k.id===x.cls),s=c&&c.subjects.find(k=>k.id===x.subj),u=x.bank?{t:x.title,d:'Modul dari guru'}:(s&&s.units[x.unit]);if(!u||!s){toast('lock','Materi tugas ini tidak ditemukan.');return}
+  if(x.bank&&(x.bank.materi||x.bank.video)&&!x._read){openModal(`<div class="tkmat"><span class="pill" style="align-self:flex-start">📘 Materi dari guru</span><h3 style="margin:6px 0 0">${esc(x.title)}</h3>${x.bank.video?`<div class="tkvid"><iframe src="https://www.youtube-nocookie.com/embed/${esc(x.bank.video)}?rel=0" title="Video materi" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>`:''}${x.bank.materi?`<div class="tkmtx">${esc(x.bank.materi).replace(/\n{2,}/g,'</p><p>').replace(/\n/g,'<br>').replace(/^/,'<p>')}</p></div>`:''}</div><div class="acts"><button class="ghost" id="mNo">Nanti</button><button class="primary" id="mYes">Sudah dibaca, lanjut ke soal</button></div>`);
+    $('#mNo').onclick=closeModal;$('#mYes').onclick=()=>{x._read=true;closeModal();setTimeout(()=>fbStartTask(x),150)};return}
   openModal(`<div style="text-align:center"><span style="display:inline-block;width:64px">${ICONS.target}</span><h3>Mode ujian</h3><p style="margin:0 0 6px"><b>${esc(x.title)}</b> · ${x.n} soal</p></div>
    <ul class="exrules"><li>Tugas hanya bisa dikerjakan <b>satu kali</b>.</li><li>Selama mengerjakan, kamu <b>tidak bisa keluar</b> atau kembali ke menu.</li><li>Jika kamu membuka aplikasi lain atau layar utama, itu dicatat sebagai pelanggaran dan dilaporkan ke guru.</li><li>Setelah <b>${EX_MAX} kali</b> keluar, tugas <b>dikumpulkan otomatis</b> dengan jawaban yang sudah ada.</li></ul>
    <div class="acts"><button class="ghost" id="mNo">Nanti</button><button class="primary" id="mYes">Mulai mengerjakan</button></div>`);
@@ -10779,7 +10810,7 @@ const EX_MAX=3;let EXAM=null;window.examActive=()=>!!EXAM;
 function examSave(){if(!EXAM)return;const o=game&&game.lesson;try{localStorage.setItem('jk_exam',JSON.stringify({tid:EXAM.tid,cid:EXAM.cid,viol:EXAM.viol,ans:o?o.answers:0,wrong:o?o.wrong:0,target:o?o.target:EXAM.n,at:Date.now()}))}catch(e){}}
 function examStart(x,s,u){EXAM={tid:x.id,cid:(FBX.me||{}).classId,n:x.n,viol:0,away:false,title:x.title};document.body.classList.add('exam');
   try{const d=document.documentElement;(d.requestFullscreen||d.webkitRequestFullscreen||(()=>{})).call(d,{navigationUI:'hide'})}catch(e){}
-  beginRun({kind:'practice',qs:unitQs(u,x.n),mode:'kuis',title:`Tugas · ${u.t}`,subj:s,cls:x.cls,task:x.id,noReask:true});examSave()}
+  beginRun({kind:'practice',qs:x.bank?bankQs({qs:x.bank.qs},x.n):unitQs(u,x.n),mode:'kuis',title:`Tugas · ${u.t}`,subj:s,cls:x.cls,task:x.id,noReask:true});examSave()}
 function examEnd(){EXAM=null;document.body.classList.remove('exam');try{localStorage.removeItem('jk_exam')}catch(e){}try{if(document.fullscreenElement)document.exitFullscreen()}catch(e){}}
 function examForce(){if(!EXAM||!game||!game.lesson)return;const o=game.lesson,ok=Math.max(0,o.answers-o.wrong),score=Math.round(ok/o.target*100),v=EXAM.viol,t=EXAM.tid;
   fbSubmitTask(t,score,ok,o.target,{viol:v,forced:true});clearInterval(timerId);try{arcStop()}catch(e){}game=null;examEnd();go('learn');
@@ -11224,7 +11255,7 @@ function folBind(root,list,after){root.querySelectorAll('[data-follow]').forEach
   try{await folDo(f,on);if(on){try{sfx.ok()}catch(_){}toast('team',`Kamu mengikuti ${f.name}.`)}b.outerHTML=folBtn(f,b.classList.contains('sm'));folBind(root,list,after);after&&after()}catch(err){b.disabled=false;toast('lock',fbErr(err))}})}
 const shareIcon='<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M12 3 V15 M7 8 L12 3 L17 8 M5 13 V19 C5 20 6 21 7 21 H17 C18 21 19 20 19 19 V13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const qrIcon='<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><path d="M14 14h3v3h-3zM18 18h3v3h-3zM18 14h3M14 18v3" stroke-linecap="round"/></svg>';
-let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=214';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
+let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=217';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
 function qrMatrix(text){const Q=window.QRCodeLib,q=new Q(-1,Q.ECL.M);q.addData(text);q.make();const n=q.getModuleCount(),m=[];for(let r=0;r<n;r++){m.push([]);for(let c=0;c<n;c++)m[r].push(q.isDark(r,c))}return m}
 function qrSvgOf(m){const n=m.length;let d='';for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(m[r][c])d+=`M${c} ${r}h1.02v1.02h-1.02z`;
   return `<svg viewBox="-2 -2 ${n+4} ${n+4}" class="pcqr" shape-rendering="crispEdges" aria-label="Kode QR profil"><rect x="-2" y="-2" width="${n+4}" height="${n+4}" fill="#fff"/><path d="${d}" fill="#1C1E3D"/></svg>`}
@@ -11423,20 +11454,26 @@ window.fbCheckRoomLink=function(){try{const tg=new URLSearchParams(location.sear
 try{const c=new URLSearchParams(location.search).get('tantang');if(c)sessionStorage.setItem('jk_tantang',c)}catch(e){}
 
 /* ---------- notifikasi gelembung (Firebase Cloud Messaging) ---------- */
-async function fbPushRegister(){try{if(notifOff())return;if(!FB.cfg.vapidKey||!firebase.messaging||!('serviceWorker' in navigator)||!('Notification' in window)||Notification.permission!=='granted'||!FBX.user||isT())return;
+/* SDK notifikasi baru dimuat saat dibutuhkan, supaya pembukaan pertama lebih ringan */
+function fbMsgLoad(){if(typeof firebase==='undefined')return Promise.resolve();if(firebase.messaging)return Promise.resolve();if(window._fbMsgP)return window._fbMsgP;
+  window._fbMsgP=new Promise((res,rej)=>{const sc=document.createElement('script');sc.src='https://www.gstatic.com/firebasejs/10.12.2/firebase-messaging-compat.js';sc.onload=()=>res();sc.onerror=()=>{window._fbMsgP=null;sc.remove();rej(new Error('messaging'))};document.head.appendChild(sc)});return window._fbMsgP}
+async function fbPushRegister(){try{if(notifOff())return;await fbMsgLoad().catch(()=>{});if(!FB.cfg.vapidKey||!firebase.messaging||!('serviceWorker' in navigator)||!('Notification' in window)||Notification.permission!=='granted'||!FBX.user||isT())return;
   const reg=await navigator.serviceWorker.ready;const tok=await firebase.messaging().getToken({vapidKey:FB.cfg.vapidKey,serviceWorkerRegistration:reg});
   if(!tok)return;FBX.pushTok=tok;const have=(FBX.me&&FBX.me.push)||[];if(have.includes(tok))return;
   await FB.db.doc('users/'+FBX.user.uid).set({push:firebase.firestore.FieldValue.arrayUnion(tok)},{merge:true})}catch(e){console.warn('push',e)}}
 async function fbPushUnregister(){try{if(FBX.pushTok&&FBX.user)await FB.db.doc('users/'+FBX.user.uid).set({push:firebase.firestore.FieldValue.arrayRemove(FBX.pushTok)},{merge:true})}catch(e){}}
 window.fbPushRegister=fbPushRegister;
-async function fbPushOff(){try{let tok=FBX.pushTok;if(!tok&&FB.cfg.vapidKey&&firebase.messaging&&'serviceWorker' in navigator&&Notification.permission==='granted'){const reg=await navigator.serviceWorker.ready;tok=await firebase.messaging().getToken({vapidKey:FB.cfg.vapidKey,serviceWorkerRegistration:reg})}
+async function fbPushOff(){try{await fbMsgLoad().catch(()=>{});let tok=FBX.pushTok;if(!tok&&FB.cfg.vapidKey&&firebase.messaging&&'serviceWorker' in navigator&&Notification.permission==='granted'){const reg=await navigator.serviceWorker.ready;tok=await firebase.messaging().getToken({vapidKey:FB.cfg.vapidKey,serviceWorkerRegistration:reg})}
   if(tok&&FBX.user)await FB.db.doc('users/'+FBX.user.uid).set({push:firebase.firestore.FieldValue.arrayRemove(tok)},{merge:true});FBX.pushTok=null;
   try{const reg=await navigator.serviceWorker.ready;(await reg.getNotifications()).forEach(n=>n.close())}catch(e){}}catch(e){console.warn('push off',e)}}
 window.fbNotifSet=async function(on){if(!on){try{localStorage.setItem('jk_notif_off','1')}catch(e){}fbPushOff();notifBanner();return 'off'}
   try{localStorage.removeItem('jk_notif_off')}catch(e){}const st=notifState();if(st==='unsupported')return 'unsupported';
   if(st==='granted'){fbPushRegister();notifBanner();return 'on'}if(st==='denied'){notifEnable();return 'denied'}
   const r=await Notification.requestPermission().catch(()=>'default');if(r==='granted'){fbPushRegister();notifBanner();return 'on'}if(r==='denied')notifEnable();return r};
-async function notifyServer(type,id,extra){try{if(!FB.cfg.pushUrl||!FBX.user)return;const t=await FBX.user.getIdToken();await fetch(FB.cfg.pushUrl,{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+t},body:JSON.stringify(Object.assign({type,id},extra||{}))})}catch(e){console.warn('notif',e)}}
+/* Kirim notifikasi lewat server Cloudflare; jika gagal, titipkan di antrean "pushq" yang dikirim oleh GitHub Actions. */
+async function notifyServer(type,id,extra){try{if(!FBX.user)return;let ok=false;
+  if(FB.cfg.pushUrl){try{const t=await FBX.user.getIdToken();const r=await fetch(FB.cfg.pushUrl,{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+t},body:JSON.stringify(Object.assign({type,id},extra||{}))});ok=r.ok}catch(e){}}
+  if(!ok){const d={type:String(type),id2:String(id||''),uid:FBX.user.uid,created:Date.now()};if(extra&&extra.cid)d.cid=String(extra.cid);if(extra&&extra.tid)d.tid=String(extra.tid);await FB.db.collection('pushq').add(d)}}catch(e){console.warn('notif',e)}}
 window.notifyServer=(...a)=>notifyServer(...a);
 
 /* ---------- panel admin (penjual) ---------- */
@@ -11448,21 +11485,35 @@ function aduCls(id){const c=(typeof COURSE!=='undefined'?COURSE:[]).find(x=>x.id
 function aduAv(r,big){const p=aduP(r);if(r.photo)return `<span class="avatar avimg"${big?' style="width:84px;height:84px"':''}><img src="${esc(r.photo)}" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:50%"></span>`;
   if(p&&p.avatar)try{return `<span class="avatar avimg"${big?' style="width:84px;height:84px;--av:'+avBgColor(p.avatar)+'"':' style="--av:'+avBgColor(p.avatar)+'"'}>${avatarSVG(p.avatar)}</span>`}catch(e){}
   const n=(r.name||r.username||r.email||'?').trim();return `<span class="avatar aduini"${big?' style="width:84px;height:84px;font-size:32px"':''}>${esc(n[0]?n[0].toUpperCase():'?')}</span>`}
+/* Hemat baca Firebase: daftar pengguna disimpan di perangkat admin (IndexedDB).
+   Saat dibuka lagi hanya pengguna yang berubah yang dibaca; dibaca ulang penuh sekali sehari atau saat diminta. */
+const ADC={db:null};
+function adcDB(){return new Promise((res,rej)=>{if(ADC.db)return res(ADC.db);try{const r=indexedDB.open('jelas-admin',1);r.onupgradeneeded=()=>r.result.createObjectStore('kv');r.onsuccess=()=>{ADC.db=r.result;res(ADC.db)};r.onerror=()=>rej(r.error)}catch(e){rej(e)}})}
+async function adcGet(k){try{const db=await adcDB();return await new Promise(res=>{const t=db.transaction('kv').objectStore('kv').get(k);t.onsuccess=()=>res(t.result||null);t.onerror=()=>res(null)})}catch(e){return null}}
+async function adcSet(k,v){try{const db=await adcDB();db.transaction('kv','readwrite').objectStore('kv').put(v,k)}catch(e){}}
+const aduStrip=r=>{const o=Object.assign({},r);delete o._p;return o};
+function aduSaveCache(){if(!ADU.rows||!FBX.user)return;const max=Math.max(0,...ADU.rows.map(r=>+r.upd||0));adcSet('users:'+FBX.user.uid,{rows:ADU.rows.map(aduStrip),max,full:(ADU.fresh&&ADU.fresh.full)||Date.now()})}
+async function aduFetch(force){const key='users:'+FBX.user.uid,now=Date.now();const c=force?null:await adcGet(key);
+  if(c&&c.rows&&now-(c.full||0)<24*3600e3){const q=await FB.db.collection('users').where('upd','>',c.max||0).get();const m=new Map(c.rows.map(r=>[r.id,r]));q.docs.forEach(d=>m.set(d.id,Object.assign({id:d.id},d.data())));
+    const rows=[...m.values()];ADU.fresh={n:q.size,at:now,full:c.full,inc:true};adcSet(key,{rows:rows.map(aduStrip),max:Math.max(c.max||0,...rows.map(r=>+r.upd||0)),full:c.full});return rows}
+  const q=await FB.db.collection('users').limit(5000).get();const rows=q.docs.map(d=>Object.assign({id:d.id},d.data()));ADU.fresh={n:rows.length,at:now,full:now,inc:false};
+  adcSet(key,{rows:rows.map(aduStrip),max:Math.max(0,...rows.map(r=>+r.upd||0)),full:now});return rows}
+function aduReload(){const b=$('#aduRe');if(b)b.disabled=true;aduFetch(true).then(rows=>{ADU.rows=rows;try{aduCount()}catch(e){}aduDraw();toast('check',`Daftar dimuat ulang: ${rows.length} pengguna.`)}).catch(e=>toast('lock',fbErr(e))).finally(()=>{if(b)b.disabled=false})}
 function aduCount(){const set=(i,v)=>{const el=document.querySelector(`#aduStats [data-i="${i}"] b`);if(el)el.textContent=v};
   /* hitung dari daftar pengguna (SDK compat tidak punya count()); hasilnya disimpan supaya daftar tidak dibaca ulang */
   const fill=rows=>{const wk=Date.now()-7*864e5,n=x=>x.toLocaleString('id-ID');set(0,n(rows.length));set(1,n(rows.filter(r=>r.role==='student').length));set(2,n(rows.filter(r=>r.role==='teacher').length));set(3,n(rows.filter(r=>(r.upd||0)>wk).length));set(4,n(rows.filter(r=>(r.created||0)>wk).length));
     try{adCharts(rows)}catch(e){console.warn(e)}const ms=document.querySelector('#adStats').children[3];if(ms&&ms.querySelector('b'))ms.querySelector('b').textContent=n(rows.filter(r=>r.role==='student').length)};
   if(ADU.rows){fill(ADU.rows);return}
-  FB.db.collection('users').limit(3000).get().then(q=>{ADU.rows=q.docs.map(d=>Object.assign({id:d.id},d.data()));fill(ADU.rows);if($('#aduList')&&!$('#aduTools').hidden)aduDraw()}).catch(()=>{[0,1,2,3,4].forEach(i=>set(i,'—'))})}
+  aduFetch().then(rows=>{ADU.rows=rows;fill(ADU.rows);if($('#aduList')&&!$('#aduTools').hidden)aduDraw()}).catch(()=>{[0,1,2,3,4].forEach(i=>set(i,'—'))})}
 window.aduCount=aduCount;
 function aduLoad(){const host=$('#aduList');host.innerHTML='<p class="note">Memuat daftar pengguna…</p>';if(ADU.rows){aduDraw();return}
-  FB.db.collection('users').limit(3000).get().then(q=>{ADU.rows=q.docs.map(d=>Object.assign({id:d.id},d.data()));aduDraw()})
+  aduFetch().then(rows=>{ADU.rows=rows;aduDraw()})
    .catch(e=>{host.innerHTML=`<p class="note" style="color:var(--bad)">${esc(fbErr(e))}</p>`})}
 function aduDraw(){const host=$('#aduList');if(!host||!ADU.rows)return;const q=ADU.q.trim().toLowerCase();
   let list=ADU.rows.filter(r=>(ADU.role==='all'||r.role===ADU.role)&&(!q||[r.name,r.username,r.email,r.school,r.clsName].some(v=>String(v||'').toLowerCase().includes(q))));
   list.sort(ADU.sort==='new'?(a,b)=>(b.created||0)-(a.created||0):ADU.sort==='act'?(a,b)=>(b.upd||0)-(a.upd||0):(a,b)=>(b.xp||0)-(a.xp||0));
   const shown=list.slice(0,ADU.n);
-  host.innerHTML=`<p class="note" style="margin:0 0 8px">${list.length.toLocaleString('id-ID')} pengguna${q||ADU.role!=='all'?' cocok':''}</p>`+(shown.length?`<div class="adulist">${shown.map(r=>`<button class="adurow press" data-adu="${esc(r.id)}">${aduAv(r)}<span class="grow"><b>${esc(r.name||r.username||r.email||'Tanpa nama')}${r.disabled?' <em class="adoff">Nonaktif</em>':''}</b><small>${r.role==='teacher'?'Guru':r.role==='student'?'Murid':esc(r.role||'?')} · ${r.role==='teacher'?esc(r.school||r.email||''):esc(aduCls(r.cls))}${r.username?' · @'+esc(r.username):''}</small></span><span class="adumeta"><small>Aktif</small>${aduAgo(r.upd)}</span></button>`).join('')}</div>`:'<p class="note">Tidak ada pengguna.</p>')
+  host.innerHTML=`<p class="note" style="margin:0 0 8px">${list.length.toLocaleString('id-ID')} pengguna${q||ADU.role!=='all'?' cocok':''}${ADU.fresh&&ADU.fresh.inc?` · ${ADU.fresh.n} data baru dibaca dari server (sisanya tersimpan di perangkat ini)`:''}</p>`+(shown.length?`<div class="adulist">${shown.map(r=>`<button class="adurow press" data-adu="${esc(r.id)}">${aduAv(r)}<span class="grow"><b>${esc(r.name||r.username||r.email||'Tanpa nama')}${r.disabled?' <em class="adoff">Nonaktif</em>':''}</b><small>${r.role==='teacher'?'Guru':r.role==='student'?'Murid':esc(r.role||'?')} · ${r.role==='teacher'?esc(r.school||r.email||''):esc(aduCls(r.cls))}${r.username?' · @'+esc(r.username):''}</small></span><span class="adumeta"><small>Aktif</small>${aduAgo(r.upd)}</span></button>`).join('')}</div>`:'<p class="note">Tidak ada pengguna.</p>')
    +(list.length>ADU.n?`<button class="ghost press" id="aduMore" style="margin-top:10px">Tampilkan lebih banyak (${list.length-ADU.n} lagi)</button>`:'');
   hydrate(host);host.querySelectorAll('[data-adu]').forEach(b=>b.onclick=()=>aduOpen(ADU.rows.find(r=>r.id===b.dataset.adu)));
   const m=$('#aduMore');if(m)m.onclick=()=>{ADU.n+=40;aduDraw()}}
@@ -11479,13 +11530,13 @@ function isAdminRow(r){return !!(FBX.user&&r.id===FBX.user.uid)}
 function aduInit(){if(!$('#aduCard'))return;aduCount();
   $('#aduLoad').onclick=()=>{$('#aduLoad').hidden=true;$('#aduTools').hidden=false;aduLoad()};
   $('#aduFind').oninput=e=>{ADU.q=e.target.value;ADU.n=40;aduDraw()};
-  $('#aduSort').onchange=e=>{ADU.sort=e.target.value;aduDraw()};$('#aduCsv').onclick=aduCSV;
+  $('#aduSort').onchange=e=>{ADU.sort=e.target.value;aduDraw()};$('#aduCsv').onclick=aduCSV;$('#aduRe').onclick=aduReload;
   $('#aduCard').querySelectorAll('[data-adr]').forEach(b=>b.onclick=()=>{ADU.role=b.dataset.adr;ADU.n=40;$('#aduCard').querySelectorAll('[data-adr]').forEach(x=>x.setAttribute('aria-pressed',x===b));aduDraw()});
   if(ADU.rows){$('#aduLoad').hidden=true;$('#aduTools').hidden=false;aduDraw()}}
 const ADU_CARD=`<div class="tcard" id="aduCard"><h3>Pengguna</h3>
  <div class="fbstats" id="aduStats">${['Semua pengguna','Murid','Guru','Aktif 7 hari','Baru 7 hari'].map((l,i)=>`<div class="fbstat" data-i="${i}"><b>…</b><small>${l}</small></div>`).join('')}</div>
  <button class="primary press" id="aduLoad" style="align-self:flex-start">Lihat daftar pengguna</button>
- <div id="aduTools" hidden><div class="adutools"><input id="aduFind" placeholder="Cari nama, nama pengguna, email, sekolah" autocomplete="off"><select id="aduSort" aria-label="Urutkan"><option value="new">Terbaru</option><option value="act">Terakhir aktif</option><option value="xp">XP terbanyak</option></select><button class="ghost press adcsv" id="aduCsv">⬇ CSV</button></div>
+ <div id="aduTools" hidden><div class="adutools"><input id="aduFind" placeholder="Cari nama, nama pengguna, email, sekolah" autocomplete="off"><select id="aduSort" aria-label="Urutkan"><option value="new">Terbaru</option><option value="act">Terakhir aktif</option><option value="xp">XP terbanyak</option></select><button class="ghost press adcsv" id="aduCsv">⬇ CSV</button><button class="ghost press adcsv" id="aduRe" title="Baca ulang semua data dari server">↻</button></div>
  <div class="aduchips">${[['all','Semua'],['student','Murid'],['teacher','Guru']].map(([k,l])=>`<button class="aduchip" data-adr="${k}" aria-pressed="${k==='all'}">${l}</button>`).join('')}</div><div id="aduList"></div></div></div>`;
 /* ===== Admin lanjutan: grafik, statistik belajar, kelas, laporan soal, tindakan pengguna, CSV ===== */
 const ADX={cls:null,rep:null,repF:'open'};window.ADU=ADU;window.ADX=ADX;
@@ -11562,7 +11613,7 @@ function rpOpen(){if(!game)return;const q=game.qs[game.i]||{};const plain=t=>Str
       cls:(P&&P.cls)||(isT()&&T()&&T().cls)||'',subj:sid,unit:q._u||'',mode:(game.lesson&&game.lesson.kind)||'',uid:FBX.user.uid,name:(P&&P.name)||(T()&&T().name)||'',role:isT()?'teacher':'student',status:'open',created:Date.now()};
     FB.db.collection('reports').add(d).then(()=>{closeModal();toast('check','Terima kasih! Laporanmu sudah dikirim ke admin.');const r=$('#fbReport');if(r)r.disabled=true}).catch(e=>{b.disabled=false;toast('lock',fbErr(e))})}}
 /* --- tindakan admin pada pengguna --- */
-function aduAct(r,k){const doc=FB.db.doc('users/'+r.id),done=(m)=>{toast('check',m);aduDraw();try{aduCount()}catch(e){}aduOpen(r)};
+function aduAct(r,k){const doc=FB.db.doc('users/'+r.id),done=(m)=>{toast('check',m);aduSaveCache();aduDraw();try{aduCount()}catch(e){}aduOpen(r)};
   if(k==='nama'){openModal(`<h3 style="margin:0">Ubah nama</h3><p class="note">Misalnya jika nama tidak pantas.</p><div class="tfield"><label for="anNm">Nama baru</label><input id="anNm" maxlength="40" value="${esc(r.name||'')}"></div><div class="acts"><button class="primary press" id="anGo">Simpan</button><button class="ghost" id="mNo">Batal</button></div>`);$('#mNo').onclick=()=>aduOpen(r);
     $('#anGo').onclick=()=>{const nm=$('#anNm').value.trim().slice(0,40);if(nm.length<2){toast('lock','Nama minimal 2 huruf.');return}const up={name:nm};const p=aduP(r);if(p){p.name=nm;p.upd=Date.now();up.p=JSON.stringify(p);up.upd=Date.now()}
       doc.update(up).then(()=>{Object.assign(r,up);r._p=undefined;done('Nama diganti.')}).catch(e=>toast('lock',fbErr(e)))};return}
@@ -11581,7 +11632,7 @@ function aduAct(r,k){const doc=FB.db.doc('users/'+r.id),done=(m)=>{toast('check'
     if(ADX.cls)pick();else{toast('clock','Memuat daftar kelas…');FB.db.collection('classes').limit(2000).get().then(q=>{ADX.cls=q.docs.map(d=>Object.assign({id:d.id},d.data()));pick()}).catch(e=>toast('lock',fbErr(e)))}return}
   if(k==='hapus'){openModal(`<h3 style="margin:0;color:var(--bad)">Hapus data pengguna?</h3><p>Semua data <b>${esc(r.name||'pengguna')}</b> (progres, XP, kelas) dihapus dan <b>tidak bisa dikembalikan</b>. Akun masuknya tetap ada, jadi jika ia masuk lagi akan mulai dari awal.</p><div class="tfield"><label for="ahTx">Ketik HAPUS untuk melanjutkan</label><input id="ahTx" autocomplete="off"></div><div class="acts"><button class="primary press" id="anGo" style="background:var(--bad)">Hapus permanen</button><button class="ghost" id="mNo">Batal</button></div>`);$('#mNo').onclick=()=>aduOpen(r);
     $('#anGo').onclick=()=>{if($('#ahTx').value.trim().toUpperCase()!=='HAPUS'){toast('lock','Ketik HAPUS dulu.');return}const b=FB.db.batch();if(r.classId)b.update(FB.db.doc('classes/'+r.classId),{['members.'+r.id]:firebase.firestore.FieldValue.delete()});b.delete(doc);
-      b.commit().then(()=>{ADU.rows=ADU.rows.filter(x=>x!==r);closeModal();aduDraw();try{aduCount()}catch(e){}toast('check','Data pengguna dihapus.')}).catch(e=>toast('lock',fbErr(e)))};return}}
+      b.commit().then(()=>{ADU.rows=ADU.rows.filter(x=>x!==r);aduSaveCache();closeModal();aduDraw();try{aduCount()}catch(e){}toast('check','Data pengguna dihapus.')}).catch(e=>toast('lock',fbErr(e)))};return}}
 /* akun yang dinonaktifkan admin */
 function adBlocked(){if(window._adBlk&&Date.now()-window._adBlk<4000)return;window._adBlk=Date.now();const wa=(window.FBX&&FBX.cfg&&FBX.cfg.wa)||'';
   try{logout()}catch(e){}try{FB.auth.signOut()}catch(e){}
@@ -11593,15 +11644,29 @@ function annStudent(){try{const host=$('#vLearn');if(!host||!FBX.user||!P||isT()
   const el=document.createElement('div');el.id='annS';el.className='anns';el.dataset.k=key;el.innerHTML=`<span class="annic" aria-hidden="true">📢</span><div class="grow"><b>Pengumuman</b><span>${esc(tx)}</span></div><button class="annx" aria-label="Tutup pengumuman">✕</button>`;
   const anchor=host.querySelector('.pathwrap,.path,#path')||host.firstElementChild;if(anchor&&anchor.parentElement===host)host.insertBefore(el,anchor);else host.prepend(el);
   el.querySelector('.annx').onclick=()=>{try{localStorage.setItem(key,'1')}catch(e){}el.remove()}}catch(e){}}
+/* --- admin: error aplikasi (dikelompokkan per pesan) --- */
+function adErrLoad(){const host=$('#adErrList');if(!host)return;host.innerHTML='<p class="note">Memuat…</p>';
+  FB.db.collection('errors').limit(600).get().then(q=>{ADX.err=q.docs.map(d=>Object.assign({id:d.id},d.data()));adErrDraw()}).catch(e=>{host.innerHTML=`<p class="note" style="color:var(--bad)">${esc(/permission/.test(String(e.code||e.message||''))?'Belum bisa memuat. Aturan Firestore terbaru sedang dipasang, coba lagi beberapa menit lagi.':fbErr(e))}</p>`})}
+function adErrDraw(){const host=$('#adErrList');if(!host||!ADX.err)return;const g={};
+  ADX.err.forEach(e=>{const k=(e.msg||'')+'|'+(e.src||'')+'|'+(e.line||0);const o=g[k]=g[k]||{k,msg:e.msg,src:e.src,line:e.line,col:e.col,stack:e.stack,ids:[],users:new Set(),last:0,first:Infinity,vers:new Set(),pages:new Set(),uas:new Set()};
+    o.ids.push(e.id);if(e.uid)o.users.add(e.uid);o.last=Math.max(o.last,e.created||0);o.first=Math.min(o.first,e.created||0);if(e.ver)o.vers.add(e.ver);if(e.page)o.pages.add(e.page);if(e.ua)o.uas.add(/Android/.test(e.ua)?'Android':/iPhone|iPad/.test(e.ua)?'iPhone/iPad':/Windows/.test(e.ua)?'Windows':/Mac/.test(e.ua)?'Mac':'Lainnya');if(!o.stack&&e.stack)o.stack=e.stack});
+  const L=Object.values(g).sort((a,b)=>b.last-a.last),wk=Date.now()-7*864e5,nw=ADX.err.filter(e=>(e.created||0)>wk).length;
+  const N=$('#adErrN');if(N)N.textContent=L.length?`${L.length} jenis error · ${nw} kejadian 7 hari terakhir`:'';
+  document.querySelectorAll('#adminPanel .adnb[data-adsec="error"]').forEach(b=>b.classList.toggle('addot',ADX.err.some(e=>(e.created||0)>Date.now()-864e5)));
+  host.innerHTML=L.length?L.map((o,i)=>`<div class="adrep"><div class="adrh"><span class="adrwhy" style="background:#FEE2E2;color:#B91C1C">${o.ids.length}× · ${o.users.size} pengguna</span><small>Terakhir ${aduAgo(o.last)} · ${[...o.uas].join(', ')}${o.vers.size?' · versi '+[...o.vers].slice(-2).join(', '):''}</small></div>
+    <div class="adrq" style="font-family:ui-monospace,monospace;font-size:14px;word-break:break-word">${esc(o.msg||'')}</div><div class="adrkv"><span>Lokasi: <b>${esc((o.src||'index')+(o.line?':'+o.line:''))}</b></span>${o.pages.size?`<span>Halaman: <b>${esc([...o.pages].slice(0,4).join(', '))}</b></span>`:''}</div>
+    ${o.stack?`<details class="aderrst"><summary>Detail teknis</summary><pre>${esc(o.stack)}</pre></details>`:''}<div class="adrf"><small>Pertama ${aduAgo(o.first)}</small><span><button class="ghost press" data-erx="${i}" style="color:var(--bad)">Tandai selesai (hapus)</button></span></div></div>`).join(''):'<p class="note">Tidak ada error tercatat. 🎉</p>';
+  host.querySelectorAll('[data-erx]').forEach(b=>b.onclick=()=>{const o=L[+b.dataset.erx];b.disabled=true;const bt=FB.db.batch();o.ids.slice(0,450).forEach(id=>bt.delete(FB.db.doc('errors/'+id)));
+    bt.commit().then(()=>{const s=new Set(o.ids);ADX.err=ADX.err.filter(e=>!s.has(e.id));adErrDraw();toast('check','Error ditandai selesai.')}).catch(e=>{b.disabled=false;toast('lock',fbErr(e))})})}
 /* Panel admin bermenu: satu bagian tampil dalam satu waktu */
 let ADMSEC='ringkasan';
-const ADM_I={ringkasan:'dash',pengguna:'team',kelas:'teach',laporan:'quiz',guru:'report',bayar:'gem',atur:'gear'};
+const ADM_I={ringkasan:'dash',pengguna:'team',kelas:'teach',laporan:'quiz',error:'target',guru:'report',bayar:'gem',atur:'gear'};
 const ADM_IC={ringkasan:'<path d="M4 4h7v7H4zM13 4h7v4h-7zM13 10h7v10h-7zM4 13h7v7H4z"/>',pengguna:'<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.8 3.4-6 6.5-6s5.7 2.2 6.5 6"/><circle cx="17" cy="9" r="2.6"/><path d="M16.5 14.2c2.6.3 4.4 2.3 5 5.3"/>',guru:'<path d="M2 9l10-5 10 5-10 5z"/><path d="M6 11v5c3 2.5 9 2.5 12 0v-5"/>',bayar:'<rect x="3" y="5.5" width="18" height="13" rx="2.5"/><path d="M3 10h18M7 15h4"/>',atur:'<circle cx="12" cy="12" r="3.2"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M5.3 18.7l2.1-2.1M16.6 7.4l2.1-2.1"/>'};
-function adMenu(el){const box=el.querySelector('.onbin');if(!box)return;const cards=[...box.querySelectorAll(':scope > .tcard')];if(cards.length<7)return;
-  const [cRing,cUser,cGuru,cAtur,cBayar,cKls,cRep]=cards;const head=box.querySelector(':scope > .thead'),foot=[...box.children].find(x=>x.querySelector&&x.querySelector('#adTeach'));
+function adMenu(el){const box=el.querySelector('.onbin');if(!box)return;const cards=[...box.querySelectorAll(':scope > .tcard')];if(cards.length<8)return;
+  const [cRing,cUser,cGuru,cAtur,cBayar,cKls,cRep,cErr]=cards;const head=box.querySelector(':scope > .thead'),foot=[...box.children].find(x=>x.querySelector&&x.querySelector('#adTeach'));
   const st=$('#aduStats');{const h0=cRing.querySelector(':scope > h3');if(h0)h0.insertAdjacentHTML('afterend','<h3 class="adsub">Guru</h3>')}if(st){cRing.insertAdjacentHTML('beforeend','<h3 class="adsub" style="margin-top:8px">Semua pengguna</h3>');cRing.appendChild(st)}
   cRing.insertAdjacentHTML('beforeend','<div id="adGrowth"></div><div id="adLearn"></div>');if(ADU.rows)try{adCharts(ADU.rows)}catch(e){}
-  const secs=[['ringkasan','Ringkasan',cRing],['pengguna','Pengguna',cUser],['kelas','Kelas',cKls],['laporan','Laporan soal',cRep],['guru','Guru & Pro',cGuru],['bayar','Pembayaran',cBayar],['atur','Pengaturan',cAtur]];
+  const secs=[['ringkasan','Ringkasan',cRing],['pengguna','Pengguna',cUser],['kelas','Kelas',cKls],['laporan','Laporan soal',cRep],['error','Error aplikasi',cErr],['guru','Guru & Pro',cGuru],['bayar','Pembayaran',cBayar],['atur','Pengaturan',cAtur]];
   secs.forEach(([k,,c])=>{c.dataset.sec=k;const h=c.querySelector(':scope > h3');if(h)h.classList.add('adh')});
   const lay=document.createElement('div');lay.className='adlay';
   const hr=new Date().getHours(),sap=hr<11?'pagi':hr<15?'siang':hr<18?'sore':'malam',tgl=new Date().toLocaleDateString('id-ID',{weekday:'long',day:'numeric',month:'long',year:'numeric'}),em=(FBX.user&&FBX.user.email)||'';
@@ -11609,12 +11674,12 @@ function adMenu(el){const box=el.querySelector('.onbin');if(!box)return;const ca
   const main=lay.querySelector('.admain');secs.forEach(([,,c])=>main.appendChild(c));if(foot){foot.removeAttribute('style');foot.className='adfootin';lay.querySelector('.adfoot').appendChild(foot)}
   if(head)head.remove();box.classList.add('adbox');box.appendChild(lay);
   const show=k=>{ADMSEC=k;secs.forEach(([kk,l,c])=>{c.hidden=kk!==k;if(kk===k)lay.querySelector('.adtitle').textContent=l});lay.querySelectorAll('.adnb').forEach(b=>{const on=b.dataset.adsec===k;b.setAttribute('aria-selected',on);if(on&&innerWidth<900)try{b.scrollIntoView({inline:'center',block:'nearest'})}catch(e){}});el.scrollTop=0;
-    if(k==='pengguna'){const b=$('#aduLoad');if(b&&!b.hidden)b.click()}if(k==='kelas')adClsLoad();if(k==='laporan'&&ADX.rep)adRepDraw()};
+    if(k==='pengguna'){const b=$('#aduLoad');if(b&&!b.hidden)b.click()}if(k==='kelas')adClsLoad();if(k==='laporan'&&ADX.rep)adRepDraw();if(k==='error'&&ADX.err)adErrDraw()};
   lay.querySelectorAll('.adnb').forEach(b=>b.onclick=()=>show(b.dataset.adsec));hydrate(lay);try{applyUITheme()}catch(e){}lay.querySelectorAll('.adpbtn').forEach(b=>b.onclick=adProfile);
   /* bagian berisi kartu sendiri tampil tanpa kartu luar */
-  [cRing,cUser,cGuru,cKls,cRep].forEach(c=>c.classList.add('adflat'));
+  [cRing,cUser,cGuru,cKls,cRep,cErr].forEach(c=>c.classList.add('adflat'));
   {const f=$('#adClsFind');if(f)f.oninput=adClsDraw}cRep.querySelectorAll('[data-rpf]').forEach(b=>b.onclick=()=>{ADX.repF=b.dataset.rpf;cRep.querySelectorAll('[data-rpf]').forEach(x=>x.setAttribute('aria-pressed',x===b));adRepDraw()});
-  {const pc=$('#adPayCsv');if(pc)pc.onclick=payCSV}adRepLoad();show(ADMSEC)}
+  {const pc=$('#adPayCsv');if(pc)pc.onclick=payCSV}adRepLoad();adErrLoad();show(ADMSEC)}
 function adName(){const m=(window.FBX&&FBX.me)||{};return m.name||(FBX.user&&FBX.user.displayName)||'Admin'}
 function adPhoto(){const m=(window.FBX&&FBX.me)||{};return (typeof m.photo==='string'&&m.photo)||(FBX.user&&FBX.user.photoURL)||''}
 function adAv(){const ph=adPhoto(),n=adName();return `<span class="adme-av">${ph?`<img src="${esc(ph)}" alt="" referrerpolicy="no-referrer">`:esc((n[0]||'A').toUpperCase())}</span>`}
@@ -11638,7 +11703,7 @@ function adProfile(){const u=FBX.user||{},own=!!adPhoto();const row=(k,ic,l,cls)
     else if(k==='swap'){logout();setTimeout(()=>{try{showBack()}catch(e){}},300)}
     else if(k==='out')logout()})}
 window.adProfile=adProfile;
-openAdmin=function(){const el=$('#adminPanel'),u=FBX.user;if(!u){showLogin();return}ADU.rows=null;ADX.cls=null;ADX.rep=null;el.hidden=false;$('#auth').hidden=true;$('#onb').hidden=true;document.body.classList.remove('teacher');
+openAdmin=function(){const el=$('#adminPanel'),u=FBX.user;if(!u){showLogin();return}ADU.rows=null;ADX.cls=null;ADX.rep=null;ADX.err=null;el.hidden=false;$('#auth').hidden=true;$('#onb').hidden=true;document.body.classList.remove('teacher');
   el.innerHTML=`<div class="onbin" style="max-width:920px;gap:14px">
    <div class="thead"><span style="width:52px;height:52px;flex:none">${ICONS.key}</span><div class="grow"><h2>Panel Admin</h2><p>${esc(u.email)}</p></div></div>
    <div class="tcard"><h3>Ringkasan</h3><div class="fbstats" id="adStats"><p class="note">Memuat…</p></div></div>${ADU_CARD}
@@ -11659,6 +11724,7 @@ openAdmin=function(){const el=$('#adminPanel'),u=FBX.user;if(!u){showLogin();ret
     <div class="adrowh"><h3 style="margin:8px 0 0">Pembayaran terakhir</h3><button class="ghost press adcsv" id="adPayCsv">⬇ Unduh CSV</button></div><div id="adPays"><p class="note">Memuat…</p></div></div>
    <div class="tcard" id="adClsCard"><h3>Kelas</h3><input id="adClsFind" class="adfind" placeholder="Cari kelas, guru, atau sekolah" autocomplete="off"><div id="adClsList"><p class="note">Memuat…</p></div></div>
    <div class="tcard" id="adRepCard"><h3>Laporan soal</h3><p class="note" style="margin:0">Laporan dari murid dan guru tentang soal yang salah atau kurang jelas.</p><div class="aduchips">${[['open','Baru'],['done','Selesai'],['all','Semua']].map(([k,l])=>`<button class="aduchip" data-rpf="${k}" aria-pressed="${k==='open'}">${l}</button>`).join('')}</div><div id="adRepList"><p class="note">Memuat…</p></div></div>
+   <div class="tcard" id="adErrCard"><h3>Error aplikasi</h3><p class="note" style="margin:0">Error yang terjadi di HP atau laptop pengguna tercatat otomatis di sini. <span id="adErrN"></span></p><div id="adErrList"><p class="note">Memuat…</p></div></div>
    <div style="display:flex;gap:10px;flex-wrap:wrap"><button class="primary" id="adTeach">Buka Mode Guru</button><button class="ghost" id="adOut" style="color:var(--bad)">Keluar</button></div></div>`;
   hydrate(el);try{aduInit()}catch(e){console.warn(e)}try{adMenu(el)}catch(e){console.warn(e)}
   $('#adOut').onclick=logout;
