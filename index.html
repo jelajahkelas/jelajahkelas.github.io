@@ -3511,6 +3511,12 @@ body.teacher .nav[data-tab="smod"]{display:none!important}
 .mmtab{border-collapse:collapse;margin:10px auto 4px;font-size:16px}.mmtab th,.mmtab td{border:2px solid var(--line,#E5E5E5);padding:5px 14px}.mmtab th{background:var(--bg2,#F2F4FF)}
 .mmbar{display:flex;align-items:flex-end;gap:12px;height:150px;margin:12px auto 4px;max-width:320px;padding:0 6px 22px;border-bottom:2px solid var(--line,#E5E5E5);position:relative}.mmbar>span{flex:1;height:100%;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;position:relative}.mmbar i{display:block;width:100%;background:#9B6BFF;border-radius:8px 8px 0 0;position:relative;min-height:6px}.mmbar em{position:absolute;top:-20px;left:0;right:0;text-align:center;font-style:normal;font-size:13px;font-weight:800}.mmbar small{position:absolute;bottom:-22px;font-size:12px;font-weight:700}
 .glisten{margin-top:8px;align-self:flex-start;font-size:14px}
+/* TK: game lebih mudah dibaca, tanpa tekanan waktu dan nyawa */
+.tkmode .arcade .q,.tkmode .arcade #qtext{font-size:21px!important;line-height:1.3;max-height:none!important}
+.tkmode .arcade #qtext .objs,.tkmode.arcade #qtext .objs,.tkmode .arcade #qtext .big,.tkmode.arcade #qtext .big{font-size:38px!important;letter-spacing:2px;display:block;margin-top:4px}
+.tkmode #timer,.tkmode #hearts{visibility:hidden}
+body.arcfs.tkmode .qcard>#qtext{font-size:20px!important;max-height:7em}
+body.arcfs.tkmode .qcard>#qtext .objs,body.arcfs.tkmode .qcard>#qtext .big{font-size:34px!important;display:block}
 /* Toko: judul bagian besar gelap */
 html body:not(.teacher) #vShop .shopsec h3{font-size:22px!important;color:var(--ink)!important;text-transform:none!important;letter-spacing:0!important}
 /* Profil: ringkasan tanpa kotak */
@@ -3893,7 +3899,7 @@ html[data-theme=malam] .plstick{background:#0a0f1e}
 <div class="syncpill" id="syncPill" hidden></div>
 <div class="toast" id="toast" hidden></div>
 
-<script src="av.js?v=227"></script>
+<script src="av.js?v=228"></script>
 <script>
 /* ---------- visual assets ---------- */
 const INK='#1B1E3D';
@@ -6679,8 +6685,8 @@ const FIT={
  word:{games:['lompat','pancing','katak','lari','tikus','penalti','buah','labirin','memori','benarsalah','susun','kelompok','urut','pacu','layang','kuis'],note:'Jawabannya berupa kata, jadi dipilih game yang memberi waktu membaca sebelum memilih.'},
  phrase:{games:['lompat','ular','lari','katak','pancing','penalti','labirin','memori','benarsalah','susun','kelompok','urut','pacu','kuis'],note:'Jawabannya berupa istilah atau frasa, jadi dipilih game dengan kartu jawaban lebar.'},
  long:{games:['ular','lari','katak','labirin','benarsalah','kelompok','urut','pacu','kuis'],note:'Jawabannya berupa kalimat atau nama panjang, jadi dipilih game yang menampilkan jawaban dengan jelas dan tidak terburu-buru.'},
- kid:{games:['lompat','balon','tikus','katak','pancing','buah','basket','memori','urut','layang','kuis'],note:'Untuk anak TK dipilih game yang cukup diketuk atau digeser, dengan gerakan pelan.'},
- kidSlow:{games:['balon','katak','pancing','basket','memori','urut','kuis'],note:'Untuk anak TK dipilih game yang pelan dan cukup diketuk.'},
+ kid:{games:['katak','basket','penalti','balon','memori','pancing','urut','kuis'],note:'Untuk anak TK dipilih game yang cukup diketuk atau digeser, dengan gerakan pelan.'},
+ kidSlow:{games:['katak','basket','penalti','memori','kuis'],note:'Untuk anak TK dipilih game yang pelan dan cukup diketuk.'},
  picture:{games:['kuis'],note:'Jawabannya berupa gambar, jadi dimainkan sebagai kuis bergambar dengan tombol besar.'}};
 /* Semua game boleh dipilih di semua kelas. Game yang paling cocok tetap di urutan atas. Kuis bergambar (jawaban berupa gambar) hanya bisa dimainkan sebagai kuis. */
 const allGames=f=>{f=f||FIT.long;if(f===FIT.picture)return f.games;const rest=MODE_LIST.map(m=>m.id).filter(id=>!f.games.includes(id)&&id!=='kuis');const g=f.games.filter(x=>x!=='kuis').concat(rest);return g.concat(['kuis'])};
@@ -6970,8 +6976,8 @@ function turnGo(){if($('#turn').hidden)return;startQ()}
 
 /* ---------- arcade engine ---------- */
 const FONT='"Baloo 2", "Trebuchet MS", system-ui, sans-serif';
-const READ={tk:16,sd:20,smp:26,sma:32};
-const SPEED={tk:.7,sd:.85,smp:1,sma:1};
+const READ={tk:45,sd:20,smp:26,sma:32};
+const SPEED={tk:.45,sd:.85,smp:1,sma:1};
 let arc={running:false,keys:{},parts:[],banner:null,lastW:0};
 const strip=h=>h.replace(/<[^>]+>/g,'').replace(/\s+/g,' ').trim();
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
@@ -8565,7 +8571,8 @@ const progKey=(c,s)=>`${c||CLS().id}/${s||SUBJ().id}`;
 function progOf(c,s){const k=progKey(c,s);return P.prog[k]||(P.prog[k]={done:0})}
 const totalNodes=s=>s.units.length*NODES.length;
 const lvOf=()=>LEVELS.find(l=>l.id===CLS().lv);
-function gameFor(subj,ui){const u=subj.units[ui];const list=FIT[u.fit||subj.fit].games.filter(g=>g!=='kuis');return list.length?list[ui%list.length]:'kuis'}
+const TK_GAMES=['penalti','kuis'];
+function gameFor(subj,ui){const u=subj.units[ui];const f=FIT[u.fit||subj.fit];let isTk=false;try{isTk=CLS().lv==='tk'}catch(e){}if(isTk&&f!==FIT.picture)return TK_GAMES[ui%TK_GAMES.length];const list=f.games.filter(g=>g!=='kuis');return list.length?list[ui%list.length]:'kuis'}
 const UNIT_SHADES=[0,-.16,-.3,.1,-.08,-.22];
 const unitColor=ui=>{const c=(typeof P!=='undefined'&&P&&P.cls)?SUBJ().color:null;return c?shade(c,UNIT_SHADES[ui%UNIT_SHADES.length]):UNIT_COLORS[ui%UNIT_COLORS.length]};
 const WORLD_DOODLES={hitung:['1','2','3','+','5','★'],huruf:['A','b','C','d','E','?'],warna:['●','▲','■','★','◆','♥'],mtk:['+','×','÷','=','π','%'],bindo:['Aa','B','“','?','!','k'],umum:['☀','☁','♣','✿','☂','★'],
@@ -9218,7 +9225,7 @@ function scrollToCurrent(){const n=document.querySelector('.node.cur');if(n&&!$(
 function nodePop(ui,ni,row){const s=SUBJ(),u=s.units[ui],nd=NODES[ni],idx=ui*NODES.length+ni,done=progOf().done;let st=idx<done?'done':idx===done?'cur':'lock';if(ni===2&&spPending(ui))st='lock';
   let t='',p='',btn='';
   if(nd.k==='lesson'){t=`Pelajaran ${nd.n} dari 2`;p=nd.n===1?`${u.t} · 5 soal`:`${u.t} · 5 soal termasuk ulasan unit sebelumnya`;btn=st==='done'?'Ulangi +5 XP':'Mulai +10 XP'}
-  if(nd.k==='game'){const m=MODE_LIST.find(x=>x.id===gameFor(s,ui));t=m.id==='kuis'?'Kuis bergambar':`Level game: ${m.name}`;p=`${m.desc}. 6 soal, lulus dengan 3 jawaban benar.`;btn=st==='done'?'Main lagi +5 XP':'Main +10 XP'}
+  if(nd.k==='game'){const m=MODE_LIST.find(x=>x.id===gameFor(s,ui));t=m.id==='kuis'?'Kuis bergambar':`Level game: ${m.name}`;p=`${m.desc}. 6 soal, lulus dengan ${CLS().lv==='tk'?2:3} jawaban benar.`;btn=st==='done'?'Main lagi +5 XP':'Main +10 XP'}
   if(nd.k==='chest'){t='Peti hadiah';p=st==='done'?'Peti ini sudah kamu buka.':'Berisi permata untuk belanja di Toko.';btn=st==='cur'?'Buka peti':''}
   if(nd.k==='test'){t=`Ujian Unit ${ui+1}`;p='8 soal dari unit ini dan unit sebelumnya. Lulus dengan 70% benar.';btn=st==='done'?'Ulangi ujian +8 XP':'Mulai ujian +15 XP'}
   if(st==='lock'){p='Selesaikan semua level di atasnya untuk membuka level ini.';btn=''}
@@ -9559,7 +9566,7 @@ function startPractice(){const s=SUBJ(),doneUnits=Math.max(1,Math.floor(progOf()
   beginRun({kind:'practice',qs:mixTypes(shuffle([...wk,...fresh]),pick(pool)),mode:'kuis',title:`Latihan · ${s.name}`})}
 function beginRun(o){PLAY='solo';{const rr=document.getElementById('roomRace');if(rr&&!o.room)rr.hidden=true}L=o.cls?LEVELS.find(l=>l.id===COURSE.find(c=>c.id===o.cls).lv):lvOf();const s=o.subj||SUBJ();S={id:s.id,name:o.title||s.name,make:()=>o.qs};MODE=o.mode;setLvColor(L);document.documentElement.style.setProperty('--lvc',s.color);
   const usesHearts=o.kind==='lesson'||o.kind==='test';
-  game={qs:o.qs,i:0,score:0,correct:0,lives:o.kind==='game'?3:(usesHearts&&!HUNL()?P.hearts:999),streak:0,best:0,results:[],locked:false,mode:o.mode,buzz:null,group:null,
+  game={qs:o.qs,i:0,score:0,correct:0,lives:o.kind==='game'?(L&&L.id==='tk'?999:3):(usesHearts&&!HUNL()?P.hearts:999),streak:0,best:0,results:[],locked:false,mode:o.mode,buzz:null,group:null,
     lesson:Object.assign({},o,{target:o.qs.length,reask:(o.kind==='lesson'||o.kind==='practice')&&!o.noReask,answers:0,wrong:0,start:Date.now(),usesHearts})};
   show('vPlay');document.body.classList.toggle('lessonmode',o.mode==='kuis');try{loadMateri().catch(()=>{})}catch(e){}
   $('#turn').hidden=true;$('#buzz').hidden=true;$('#teamBar').hidden=true;$('#feedback').hidden=true;
@@ -9579,7 +9586,7 @@ function finishRun(){clearInterval(timerId);if(arc.running)arcStop();const g=gam
   const noHearts=o.usesHearts&&!HUNL()&&P.hearts<=0&&g.lives<=0;
   let passed=g.lives>0;let need=0;
   if(o.kind==='test'){need=Math.ceil(o.target*.7);passed=passed&&g.correct>=need}
-  if(o.kind==='game'){need=Math.ceil(o.target/2);passed=g.correct>=need}
+  if(o.kind==='game'){need=L&&L.id==='tk'?Math.ceil(o.target/3):Math.ceil(o.target/2);passed=g.correct>=need}
   if(!passed){showFail(o,noHearts,g.correct,need);return}
   const perfect=o.wrong===0;
   let xp={lesson:10,game:10,test:15,practice:8}[o.kind]+(perfect&&o.kind!=='practice'?5:0);if(o.replay)xp=Math.ceil(xp/2);
@@ -12021,7 +12028,7 @@ function folBind(root,list,after){root.querySelectorAll('[data-follow]').forEach
   try{await folDo(f,on);if(on){try{sfx.ok()}catch(_){}toast('team',`Kamu mengikuti ${f.name}.`)}b.outerHTML=folBtn(f,b.classList.contains('sm'));folBind(root,list,after);after&&after()}catch(err){b.disabled=false;toast('lock',fbErr(err))}})}
 const shareIcon='<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M12 3 V15 M7 8 L12 3 L17 8 M5 13 V19 C5 20 6 21 7 21 H17 C18 21 19 20 19 19 V13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const qrIcon='<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><path d="M14 14h3v3h-3zM18 18h3v3h-3zM18 14h3M14 18v3" stroke-linecap="round"/></svg>';
-let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=227';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
+let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=228';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
 function qrMatrix(text){const Q=window.QRCodeLib,q=new Q(-1,Q.ECL.M);q.addData(text);q.make();const n=q.getModuleCount(),m=[];for(let r=0;r<n;r++){m.push([]);for(let c=0;c<n;c++)m[r].push(q.isDark(r,c))}return m}
 function qrSvgOf(m){const n=m.length;let d='';for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(m[r][c])d+=`M${c} ${r}h1.02v1.02h-1.02z`;
   return `<svg viewBox="-2 -2 ${n+4} ${n+4}" class="pcqr" shape-rendering="crispEdges" aria-label="Kode QR profil"><rect x="-2" y="-2" width="${n+4}" height="${n+4}" fill="#fff"/><path d="${d}" fill="#1C1E3D"/></svg>`}
