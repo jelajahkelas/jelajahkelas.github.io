@@ -3899,7 +3899,7 @@ html[data-theme=malam] .plstick{background:#0a0f1e}
 <div class="syncpill" id="syncPill" hidden></div>
 <div class="toast" id="toast" hidden></div>
 
-<script src="av.js?v=243"></script>
+<script src="av.js?v=244"></script>
 <script>
 /* ---------- visual assets ---------- */
 const INK='#1B1E3D';
@@ -9151,6 +9151,302 @@ curInstall('k12',{
   ['Orde Baru','Supersemar hingga 1998',[kb(SEJ12[2])],'Supersemar 11 Maret 1966.'],
   ['Reformasi','Habibie, pemilu langsung, otonomi',[kb(SEJ12[3])],'Pemilu langsung sejak 2004.']]},'g12');
 
+/* ===================== Bahasa Inggris Kurikulum Merdeka (My Next Words, English for Nusantara, Work in Progress, English for Change, Life Today) ===================== */
+/* kata bahasa Inggris di dalam «…» diucapkan dengan suara bahasa Inggris */
+const enBank=list=>{const f=()=>{const t=pick(list);const q=biQ(t[0],t[1],t[2],t[3]||'',t[4]);if(t[5])q.optEn=true;return q};f.items=list;return f};
+const ke=a=>enBank(a);
+const eo=(q,a,w,e,s)=>[q,a,w,e,s,1]; /* pilihan jawaban berbahasa Inggris */
+const ei=(q,a,w,e,s)=>[q,a,w,e,s,0]; /* pilihan jawaban berbahasa Indonesia */
+const EN1=[
+ [ei('"Good morning" artinya …','selamat pagi',['selamat malam','selamat tinggal','terima kasih'],'Good morning = selamat pagi.','«Good morning» artinya apa?'),
+  eo('Teman bertanya "How are you?". Jawabanmu …','I am fine.',['Goodbye.','My name is Kimi.','Good night.'],'How are you? dijawab I am fine.','Teman bertanya, «How are you?». Jawabanmu apa?'),
+  eo('Bahasa Inggris untuk "selamat tinggal" adalah …','goodbye',['hello','thank you','good morning'],'Selamat tinggal = goodbye.','Bahasa Inggrisnya selamat tinggal, apa?'),
+  eo('Untuk menyebut nama, kita bilang …','My name is Joshua.',['How are you?','I am fine.','Goodbye.'],'My name is … = nama saya ….','Untuk menyebut nama, kita bilang apa?')],
+ [eo('Bahasa Inggris dari angka 3 adalah …','three',['two','five','ten'],'3 = three.','Bahasa Inggrisnya angka tiga, apa?'),
+  eo('Bahasa Inggris dari angka 7 adalah …','seven',['six','eight','one'],'7 = seven.','Bahasa Inggrisnya angka tujuh, apa?'),
+  eo('Bahasa Inggris dari angka 10 adalah …','ten',['nine','four','two'],'10 = ten.','Bahasa Inggrisnya angka sepuluh, apa?'),
+  ei('"Five" adalah angka …','5',['4','6','9'],'Five = 5.','«Five» adalah angka berapa?')],
+ [eo('✏️ Bahasa Inggris dari pensil adalah …','pencil',['book','bag','chair'],'Pensil = pencil.','Bahasa Inggrisnya pensil, apa?'),
+  eo('📖 Bahasa Inggris dari buku adalah …','book',['pen','ruler','table'],'Buku = book.','Bahasa Inggrisnya buku, apa?'),
+  eo('🎒 Bahasa Inggris dari tas adalah …','bag',['desk','clock','eraser'],'Tas = bag.','Bahasa Inggrisnya tas, apa?'),
+  ei('"Eraser" artinya …','penghapus',['penggaris','rautan','kursi'],'Eraser = penghapus.','«Eraser» artinya apa?')],
+ [eo('🔴 Bahasa Inggris dari merah adalah …','red',['blue','green','yellow'],'Merah = red.','Bahasa Inggrisnya merah, apa?'),
+  eo('🔵 Bahasa Inggris dari biru adalah …','blue',['black','pink','white'],'Biru = blue.','Bahasa Inggrisnya biru, apa?'),
+  eo('🟢 Bahasa Inggris dari hijau adalah …','green',['brown','orange','red'],'Hijau = green.','Bahasa Inggrisnya hijau, apa?'),
+  ei('"Yellow" artinya …','kuning',['ungu','putih','hitam'],'Yellow = kuning.','«Yellow» artinya apa?')],
+ [eo('⚪ Bentuk bulat bahasa Inggrisnya …','circle',['square','triangle','star'],'Lingkaran = circle.','Bentuk bulat, bahasa Inggrisnya apa?'),
+  eo('🔺 Bentuk segitiga bahasa Inggrisnya …','triangle',['circle','square','heart'],'Segitiga = triangle.','Segitiga, bahasa Inggrisnya apa?'),
+  ei('"Big" artinya …','besar',['kecil','panjang','pendek'],'Big = besar, small = kecil.','«Big» artinya apa?')],
+ [eo('🐱 Bahasa Inggris dari kucing adalah …','cat',['duck','fish','bird'],'Kucing = cat.','Bahasa Inggrisnya kucing, apa?'),
+  eo('🐰 Bahasa Inggris dari kelinci adalah …','rabbit',['chicken','cat','duck'],'Kelinci = rabbit.','Bahasa Inggrisnya kelinci, apa?'),
+  eo('🐟 Bahasa Inggris dari ikan adalah …','fish',['bird','rabbit','cat'],'Ikan = fish.','Bahasa Inggrisnya ikan, apa?'),
+  ei('"Duck" artinya …','bebek',['ayam','burung','kucing'],'Duck = bebek.','«Duck» artinya apa?')],
+ [eo('Bahasa Inggris dari ayah adalah …','father',['mother','sister','brother'],'Ayah = father.','Bahasa Inggrisnya ayah, apa?'),
+  eo('Bahasa Inggris dari ibu adalah …','mother',['father','grandfather','brother'],'Ibu = mother.','Bahasa Inggrisnya ibu, apa?'),
+  eo('👧 Untuk anak perempuan kita pakai …','she',['he','it','they'],'She untuk perempuan, he untuk laki-laki.','Untuk anak perempuan, kita pakai kata apa?'),
+  ei('"Grandmother" artinya …','nenek',['kakek','kakak','adik'],'Grandmother = nenek.','«Grandmother» artinya apa?')],
+ [eo('🍎 Bahasa Inggris dari apel adalah …','apple',['banana','mango','orange'],'Apel = apple.','Bahasa Inggrisnya apel, apa?'),
+  eo('🍌 Bahasa Inggris dari pisang adalah …','banana',['apple','watermelon','strawberry'],'Pisang = banana.','Bahasa Inggrisnya pisang, apa?'),
+  ei('"I like mangoes" artinya …','saya suka mangga',['saya punya mangga','saya makan apel','saya tidak suka mangga'],'Like = suka.','«I like mangoes» artinya apa?')]
+];
+const EN3=[
+ [eo('🍚 Bahasa Inggris dari nasi adalah …','rice',['bread','noodle','milk'],'Nasi = rice.','Bahasa Inggrisnya nasi, apa?'),
+  eo('🥛 Bahasa Inggris dari susu adalah …','milk',['tea','coffee','water'],'Susu = milk.','Bahasa Inggrisnya susu, apa?'),
+  eo('Ditanya "Do you like meatball?" dan kamu suka. Jawabanmu …','Yes, I do.',['No, I don\'t.','Yes, she does.','I am fine.'],'Suka = Yes, I do.','Ditanya, «Do you like meatball?», dan kamu suka. Jawabanmu apa?'),
+  ei('"She doesn\'t like rice" artinya …','dia tidak suka nasi',['dia suka nasi','saya suka nasi','dia makan nasi'],'Doesn\'t like = tidak suka.','«She doesn\'t like rice» artinya apa?')],
+ [eo('Makan pagi dalam bahasa Inggris adalah …','breakfast',['lunch','dinner','snack'],'Pagi = breakfast.','Makan pagi, bahasa Inggrisnya apa?'),
+  eo('Makan siang dalam bahasa Inggris adalah …','lunch',['breakfast','dinner','supper'],'Siang = lunch.','Makan siang, bahasa Inggrisnya apa?'),
+  ei('"Dinner" artinya …','makan malam',['makan pagi','makan siang','minum teh'],'Dinner = makan malam.','«Dinner» artinya apa?')],
+ [eo('🏊 Berenang dalam bahasa Inggris adalah …','swimming',['reading','singing','running'],'Berenang = swimming.','Berenang, bahasa Inggrisnya apa?'),
+  eo('📚 Membaca dalam bahasa Inggris adalah …','reading',['writing','swimming','cooking'],'Membaca = reading.','Membaca, bahasa Inggrisnya apa?'),
+  ei('"Singing" artinya …','bernyanyi',['menari','menggambar','bersepeda'],'Singing = bernyanyi.','«Singing» artinya apa?')],
+ [eo('Hari Senin dalam bahasa Inggris adalah …','Monday',['Sunday','Friday','Tuesday'],'Senin = Monday.','Hari Senin, bahasa Inggrisnya apa?'),
+  eo('Hari Minggu dalam bahasa Inggris adalah …','Sunday',['Saturday','Monday','Thursday'],'Minggu = Sunday.','Hari Minggu, bahasa Inggrisnya apa?'),
+  ei('"Friday" adalah hari …','Jumat',['Kamis','Sabtu','Rabu'],'Friday = Jumat.','«Friday» adalah hari apa?'),
+  eo('Hari setelah Monday adalah …','Tuesday',['Wednesday','Sunday','Friday'],'Monday, Tuesday, Wednesday …','Hari setelah «Monday» adalah hari apa?')],
+ [eo('Perpustakaan dalam bahasa Inggris adalah …','library',['canteen','classroom','office'],'Perpustakaan = library.','Perpustakaan, bahasa Inggrisnya apa?'),
+  eo('Kantin dalam bahasa Inggris adalah …','canteen',['library','restroom','schoolyard'],'Kantin = canteen.','Kantin, bahasa Inggrisnya apa?'),
+  ei('"Classroom" artinya …','ruang kelas',['kamar mandi','halaman sekolah','kantor'],'Classroom = ruang kelas.','«Classroom» artinya apa?')],
+ [eo('Di bawah dalam bahasa Inggris adalah …','under',['on','in','behind'],'Di bawah = under.','Di bawah, bahasa Inggrisnya apa?'),
+  eo('Di atas (menempel) dalam bahasa Inggris adalah …','on',['under','in','between'],'Di atas meja = on the table.','Di atas meja, bahasa Inggrisnya apa?'),
+  ei('"Behind" artinya …','di belakang',['di depan','di samping','di dalam'],'Behind = di belakang.','«Behind» artinya apa?')],
+ [eo('Kelas yang bersih dalam bahasa Inggris …','clean',['dirty','small','narrow'],'Bersih = clean, kotor = dirty.','Bersih, bahasa Inggrisnya apa?'),
+  eo('Guru mengajar = The teacher …','teaches',['eats','sleeps','buys'],'Teach = mengajar.','Guru mengajar, bahasa Inggrisnya, the teacher apa?'),
+  eo('"Big" lawan katanya …','small',['large','wide','clean'],'Big = besar, small = kecil.','Lawan kata «big» adalah apa?')],
+ [eo('Angka 20 dalam bahasa Inggris adalah …','twenty',['twelve','two','thirty'],'20 = twenty.','Angka dua puluh, bahasa Inggrisnya apa?'),
+  eo('Angka 30 dalam bahasa Inggris adalah …','thirty',['thirteen','three','forty'],'30 = thirty.','Angka tiga puluh, bahasa Inggrisnya apa?'),
+  ei('"Fifty" adalah angka …','50',['15','40','5'],'Fifty = 50.','«Fifty» adalah angka berapa?')]
+];
+const EN4=[
+ [bb('She ___ reading a book now.','is',['are','am','do'],'Present continuous: is/am/are + -ing.'),
+  bb('"What are you doing?" Jawaban yang tepat …','I am cleaning the table.',['I clean every day.','I can swim.','It is ten o\'clock.'],'Sedang = am + -ing.'),
+  bb('They ___ playing football.','are',['is','am','does'],'They memakai are.')],
+ [bb('Sixty-seven adalah angka …','67',['76','57','60'],'Sixty = 60, seven = 7.'),
+  bb('Ten plus five equals …','fifteen',['fifty','five','twenty'],'10 + 5 = 15.'),
+  bb('Angka 100 dalam bahasa Inggris …','one hundred',['ten','one thousand','ninety'],'100 = one hundred.')],
+ [bb('Ruang untuk memasak disebut …','kitchen',['bedroom','garage','bathroom'],'Dapur = kitchen.'),
+  bb('Ruang untuk tidur disebut …','bedroom',['living room','kitchen','garage'],'Kamar tidur = bedroom.'),
+  bb('"The bedroom is behind the kitchen." Kamar tidur ada di … dapur','belakang',['depan','samping','atas'],'Behind = di belakang.')],
+ [bb('Cici ___ in the kitchen every day.','cooks',['cook','cooking','is cook'],'She/he + kata kerja -s.'),
+  bb('I ___ a bath every morning.','take',['takes','taking','took'],'I + kata kerja tanpa -s.'),
+  bb('"I eat in the dining room." Dining room artinya …','ruang makan',['ruang tamu','dapur','garasi'],'Dining room = ruang makan.')],
+ [bb('There ___ a bed in the bedroom.','is',['are','am','be'],'Satu benda: there is.'),
+  bb('There ___ two pillows on the bed.','are',['is','am','be'],'Lebih dari satu: there are.'),
+  bb('Lemari pakaian dalam bahasa Inggris …','wardrobe',['mirror','blanket','vase'],'Wardrobe = lemari pakaian.')],
+ [bb('I ___ make fried eggs. (bisa)','can',['can\'t','am','does'],'Can = bisa.'),
+  bb('"I can\'t swim" artinya …','saya tidak bisa berenang',['saya bisa berenang','saya suka berenang','saya sedang berenang'],'Can\'t = tidak bisa.'),
+  bb('Peralatan mandi untuk mengeringkan badan adalah …','towel',['soap','shampoo','toothbrush'],'Towel = handuk.')],
+ [bb('07.30 dibaca …','half past seven',['half past eight','seven o\'clock','quarter to seven'],'Half past = lewat setengah.'),
+  bb('08.15 dibaca …','quarter past eight',['quarter to eight','half past eight','eight fifty'],'Quarter past = lewat seperempat.'),
+  bb('"What time is it?" artinya …','jam berapa sekarang?',['hari apa sekarang?','kamu sedang apa?','kamu di mana?'],'Menanyakan jam.')],
+ [bb('Selalu dalam bahasa Inggris adalah …','always',['never','sometimes','usually'],'Always = selalu.'),
+  bb('"He never goes to bed late" artinya ia … tidur larut','tidak pernah',['selalu','kadang-kadang','biasanya'],'Never = tidak pernah.'),
+  bb('Urutan dari yang paling sering: always, usually, …, never','sometimes',['always','often never','rarely always'],'Always > usually > sometimes > never.')],
+ [bb('"How do you go to school?" — "I go to school ___ bike."','by',['on','in','at'],'By bike, by bus, by car.'),
+  bb('Berjalan kaki dalam bahasa Inggris …','on foot',['by foot','in foot','at foot'],'Go on foot.'),
+  bb('Becak dalam bahasa Inggris …','pedicab',['truck','helicopter','ship'],'Pedicab = becak.')]
+];
+const EN5=[
+ [bb('Gula rasanya …','sweet',['bitter','salty','sour'],'Sweet = manis.'),
+  bb('Kopi tanpa gula rasanya …','bitter',['sweet','sour','salty'],'Bitter = pahit.'),
+  bb('Jeruk nipis rasanya …','sour',['sweet','salty','bitter'],'Sour = asam.')],
+ [bb('A ___ of water','bottle',['slice','loaf','bar'],'Sebotol air.'),
+  bb('A ___ of pizza','slice',['bottle','glass','cone'],'Sepotong pizza.'),
+  bb('A ___ of chocolate','bar',['bowl','loaf','glass'],'Sebatang cokelat.')],
+ [bb('Menanyakan harga: "How ___ is it?"','much',['many','old','far'],'How much is it? = Berapa harganya?'),
+  bb('"It is five thousand rupiahs" artinya harganya …','Rp5.000',['Rp500','Rp50.000','Rp15.000'],'Five thousand = 5.000.'),
+  bb('A ___ of bakso','bowl',['bar','loaf','cone'],'Semangkuk bakso.')],
+ [bb('Sakit kepala dalam bahasa Inggris …','headache',['toothache','stomachache','sore eyes'],'Head = kepala.'),
+  bb('"What\'s wrong with you?" artinya …','kamu kenapa?',['kamu di mana?','kamu mau apa?','berapa umurmu?'],'Menanyakan keluhan.'),
+  bb('Sakit gigi dalam bahasa Inggris …','toothache',['headache','sore throat','cold'],'Tooth = gigi.')],
+ [bb('Topi dalam bahasa Inggris …','hat',['shoes','socks','tie'],'Hat = topi.'),
+  bb('A pair of ___ (sepasang sepatu)','shoes',['hat','blouse','tie'],'Sepatu selalu berpasangan.'),
+  bb('Kaus kaki dalam bahasa Inggris …','socks',['shorts','skirt','shirt'],'Socks = kaus kaki.')],
+ [bb('We use our nose to …','smell',['see','hear','walk'],'Nose = hidung.'),
+  bb('We use our eyes to …','see',['smell','taste','hear'],'Eyes = mata.'),
+  bb('Bahu dalam bahasa Inggris …','shoulders',['knees','toes','cheek'],'Shoulders = bahu.')],
+ [bb('Lawan kata "tall" adalah …','short',['big','old','fast'],'Tall = tinggi, short = pendek.'),
+  bb('Lawan kata "expensive" adalah …','cheap',['new','young','slow'],'Expensive = mahal, cheap = murah.'),
+  bb('Lawan kata "fast" adalah …','slow',['old','short','small'],'Fast = cepat, slow = lambat.')],
+ [bb('The giraffe is ___ than the deer.','taller',['tall','tallest','more tall'],'Perbandingan: -er than.'),
+  bb('The rabbit is ___ than the goat.','smaller',['small','smallest','more small'],'Small → smaller.'),
+  bb('Bentuk -er dari "big" adalah …','bigger',['biger','biggest','more big'],'Huruf g digandakan.')],
+ [bb('The elephant is the ___ animal here.','biggest',['bigger','big','more big'],'Paling: the + -est.'),
+  bb('Bentuk paling dari "tall" adalah …','the tallest',['taller','tall','more tall'],'Superlatif: the -est.'),
+  bb('The cheetah is the ___ animal.','fastest',['faster','fast','more fast'],'Fast → fastest.')],
+ [bb('Bulan pertama dalam setahun …','January',['June','December','March'],'January = Januari.'),
+  bb('Bulan Agustus dalam bahasa Inggris …','August',['April','October','July'],'Kita merdeka 17 August.'),
+  bb('Tanggal 1 dibaca …','the first',['the one','the second','the third'],'1st = first.'),
+  bb('Bulan setelah November …','December',['October','January','September'],'November, December.')]
+];
+const EN6=[
+ [bb('Yesterday I ___ TV.','watched',['watch','watching','watches'],'Past tense: -ed.'),
+  bb('Last night she ___ for the test.','studied',['study','studies','studying'],'Study → studied.'),
+  bb('"I studied, but my sister didn\'t." Kakaknya …','tidak belajar',['belajar','sedang belajar','akan belajar'],'Didn\'t = tidak (lampau).')],
+ [bb('Bentuk lampau dari "go" adalah …','went',['goed','gone','going'],'Kata kerja tak beraturan.'),
+  bb('Bentuk lampau dari "buy" adalah …','bought',['buyed','buys','brought'],'Buy → bought.'),
+  bb('"Two days ago" artinya …','dua hari yang lalu',['dua hari lagi','setiap dua hari','dua hari ini'],'Ago = yang lalu.')],
+ [bb('I ___ in Bali last week.','was',['were','am','is'],'I/he/she: was.'),
+  bb('They ___ tired yesterday.','were',['was','is','am'],'You/we/they: were.'),
+  bb('"Where were you last holiday?" menanyakan …','tempat liburan lalu',['jam berapa','umur','cita-cita'],'Where = di mana.')],
+ [bb('"How did you feel yesterday?" — "I ___ happy."','felt',['feel','feeling','feels'],'Feel → felt.'),
+  bb('Sedih dalam bahasa Inggris …','sad',['happy','angry','worried'],'Sad = sedih.'),
+  bb('Khawatir dalam bahasa Inggris …','worried',['alone','sick','happy'],'Worried = khawatir.')],
+ [bb('Kata tanya untuk waktu adalah …','when',['who','where','what'],'When = kapan.'),
+  bb('Kata tanya untuk orang adalah …','who',['when','how','where'],'Who = siapa.'),
+  bb('"___ did you go?" — "To the museum."','Where',['Who','When','What time'],'Where = ke mana / di mana.')],
+ [bb('I ___ go to Bromo tomorrow.','will',['was','did','am'],'Will untuk rencana masa depan.'),
+  bb('"What will you do tomorrow?" menanyakan kegiatan …','besok',['kemarin','tadi','minggu lalu'],'Tomorrow = besok.'),
+  bb('She will ___ a cake.','buy',['buys','bought','buying'],'Setelah will: kata kerja dasar.')],
+ [bb('"Next year" artinya …','tahun depan',['tahun lalu','tahun ini','setiap tahun'],'Next = berikutnya.'),
+  bb('"Tonight" artinya …','nanti malam',['tadi malam','besok pagi','kemarin'],'Tonight = malam ini.'),
+  bb('Kalimat masa depan yang benar adalah …','I will study at junior high school next year.',['I studied next year.','I study yesterday.','I was study next year.'],'Will + kata kerja dasar.')],
+ [bb('Orang yang menerbangkan pesawat disebut …','pilot',['chef','farmer','sailor'],'Pilot bekerja di bandara.'),
+  bb('Orang yang memasak di restoran disebut …','chef',['nurse','driver','singer'],'Chef = koki.'),
+  bb('A doctor works in a …','hospital',['ricefield','airport','restaurant'],'Dokter di rumah sakit.'),
+  bb('"What do you want to be?" menanyakan …','cita-cita',['hobi','alamat','umur'],'Want to be = ingin menjadi.')]
+];
+const EN7=[
+ [bb('"I ___ thirteen years old."','am',['is','are','be'],'I am.'),
+  bb('"She ___ from Kalimantan."','is',['am','are','be'],'She is.'),
+  bb('"Are you a student?" — "Yes, I ___."','am',['is','are','do'],'Short answer: Yes, I am.'),
+  bb('Bulan setelah March adalah …','April',['May','February','June'],'March, April, May.')],
+ [bb('"My hobby is fishing." Hobinya …','memancing',['berenang','membaca','memasak'],'Fishing = memancing.'),
+  bb('"She has long hair and she is kind." Kata yang menunjukkan sifat adalah …','kind',['long','hair','has'],'Kind = baik hati.'),
+  bb('They ___ my best friends.','are',['is','am','be'],'They are.')],
+ [bb('Teks yang berisi cara membuat sesuatu disebut …','procedure text',['recount text','narrative text','descriptive text'],'Ada bahan dan langkah.'),
+  bb('"___ the eggs for five minutes." (perintah)','Boil',['Boiled','Boiling','Boils'],'Imperatif memakai kata kerja dasar.'),
+  bb('"Don\'t touch the hot pan!" adalah kalimat …','larangan',['ajakan','pertanyaan','pujian'],'Don\'t + kata kerja.'),
+  bb('Bahan-bahan dalam resep disebut …','ingredients',['utensils','steps','tools'],'Utensils = peralatan.')],
+ [bb('There ___ three bedrooms in my house.','are',['is','am','be'],'Jamak: there are.'),
+  bb('The cat is ___ the sofa. (di bawah)','under',['on','between','behind'],'Under = di bawah.'),
+  bb('First, sweep the floor. ___, mop it.','Next',['Yesterday','Because','But'],'Kata urutan: first, next, then, finally.')],
+ [bb('I ___ study at night. (selalu)','always',['never','sometimes','rarely'],'Adverb of frequency.'),
+  bb('"We have English on Monday." Pelajaran Inggris pada hari …','Senin',['Selasa','Rabu','Jumat'],'Monday = Senin.'),
+  bb('"Could you turn on your camera, please?" adalah kalimat …','permintaan sopan',['larangan','perintah kasar','pujian'],'Could you … please?')],
+ [bb('The library is ___ the canteen and the office.','between',['under','across','on'],'Between = di antara.'),
+  bb('"Across from" artinya …','di seberang',['di dalam','di bawah','di atas'],'Across from = di seberang.'),
+  bb('Kegiatan di luar jam pelajaran disebut …','extracurricular activities',['homework','schedule','exam'],'Contoh: Pramuka.')]
+];
+const EN8=[
+ [bb('Teks yang menceritakan pengalaman masa lalu disebut …','recount text',['procedure text','descriptive text','report text'],'Struktur: orientation, events, reorientation.'),
+  bb('Bentuk lampau dari "win" adalah …','won',['winned','wan','wins'],'Win → won.'),
+  bb('We ___ Independence Day last August.','celebrated',['celebrate','celebrating','celebrates'],'Past tense.'),
+  bb('Bentuk lampau dari "lead" adalah …','led',['leaded','lead','leads'],'Lead → led.')],
+ [bb('Kata penghubung waktu (time connective) adalah …','after that',['because','but','although'],'First, then, after that, finally.'),
+  bb('"Finally" biasanya dipakai di bagian …','akhir cerita',['awal cerita','judul','pertanyaan'],'Finally = akhirnya.')],
+ [bb('Teks yang berisi cerita dengan konflik dan penyelesaian disebut …','narrative text',['recount text','procedure text','descriptive text'],'Contoh: The Ugly Duckling.'),
+  bb('Sifat "brave" artinya …','berani',['malu','sombong','marah'],'Brave = berani.'),
+  bb('Lawan kata "rude" adalah …','polite',['shy','angry','brave'],'Rude = kasar, polite = sopan.')],
+ [bb('"Throw your rubbish in the bin." adalah kalimat …','perintah',['tanya','lampau','perbandingan'],'Imperatif.'),
+  bb('Poster ajakan biasanya memakai kata …','Let\'s',['Did','Was','Yesterday'],'Let\'s = mari.')],
+ [bb('___ it rain last night? — Yes, it did.','Did',['Do','Was','Does'],'Pertanyaan lampau: Did + kata kerja dasar.'),
+  bb('"What happened to the sea animals?" menanyakan …','apa yang terjadi',['kapan terjadi','siapa yang datang','berapa jumlahnya'],'What happened = apa yang terjadi.'),
+  bb('Did you ___ the beach? — Yes, I did.','clean',['cleaned','cleaning','cleans'],'Setelah did: kata kerja dasar.')],
+ [bb('Ungkapan untuk menyatakan pendapat adalah …','I think that …',['Good morning.','See you.','Thank you.'],'I think, in my opinion.'),
+  bb('He sang ___ . (dengan ragu-ragu)','hesitantly',['hesitant','hesitate','hesitation'],'Adverb of manner berakhiran -ly.'),
+  bb('"Practice makes perfect" artinya …','latihan membuat sempurna',['latihan itu sulit','berhenti berlatih','sempurna tanpa latihan'],'Peribahasa.')]
+];
+const EN9=[
+ [bb('Teks yang menggambarkan ciri suatu hewan disebut …','descriptive text',['recount text','procedure text','narrative text'],'Contoh: bekantan.'),
+  bb('Hewan yang hampir punah disebut …','endangered',['domestic','extinct','common'],'Endangered species.'),
+  bb('Orangutans ___ long arms.','have',['has','having','is'],'They/jamak: have.')],
+ [bb('The hornbill ___ protected by the government. (pasif)','is',['are','do','does'],'Passive: be + V3.'),
+  bb('Bentuk pasif dari "People protect the birds" adalah …','The birds are protected by people.',['The birds protect people.','People are protected the birds.','The birds is protect.'],'Objek jadi subjek.')],
+ [bb('I ___ snorkeling when I saw a turtle.','was',['were','am','is'],'Past continuous: was/were + -ing.'),
+  bb('They were swimming ___ it started to rain.','when',['while','because','so'],'When + kejadian singkat.'),
+  bb('We did not ___ the national park.','visit',['visited','visiting','visits'],'Did not + kata kerja dasar.')],
+ [bb('Bagian narrative yang berisi masalah disebut …','complication',['orientation','resolution','coda'],'Orientation → complication → resolution.'),
+  bb('Bagian yang berisi penyelesaian masalah disebut …','resolution',['complication','orientation','title'],'Masalah terselesaikan.'),
+  bb('Cerita Timun Mas termasuk teks …','narrative',['procedure','report','recount'],'Cerita rakyat.')],
+ [bb('Urutan kata sifat yang benar adalah …','a beautiful small bag',['a small beautiful bag','a bag beautiful small','a beautiful bag small'],'Opini dulu, lalu ukuran.'),
+  bb('Mengolah barang bekas menjadi barang bernilai disebut …','upcycling',['recycling bin','littering','burning'],'Upcycling used materials.'),
+  bb('"How much is this shirt?" menanyakan …','harga',['ukuran','warna','bahan'],'How much = berapa harganya.')],
+ [bb('Berita bohong dalam bahasa Inggris …','hoax',['fact','search engine','expert'],'Turn back hoax!'),
+  bb('___ share your password with others.','Never',['Always','Please','Sometimes'],'Imperatif dengan never.'),
+  bb('Perundungan di dunia maya disebut …','cyberbullying',['online safety','identity','netiquette'],'Harus dilaporkan.')]
+];
+const EN10=[
+ [bb('Teks yang menggambarkan seorang atlet disebut …','descriptive text',['procedure text','recount text','expository text'],'Present simple.'),
+  bb('Kalimat present simple yang benar adalah …','She trains every morning.',['She train every morning.','She trained tomorrow.','She training every day.'],'She + V-s.'),
+  bb('Kata sifat untuk menggambarkan atlet: "He is very ___."','athletic',['athletically','athlete','athletics'],'Adjective setelah be.')],
+ [bb('While I ___ the match, it started to rain.','was watching',['watched','watch','am watching'],'Past progressive.'),
+  bb('Teks pengalaman pribadi disebut …','personal recount',['procedure','exposition','description'],'Orientation, events, reorientation.')],
+ [bb('"Warm up before you exercise." adalah kalimat …','imperative',['interrogative','past tense','passive'],'Perintah.'),
+  bb('Teks prosedur berisi …','langkah-langkah',['opini pribadi','kisah fantasi','berita'],'Goal, materials, steps.')],
+ [bb('You ___ eat more vegetables. (sebaiknya)','had better',['had','better to','have better'],'Had better + V1.'),
+  bb('You ___ drink enough water every day. (harus)','should',['shouldn\'t','can\'t','mustn\'t'],'Should = sebaiknya/harus.')],
+ [bb('Teks yang menjelaskan pendapat tentang suatu topik disebut …','expository text',['narrative text','recount text','procedure text'],'Thesis, arguments, conclusion.'),
+  bb('Ungkapan memberi pendapat adalah …','In my opinion, …',['Once upon a time, …','First, …','Yesterday, …'],'Giving opinions.')],
+ [bb('If I ___ a superhero, I would help everyone.','were',['am','is','be'],'Conditional tipe 2.'),
+  bb('Cerita lama yang diubah alur atau tokohnya disebut …','fractured story',['report','biography','news'],'Fractured narrative.')]
+];
+const EN11=[
+ [bb('___ posted this photo? (menanyakan pelaku)','Who',['Whom','Whose','Which'],'Subject question.'),
+  bb('Kemampuan memakai teknologi digital dengan bijak disebut …','digital literacy',['cyberbullying','hoax','spam'],'Literasi digital.')],
+ [bb('The place ___ we throw rubbish is called a bin.','where',['who','when','whose'],'Noun of place + where.'),
+  bb('Sampah organik dalam bahasa Inggris …','organic waste',['plastic waste','e-waste','glass waste'],'Bisa jadi kompos.')],
+ [bb('Teks yang berisi argumen untuk meyakinkan pembaca disebut …','analytical exposition',['narrative','recount','descriptive'],'Thesis, arguments, reiteration.'),
+  bb('Kata penghubung untuk menambah argumen adalah …','Furthermore',['Once upon a time','Yesterday','Suddenly'],'Internal conjunction.')],
+ [bb('Bentuk lampau dari "plant" adalah …','planted',['plant','planting','plants'],'Simple past.'),
+  bb('Ungkapan untuk mengakhiri percakapan adalah …','Nice talking to you.',['Excuse me.','By the way.','Guess what?'],'Ending a conversation.')],
+ [bb('Saving money is ___ than spending it all.','better',['good','best','more good'],'Good → better → best.'),
+  bb('"Make a budget first." adalah kalimat …','imperative',['passive','question','conditional'],'Procedure text.')]
+];
+const EN12=[
+ [bb('Energi dari matahari, air, dan angin disebut …','renewable energy',['fossil fuel','blackout','pollution'],'Bisa diperbarui.'),
+  bb('Bentuk lampau dari "build" adalah …','built',['builded','build','builds'],'Build → built.')],
+ [bb('Masyarakat yang tidak memakai uang tunai disebut …','cashless society',['money laundering','interest','currency'],'E-wallet, QR code.'),
+  bb('Teks yang berisi argumen untuk membuktikan suatu pendapat disebut …','argumentative text',['narrative text','recount text','procedure text'],'Ada klaim dan bukti.')],
+ [bb('Etika berinternet disebut …','netiquette',['hate speech','hoax','spam'],'Net + etiquette.'),
+  bb('Hortatory exposition diakhiri dengan …','recommendation',['orientation','complication','coda'],'Mengajak pembaca bertindak.')],
+ [bb('Teks yang menyajikan dua sisi pendapat disebut …','discussion text',['narrative text','report text','recount text'],'Pro dan kontra.'),
+  bb('Greenhouse gases ___ by burning fossil fuels. (pasif)','are produced',['produce','producing','is produce'],'Passive voice.'),
+  bb('Kata penghubung pertentangan adalah …','however',['moreover','because','first'],'Contrastive conjunction.')]
+];
+curInstall('k1',{eng:[['Salam dan perkenalan','How are you? My name is …',[ke(EN1[0])],'Good morning = selamat pagi.'],
+  ['Angka 1–10','one sampai ten',[ke(EN1[1])],'One, two, three …'],['Benda di kelas','book, pencil, bag',[ke(EN1[2])],'Pencil = pensil.'],
+  ['Warna','red, blue, green',[ke(EN1[3])],'Red = merah.'],['Bentuk dan ukuran','circle, square, big, small',[ke(EN1[4])],'Circle = lingkaran.'],
+  ['Hewan','cat, duck, fish',[ke(EN1[5])],'Cat = kucing.'],['Keluarga','father, mother, he, she',[ke(EN1[6])],'Father = ayah.'],
+  ['Buah dan kesukaan','apple, banana, I like',[ke(EN1[7])],'I like = saya suka.']]},'e1');
+curInstall('k3',{eng:[['Makanan dan minuman','Do you like …?',[ke(EN3[0])],'Yes, I do. / No, I don\'t.'],
+  ['Waktu makan','breakfast, lunch, dinner',[ke(EN3[1])],'Breakfast = sarapan.'],['Hobi','swimming, reading, singing',[ke(EN3[2])],'Hobi berakhiran -ing.'],
+  ['Nama hari','Monday sampai Sunday',[ke(EN3[3])],'Monday = Senin.'],['Ruangan sekolah','library, canteen',[ke(EN3[4])],'Library = perpustakaan.'],
+  ['Letak benda','in, on, under, behind',[ke(EN3[5])],'Under = di bawah.'],['Kegiatan dan keadaan kelas','clean, dirty, teach',[ke(EN3[6])],'Clean = bersih.'],
+  ['Angka 21–50','twenty-one sampai fifty',[ke(EN3[7])],'Twenty = 20.']]},'e3');
+curInstall('k4',{eng:[['What are you doing?','Present continuous',[ke(EN4[0])],'is/am/are + -ing.'],['Angka 1–100','plus, minus, hundred',[ke(EN4[1])],'Sixty-seven = 67.'],
+  ['Ruangan rumah','kitchen, bedroom, behind',[ke(EN4[2])],'Kitchen = dapur.'],['Kegiatan rutin','Simple present',[ke(EN4[3])],'She cooks, I cook.'],
+  ['Perabot rumah','There is / there are',[ke(EN4[4])],'Satu: is, banyak: are.'],['I can …','Can dan can\'t',[ke(EN4[5])],'Can = bisa.'],
+  ['Membaca jam','o\'clock, half past, quarter',[ke(EN4[6])],'Half past seven = 07.30.'],['Seberapa sering','always, usually, sometimes, never',[ke(EN4[7])],'Always = selalu.'],
+  ['Kendaraan','by bus, on foot',[ke(EN4[8])],'Go by bike.']]},'e4');
+curInstall('k5',{eng:[['Rasa makanan','sweet, sour, salty, bitter',[ke(EN5[0])],'Sweet = manis.'],['Satuan makanan','a bottle of, a slice of',[ke(EN5[1])],'A glass of water.'],
+  ['Harga','How much is it?',[ke(EN5[2])],'Thousand = ribu.'],['Keluhan sakit','headache, toothache',[ke(EN5[3])],'What\'s wrong with you?'],
+  ['Pakaian','hat, shoes, socks',[ke(EN5[4])],'A pair of shoes.'],['Bagian tubuh','nose, eyes, shoulders',[ke(EN5[5])],'Nose to smell.'],
+  ['Kata sifat','tall, short, cheap',[ke(EN5[6])],'Lawan kata.'],['Perbandingan','taller than',[ke(EN5[7])],'-er than.'],
+  ['Paling','the tallest',[ke(EN5[8])],'the -est.'],['Bulan dan tanggal','January, the first',[ke(EN5[9])],'1st = first.']]},'e5');
+curInstall('k6',{eng:[['Kegiatan kemarin','Past tense -ed',[ke(EN6[0])],'Watch → watched.'],['Kata kerja tak beraturan','go → went, ago',[ke(EN6[1])],'Buy → bought.'],
+  ['Was dan were','I was, they were',[ke(EN6[2])],'I/he/she: was.'],['Perasaan','happy, sad, worried',[ke(EN6[3])],'Feel → felt.'],
+  ['Kata tanya','who, what, where, when',[ke(EN6[4])],'When = kapan.'],['Rencana','will + kata kerja',[ke(EN6[5])],'Will = akan.'],
+  ['Waktu yang akan datang','tomorrow, next year',[ke(EN6[6])],'Next year = tahun depan.'],['Cita-cita','I want to be …',[ke(EN6[7])],'Pilot, doctor, chef.']]},'e6');
+curInstall('k7',{eng:[['The Beginning dan perkenalan','be: am, is, are',[ke(EN7[0])],'I am, she is, they are.'],
+  ['Hobi dan teman','Deskripsi orang',[ke(EN7[1])],'Sifat dan ciri fisik.'],['Makanan dan resep','Procedure, imperatif',[ke(EN7[2])],'Kata kerja dasar untuk perintah.'],
+  ['Rumah dan pekerjaan rumah','There is/are, first-next-then',[ke(EN7[3])],'Kata urutan.'],['Kehidupan sekolah','Jadwal, frequency adverbs',[ke(EN7[4])],'Always … never.'],
+  ['Gedung dan kegiatan sekolah','Preposisi tempat, ekskul',[ke(EN7[5])],'Between, across from.']]},'e7');
+curInstall('k8',{eng:[['Merayakan kemerdekaan','Recount, past tense',[ke(EN8[0])],'Win → won.'],['Urutan peristiwa','Time connectives',[ke(EN8[1])],'First, then, finally.'],
+  ['Kebaikan','Narrative, sifat tokoh',[ke(EN8[2])],'Brave, kind, polite.'],['Peduli lingkungan','Instruksi dan poster',[ke(EN8[3])],'Let\'s …'],
+  ['Did it rain?','Pertanyaan lampau',[ke(EN8[4])],'Did + V1.'],['Jadilah dirimu','Opini, adverb of manner',[ke(EN8[5])],'I think that …']]},'e8');
+curInstall('k9',{eng:[['Fauna Indonesia','Descriptive text',[ke(EN9[0])],'Endangered = terancam punah.'],['Burung Indonesia','Passive voice',[ke(EN9[1])],'be + V3.'],
+  ['Perjalanan','Recount, past continuous',[ke(EN9[2])],'was/were + -ing.'],['Dunia fantasi','Narrative text',[ke(EN9[3])],'Orientation, complication, resolution.'],
+  ['Barang bekas jadi baru','Urutan kata sifat, harga',[ke(EN9[4])],'Upcycling.'],['Kehidupan digital','Procedure, imperatif',[ke(EN9[5])],'Turn back hoax!']]},'e9');
+curInstall('k10',{eng:[['Great athletes','Descriptive, present simple',[ke(EN10[0])],'She trains.'],['Sports events','Recount, past progressive',[ke(EN10[1])],'was watching.'],
+  ['Sports and health','Procedure, imperatives',[ke(EN10[2])],'Warm up first.'],['Healthy foods','Had better, should',[ke(EN10[3])],'Had better + V1.'],
+  ['Graffiti','Expository, opinions',[ke(EN10[4])],'In my opinion …'],['Fractured stories','Conditional sentences',[ke(EN10[5])],'If I were …']]},'e10');
+curInstall('k11',{eng:[['Digital literacies','Subject questions',[ke(EN11[0])],'Who posted …?'],['Love your environment','Descriptive, where/that',[ke(EN11[1])],'The place where …'],
+  ['Healthy life','Analytical exposition',[ke(EN11[2])],'Thesis, arguments, reiteration.'],['Environmental figures','Narrative, simple past',[ke(EN11[3])],'Plant → planted.'],
+  ['Money management','Procedure, comparatives',[ke(EN11[4])],'Better than.']]},'e11');
+curInstall('k12',{eng:[['A friendly future','Narrative, renewable energy',[ke(EN12[0])],'Build → built.'],['E-money','Argumentative text',[ke(EN12[1])],'Cashless society.'],
+  ['Netiquette','Hortatory exposition',[ke(EN12[2])],'Diakhiri recommendation.'],['Carbon footprints','Discussion text, passive',[ke(EN12[3])],'Pro dan kontra.']]},'e12');
+
 const COURSE_VIS=()=>COURSE.filter(c=>!c.hidden);
 const clsGrp=id=>{const c=COURSE.find(x=>x.id===id);return c&&c.grp||id};
 
@@ -9201,10 +9497,11 @@ function spokenTx(t){return String(t||'').replace(/[\p{Extended_Pictographic}\uF
   .replace(/(\d)\/(\d)/g,'$1 per $2').replace(/%/g,' persen').replace(/°/g,' derajat').replace(/cm²/g,' sentimeter persegi').replace(/m²/g,' meter persegi').replace(/cm³/g,' sentimeter kubik').replace(/&gt;|>/g,' lebih dari ').replace(/&lt;|</g,' kurang dari ')
   .replace(/\s*…\s*/g,' apa? ').replace(/\?\s*$/,' berapa?').replace(/\s+/g,' ').trim()}
 function qSpeech(q){if(!q)return '';if(!earlyReader())return '';if(q.say)return q.say;return spokenTx(plainTx(q.q))}
-function sayLong(t){if(!t)return;try{const s=window.speechSynthesis;s.cancel();const parts=String(t).match(/[^.!?\n]+[.!?\n]*/g)||[t];let buf='';const out=[];parts.forEach(p=>{if((buf+p).length>180&&buf){out.push(buf);buf=''}buf+=p});if(buf)out.push(buf);
+function sayLong(t){if(!t)return;try{const s=window.speechSynthesis;s.cancel();if(String(t).includes('«')){speakParts(s,t,.9);return}const parts=String(t).match(/[^.!?\n]+[.!?\n]*/g)||[t];let buf='';const out=[];parts.forEach(p=>{if((buf+p).length>180&&buf){out.push(buf);buf=''}buf+=p});if(buf)out.push(buf);
   out.forEach(x=>{const u=new SpeechSynthesisUtterance(x.trim());u.lang='id-ID';u.rate=.9;s.speak(u)})}catch(e){}}
-function optSpeech(q,k){if(q.trace||q.warna||q.match)return '';const o=q.opts[k];if(q.optSay&&q.optSay[o])return q.optSay[o];const t=plainTx(o).replace(/[^\p{L}\p{N}’' -]/gu,' ').replace(/\s+/g,' ').trim();if(t)return t;const m=String(o).match(/class="objs">([^<]*)</);return m?String([...m[1]].filter(ch=>/\p{Extended_Pictographic}/u.test(ch)).length):''}
-function say(t){if(!soundOn||!t)return;try{const s=window.speechSynthesis;s.cancel();const u=new SpeechSynthesisUtterance(t);u.lang='id-ID';u.rate=.9;s.speak(u)}catch(e){}}
+function optSpeech(q,k){if(q.trace||q.warna||q.match)return '';const o=q.opts[k];if(q.optSay&&q.optSay[o])return q.optSay[o];const t=plainTx(o).replace(/[^\p{L}\p{N}’' -]/gu,' ').replace(/\s+/g,' ').trim();if(t)return q.optEn?'«'+t+'»':t;const m=String(o).match(/class="objs">([^<]*)</);return m?String([...m[1]].filter(ch=>/\p{Extended_Pictographic}/u.test(ch)).length):''}
+function speakParts(s,t,rate){String(t).split(/(«[^»]*»)/).forEach(p=>{if(!p.trim())return;const en=p[0]==='«';const u=new SpeechSynthesisUtterance(en?p.slice(1,-1):p);u.lang=en?'en-US':'id-ID';u.rate=en?.8:rate;s.speak(u)})}
+function say(t){if(!soundOn||!t)return;try{const s=window.speechSynthesis;s.cancel();speakParts(s,t,.9)}catch(e){}}
 
 /* ---------- state ---------- */
 let L=null,S=null,game=null,timerId=null,M=null,DUEL=null,CUR=null;
@@ -14628,7 +14925,7 @@ function folBind(root,list,after){root.querySelectorAll('[data-follow]').forEach
   try{await folDo(f,on);if(on){try{sfx.ok()}catch(_){}toast('team',`Kamu mengikuti ${f.name}.`)}b.outerHTML=folBtn(f,b.classList.contains('sm'));folBind(root,list,after);after&&after()}catch(err){b.disabled=false;toast('lock',fbErr(err))}})}
 const shareIcon='<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M12 3 V15 M7 8 L12 3 L17 8 M5 13 V19 C5 20 6 21 7 21 H17 C18 21 19 20 19 19 V13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const qrIcon='<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><path d="M14 14h3v3h-3zM18 18h3v3h-3zM18 14h3M14 18v3" stroke-linecap="round"/></svg>';
-let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=243';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
+let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=244';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
 function qrMatrix(text){const Q=window.QRCodeLib,q=new Q(-1,Q.ECL.M);q.addData(text);q.make();const n=q.getModuleCount(),m=[];for(let r=0;r<n;r++){m.push([]);for(let c=0;c<n;c++)m[r].push(q.isDark(r,c))}return m}
 function qrSvgOf(m){const n=m.length;let d='';for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(m[r][c])d+=`M${c} ${r}h1.02v1.02h-1.02z`;
   return `<svg viewBox="-2 -2 ${n+4} ${n+4}" class="pcqr" shape-rendering="crispEdges" aria-label="Kode QR profil"><rect x="-2" y="-2" width="${n+4}" height="${n+4}" fill="#fff"/><path d="${d}" fill="#1C1E3D"/></svg>`}
