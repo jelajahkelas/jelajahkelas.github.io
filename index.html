@@ -3899,7 +3899,7 @@ html[data-theme=malam] .plstick{background:#0a0f1e}
 <div class="syncpill" id="syncPill" hidden></div>
 <div class="toast" id="toast" hidden></div>
 
-<script src="av.js?v=246"></script>
+<script src="av.js?v=247"></script>
 <script>
 /* ---------- visual assets ---------- */
 const INK='#1B1E3D';
@@ -3922,7 +3922,7 @@ const LEVEL_ART={
  sd:`<svg viewBox="0 0 80 80"><g ${S3}><path d="M30 18 v-4 a10 10 0 0 1 20 0 v4" fill="none"/><rect x="14" y="18" width="52" height="56" rx="14" fill="#F2394B"/><rect x="22" y="44" width="36" height="22" rx="6" fill="#fff"/><path d="M22 52 h36"/><circle cx="40" cy="31" r="5" fill="#FFC23D"/></g></svg>`,
  smp:`<svg viewBox="0 0 80 80"><g ${S3}><path d="M40 24 C30 18 18 18 8 22 V66 C18 62 30 62 40 68Z" fill="#fff"/><path d="M40 24 C50 18 62 18 72 22 V66 C62 62 50 62 40 68Z" fill="#DCE6FF"/><path d="M40 24 V68"/><path d="M15 34 h16 M15 42 h16 M49 34 h16 M49 42 h12" stroke-width="2.5"/><path d="M52 64 L70 46 l6 6 L58 70 l-8 2z" fill="#FFC23D"/></g></svg>`,
  sma:`<svg viewBox="0 0 80 80"><g ${S3}><path d="M20 40 v14 c0 10 40 10 40 0 v-14" fill="#6676B8"/><path d="M4 32 L40 16 L76 32 L40 48Z" fill="${INK}"/><path d="M40 32 L66 37 V56" fill="none" stroke="#FFC23D" stroke-width="3"/><circle cx="66" cy="60" r="5" fill="#FFC23D"/></g></svg>`};
-const MCOL={tembak:'#FF5A5F',lari:'#FF8A3D',balon:'#3DA5FF',tikus:'#A86BFF',balap:'#2F5BEA',pancing:'#14B8A6',katak:'#22B85C',ular:'#E89A00',penalti:'#2E9E4F',basket:'#E8590C',buah:'#D6336C',labirin:'#5B5BD6',memori:'#7C4DFF',benarsalah:'#FF4B4B',susun:'#F5A300',kelompok:'#1CB0F6',urut:'#26A65B',pacu:'#1565C0',layang:'#E91E63',kuis:'#FF5C9E'};
+const MCOL={zona:'#16A34A',tembak:'#FF5A5F',lari:'#FF8A3D',balon:'#3DA5FF',tikus:'#A86BFF',balap:'#2F5BEA',pancing:'#14B8A6',katak:'#22B85C',ular:'#E89A00',penalti:'#2E9E4F',basket:'#E8590C',buah:'#D6336C',labirin:'#5B5BD6',memori:'#7C4DFF',benarsalah:'#FF4B4B',susun:'#F5A300',kelompok:'#1CB0F6',urut:'#26A65B',pacu:'#1565C0',layang:'#E91E63',kuis:'#FF5C9E'};
 const SCOL=['#FF5A5F','#3D8BFF','#F5A300','#22B85C','#A86BFF','#14B8A6','#FF8A3D'];
 const HEART='<svg viewBox="0 0 24 22"><path d="M12 20.5 C5 15 1.5 11 1.5 6.8 A5.2 5.2 0 0 1 12 4.6 A5.2 5.2 0 0 1 22.5 6.8 C22.5 11 19 15 12 20.5Z" stroke="#1B1E3D" stroke-width="2.2" stroke-linejoin="round"/></svg>';
 const CHEER=['Hebat!','Pintar!','Keren!','Mantap!','Luar biasa!','Jenius!','Hore!'];
@@ -9813,6 +9813,7 @@ const MODE_LIST=[
   icon:'<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round"><rect x="14" y="4" width="20" height="12" rx="3"/><path d="M4 28h16l-2 14H6zM28 28h16l-2 14H30z"/><path d="M24 18v6" stroke-linecap="round"/></svg>'},
  {id:'urut',name:'Urutkan',desc:'Ketuk berurutan dari yang pertama',help:'Susun urutan yang benar, misalnya urutan planet, gerakan wudu, peristiwa sejarah, atau bilangan. Ketuk kartu satu per satu dari yang pertama. Salah 2 kali, jawaban dianggap salah.',
   icon:'<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M18 10h24M18 24h24M18 38h24"/><path d="M6 8l3-2v8M5 22c2-3 6-2 6 1s-6 5-6 7h6M5 34h5l-3 4c3 0 4 2 3 4s-4 2-5 0"/></svg>'},
+ {id:'zona',name:'Zona Jawaban',desc:'Lari ke zona jawaban yang benar',help:'Ketuk atau geser layar untuk menggerakkan avatarmu ke zona jawaban yang benar, lalu berdiri sebentar di sana. Ambil bintang agar lebih cepat, hindari lumpur. Jawaban benar menaikkan kendaraanmu! Keyboard: panah atau angka 1–4.',icon:'<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="12" rx="3"/><rect x="28" y="4" width="16" height="12" rx="3"/><rect x="4" y="32" width="16" height="12" rx="3"/><rect x="28" y="32" width="16" height="12" rx="3"/><circle cx="24" cy="24" r="4"/></svg>'},
  {id:'pacu',name:'Pacu Jalur',desc:'Jawab benar, perahumu melaju',help:'Setiap jawaban benar membuat perahu jalurmu mendayung lebih jauh, jawaban salah atau waktu habis membuatnya mundur sedikit. Kalahkan perahu lawan sampai garis finis! Ketuk tombol jawaban atau tekan angka 1–4.',
   icon:'<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 28h40l-6 8H10z"/><path d="M14 28l-4-10M24 28l-4-10M34 28l-4-10"/><path d="M4 42c4-3 8-3 12 0s8 3 12 0 8-3 12 0"/></svg>'},
  {id:'layang',name:'Main Layangan',desc:'Terbangkan layangan ke awan jawaban',help:'Geser jari ke kiri dan kanan untuk mengarahkan layangan ke awan dengan jawaban benar. Hindari layangan ungu yang bisa menyenggolmu! Keyboard: panah kiri dan kanan.',
@@ -9822,11 +9823,11 @@ const MODE_LIST=[
 /* which games suit which subject: short numeric answers suit fast action games,
    word answers suit games with readable cards, long phrases suit games with wide labels or an A–D list */
 const FIT={
- num:{games:['lompat','tembak','balap','balon','tikus','penalti','basket','buah','memori','benarsalah','kelompok','urut','pacu','layang','kuis'],note:'Jawabannya berupa angka pendek, jadi cocok untuk game cepat yang melatih ketangkasan berhitung.'},
- unit:{games:['lompat','tembak','balap','lari','pancing','penalti','basket','memori','benarsalah','kelompok','urut','pacu','kuis'],note:'Jawabannya angka dengan satuan (cm, menit, N, J), jadi dipilih game yang kartunya cukup lebar.'},
- word:{games:['lompat','pancing','katak','lari','tikus','penalti','buah','labirin','memori','benarsalah','susun','kelompok','urut','pacu','layang','kuis'],note:'Jawabannya berupa kata, jadi dipilih game yang memberi waktu membaca sebelum memilih.'},
- phrase:{games:['lompat','ular','lari','katak','pancing','penalti','labirin','memori','benarsalah','susun','kelompok','urut','pacu','kuis'],note:'Jawabannya berupa istilah atau frasa, jadi dipilih game dengan kartu jawaban lebar.'},
- long:{games:['ular','lari','katak','labirin','benarsalah','kelompok','urut','pacu','kuis'],note:'Jawabannya berupa kalimat atau nama panjang, jadi dipilih game yang menampilkan jawaban dengan jelas dan tidak terburu-buru.'},
+ num:{games:['lompat','zona','tembak','balap','balon','tikus','penalti','basket','buah','memori','benarsalah','kelompok','urut','pacu','layang','kuis'],note:'Jawabannya berupa angka pendek, jadi cocok untuk game cepat yang melatih ketangkasan berhitung.'},
+ unit:{games:['lompat','zona','tembak','balap','lari','pancing','penalti','basket','memori','benarsalah','kelompok','urut','pacu','kuis'],note:'Jawabannya angka dengan satuan (cm, menit, N, J), jadi dipilih game yang kartunya cukup lebar.'},
+ word:{games:['lompat','zona','pancing','katak','lari','tikus','penalti','buah','labirin','memori','benarsalah','susun','kelompok','urut','pacu','layang','kuis'],note:'Jawabannya berupa kata, jadi dipilih game yang memberi waktu membaca sebelum memilih.'},
+ phrase:{games:['lompat','zona','ular','lari','katak','pancing','penalti','labirin','memori','benarsalah','susun','kelompok','urut','pacu','kuis'],note:'Jawabannya berupa istilah atau frasa, jadi dipilih game dengan kartu jawaban lebar.'},
+ long:{games:['ular','zona','lari','katak','labirin','benarsalah','kelompok','urut','pacu','kuis'],note:'Jawabannya berupa kalimat atau nama panjang, jadi dipilih game yang menampilkan jawaban dengan jelas dan tidak terburu-buru.'},
  kid:{games:['katak','basket','penalti','balon','memori','pancing','urut','kuis'],note:'Untuk anak TK dipilih game yang cukup diketuk atau digeser, dengan gerakan pelan.'},
  kidSlow:{games:['katak','basket','penalti','memori','kuis'],note:'Untuk anak TK dipilih game yang pelan dan cukup diketuk.'},
  picture:{games:['kuis'],note:'Jawabannya berupa gambar, jadi dimainkan sebagai kuis bergambar dengan tombol besar.'}};
@@ -9836,7 +9837,7 @@ const SUBJ_FIT={'tk/hitung':'kid','tk/tambah':'kidSlow','tk/huruf':'kid','tk/war
  'sd/tambahkurang':'num','sd/kalibagi':'num','sd/mtk':'unit','sd/bindo':'word','sd/ipas':'phrase','sd/pancasila':'long','sd/eng':'word','sd/__mix':'phrase',
  'smp/mtk':'num','smp/ipa':'phrase','smp/ips':'long','smp/eng':'long','smp/__mix':'long',
  'sma/mtk':'num','sma/fisika':'unit','sma/kimbio':'phrase','sma/kimia':'phrase','sma/ipa':'phrase','sma/ips':'phrase','sma/biologi':'phrase','sma/sejarah':'long','sma/eng':'long','sma/tkj':'phrase','sma/__mix':'long','tk/pai':'word','sd/pai':'long','smp/pai':'long','sma/pai':'long'};
-const WHY={lompat:'Petualangan dari START ke FINIS, soal muncul dari kotak tanya',tembak:'Cepat dan seru untuk jawaban singkat',balap:'Pindah jalur ke angka yang benar',balon:'Santai, angka dan kata pendek mudah dibaca',tikus:'Latih refleks dengan jawaban singkat',
+const WHY={zona:'Gerakkan avatar ke zona jawaban, kartu jawaban besar dan jelas',lompat:'Petualangan dari START ke FINIS, soal muncul dari kotak tanya',tembak:'Cepat dan seru untuk jawaban singkat',balap:'Pindah jalur ke angka yang benar',balon:'Santai, angka dan kata pendek mudah dibaca',tikus:'Latih refleks dengan jawaban singkat',
  pancing:'Kartu ikan lebar, ada waktu membaca',katak:'Daun berhenti lama, cocok untuk membaca',lari:'Tombol jawaban lebar, muat jawaban panjang',ular:'Jawaban panjang ditulis di daftar A–D',penalti:'Kotak gawang lebar, seru seperti adu penalti',basket:'Bidik ring, latih fokus sambil membaca',buah:'Sayat cepat, seru untuk jawaban singkat',labirin:'Jawaban di daftar A–D, kejar-kejaran dengan hantu',memori:'Latih ingatan sambil menjawab',benarsalah:'Cepat menilai setiap jawaban',susun:'Latih ejaan kata dan istilah',kelompok:'Pilah jawaban benar dan salah',urut:'Latih urutan: angka, proses, dan peristiwa',pacu:'Balapan perahu khas Riau, makin benar makin cepat',layang:'Santai, terbangkan layangan ke awan',kuis:'Lengkap dengan pembahasan, cocok untuk semua soal'};
 const fitOf=(lv,sid)=>FIT[SUBJ_FIT[lv+'/'+sid]||'phrase'];
 const modeInfo=()=>MODE_LIST.find(m=>m.id===MODE)||MODE_LIST[0];
@@ -11187,7 +11188,57 @@ const Lompat={
    drawFit(c,this.qf,p.x+p.w/2,p.y+12+p.qh/2,'#1B1E3D');
    this.opts.forEach(o=>{rr(c,o.x,o.y,o.w,o.h,12);c.fillStyle='#F4F7FB';c.fill();c.lineWidth=2.5;c.strokeStyle='#C9D3E6';c.stroke();c.fillStyle='#3D8BFF';c.beginPath();c.arc(o.x+18,o.y+o.h/2,11,0,7);c.fill();c.fillStyle='#fff';c.font=`900 13px ${FONT}`;c.fillText('ABCD'[o.i],o.x+18,o.y+o.h/2+1);drawFit(c,o.f,o.x+o.w/2+12,o.y+o.h/2,'#1B1E3D')})}}};
 
-const MODES={lompat:Lompat,tembak:Tembak,lari:Lari,balon:Balon,tikus:Tikus,balap:Balap,pancing:Pancing,katak:Katak,ular:Ular,penalti:Penalti,basket:Basket,buah:Buah,labirin:Labirin,memori:Memori,benarsalah:BenarSalah,susun:Susun,kelompok:Kelompok,urut:Urut,pacu:Pacu,layang:Layang};
+/* ===== Game baru "Zona Jawaban" (ATM dari kuis OX dan peta bebas ZEP QUIZ) =====
+   Gerakkan avatar ke zona jawaban yang benar lalu berdiri sebentar di sana. Bintang mempercepat, lumpur memperlambat.
+   Jawaban benar menaikkan kendaraan (jalan kaki → skuter → sepeda → motor → mobil), jawaban salah menurunkannya satu tingkat. */
+const ZONA_VEH=[{n:'Jalan kaki',v:95,e:'🚶'},{n:'Skuter',v:120,e:'🛴'},{n:'Sepeda',v:145,e:'🚲'},{n:'Motor',v:170,e:'🛵'},{n:'Mobil',v:195,e:'🚗'}];
+const Zona={
+ setup(){const{W,H,ctx}=arc,n=arc.labels.length;if(game.zStage==null)game.zStage=0;
+  const m=10,zw=Math.min(W*.44,200),zh=Math.max(64,Math.min(H*.2,96));
+  const spots=n<=2?[[m,H*.5-zh/2],[W-m-zw,H*.5-zh/2]]:[[m,m],[W-m-zw,m],[m,H-m-zh],[W-m-zw,H-m-zh]];
+  const order=shuffle([...Array(n).keys()]);const cols=['#3D8BFF','#FF8A3D','#22B85C','#A86BFF'];
+  this.zones=order.map((ai,k)=>{const [x,y]=spots[k];return {i:ai,x,y,w:zw,h:zh,col:cols[k%4],f:fit(ctx,arc.labels[ai],zw-18,zh-26,20,10),num:k+1}});
+  this.p={x:W/2,y:H/2,tx:null,ty:null,dir:1,ph:0};this.stay=0;this.inZ=null;this.boost=0;this.slow=0;
+  const items=[];const free=(x,y)=>!this.zones.some(z=>x>z.x-24&&x<z.x+z.w+24&&y>z.y-24&&y<z.y+z.h+24)&&Math.hypot(x-W/2,y-H/2)>50;
+  let g=0;while(items.length<5&&g<200){g++;const x=30+Math.random()*(W-60),y=30+Math.random()*(H-60);if(free(x,y))items.push({x,y,k:items.length<2?'bintang':'lumpur',used:false})}
+  this.items=items;this.extra=arc.limit*.4},
+ zoneAt(x,y){return this.zones.find(z=>x>z.x&&x<z.x+z.w&&y>z.y&&y<z.y+z.h)||null},
+ down(x,y){this.p.tx=x;this.p.ty=y},move(x,y,drag){if(drag){this.p.tx=x;this.p.ty=y}},
+ key(k){if(/^[1-4]$/.test(k)){const z=this.zones.find(z=>z.num===+k);if(z){this.p.tx=z.x+z.w/2;this.p.ty=z.y+z.h/2}}},
+ update(dt){const p=this.p,K=arc.keys||{};let vx=0,vy=0;
+  if(K.ArrowLeft||K.a)vx--;if(K.ArrowRight||K.d)vx++;if(K.ArrowUp||K.w)vy--;if(K.ArrowDown||K.s)vy++;
+  if(vx||vy){p.tx=null}else if(p.tx!=null){const dx=p.tx-p.x,dy=p.ty-p.y,d=Math.hypot(dx,dy);if(d>4){vx=dx/d;vy=dy/d}else p.tx=null}
+  const sp=ZONA_VEH[game.zStage].v*(this.boost>0?1.6:1)*(this.slow>0?.5:1)*Math.max(.6,arc.speed);
+  if(vx||vy){const d=Math.hypot(vx,vy);p.x+=vx/d*sp*dt;p.y+=vy/d*sp*dt;p.ph+=dt*10;if(vx)p.dir=vx>0?1:-1}
+  p.x=Math.max(14,Math.min(arc.W-14,p.x));p.y=Math.max(14,Math.min(arc.H-14,p.y));
+  this.boost=Math.max(0,this.boost-dt);this.slow=Math.max(0,this.slow-dt);
+  for(const it of this.items){if(it.used||Math.hypot(it.x-p.x,it.y-p.y)>20)continue;
+   if(it.k==='bintang'){it.used=true;this.boost=3;tone([880,1320],.06);burst(it.x,it.y,'#FFD54A',12)}else{this.slow=Math.max(this.slow,.6)}}
+  const z=this.zoneAt(p.x,p.y);if(z!==this.inZ){this.inZ=z;this.stay=0}
+  if(z){this.stay+=dt;if(this.stay>=.8){burst(p.x,p.y,z.i===arc.ci?'#22B85C':'#FF5A5F',16);this.finish(z.i)}}},
+ finish(k){const ok=k===arc.ci;game.zStage=Math.max(0,Math.min(ZONA_VEH.length-1,game.zStage+(ok?1:-1)));arcResolve(k)},
+ idle(dt){this.p.ph+=dt*2},
+ draw(c){const{W,H}=arc,tm=performance.now()/1000;
+  c.fillStyle='#8BCB6B';c.fillRect(0,0,W,H);c.fillStyle='rgba(255,255,255,.12)';for(let x=0;x<W;x+=40)for(let y=(x/40%2)*20;y<H;y+=40)c.fillRect(x,y,20,20);
+  c.strokeStyle='rgba(255,255,255,.55)';c.setLineDash([8,8]);c.lineWidth=3;c.beginPath();c.arc(W/2,H/2,34,0,7);c.stroke();c.setLineDash([]);
+  const done=arc.state==='resolved';
+  for(const z of this.zones){let fill=z.col,txt='#fff';if(done){if(z.i===arc.ci)fill='#1C8A57';else if(z.i===arc.picked)fill='#C9362A';else fill='rgba(120,120,120,.55)'}
+   c.save();c.shadowColor='rgba(0,0,0,.18)';c.shadowBlur=8;rr(c,z.x,z.y,z.w,z.h,16);c.fillStyle=fill;c.fill();c.restore();
+   c.strokeStyle='rgba(255,255,255,.85)';c.lineWidth=3;rr(c,z.x+3,z.y+3,z.w-6,z.h-6,13);c.stroke();
+   c.fillStyle='rgba(255,255,255,.95)';c.beginPath();c.arc(z.x+16,z.y+16,11,0,7);c.fill();c.fillStyle=fill;c.font=`800 13px ${FONT}`;c.textAlign='center';c.textBaseline='middle';c.fillText(z.num,z.x+16,z.y+17);
+   drawFit(c,z.f,z.x+z.w/2,z.y+z.h/2+6,txt);
+   if(z===this.inZ&&!done){c.strokeStyle='#FFD54A';c.lineWidth=6;c.beginPath();c.arc(this.p.x,this.p.y,26,-Math.PI/2,-Math.PI/2+Math.PI*2*Math.min(1,this.stay/.8));c.stroke()}}
+  for(const it of this.items){if(it.used)continue;c.save();c.translate(it.x,it.y);
+   if(it.k==='bintang'){c.rotate(tm*1.5);c.fillStyle='#FFD54A';c.beginPath();for(let k=0;k<10;k++){const r=k%2?6:14,a=k*Math.PI/5;c.lineTo(Math.sin(a)*r,-Math.cos(a)*r)}c.fill();c.strokeStyle='#E8A400';c.lineWidth=2;c.stroke()}
+   else{c.fillStyle='#8B6B45';c.beginPath();c.ellipse(0,0,22,13,0,0,7);c.fill();c.fillStyle='rgba(255,255,255,.18)';c.beginPath();c.ellipse(-6,-3,7,3,0,0,7);c.fill()}c.restore()}
+  if(this.p.tx!=null&&!done){c.strokeStyle='rgba(255,255,255,.7)';c.lineWidth=2;c.beginPath();c.arc(this.p.tx,this.p.ty,8,0,7);c.stroke()}
+  const p=this.p,v=ZONA_VEH[game.zStage||0];c.save();c.translate(p.x,p.y);
+  if(this.boost>0){c.fillStyle='rgba(255,213,74,.35)';c.beginPath();c.arc(0,0,24+Math.sin(tm*12)*3,0,7);c.fill()}
+  c.fillStyle='rgba(0,0,0,.18)';c.beginPath();c.ellipse(0,16,15,5,0,0,7);c.fill();
+  c.save();if(p.dir<0)c.scale(-1,1);drawKid(c,0,8,.75,p.ph,'#2F5BEA');c.restore();if(game.zStage>0){c.font='18px sans-serif';c.textAlign='center';c.textBaseline='middle';c.fillText(v.e,16,12)}c.restore();
+  c.fillStyle='rgba(20,33,61,.6)';rr(c,W/2-56,H/2+44,112,20,10);c.fill();c.fillStyle='#fff';c.font=`700 11px ${FONT}`;c.textAlign='center';c.textBaseline='middle';c.fillText(v.e+' '+v.n+(this.boost>0?' ⚡':''),W/2,H/2+55)}
+};
+const MODES={zona:Zona,lompat:Lompat,tembak:Tembak,lari:Lari,balon:Balon,tikus:Tikus,balap:Balap,pancing:Pancing,katak:Katak,ular:Ular,penalti:Penalti,basket:Basket,buah:Buah,labirin:Labirin,memori:Memori,benarsalah:BenarSalah,susun:Susun,kelompok:Kelompok,urut:Urut,pacu:Pacu,layang:Layang};
 
 
 /* ---------- split screen (layar terbagi) ---------- */
@@ -12668,8 +12719,8 @@ const _closeVideo1=closeVideo;closeVideo=function(){VX.open=false;VX.tok++;if(VX
  if(document.body)start();else document.addEventListener('DOMContentLoaded',start)})();
 /* ---------- starting a level ---------- */
 /* ambil n soal tanpa kembar; bila bank unit kecil, ulangan diubah jadi soal benar/salah agar tidak sama persis */
-function uniqQs(list,n){const seen=new Set(),out=[],rest=[];list.forEach(q=>{if(!q)return;const k=String(q.q);if(seen.has(k))rest.push(q);else{seen.add(k);out.push(q)}});
-  const bs=new Set();for(const q of rest){if(out.length>=n)break;const v=toBS(q);const k=v&&(v.q+v.ans);if(v&&!bs.has(k)){bs.add(k);out.push(v)}}
+function uniqQs(list,n,noBS){const seen=new Set(),out=[],rest=[];list.forEach(q=>{if(!q)return;const k=String(q.q);if(seen.has(k))rest.push(q);else{seen.add(k);out.push(q)}});
+  const bs=new Set();for(const q of rest){if(out.length>=n||noBS)break;const v=toBS(q);const k=v&&(v.q+v.ans);if(v&&!bs.has(k)){bs.add(k);out.push(v)}}
   let i=0;while(out.length<n&&rest.length&&i<rest.length*2){out.push(rest[i%rest.length]);i++}return shuffle(out.slice(0,n))}
 function startNode(ui,ni){const s=SUBJ(),u=s.units[ui],nd=NODES[ni],idx=ui*NODES.length+ni,pr=progOf();const replay=idx<pr.done;
   if(idx>pr.done)return;
@@ -12681,7 +12732,7 @@ function startNode(ui,ni){const s=SUBJ(),u=s.units[ui],nd=NODES[ni],idx=ui*NODES
   /* semua soal di jalur belajar hanya dari unit yang sedang dipelajari */
   if(nd.k==='lesson')qs=mixTypes(unitQs(u,5),u);
   else if(nd.k==='test')qs=uniqQs(unitQs(u,16),8);
-  else{mode=gameFor(s,ui);qs=uniqQs(unitQs(u,mode==='kuis'?12:18).filter(q=>mode==='kuis'||!q.html),6)}
+  else{mode=gameFor(s,ui);qs=uniqQs(unitQs(u,mode==='kuis'?12:18).filter(q=>mode==='kuis'||!q.html),6,mode!=='kuis')}
   beginRun({kind:nd.k,ui,ni,idx,replay,qs,mode,title:nd.k==='test'?`Ujian · ${u.t}`:u.t})}
 /* ===== Ragam soal: benar/salah, ketik jawaban, cocokkan pasangan + ulang soal lemah ===== */
 const qPlain=t=>String(t==null?'':t).replace(/<[^>]+>/g,'').trim();
@@ -15175,7 +15226,7 @@ function folBind(root,list,after){root.querySelectorAll('[data-follow]').forEach
   try{await folDo(f,on);if(on){try{sfx.ok()}catch(_){}toast('team',`Kamu mengikuti ${f.name}.`)}b.outerHTML=folBtn(f,b.classList.contains('sm'));folBind(root,list,after);after&&after()}catch(err){b.disabled=false;toast('lock',fbErr(err))}})}
 const shareIcon='<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M12 3 V15 M7 8 L12 3 L17 8 M5 13 V19 C5 20 6 21 7 21 H17 C18 21 19 20 19 19 V13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const qrIcon='<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><path d="M14 14h3v3h-3zM18 18h3v3h-3zM18 14h3M14 18v3" stroke-linecap="round"/></svg>';
-let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=246';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
+let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=247';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
 function qrMatrix(text){const Q=window.QRCodeLib,q=new Q(-1,Q.ECL.M);q.addData(text);q.make();const n=q.getModuleCount(),m=[];for(let r=0;r<n;r++){m.push([]);for(let c=0;c<n;c++)m[r].push(q.isDark(r,c))}return m}
 function qrSvgOf(m){const n=m.length;let d='';for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(m[r][c])d+=`M${c} ${r}h1.02v1.02h-1.02z`;
   return `<svg viewBox="-2 -2 ${n+4} ${n+4}" class="pcqr" shape-rendering="crispEdges" aria-label="Kode QR profil"><rect x="-2" y="-2" width="${n+4}" height="${n+4}" fill="#fff"/><path d="${d}" fill="#1C1E3D"/></svg>`}
