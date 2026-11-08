@@ -743,3 +743,46 @@ Object.assign(MATERI,{
  {h:'Hubungan satuan',tb:[['Jenis','Hubungan'],['Panjang','1 km = 1.000 m, 1 m = 100 cm, 1 cm = 10 mm'],['Luas','1 a = 100 m², 1 ha = 10.000 m²'],['Volume','1 m³ = 1.000 l = 1 kl, 1 l = 10 dl = 1.000 ml'],['Berat','1 t = 1.000 kg, 1 kg = 1.000 g, 1 g = 1.000 mg']]}],
  sum:['Awalan kilo = ribu, senti = perseratus, mili = perseribu.']}
 });
+
+/* Materi Bahasa Indonesia SD Kelas 1, jalur Kurikulum Merdeka (bab mengikuti buku siswa "Aku Bisa!" Edisi Revisi 2023, isi ditulis sendiri) */
+Object.assign(MATERI,{
+'bi1/bindo/0':{intro:'Di sekitar kita ada banyak bunyi. Di bab ini kita menyimak cerita, berkenalan, dan mengenal huruf B.',s:[
+ {h:'Menyimak bunyi',p:'Dengarkan baik-baik. Bola dipantulkan berbunyi duk, duk. Ayam jantan berkokok kukuruyuk. Hujan di atap berbunyi tik, tik.'},
+ {h:'Berkenalan',li:['Sebutkan namamu dengan jelas.','Tatap teman yang diajak bicara.','Dengarkan saat teman memperkenalkan diri.']},
+ {h:'Huruf B dan b',p:'B adalah huruf kapital, b adalah huruf kecil. Bentuknya berbeda tetapi bunyinya sama.'},
+ {h:'Suku kata ba, bi, bu, be, bo',p:'Huruf b digabung dengan huruf vokal menjadi suku kata.',tb:[['Suku kata','Contoh kata'],['ba','balon'],['bu','buku, bunga'],['be','bebek'],['bo','bola, boneka']]}],
+ sum:['B kapital, b kecil.','bo + la = bola.']},
+'bi1/bindo/1':{intro:'Bermain itu menyenangkan, asalkan aman. Kita juga belajar tanda tanya, tanda seru, serta huruf h dan c.',s:[
+ {h:'Bermain dengan aman',li:['Bermain di halaman atau lapangan, bukan di jalan raya.','Sepakati aturan permainan.','Tolong teman yang jatuh.','Rapikan mainan setelah bermain.']},
+ {h:'Tanda tanya dan tanda seru',tb:[['Tanda','Dipakai untuk','Contoh'],['?','kalimat tanya','Apakah kamu terluka?'],['!','perintah atau larangan','Hati-hati!']],p:'Cara membacanya berbeda: kalimat tanya dibaca dengan nada bertanya.'},
+ {h:'Suku kata h dan c',tb:[['Huruf','Contoh kata'],['h','ha-ti, hi-dung, hu-jan, ha-ri-mau'],['c','ca-bai, ci-cak, co-ke-lat']]}],
+ sum:['? untuk bertanya, ! untuk perintah atau larangan.']},
+'bi1/bindo/2':{intro:'Kuman tidak terlihat, tetapi bisa membuat kita sakit. Kita belajar hidup bersih dan suku kata dengan huruf k.',s:[
+ {h:'Mencegah kuman',li:['Cuci tangan dengan air dan sabun, pelan-pelan sampai bersih.','Cuci tangan sebelum makan dan setelah buang air.','Tutup mulut dan hidung dengan tisu atau lengan saat bersin.','Pilih makanan yang bersih dan tertutup.']},
+ {h:'Suku kata ka, ki, ku, ke, ko',tb:[['Suku kata','Contoh kata'],['ka','ka-ki, ka-tak'],['ku','ku-da, ku-cing, ku-e'],['ke','ke-lin-ci, ke-ra'],['ko','ko-ta']]}],
+ sum:['Air + sabun mengusir kuman.','ku + da = kuda.']},
+'bi1/bindo/3':{intro:'Tubuh kita bisa bergerak dengan banyak cara. Kita belajar kata gerakan dan huruf l.',s:[
+ {h:'Kata gerakan',p:'Melompat, berlari, menari, berenang, dan terbang adalah kata yang menunjukkan gerakan.',tb:[['Hewan','Cara bergerak'],['kanguru','melompat'],['ikan','berenang'],['burung','terbang'],['ular','merayap']]},
+ {h:'Suku kata la, li, lu, le, lo',tb:[['Suku kata','Contoh kata'],['la','la-ut'],['li','li-lin, li-ma'],['lu','lu-tut'],['le','le-bah, le-le']]}],
+ sum:['Kata gerakan menunjukkan apa yang dilakukan.']},
+'bi1/bindo/4':{intro:'Teman baru membuat kita senang. Kita belajar kata-kata sopan, tanda titik, dan huruf m.',s:[
+ {h:'Kata sopan',tb:[['Kata','Kapan dipakai'],['Tolong','saat meminta bantuan'],['Terima kasih','saat dibantu atau diberi'],['Maaf','saat berbuat salah'],['Permisi','saat hendak lewat atau menyela']]},
+ {h:'Tanda titik',p:'Tanda titik (.) mengakhiri kalimat. Kalimat diawali huruf kapital. Contoh: Mimi makan kue.'},
+ {h:'Suku kata ma, mi, mu, me, mo',tb:[['Suku kata','Contoh kata'],['ma','ma-ta, ma-du'],['mu','mu-lut'],['me','me-ja, me-rah'],['mo','mo-bil, mo-nyet']]}],
+ sum:['Tolong, terima kasih, maaf, permisi.','Kalimat diakhiri titik.']},
+'bi1/bindo/5':{intro:'Setiap orang berbeda: rambut, tinggi badan, dan kesukaannya. Kita belajar menghargai perbedaan dan huruf g.',s:[
+ {h:'Menghargai perbedaan',li:['Teman boleh berbeda rupa dan kesukaan.','Jangan mengejek perbedaan.','Tetap bermain dan berteman dengan semua.']},
+ {h:'Menghitung benda',p:'Hitung benda pada gambar, lalu tulis atau sebut angkanya: satu, dua, tiga, empat, lima, …'},
+ {h:'Suku kata ga, gi, gu, ge, go',tb:[['Suku kata','Contoh kata'],['ga','ga-jah'],['gi','gi-gi, gi-tar'],['gu','gu-nung, gu-la'],['ge','ge-las'],['go','go-ri-la']]}],
+ sum:['Berbeda itu wajar.','ga + jah = gajah.']},
+'bi1/bindo/6':{intro:'Kita ingin membeli banyak hal, tetapi uang terbatas. Kita mengenal uang, menabung, dan membaca kata sederhana.',s:[
+ {h:'Mengenal uang',p:'Ada uang logam dan uang kertas. Uang kertas mudah sobek dan rusak jika basah, jadi harus dijaga.'},
+ {h:'Menabung',li:['Sisihkan uang sedikit demi sedikit di celengan.','Belikan barang yang dibutuhkan lebih dulu.','Jika tabungan sudah cukup, barang yang diinginkan bisa dibeli.']},
+ {h:'Membaca kata sederhana',p:'Gabungkan suku kata menjadi kata: ce + le + ngan = celengan, u + ang = uang. Hitung juga ada berapa suku kata dalam sebuah kata.'}],
+ sum:['Menabung = menyisihkan uang.','Gabungkan suku kata untuk membaca.']},
+'bi1/bindo/7':{intro:'Di sekitar rumah dan sekolah ada banyak tempat dan orang yang bekerja. Kita belajar kata arah dan nama pekerja.',s:[
+ {h:'Kata arah dan letak',p:'Kanan, kiri, atas, bawah, depan, belakang. Lawan kata kanan adalah kiri, lawan kata atas adalah bawah.'},
+ {h:'Pekerja di sekitar kita',tb:[['Pekerja','Tugasnya'],['polisi','mengatur lalu lintas dan menjaga keamanan'],['satpam','menjaga keamanan sekolah atau kompleks'],['pemadam kebakaran','memadamkan api'],['tukang pos','mengantar surat dan paket'],['perawat','merawat orang sakit'],['petani','menanam padi dan sayur']]},
+ {h:'Membaca kata',p:'po - li - si dibaca polisi. sat - pam dibaca satpam.'}],
+ sum:['Kanan-kiri, atas-bawah.','Setiap pekerja punya tugas.']}
+});

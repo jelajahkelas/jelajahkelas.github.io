@@ -3892,7 +3892,7 @@ html[data-theme=malam] .plstick{background:#0a0f1e}
 <div class="syncpill" id="syncPill" hidden></div>
 <div class="toast" id="toast" hidden></div>
 
-<script src="av.js?v=224"></script>
+<script src="av.js?v=225"></script>
 <script>
 /* ---------- visual assets ---------- */
 const INK='#1B1E3D';
@@ -6251,13 +6251,115 @@ var MM_OLDU={};
 for(let g=1;g<=6;g++){const c=COURSE.find(x=>x.id==='k'+g);if(!c)continue;const s=c.subjects.find(x=>x.id==='mtk');if(!s)continue;MM_OLDU[c.id]=s.units;
   s.units=MM_MERDEKA[g].map(([t,d,gens,tip],i)=>U(t,d,gens,{tip,_k:'m'+g+'/mtk/'+i,merdeka:true}));s.merdeka=true}
 /* cari unit menurut judul (jalur baru dulu, lalu jalur lama) */
-function unitByTitle(cls,subj,t,ui){const c=COURSE.find(x=>x.id===cls),s=c&&c.subjects.find(x=>x.id===subj);if(!s)return null;const old=subj==='mtk'&&MM_OLDU[cls];
+function unitByTitle(cls,subj,t,ui){const c=COURSE.find(x=>x.id===cls),s=c&&c.subjects.find(x=>x.id===subj);if(!s)return null;const old=(subj==='mtk'&&MM_OLDU[cls])||(typeof CUR_OLDU!=='undefined'&&CUR_OLDU[cls+'/'+subj]);
   return (t&&s.units.find(u=>u.t===t))||(old&&t&&old.find(u=>u.t===t))||(old?old[ui]:s.units[ui])||null}
+/* jalur mapel lain yang diganti mengikuti buku: progres dipindahkan sebanding (sekali per mapel) */
+function curMigrate(p){const NL=NODES.length;p.cmig=p.cmig||{};Object.keys(CUR_OLDU).forEach(k=>{if(p.cmig[k])return;p.cmig[k]=1;const o=p.prog&&p.prog[k];if(!o||!o.done)return;const [cid,sid]=k.split('/'),c=COURSE.find(x=>x.id===cid),s=c&&c.subjects.find(x=>x.id===sid);if(!s)return;
+  const oc=CUR_OLDU[k].length,nc=s.units.length,du=Math.min(oc,Math.floor(o.done/NL)),nu=du>=oc?nc:Math.round(du/oc*nc);p.prog[k]=Object.assign({},o,{done:nu*NL+(nu<nc&&du<oc?o.done%NL:0)})})}
 /* progres Matematika kelas 1–6 dipindahkan sebanding ke jalur baru (sekali saja) */
-function mmMigrate(p){if(!p||p.mmv)return;const NL=NODES.length;
+function mmMigrate(p){if(!p)return;try{curMigrate(p)}catch(e){}if(p.mmv)return;const NL=NODES.length;
   Object.keys(MM_OLDU).forEach(cid=>{const k=cid+'/mtk',o=p.prog&&p.prog[k];if(!o||!o.done)return;const oc=MM_OLDU[cid].length,nc=MM_MERDEKA[+cid.slice(1)].length;
     const du=Math.min(oc,Math.floor(o.done/NL));const nu=du>=oc?nc:Math.round(du/oc*nc);p.prog[k]=Object.assign({},o,{done:nu*NL+(nu<nc&&du<oc?o.done%NL:0)})});
   p.mmv=1}
+
+/* ===================== Bahasa Indonesia SD Kelas 1 sesuai Kurikulum Merdeka =====================
+   Bab mengikuti buku siswa "Bahasa Indonesia: Aku Bisa!" Kelas I Edisi Revisi 2023 (SIBI). Soal ditulis sendiri. */
+const biQ=(q,ans,wr,exp,say)=>Q(q,mmCh(ans,wr),exp,{say:say||plainTx(q).replace(/\s*…\s*/g,' apa? ').replace(/[“”"]/g,'').replace(/[\p{Extended_Pictographic}\uFE0F\u200D]/gu,'').replace(/\s+/g,' ').trim()});
+const biBank=list=>()=>{const t=pick(list);return biQ(t[0],t[1],t[2],t[3]||'',t[4])};
+/* kata bergambar: [emoji, kata, suku kata] */
+const BI_KATA={
+ b:[['⚽','bola','bo-la'],['📚','buku','bu-ku'],['🌸','bunga','bu-nga'],['🦆','bebek','be-bek'],['🍌','pisang',null],['🎈','balon','ba-lon'],['👶','bayi','ba-yi'],['🐻','beruang','be-ru-ang'],['🌙','bulan','bu-lan'],['🐦','burung','bu-rung'],['🧸','boneka','bo-ne-ka'],['⭐','bintang','bin-tang']],
+ h:[['🐯','harimau','ha-ri-mau'],['👃','hidung','hi-dung'],['🌧️','hujan','hu-jan'],['❤️','hati','ha-ti'],['🌲','hutan','hu-tan'],['🦛','kuda nil',null],['📱','handphone',null],['🎁','hadiah','ha-di-ah'],['🐜','semut',null],['🟢','hijau','hi-jau']],
+ c:[['🌶️','cabai','ca-bai'],['🦎','cicak','ci-cak'],['🍫','cokelat','co-ke-lat'],['☕','cangkir','cang-kir'],['🪞','cermin','cer-min'],['🎨','cat','cat'],['🐛','ulat',null],['🧺','cucian','cu-ci-an'],['💍','cincin','cin-cin']],
+ k:[['🐴','kuda','ku-da'],['🦶','kaki','ka-ki'],['🐱','kucing','ku-cing'],['🐰','kelinci','ke-lin-ci'],['🐐','kambing','kam-bing'],['🍰','kue','ku-e'],['🔑','kunci','kun-ci'],['🐒','kera','ke-ra'],['🦀','kepiting','ke-pi-ting'],['👕','kaus','ka-us'],['🐸','katak','ka-tak'],['🥥','kelapa','ke-la-pa']],
+ l:[['💡','lampu','lam-pu'],['🕯️','lilin','li-lin'],['🐝','lebah','le-bah'],['🌊','laut','la-ut'],['🪁','layang-layang','la-yang-la-yang'],['🦵','lutut','lu-tut'],['🥕','wortel',null],['🍋','lemon','le-mon'],['🖐️','lima','li-ma'],['🐟','lele','le-le']],
+ m:[['👁️','mata','ma-ta'],['🍯','madu','ma-du'],['🚗','mobil','mo-bil'],['🪑','meja','me-ja'],['🥭','mangga','mang-ga'],['👄','mulut','mu-lut'],['🐒','monyet','mo-nyet'],['🔴','merah','me-rah'],['🍜','mi','mi']],
+ g:[['🐘','gajah','ga-jah'],['🦷','gigi','gi-gi'],['⛰️','gunung','gu-nung'],['🥛','gelas','ge-las'],['🦍','gorila','go-ri-la'],['🎸','gitar','gi-tar'],['🍬','gula','gu-la'],['🎂','kue',null],['🪮','sisir',null],['☁️','awan',null]]};
+const biBersih=a=>a.filter(x=>x[2]&&x[2].includes('-'));
+const biHuruf=(L)=>()=>{const list=biBersih(BI_KATA[L]),r=R(0,3),t=pick(list),sk=t[2].split('-');const oth=Object.keys(BI_KATA).filter(x=>x!==L);
+  if(r===0){const big=Math.random()<.5,X=L.toUpperCase(),wrong={b:['d','p','h'],h:['n','k','b'],c:['e','o','a'],k:['h','x','l'],l:['i','t','j'],m:['n','w','u'],g:['q','y','j']}[L];
+    return big?biQ(`Huruf kecil dari <b style="font-size:1.4em">${X}</b> adalah …`,L,wrong,`Huruf kapital ${X}, huruf kecilnya ${L}.`,`Huruf kecil dari huruf kapital ${X} adalah apa?`):biQ(`Huruf kapital dari <b style="font-size:1.4em">${L}</b> adalah …`,X,wrong.map(w=>w.toUpperCase()),`Huruf kecil ${L}, huruf kapitalnya ${X}.`,`Huruf kapital dari huruf kecil ${L} adalah apa?`)}
+  if(r===1){const w=shuffle(oth).slice(0,3).map(o=>pick(biBersih(BI_KATA[o])));return biQ(`Nama benda mana yang diawali huruf <b>${L}</b>?`,`${t[0]} ${t[1]}`,w.map(x=>`${x[0]} ${x[1]}`),`${t[1]} diawali huruf ${L}.`)}
+  if(r===2){const first=sk[0],w=[...new Set(list.map(x=>x[2].split('-')[0]).filter(x=>x!==first))];return biQ(`<span class="big">${t[0]}</span>Lengkapi: <b>__ ${sk.slice(1).join(' ')}</b>`,first,shuffle(w).slice(0,3),`${t[0]} = ${sk.join(' - ')} = ${t[1]}.`,`Lengkapi nama gambar ini. ${t[1]}`)}
+  return biQ(`Gabungkan suku kata: <b>${sk.join(' + ')}</b>`,t[1],shuffle(list.filter(x=>x!==t)).slice(0,3).map(x=>x[1]),`${sk.join(' + ')} = ${t[1]}.`,`Gabungkan suku kata ${sk.join(', ')}.`)};
+const biSukuAwal=(L)=>()=>{const list=biBersih(BI_KATA[L]).filter(x=>x[2].split('-')[0].length===2),t=pick(list),sk=t[2].split('-');const v=['a','i','u','e','o'].map(x=>L+x).filter(x=>x!==sk[0]);return biQ(`<span class="big">${t[0]}</span>Suku kata awal dari <b>${t[1]}</b> adalah …`,sk[0],shuffle(v).slice(0,3),`${t[1]} = ${sk.join(' - ')}. Suku kata awalnya ${sk[0]}.`)};
+const biEja=()=>{const all=Object.values(BI_KATA).flatMap(biBersih).filter(x=>x[1].length<=7&&!/-/.test(x[1])),t=pick(all);return biQ(`<b>${t[1].split('').join(' - ')}</b> dibaca …`,t[1],shuffle(all.filter(x=>x!==t)).slice(0,3).map(x=>x[1]),`${t[1].split('').join('-')} → ${t[2].replace(/-/g,' - ')} → ${t[1]}.`,`Baca ejaan ini: ${t[1].split('').join(', ')}`)};
+const biBanyakSuku=()=>{const all=Object.values(BI_KATA).flatMap(biBersih).filter(x=>!/ /.test(x[1])&&x[1].indexOf('-')<0),t=pick(all),n=t[2].split('-').length;return biQ(`Kata <b>${t[1]}</b> terdiri atas … suku kata`,String(n),['1','2','3','4'].filter(x=>x!==String(n)),`${t[1]} = ${t[2].replace(/-/g,' - ')} → ${n} suku kata.`)};
+/* Bab 1 */
+const BI_BUNYI=[['Benda apa yang berbunyi “duk, duk” saat dipantulkan?','⚽ bola',['🍎 apel','📚 buku','🧸 boneka'],'Bola yang dipantulkan berbunyi duk, duk.'],
+ ['Hewan apa yang berbunyi “kukuruyuk”?','🐓 ayam jantan',['🐱 kucing','🐶 anjing','🐸 katak'],'Ayam jantan berkokok kukuruyuk.'],
+ ['Hewan apa yang berbunyi “meong”?','🐱 kucing',['🐶 anjing','🐄 sapi','🦆 bebek'],'Kucing mengeong: meong.'],
+ ['Hewan apa yang berbunyi “guk, guk”?','🐶 anjing',['🐱 kucing','🐐 kambing','🐓 ayam'],'Anjing menggonggong: guk, guk.'],
+ ['Bunyi “tik, tik, tik” di atap berasal dari …','🌧️ hujan',['☀️ matahari','🌙 bulan','🌈 pelangi'],'Air hujan jatuh berbunyi tik, tik.'],
+ ['Bunyi “tok, tok, tok” biasanya berasal dari …','🚪 pintu diketuk',['🚿 air mengalir','📺 televisi','🍳 telur digoreng'],'Pintu yang diketuk berbunyi tok, tok.'],
+ ['Bunyi “kring, kring” berasal dari …','🚲 bel sepeda',['🐟 ikan','🧺 keranjang','🪑 kursi'],'Bel sepeda berbunyi kring, kring.'],
+ ['Hewan apa yang berbunyi “kwek, kwek”?','🦆 bebek',['🐱 kucing','🐮 sapi','🐒 monyet'],'Bebek berbunyi kwek, kwek.'],
+ ['Hewan apa yang berbunyi “moo”?','🐄 sapi',['🐔 ayam','🐶 anjing','🐸 katak'],'Sapi melenguh: moo.']];
+const BI_KENAL=[['Saat berkenalan, yang pertama kita sebutkan adalah …','nama kita',['makanan kesukaan','harga sepatu','nama hewan'],'Berkenalan dimulai dengan menyebutkan nama.'],
+ ['Ketika teman berbicara, sikap kita yang baik adalah …','mendengarkan',['berteriak','tidur','pergi'],'Menyimak berarti mendengarkan dengan sungguh-sungguh.'],
+ ['Huruf kapital dipakai untuk menulis … di awal nama orang.','huruf pertama',['huruf terakhir','semua angka','tanda titik'],'Nama orang diawali huruf kapital, misalnya Boni.']];
+/* Bab 2 */
+const BI_TANDA=[['Apakah kamu terluka','?'],['Hati-hati','!'],['Jangan berlari di tangga','!'],['Siapa namamu','?'],['Ayo, bermain bersama','!'],['Di mana bolaku','?'],['Awas, ada lubang','!'],['Kapan kita bermain lagi','?']];
+const biTanda=()=>{const t=pick(BI_TANDA);return biQ(`Tanda baca yang tepat:<br><b>${t[0]} …</b>`,t[1],['?','!','.'].filter(x=>x!==t[1]),t[1]==='?'?'Kalimat tanya diakhiri tanda tanya (?).':'Kalimat perintah atau larangan diakhiri tanda seru (!).',`Tanda baca apa yang tepat untuk kalimat: ${t[0]}`)};
+const BI_MAIN=[['Bermain yang aman adalah bermain di …','lapangan atau halaman',['jalan raya','atap rumah','pinggir sungai'],'Jalan raya dan sungai berbahaya untuk bermain.'],
+ ['Jika teman jatuh saat bermain, kita sebaiknya …','menolongnya',['menertawakannya','meninggalkannya','memarahinya'],'Teman yang baik saling menolong.'],
+ ['Sebelum bermain bersama, kita perlu …','menyepakati aturan',['berebut mainan','berteriak','pulang'],'Aturan membuat permainan adil dan aman.'],
+ ['Setelah selesai bermain, mainan sebaiknya …','dirapikan',['dibuang','dibiarkan berserakan','disembunyikan'],'Mainan dirapikan agar tidak hilang dan rusak.']];
+/* Bab 3 */
+const BI_KUMAN=[['Kita mencuci tangan dengan …','air dan sabun',['air saja sebentar','tanah','minyak'],'Sabun membantu membersihkan kuman.'],
+ ['Kapan kita harus mencuci tangan?','sebelum makan',['sambil tidur','saat menonton','saat berlari'],'Cuci tangan sebelum makan dan setelah buang air.'],
+ ['Saat bersin, kita menutup mulut dan hidung dengan …','tisu atau lengan',['telapak tangan teman','buku','tidak perlu ditutup'],'Menutup bersin mencegah kuman menyebar.'],
+ ['Makanan yang bersih adalah makanan yang …','ditutup dan tidak dihinggapi lalat',['jatuh ke lantai','dihinggapi lalat','dibiarkan terbuka'],'Lalat membawa kuman.'],
+ ['Mencuci tangan sebaiknya dilakukan …','pelan-pelan dan bersih',['secepat mungkin','tanpa air','hanya di ujung jari'],'Cuci tangan tidak harus cepat, yang penting bersih.'],
+ ['Kuman dapat membuat kita …','sakit',['tinggi','pintar','kenyang'],'Kuman bisa menyebabkan penyakit.']];
+/* Bab 4 */
+const BI_GERAK=[['🦘 Kanguru bergerak dengan cara …','melompat',['berenang','terbang','merayap'],'Kanguru melompat.'],
+ ['🐟 Ikan bergerak dengan cara …','berenang',['melompat','berlari','terbang'],'Ikan berenang di air.'],
+ ['🐦 Burung bergerak dengan cara …','terbang',['berenang','merayap','melompat'],'Burung terbang dengan sayapnya.'],
+ ['🐍 Ular bergerak dengan cara …','merayap',['terbang','melompat','berlari'],'Ular merayap.'],
+ ['🐎 Kuda bergerak cepat dengan cara …','berlari',['merayap','berenang','terbang'],'Kuda berlari.'],
+ ['Gerakan mengangkat kedua tangan ke atas disebut …','mengangkat tangan',['menendang','duduk','tidur'],'Tangan diangkat ke atas.'],
+ ['Kata yang menunjukkan gerakan adalah …','menari',['meja','merah','besar'],'Menari adalah kata kerja (gerakan).']];
+/* Bab 5 */
+const BI_SOPAN=[['Mimi minta kakak mengambilkan kue di lemari tinggi. Mimi berkata …','“Tolong ambilkan kue, Kak.”',['“Ambil kue itu!”','“Cepat!”','“Kue!”'],'Kata “tolong” dipakai saat meminta bantuan.'],
+ ['Teman meminjamkan pensil kepadamu. Kamu berkata …','“Terima kasih.”',['“Maaf.”','“Permisi.”','“Tolong.”'],'Ucapkan terima kasih saat dibantu.'],
+ ['Kamu tidak sengaja menginjak kaki teman. Kamu berkata …','“Maaf.”',['“Terima kasih.”','“Tolong.”','“Selamat pagi.”'],'Minta maaf saat berbuat salah.'],
+ ['Kamu ingin lewat di depan orang yang sedang duduk. Kamu berkata …','“Permisi.”',['“Maaf, ya.”','“Terima kasih.”','“Awas!”'],'Ucapkan permisi saat hendak lewat.'],
+ ['Bertemu guru pada pagi hari, kita mengucapkan …','“Selamat pagi, Bu Guru.”',['“Selamat malam.”','“Dadah.”','“Hai, kamu!”'],'Salam sesuai waktu: pagi, siang, sore, malam.']];
+const BI_TITIK=[['Mimi makan kue','.'],['Moko bermain bola','.'],['Ibu memasak di dapur','.'],['Aku punya teman baru','.']];
+const biTitik=()=>{if(Math.random()<.5){const t=pick(BI_TITIK);return biQ(`Tanda baca di akhir kalimat ini adalah …<br><b>${t[0]} …</b>`,'.',['?','!',','],'Kalimat berita diakhiri tanda titik (.).',`Tanda baca apa di akhir kalimat: ${t[0]}`)}
+  const t=pick(BI_TITIK).map(String)[0];return biQ(`Penulisan kalimat yang benar adalah …`,`${t}.`,[`${t.toLowerCase()}.`,`${t}`,`${t.toLowerCase()}`],'Kalimat diawali huruf kapital dan diakhiri tanda titik.')};
+/* Bab 6 */
+const BI_ANGKA=['nol','satu','dua','tiga','empat','lima','enam','tujuh','delapan','sembilan','sepuluh'];
+const biHitung=()=>{const t=pick([['🐘','gajah'],['🦷','gigi'],['🎸','gitar'],['🥛','gelas'],['🍬','permen']]),n=R(2,9);return biQ(`Ada berapa ${t[1]}?${objs(t[0],n)}`,BI_ANGKA[n],[BI_ANGKA[n-1],BI_ANGKA[n+1],BI_ANGKA[Math.max(1,n-2)]].filter(x=>x!==BI_ANGKA[n]),`Ada ${BI_ANGKA[n]} (${n}) ${t[1]}.`,`Ada berapa ${t[1]}?`)};
+const BI_BEDA=[['Kiki berambut lurus, Gaga berambut keriting. Sikap kita sebaiknya …','menghargai perbedaan',['mengejek teman','tidak mau berteman','menjauhinya'],'Setiap orang berbeda dan tetap bisa berteman.'],
+ ['Temanmu lebih pendek darimu. Kamu sebaiknya …','tetap berteman baik',['mengejeknya','menjauhinya','tidak mengajaknya bermain'],'Perbedaan bukan alasan untuk mengejek.'],
+ ['Makanan kesukaan setiap orang …','bisa berbeda-beda',['harus sama','tidak boleh ditanyakan','selalu nasi goreng'],'Setiap orang punya kesukaan sendiri.']];
+/* Bab 7 */
+const BI_UANG=[['Uang yang terbuat dari logam disebut uang …','logam',['kertas','plastik','kayu'],'Ada uang logam dan uang kertas.'],
+ ['Tempat untuk menabung di rumah adalah …','celengan',['tempat sampah','lemari es','kolam'],'Celengan dipakai untuk menyimpan tabungan.'],
+ ['Karena uang terbatas, kita sebaiknya membeli …','barang yang dibutuhkan',['semua yang diinginkan','apa saja','barang yang mahal'],'Uang dipakai untuk kebutuhan dulu.'],
+ ['Uang kertas harus dijaga agar tidak …','sobek dan basah',['bersih','rapi','terlipat rapi di dompet'],'Uang kertas mudah sobek dan rusak jika basah.'],
+ ['Menyisihkan uang sedikit demi sedikit disebut …','menabung',['berbelanja','meminjam','membuang'],'Menabung membuat uang terkumpul.']];
+const BI_GABUNG=[['ce + le + ngan','celengan',['celana','cerita','cemara']],['u + ang','uang',['ulang','udang','ular']],['lo + gam','logam',['lomba','lobang','lokal']],['ker + tas','kertas',['keras','kereta','ketan']],['me + na + bung','menabung',['menabur','menangis','menari']],['be + li','beli',['bali','bola','bulu']],['ja + jan','jajan',['jalan','jagung','janji']]];
+const biGabung=()=>{const t=pick(BI_GABUNG);return biQ(`Gabungkan suku kata: <b>${t[0]}</b>`,t[1],t[2],`${t[0]} = ${t[1]}.`,`Gabungkan suku kata ${t[0].replace(/\+/g,',')}`)};
+/* Bab 8 */
+const biArah=()=>{const it=shuffle([['🏠','rumah'],['🌳','pohon'],['🚗','mobil'],['🏫','sekolah'],['🛒','warung']]).slice(0,3),kn=Math.random()<.5;return biQ(`Dari kiri ke kanan: <span class="big">${it.map(x=>x[0]).join(' ')}</span>Di sebelah ${kn?'kanan':'kiri'} ${it[1][1]} ada …`,it[kn?2:0][1],[it[kn?0:2][1],it[1][1]],`Di sebelah ${kn?'kanan':'kiri'} ${it[1][1]} ada ${it[kn?2:0][1]}.`)};
+const BI_ARAH=[['Lawan kata “kanan” adalah …','kiri',['atas','depan','bawah']],['Lawan kata “atas” adalah …','bawah',['kiri','kanan','belakang']],['Burung terbang di … pohon.','atas',['bawah','dalam','kiri']],['Kucing tidur di … meja.','bawah',['atas','kanan','kiri']]];
+const BI_KERJA=[['Orang yang mengatur lalu lintas di jalan adalah …','polisi',['petani','koki','pelukis']],['Orang yang menjaga keamanan sekolah atau kompleks adalah …','satpam',['dokter','penjahit','nelayan']],['Petugas yang memadamkan kebakaran adalah …','pemadam kebakaran',['tukang pos','guru','pilot']],['Orang yang mengantarkan surat dan paket adalah …','tukang pos',['polisi','petani','perawat']],['Orang yang merawat orang sakit di rumah sakit adalah …','perawat',['satpam','tukang kayu','pedagang']],['Orang yang menanam padi di sawah adalah …','petani',['nelayan','polisi','sopir']]];
+const biKerja=()=>Math.random()<.3?(()=>{const t=pick([['polisi','po-li-si'],['satpam','sat-pam'],['petani','pe-ta-ni'],['perawat','pe-ra-wat'],['dokter','dok-ter']]);return biQ(`<b>${t[1].replace(/-/g,' - ')}</b> dibaca …`,t[0],['polisi','satpam','petani','perawat','dokter'].filter(x=>x!==t[0]).slice(0,3),`${t[1]} = ${t[0]}.`,`Baca suku kata ini: ${t[1].replace(/-/g,', ')}`)})():biBank(BI_KERJA)();
+/* susunan jalur: 8 bab buku "Aku Bisa!" */
+const BI1_MERDEKA=[['Bunyi apa?','Menyimak, berkenalan, huruf B-b, suku kata ba-bi-bu-be-bo',[biBank(BI_BUNYI),biBank(BI_KENAL),biHuruf('b'),biSukuAwal('b')],'Huruf kapital dan huruf kecil berbeda bentuknya: B dan b.'],
+ ['Ayo, bermain!','Bermain aman, tanda tanya dan seru, suku kata h dan c',[biBank(BI_MAIN),biTanda,biHuruf('h'),biHuruf('c')],'Tanda tanya (?) untuk kalimat tanya. Tanda seru (!) untuk perintah atau larangan.'],
+ ['Awas kuman!','Hidup bersih, suku kata ka-ki-ku-ke-ko',[biBank(BI_KUMAN),biHuruf('k'),biSukuAwal('k')],'Cuci tangan dengan air dan sabun. Tutup mulut saat bersin.'],
+ ['Aku bisa!','Kata gerakan, suku kata la-li-lu-le-lo',[biBank(BI_GERAK),biHuruf('l'),biSukuAwal('l')],'Melompat, berlari, menari adalah kata gerakan.'],
+ ['Teman baru','Kata sopan, tanda titik, suku kata ma-mi-mu-me-mo',[biBank(BI_SOPAN),biTitik,biHuruf('m'),biSukuAwal('m')],'Kata sopan: tolong, terima kasih, maaf, permisi. Kalimat diakhiri tanda titik.'],
+ ['Temanku berbeda','Menghargai perbedaan, menghitung benda, suku kata ga-gi-gu-ge-go',[biBank(BI_BEDA),biHitung,biHuruf('g'),biSukuAwal('g')],'Kita berbeda-beda, tetapi tetap berteman.'],
+ ['Aku ingin','Uang logam dan kertas, menabung, membaca kata sederhana',[biBank(BI_UANG),biGabung,biEja,biBanyakSuku],'Gabungkan suku kata untuk membaca kata: ce + le + ngan = celengan.'],
+ ['Di sekitar rumah','Arah, letak, dan pekerja di sekitar kita',[biArah,biBank(BI_ARAH),biKerja],'Kata arah: kanan, kiri, atas, bawah.']];
+/* pasang ke Kelas 1; unit lama disimpan untuk tugas/modul lama dan pemindahan progres */
+var CUR_OLDU=CUR_OLDU||{};
+{const c=COURSE.find(x=>x.id==='k1'),s=c&&c.subjects.find(x=>x.id==='bindo');if(s){CUR_OLDU['k1/bindo']=s.units;s.units=BI1_MERDEKA.map(([t,d,gens,tip],i)=>U(t,d,gens,{tip,_k:'bi1/bindo/'+i,merdeka:true}));s.merdeka=true}}
 const COURSE_VIS=()=>COURSE.filter(c=>!c.hidden);
 const clsGrp=id=>{const c=COURSE.find(x=>x.id===id);return c&&c.grp||id};
 
@@ -8249,7 +8351,7 @@ let APP=store.get('app',null)||{profiles:[],cur:null};
 let P=null;
 function newProfile(o){return {id:'p'+Date.now().toString(36)+R(100,999),name:o.name,color:o.color||pick(AV_COLORS),created:Date.now(),cls:o.cls||'k4',subj:o.subj?{[o.cls]:o.subj}:{},
   xp:0,gems:50,hearts:5,heartsAt:null,streak:0,bestStreak:0,lastDay:null,days:[],freeze:0,goal:o.goal||20,
-  today:{day:dayKey(),xp:0,lessons:0,perfect:0,correct:0,games:0,best:0},week:{id:weekKey(),xp:0},prog:{},mmv:1,
+  today:{day:dayKey(),xp:0,lessons:0,perfect:0,correct:0,games:0,best:0},week:{id:weekKey(),xp:0},prog:{},mmv:1,cmig:Object.fromEntries(Object.keys(typeof CUR_OLDU!=='undefined'?CUR_OLDU:{}).map(k=>[k,1])),
   stats:{lessons:0,perfect:0,tests:0,games:[],matches:0,correct:0,chests:0},quests:null,owned:{cap:['ink'],body:['purple']},outfit:{cap:'ink',body:'purple'},unlimited:false,seenBadges:{},gender:o.gender||null,avatar:avDefaultFor(o.gender),avOwned:[],pet:'uli',pets:['uli']}}
 function avDefaultFor(g){const a=Object.assign({},AV_DEFAULT,{shirt:pick(['merah','biru','hijau','kuning']),bg:pick(['b1','b2','b3','b4'])});if(g==='P'){a.hair=pick(['panjang','hijab','kuncir','kepang']);a.hc=a.hair==='hijab'?pick(['h5','h6','h10','h11']):'h1';a.eyes=pick(['bulat','lentik']);a.brow='lengkung'}else if(g==='L'){a.hair=pick(['pendek','jabrik','poni']);a.brow='tebal'}return a}
 function save(){if(P){P.upd=Date.now();const i=APP.profiles.findIndex(x=>x.id===P.id);if(i>=0)APP.profiles[i]=P;else APP.profiles.push(P);APP.cur=P.id}if(APP.teacher&&document.body.classList.contains('teacher'))APP.teacher.upd=Date.now();store.set('app',APP);if(typeof queueSync==='function')queueSync()}
@@ -8934,7 +9036,7 @@ function nodePop(ui,ni,row){const s=SUBJ(),u=s.units[ui],nd=NODES[ni],idx=ui*NOD
   {const np=row.querySelector('.npop'),rr=row.getBoundingClientRect(),bottom=rr.bottom+18+np.offsetHeight,limit=window.innerHeight-(innerWidth<1000?120:30);if(bottom>limit)window.scrollBy({top:bottom-limit+10,behavior:'smooth'})}}
 var MATERI_P=null;
 function loadMateri(){if(window.MATERI&&Object.keys(window.MATERI).length)return Promise.resolve(window.MATERI);if(MATERI_P)return MATERI_P;
-  MATERI_P=new Promise((r,j)=>{const sc=document.createElement('script');sc.src='materi.js?v=3';sc.onload=()=>r(window.MATERI||{});sc.onerror=()=>{sc.remove();MATERI_P=null;j(new Error('materi'))};document.head.appendChild(sc)});return MATERI_P}
+  MATERI_P=new Promise((r,j)=>{const sc=document.createElement('script');sc.src='materi.js?v=4';sc.onload=()=>r(window.MATERI||{});sc.onerror=()=>{sc.remove();MATERI_P=null;j(new Error('materi'))};document.head.appendChild(sc)});return MATERI_P}
 function guideBody(m){const sec=x=>`<section class="gsec"><h4>${x.h}</h4>`+(x.p?`<p>${x.p}</p>`:'')+
     (x.li?`<ul class="gli">${x.li.map(t=>`<li>${t}</li>`).join('')}</ul>`:'')+
     (x.tb?`<div class="gtb"><table><thead><tr>${x.tb[0].map(t=>`<th>${t}</th>`).join('')}</tr></thead><tbody>${x.tb.slice(1).map(r=>`<tr>${r.map(t=>`<td>${t}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`:'')+
@@ -11722,7 +11824,7 @@ function folBind(root,list,after){root.querySelectorAll('[data-follow]').forEach
   try{await folDo(f,on);if(on){try{sfx.ok()}catch(_){}toast('team',`Kamu mengikuti ${f.name}.`)}b.outerHTML=folBtn(f,b.classList.contains('sm'));folBind(root,list,after);after&&after()}catch(err){b.disabled=false;toast('lock',fbErr(err))}})}
 const shareIcon='<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M12 3 V15 M7 8 L12 3 L17 8 M5 13 V19 C5 20 6 21 7 21 H17 C18 21 19 20 19 19 V13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const qrIcon='<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><path d="M14 14h3v3h-3zM18 18h3v3h-3zM18 14h3M14 18v3" stroke-linecap="round"/></svg>';
-let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=224';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
+let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=225';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
 function qrMatrix(text){const Q=window.QRCodeLib,q=new Q(-1,Q.ECL.M);q.addData(text);q.make();const n=q.getModuleCount(),m=[];for(let r=0;r<n;r++){m.push([]);for(let c=0;c<n;c++)m[r].push(q.isDark(r,c))}return m}
 function qrSvgOf(m){const n=m.length;let d='';for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(m[r][c])d+=`M${c} ${r}h1.02v1.02h-1.02z`;
   return `<svg viewBox="-2 -2 ${n+4} ${n+4}" class="pcqr" shape-rendering="crispEdges" aria-label="Kode QR profil"><rect x="-2" y="-2" width="${n+4}" height="${n+4}" fill="#fff"/><path d="${d}" fill="#1C1E3D"/></svg>`}
