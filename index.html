@@ -3517,6 +3517,20 @@ body.teacher .nav[data-tab="smod"]{display:none!important}
 .tkmode #timer,.tkmode #hearts{visibility:hidden}
 body.arcfs.tkmode .qcard>#qtext{font-size:20px!important;max-height:7em}
 body.arcfs.tkmode .qcard>#qtext .objs,body.arcfs.tkmode .qcard>#qtext .big{font-size:34px!important;display:block}
+/* Mode Tim dan OX Survival */
+.tmbar{display:flex;flex-direction:column;gap:6px;width:100%}.tmrow{display:flex;justify-content:space-between;font-size:15px}
+.tmtrack{display:flex;height:12px;border-radius:99px;overflow:hidden;background:var(--line)}.tmtrack i{display:block;transition:width .5s}
+.tmwrap{padding:4px 10px}.tmdot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:5px;vertical-align:middle}
+.oxq{gap:8px}.oxqt{font-size:19px;font-weight:700;line-height:1.35}.oxclaim{font-size:18px;padding:10px 12px;border-radius:12px;background:var(--soft,#F2F6FF);text-align:center}
+.oxtime{height:10px;border-radius:99px;background:var(--line);overflow:hidden}.oxtime i{display:block;height:100%;background:#FFC800;transition:width .4s linear}
+.oxrev{font-size:20px;font-weight:800;text-align:center;padding:8px;border-radius:12px;color:#fff}.oxrev.ok{background:#22B85C}.oxrev.no{background:#FF4B4B}
+.oxarena{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.oxside{min-height:220px;border-radius:20px;border:4px solid transparent;display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 6px;font-size:18px;cursor:pointer;color:#14213D}
+.oxside.o{background:#E7F8EE}.oxside.x{background:#FFEDED}.oxside.sel{border-color:#14213D;transform:translateY(-2px);box-shadow:0 6px 0 rgba(0,0,0,.12)}
+.oxside.win{border-color:#22B85C}.oxside.lose{opacity:.45}.oxside:disabled{cursor:default}
+.oxbig{font-size:46px;line-height:1}.oxavs,.oxwin{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-top:6px}
+.oxav{display:flex;flex-direction:column;align-items:center;width:52px}.oxav .avatar{width:40px;height:40px;font-size:16px}.oxav small{font-size:11px;font-weight:700;max-width:52px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.oxav.me small{color:#2F5BEA}
 /* Toko: judul bagian besar gelap */
 html body:not(.teacher) #vShop .shopsec h3{font-size:22px!important;color:var(--ink)!important;text-transform:none!important;letter-spacing:0!important}
 /* Profil: ringkasan tanpa kotak */
@@ -3899,7 +3913,7 @@ html[data-theme=malam] .plstick{background:#0a0f1e}
 <div class="syncpill" id="syncPill" hidden></div>
 <div class="toast" id="toast" hidden></div>
 
-<script src="av.js?v=247"></script>
+<script src="av.js?v=249"></script>
 <script>
 /* ---------- visual assets ---------- */
 const INK='#1B1E3D';
@@ -9919,7 +9933,7 @@ function renderHUD(){
 function showQText(q){
   $('#qtag').textContent=`${q.subj||S.name} · Soal ${game.i+1} dari ${game.qs.length}${q.rev?' · Ulangan: '+q.rev:''}`;
   $('#qtext').innerHTML=q.q;
-  $('#speakBtn').hidden=!qSpeech(q);
+  $('#speakBtn').hidden=!qSpeech(q)||MODE==='lompat';
 }
 function shakeCard(){const card=$('#qcard');card.classList.remove('pop','shake');void card.offsetWidth;card.classList.add('shake')}
 /* ---------- rekam jawaban per soal (untuk analisis guru) ---------- */
@@ -10204,7 +10218,7 @@ function arcIntro(first){
   $('#asText').textContent=first?modeInfo().help:`Soal ${game.i+1} dari ${game.qs.length}. Perwakilan ${t.name} silakan maju.`;
   $('#arcStart').hidden=false;setTimeout(()=>$('#asGo').focus({preventScroll:true}),50);
 }
-function arcGo(){$('#arcStart').hidden=true;arc.state='play';tone([523,784],.08);{const sp=qSpeech(arc.q);if(sp)say(sp)}}
+function arcGo(){$('#arcStart').hidden=true;arc.state='play';tone([523,784],.08);if(MODE!=='lompat'){const sp=qSpeech(arc.q);if(sp)say(sp)}}
 function arcShowQ(){
   if(MODE==='urut'&&game.qs[game.i]&&!game.qs[game.i].urut)game.qs[game.i]=urutQ(game.qs[game.i]);
   const q=game.qs[game.i];renderHUD();showQText(q);
@@ -10250,7 +10264,7 @@ function arcNext(){
   if(game.lives<=0||game.i>=game.qs.length-1){arcStop();finish();return}
   game.i++;
   if(isGroup()){arc.state='intro';arcShowQ();arcIntro(false);return}
-  arc.state='play';arcShowQ();{const sp=qSpeech(arc.q);if(sp)say(sp)}
+  arc.state='play';arcShowQ();if(MODE!=='lompat'){const sp=qSpeech(arc.q);if(sp)say(sp)}
   if(MODE!=='lompat'){const card=$('#qcard');card.classList.remove('pop','shake');void card.offsetWidth;card.classList.add('pop')}
 }
 function arcStop(){arc.running=false;cancelAnimationFrame(arc.raf);$('#arcFb').hidden=true;$('#arcStart').hidden=true}
@@ -11078,13 +11092,18 @@ function lpTheme(){let id='';try{id=String((S&&S.id)||SUBJ().id)}catch(e){}const
   return T[k]}
 function lpGem(n){try{if(!P)return;P.gems=(P.gems||0)+n;clearTimeout(lpGem.t);lpGem.t=setTimeout(()=>{try{save();renderTop()}catch(e){}},400)}catch(e){}}
 const Lompat={
- build(){const N=game.qs.length,G=0;const SP=380,X0=360;const w={N,qs:game.qs,opened:0,stars:0,starTot:0,done:false,finishOn:false,boxes:[],pits:[],plats:[],items:[],bugs:[],safe:80,t0:performance.now()};const R=(a,b)=>a+Math.random()*(b-a);
+ build(){const N=game.qs.length;const SP=400,X0=360;const w={N,qs:game.qs,opened:0,stars:0,starTot:0,done:false,finishOn:false,boxes:[],pits:[],plats:[],items:[],bugs:[],crates:[],springs:[],spikes:[],safe:80,t0:performance.now()};const R=(a,b)=>a+Math.random()*(b-a);
+  /* setiap bagian antar-kotak tanya memakai rintangan berbeda: lubang+jembatan, tumpukan peti kayu, platform bergerak, per pegas, duri, kumbang */
+  const kinds=shuffle(['pit','peti','gerak','pegas','duri','pit','peti','gerak','pegas','duri']);
   for(let k=0;k<N;k++){const bx=X0+k*SP,lv=k/Math.max(1,N-1);w.boxes.push({k,x:bx,open:false,res:null,bump:0,coin:null});
-   const kind=Math.random();
-   if(k>0&&Math.random()<.35+lv*.3)w.pits.push({x:bx+R(120,170),w:R(70,92)+lv*28});
-   if(kind<.5){const px=bx+R(150,200),py=-R(100,150);w.plats.push({x:px,y:py,w:R(110,150)});for(let s=0;s<2;s++)w.items.push({x:px+34+s*50,y:py-32,got:false})}
-   else{const arc2=Math.random()<.5;for(let s=0;s<2;s++)w.items.push({x:bx-120+s*48,y:arc2?-80-s*22:-70-s%2*24,got:false})}
-   if(k>0&&k<N-1&&Math.random()<.35+lv*.4){const gx=bx+R(230,270);if(!w.pits.some(p=>gx>p.x-40&&gx<p.x+p.w+40))w.bugs.push({x:gx,x0:gx-40,x1:gx+50,v:(40+lv*40)*(Math.random()<.5?-1:1),dead:0})}}
+   const s0=bx+120,kind=k===0?'peti':kinds[k%kinds.length];
+   if(kind==='pit'){const pw=R(80,100)+lv*30;w.pits.push({x:s0+20,w:pw});const py=-R(95,125);w.plats.push({x:s0+20+pw/2-60,y:py,w:120});for(let i=0;i<2;i++)w.items.push({x:s0+20+pw/2-22+i*44,y:py-32,got:false})}
+   else if(kind==='peti'){const n=1+Math.floor(Math.random()*(lv>.4?3:2));for(let i=0;i<n;i++){const hgt=44*(1+((i===1&&n===3)?1:0));w.crates.push({x:s0+i*46,w:46,h:hgt})}const top=Math.max(...w.crates.slice(-n).map(c=>c.h));w.items.push({x:s0+23*n,y:-top-34,got:false})}
+   else if(kind==='gerak'){const pw=R(150,180)+lv*30;w.pits.push({x:s0,w:pw});const py=-R(30,60);w.plats.push({x:s0+10,y:py,w:96,mv:{x0:s0+4,x1:s0+pw-100,v:(55+lv*35)*(Math.random()<.5?1:-1)}});w.items.push({x:s0+pw/2,y:py-70,got:false})}
+   else if(kind==='pegas'){w.springs.push({x:s0+30,t:0});const py=-R(250,280);w.plats.push({x:s0+60,y:py,w:110});for(let i=0;i<3;i++)w.items.push({x:s0+70+i*38,y:py-32,got:false})}
+   else{const sw=R(60,90)+lv*20;w.spikes.push({x:s0+40,w:sw});w.items.push({x:s0+40+sw/2,y:-150,got:false})}
+   if(k>0&&k<N-1&&Math.random()<.3+lv*.4){const gx=bx+R(300,330);if(!w.pits.some(p=>gx>p.x-60&&gx<p.x+p.w+60)&&!w.spikes.some(p=>gx>p.x-60&&gx<p.x+p.w+60)&&!w.crates.some(c=>gx>c.x-60&&gx<c.x+c.w+60))w.bugs.push({x:gx,x0:gx-30,x1:gx+40,v:(40+lv*40)*(Math.random()<.5?-1:1),dead:0})}
+   if(Math.random()<.6)for(let i=0;i<2;i++)w.items.push({x:bx-130+i*44,y:-70-i*20,got:false})}
   w.starTot=w.items.length;w.fx=X0+N*SP+120;w.L=w.fx+260;this.w=w},
  setup(){const{W,H}=arc;this.G=H-60;this.k=clamp(Math.min(W,H)/360,1,1.35);this.hh=54*this.k;this.grav=2100;
   if(!this.w||this.w.qs!==game.qs){this.build();this.th=null;this.hero={x:130,y:0,vx:0,vy:0,face:1,run:0,blink:0};this.cam=0;this.clouds=Array.from({length:6},(_,k)=>({x:k*260+Math.random()*80,y:24+Math.random()*70,s:.6+Math.random()*.6}))}
@@ -11103,7 +11122,7 @@ const Lompat={
   const{W,H,ctx}=arc;const q=arc.q;const n=arc.labels.length,pw=Math.min(W-24,520),gap=8,bw=(pw-36-gap)/2,bh=Math.min(70,Math.max(48,(H*.42-gap)/2));
   const px=(W-pw)/2;this.qf=fit(ctx,plainTx(q.q),pw-36,Math.min(130,H*.24),22,11);const qh=this.qf.lines.length*this.qf.s*1.08+20;const ph=qh+Math.ceil(n/2)*(bh+gap)+40;const py=Math.max(10,(H-ph)/2);
   this.panel={x:px,y:py,w:pw,h:ph,qh};this.opts=arc.labels.map((l,i)=>({i,x:px+18+(i%2)*(bw+gap),y:py+qh+20+Math.floor(i/2)*(bh+gap),w:bw,h:bh,f:fit(ctx,l,bw-40,bh-12,19,9)}));
-  arc.t=0;$('#timer').classList.add('lpon')},
+  arc.t=0;$('#timer').classList.add('lpon');{const sp=qSpeech(q);if(sp)say(sp)}},
  pick(x,y){const o=(this.opts||[]).find(o=>this.inB(o,x,y));if(o)this.answer(o.i)},
  answer(i){if(!this.asking||arc.state!=='play')return;const b=this.asking;b.open=true;b.res=i===arc.ci;b.coin={t:0,ok:b.res};this.w.opened++;this.asking=false;this.opts=null;$('#timer').classList.remove('lpon');
   burst(b.x+22-this.cam,this.G+this.by()+44,b.res?'#FFD54A':'#FF6B5B',22);this.w.safe=b.x;arcResolve(i)},
@@ -11112,12 +11131,20 @@ const Lompat={
   if(this.asking&&arc.state!=='play'&&!w.finishOn){const b=this.asking;b.open=true;b.res=false;b.coin={t:0,ok:false};w.opened++;w.safe=b.x;this.asking=false;this.opts=null;$('#timer').classList.remove('lpon')}
   if(this.asking){h.vx=0}else{const P=Object.values(this.pads);let ax=0;if(k.ArrowLeft||k.a||P.includes('l'))ax-=1;if(k.ArrowRight||k.d||P.includes('r'))ax+=1;h.vx=ax*250*this.k;if(ax)h.face=ax}
   h.x=clamp(h.x+h.vx*dt,20,w.L-20);if(!w.finishOn&&!w.done)h.x=Math.min(h.x,w.fx-60);h.run+=Math.abs(h.vx)*dt;h.blink=Math.max(0,h.blink-dt);
-  const oy=h.y;h.vy+=this.grav*dt;h.y+=h.vy*dt;h.onPlat=false;
-  for(const p of w.plats){if(h.vy>=0&&oy<=p.y+1&&h.y>=p.y&&h.x>p.x-6&&h.x<p.x+p.w+6){h.y=p.y;h.vy=0;h.onPlat=true}}
+  const hb=this.hh*.34,top0=this.by();
+  for(const p of w.plats)if(p.mv){const ox=p.x;p.x+=p.mv.v*dt;if(p.x<p.mv.x0||p.x>p.mv.x1){p.mv.v*=-1;p.x=clamp(p.x,p.mv.x0,p.mv.x1)}p.dx=p.x-ox}
+  if(h.onPlat&&h.plat&&h.plat.dx)h.x+=h.plat.dx;
+  const sol=[...w.plats.map(p=>({x:p.x,y:p.y,w:p.w,h:18,p})),...w.crates.map(c=>({x:c.x,y:-c.h,w:c.w,h:c.h,c})),...w.boxes.map(b=>({x:b.x,y:top0,w:44,h:44,b}))];
+  /* dinding: badan tidak bisa menembus sisi peti, bata, atau kotak */
+  for(const r of sol){if(h.y>r.y+3&&h.y-this.hh<r.y+r.h-3&&h.x+hb>r.x&&h.x-hb<r.x+r.w){if(h.x<r.x+r.w/2)h.x=r.x-hb;else h.x=r.x+r.w+hb}}
+  const oy=h.y;h.vy+=this.grav*dt;h.y+=h.vy*dt;h.onPlat=false;h.plat=null;
+  for(const r of sol){const xo=h.x+hb>r.x+2&&h.x-hb<r.x+r.w-2;if(!xo)continue;
+   if(h.vy>=0&&oy<=r.y+1&&h.y>=r.y){h.y=r.y;h.vy=0;h.onPlat=true;h.plat=r.p||null}
+   else if(h.vy<0&&oy-this.hh>=r.y+r.h-2&&h.y-this.hh<=r.y+r.h){h.y=r.y+r.h+this.hh;h.vy=120;if(r.b){r.b.bump=1;if(!r.b.open)this.ask(r.b);else tone([260],.04)}}}
   if(!h.onPlat&&h.y>=0&&this.gy(h.x)!==null&&oy<=0.5){h.y=0;h.vy=0}
+  for(const sp of w.springs){sp.t=Math.max(0,sp.t-dt);if(h.y>=-2&&h.y<=1&&Math.abs(h.x-sp.x)<26&&h.vy>=0){h.vy=-Math.sqrt(2*this.grav*310);sp.t=.3;tone([523,784,1046],.05)}}
+  for(const sk of w.spikes){if(!h.blink&&h.y>-12&&h.x+hb*.7>sk.x&&h.x-hb*.7<sk.x+sk.w){h.blink=1.2;h.vy=-420;h.x=sk.x-hb-6;arc.banner={text:'Aduh, duri!',color:'#C9362A',t:0};tone([240,180],.07)}}
   if(h.y>260){h.x=w.safe+10;h.y=-200;h.vy=0;h.blink=1.2;arc.banner={text:'Aduh! Coba lagi',color:'#C9362A',t:0};tone([300,200],.08)}
-  if(h.vy<0){const head=h.y-this.hh,top=this.by()+44;if(head<=top&&oy-this.hh>top-2){const b=w.boxes.find(b=>h.x>b.x-4&&h.x<b.x+48);if(b){h.y=top+this.hh;h.vy=140;b.bump=1;if(!b.open)this.ask(b);else tone([260],.04)}}
-   for(const p of w.plats){const pb=p.y+18;if(head<=pb&&oy-this.hh>pb-2&&h.x>p.x&&h.x<p.x+p.w){h.y=pb+this.hh;h.vy=100}}}
   const hw=this.hh*1.55*.42+14,ht=this.hh*1.55+14;
   for(const it of w.items)if(!it.got&&Math.abs(it.x-h.x)<hw&&it.y>h.y-ht&&it.y<h.y+14){it.got=true;w.stars++;lpGem(1);tone([988,1319],.05);burst(it.x-this.cam,this.G+it.y,'#5ED0FF',10)}
   for(const g of w.bugs){if(g.dead){g.dead+=dt;continue}g.x+=g.v*dt;if(g.x<g.x0||g.x>g.x1)g.v*=-1;
@@ -11160,6 +11187,17 @@ const Lompat={
   {const x=X(18);c.fillStyle='#fff';c.strokeStyle='#1B1E3D';c.lineWidth=3;rr(c,x-6,G-74,74,28,8);c.fill();c.stroke();c.fillStyle='#1B1E3D';c.font=`900 15px ${FONT}`;c.textAlign='center';c.textBaseline='middle';c.fillText('START',x+31,G-59);c.fillRect(x+28,G-46,5,46)}
   // platform bata
   for(const p of w.plats){const x=X(p.x),y=G+p.y;if(x+p.w<0||x>W)continue;c.fillStyle='#D9823F';rr(c,x,y,p.w,18,4);c.fill();c.strokeStyle='#8A4A1A';c.lineWidth=2;c.stroke();for(let bx=x+22;bx<x+p.w;bx+=22){c.beginPath();c.moveTo(bx,y);c.lineTo(bx,y+18);c.stroke()}}
+  // platform bergerak: tanda panah
+  for(const p of w.plats){if(!p.mv)continue;const x=X(p.x),y=G+p.y;if(x+p.w<0||x>W)continue;c.fillStyle='#fff';c.font=`900 12px ${FONT}`;c.textAlign='center';c.textBaseline='middle';c.fillText('◀ ▶',x+p.w/2,y+9)}
+  // peti kayu (padat)
+  for(const cr of w.crates){const x=X(cr.x),y=G-cr.h;if(x+cr.w<0||x>W)continue;for(let j=0;j<cr.h/44;j++){const yy=y+j*44;c.fillStyle='#C8873E';rr(c,x,yy,cr.w,44,4);c.fill();c.strokeStyle='#7A4A1A';c.lineWidth=3;c.stroke();
+    c.lineWidth=2.5;c.beginPath();c.moveTo(x+4,yy+4);c.lineTo(x+cr.w-4,yy+40);c.moveTo(x+cr.w-4,yy+4);c.lineTo(x+4,yy+40);c.stroke();c.strokeStyle='rgba(255,255,255,.25)';c.beginPath();c.moveTo(x+4,yy+3);c.lineTo(x+cr.w-4,yy+3);c.stroke()}}
+  // per pegas
+  for(const sp of w.springs){const x=X(sp.x),sq=sp.t>0?.5:1;if(x<-40||x>W+40)continue;c.fillStyle='#5C6270';c.fillRect(x-20,G-6,40,6);c.strokeStyle='#9AA0AE';c.lineWidth=4;c.beginPath();for(let j=0;j<4;j++){const yy=G-6-j*6*sq;c.moveTo(x-14,yy);c.lineTo(x+14,yy-3*sq)}c.stroke();
+   c.fillStyle='#FF4B4B';rr(c,x-22,G-34*sq,44,9,4);c.fill();c.fillStyle='#fff';c.font=`900 10px ${FONT}`;c.textAlign='center';c.textBaseline='middle';c.fillText('LONCAT',x,G-29*sq)}
+  // duri
+  for(const sk of w.spikes){const x=X(sk.x);if(x+sk.w<0||x>W)continue;c.fillStyle='#8A93A6';c.strokeStyle='#4A5162';c.lineWidth=2;const n=Math.max(3,Math.round(sk.w/14)),dw=sk.w/n;
+   for(let j=0;j<n;j++){c.beginPath();c.moveTo(x+j*dw,G);c.lineTo(x+j*dw+dw/2,G-18);c.lineTo(x+(j+1)*dw,G);c.closePath();c.fill();c.stroke()}}
   // bintang
   for(const it of w.items){if(it.got)continue;const x=X(it.x),y=G+it.y+Math.sin(tm*3+it.x)*3;if(x<-20||x>W+20)continue;c.save();c.translate(x,y);c.lineJoin='round';c.fillStyle='#3FC1FF';c.strokeStyle='#1468B8';c.lineWidth=2.4;c.beginPath();c.moveTo(-12,-4);c.lineTo(-6,-11);c.lineTo(6,-11);c.lineTo(12,-4);c.lineTo(0,12);c.closePath();c.fill();c.stroke();c.fillStyle='#A8E6FF';c.beginPath();c.moveTo(-12,-4);c.lineTo(12,-4);c.lineTo(0,12);c.closePath();c.globalAlpha=.55;c.fill();c.globalAlpha=1;c.fillStyle='#fff';c.beginPath();c.moveTo(-5,-9);c.lineTo(-1,-9);c.lineTo(-5,-5);c.closePath();c.fill();c.restore()}
   // kumbang
@@ -14951,7 +14989,7 @@ window.duelFriend=function(f){if(!FBX.user||!P)return;ajakInit();AJAK.max=2;AJAK
 async function roomRematch(btn){const d=ROOM.doc;if(!d||d.host!==FBX.user.uid)return;if(btn){btn.disabled=true;btn.textContent='Menyiapkan soal baru…'}
   if(d.sel){AJAK.cls=d.sel.cls;AJAK.sid=d.sel.sid;AJAK.ui=d.sel.ui;AJAK.mode=d.sel.mode}
   const gen=roomGen((d.sel&&d.sel.n)||d.n);const players={};Object.entries(d.players||{}).forEach(([uid,p])=>{players[uid]={name:p.name,av:p.av||null,score:0,c:0,i:0,done:false,t:0,joined:p.joined||Date.now()}});
-  try{await FB.db.doc('rooms/'+ROOM.code).update(Object.assign({},gen,{status:'lobby',round:(d.round||1)+1,players,startAt:null,created:Date.now()}))}catch(e){if(btn){btn.disabled=false;btn.textContent='Main lagi'}toast('lock',fbErr(e))}}
+  try{await FB.db.doc('rooms/'+ROOM.code).update(Object.assign({},gen,{status:'lobby',round:(d.round||1)+1,players,startAt:null,created:Date.now(),ox:null}))}catch(e){if(btn){btn.disabled=false;btn.textContent='Main lagi'}toast('lock',fbErr(e))}}
 async function roomJoin(raw){const code=String(raw||'').toUpperCase().replace(/[^A-Z0-9]/g,'');if(code.length<6){toast('lock','Kode tantangan 6 huruf.');return}
   let snap;try{snap=await FB.db.doc('rooms/'+code).get()}catch(e){toast('lock',fbErr(e));return}
   if(!snap.exists){toast('lock','Tantangan tidak ditemukan. Periksa lagi kodenya.');return}const d=snap.data(),uid=FBX.user.uid;
@@ -14962,10 +15000,69 @@ async function roomJoin(raw){const code=String(raw||'').toUpperCase().replace(/[
 function roomOpen(code,bg){roomClose(true);ROOM.code=code;ROOM.shown=false;ROOM.bg=!!bg;try{history.replaceState(history.state,'',location.pathname)}catch(e){}
   let el=$('#room');if(!el){document.body.insertAdjacentHTML('beforeend','<div class="onb roomov" id="room" hidden></div>');el=$('#room')}el.hidden=!!bg||!!ROOM.mm;el.innerHTML='<div class="onbin" style="justify-content:center;align-items:center"><p class="note">Membuka ruang…</p></div>';
   ROOM.unsub=FB.db.doc('rooms/'+code).onSnapshot(s=>{if(!s.exists){roomClose();toast('lock','Ruang tantangan ditutup oleh pembuatnya.');return}const prev=ROOM.doc;ROOM.doc=s.data();try{roomLeaveNews(prev,ROOM.doc)}catch(e){}roomRender()},e=>{roomClose();toast('lock',fbErr(e))})}
-function roomClose(silent){if(ROOM.unsub){try{ROOM.unsub()}catch(e){}}ROOM.unsub=null;ROOM.round=null;clearInterval(ROOM.timer);ROOM.timer=null;ROOM.code=null;ROOM.doc=null;ROOM.playing=false;const el=$('#room');if(el)el.hidden=true;const lv=$('#roomRace');if(lv)lv.hidden=true}
+function roomClose(silent){clearInterval(ROOM.oxTick);ROOM.oxK=null;document.body.classList.remove('oxon');if(ROOM.unsub){try{ROOM.unsub()}catch(e){}}ROOM.unsub=null;ROOM.round=null;clearInterval(ROOM.timer);ROOM.timer=null;ROOM.code=null;ROOM.doc=null;ROOM.playing=false;const el=$('#room');if(el)el.hidden=true;const lv=$('#roomRace');if(lv)lv.hidden=true}
 function roomRows(d){return Object.entries(d.players||{}).map(([uid,p])=>Object.assign({uid},p)).sort((a,b)=>(b.done-a.done)||(b.score-a.score)||(a.t||9e9)-(b.t||9e9)||(b.c-a.c))}
+/* ===== Format Ruang Tanding: Biasa, Tim (2 tim, skor tim langsung), OX Survival (yang salah gugur) — ATM dari ZEP QUIZ ===== */
+const RFMT={biasa:'Biasa',tim:'Mode Tim',ox:'OX Survival'};
+const TEAM={A:{n:'Tim Merah',c:'#FF4B4B'},B:{n:'Tim Biru',c:'#1CB0F6'}};
+const OX_T=15000,OX_SHOW=3500;
+function roomFmt(d){return (d&&RFMT[d.fmt])?d.fmt:'biasa'}
+function teamSums(d){const s={A:{c:0,n:0},B:{c:0,n:0}};const live=(typeof roomPlayers==='function'&&ROOM.playing)?roomPlayers():null;
+  Object.entries(d.players||{}).forEach(([u,p])=>{if(!p.tm||!s[p.tm])return;const lp=live&&live.find(x=>x.uid===u);s[p.tm].c+=lp?lp.c:(p.c||0);s[p.tm].n++});['A','B'].forEach(k=>{s[k].v=s[k].n?Math.round(s[k].c/s[k].n*10)/10:0});return s}
+function teamBar(d){const s=teamSums(d),fair=s.A.n!==s.B.n,va=fair?s.A.v:s.A.c,vb=fair?s.B.v:s.B.c,tot=Math.max(.1,va+vb),pa=Math.round(va/tot*100);
+  return `<div class="tmbar"><div class="tmrow"><b style="color:${TEAM.A.c}">${TEAM.A.n} · ${String(va).replace('.',',')}</b><b style="color:${TEAM.B.c}">${String(vb).replace('.',',')} · ${TEAM.B.n}</b></div><div class="tmtrack"><i style="width:${va+vb?pa:50}%;background:${TEAM.A.c}"></i><i style="flex:1;background:${TEAM.B.c}"></i></div>${fair?'<small class="note" style="text-align:center">Jumlah anggota berbeda, jadi skor tim = rata-rata jawaban benar per anggota.</small>':''}</div>`}
+/* pembagian tim acak dan seimbang saat mulai */
+function teamAssign(d){const ids=shuffle(Object.keys(d.players||{}).filter(u=>!d.players[u].left));const up={};ids.forEach((u,k)=>up['players.'+u+'.tm']=k%2?'B':'A');return up}
+function fmtPicker(d){if((d.max||8)===2)return '';const f=roomFmt(d);
+  return `<div class="tcard" style="gap:8px"><h3 style="margin:0">Format permainan</h3><div class="seg small" id="rmFmt">${Object.entries(RFMT).map(([k,v])=>`<button data-f="${k}" aria-pressed="${k===f}">${v}</button>`).join('')}</div>
+   <p class="note" style="margin:0">${f==='tim'?'Pemain dibagi acak menjadi Tim Merah dan Tim Biru. Jumlah jawaban benar setiap anggota menjadi skor tim yang tampil langsung.':f==='ox'?'Semua menjawab soal yang sama bersamaan: pilih ⭕ Benar atau ❌ Salah. Yang salah gugur, sampai tersisa pemenang. Cocok untuk kuis kelas (sampai 30 pemain).':'Setiap pemain menjawab dengan kecepatannya sendiri, peringkat dari nilai dan waktu.'}</p></div>`}
+/* OX: setiap soal pilihan ganda diubah menjadi pernyataan benar/salah yang sama di semua HP */
+function oxItem(d,k){let qs=[];try{qs=JSON.parse(d.qs)}catch(e){}const q=qs[k];if(!q)return null;let h=0;const s=String(q.q);for(let i=0;i<s.length;i++)h=(h*31+s.charCodeAt(i))>>>0;
+  const truth=(h+k)%2===0,wr=(q.opts||[]).filter(o=>o!==q.ans);const claim=truth||!wr.length?q.ans:wr[h%wr.length];return {q:q.q,claim,side:(claim===q.ans)?'O':'X',ans:q.ans,exp:q.exp||'',n:qs.length}}
+function oxAlive(d){return Object.entries(d.players||{}).filter(([u,p])=>!p.out&&!p.left)}
+function oxRender(){const d=ROOM.doc,el=$('#room'),uid=FBX.user.uid,me=d.players[uid],ox=d.ox||{k:0,phase:'q'},it=oxItem(d,ox.k);if(!it){return}
+  ROOM.playing=false;el.hidden=false;document.body.classList.add('oxon');
+  if(ox.phase==='q'&&ROOM.oxK!==ox.k){ROOM.oxK=ox.k;ROOM.oxT0=Date.now();tone([660,880],.06)}
+  const pick=me.oxa&&me.oxa.k===ox.k?me.oxa.a:null,out=!!me.out,end=ox.phase==='end'||d.status==='done';
+  const ps=Object.entries(d.players||{}).filter(([u,p])=>!p.left).map(([u,p])=>Object.assign({uid:u},p));
+  const side=s=>ps.filter(p=>!p.out&&p.oxa&&p.oxa.k===ox.k&&p.oxa.a===s);const none=ps.filter(p=>!p.out&&!(p.oxa&&p.oxa.k===ox.k));
+  const av=p=>`<span class="oxav ${p.uid===uid?'me':''}" title="${esc(p.name)}">${avSpan({name:p.name,avatar:p.av})}<small>${esc(p.uid===uid?'Kamu':String(p.name).split(' ')[0])}</small></span>`;
+  const alive=oxAlive(d);
+  if(end){const win=alive.map(([u,p])=>Object.assign({uid:u},p));const host=d.host===uid;const iWin=win.some(p=>p.uid===uid);
+    if(iWin&&!(P.roomWins||[]).includes(ROOM.code+':ox'+(d.round||1))){P.roomWins=(P.roomWins||[]).concat(ROOM.code+':ox'+(d.round||1)).slice(-50);P.gems+=10;save();renderTop();toast('gem','Kamu bertahan sampai akhir! +10 permata');try{burstConfetti()}catch(e){}}
+    el.innerHTML=`<div class="onbin" style="max-width:560px;gap:14px"><div class="aved-top"><button class="back" id="rmX" aria-label="Tutup">✕</button><h2 style="flex:1">OX Survival selesai</h2></div>
+     <div class="tcard" style="text-align:center;gap:10px"><div style="font-size:44px">🏆</div><h3 style="margin:0">${win.length?(win.length===1?'Pemenang':'Para pemenang ('+win.length+')'):'Tidak ada yang bertahan'}</h3><div class="oxwin">${win.map(av).join('')}</div>
+      <p class="note" style="margin:0">${esc(d.subjName)} · ${esc(d.title)} · ${ox.k+1} soal dimainkan</p></div>
+     <div class="tcard"><h3>Gugur</h3><div class="roomrows">${ps.filter(p=>p.out).sort((a,b)=>(b.outAt||0)-(a.outAt||0)).map(p=>`<div class="lrow ${p.uid===uid?'me':''}">${avSpan({name:p.name,avatar:p.av})}<span class="nm">${esc(p.name)}</span><span class="xp">soal ${(p.outAt||0)+1}</span></div>`).join('')||'<p class="note">Tidak ada.</p>'}</div></div>
+     ${host?'<button class="primary press" id="rmAgain" style="font-size:20px;padding:12px">🔁 Main lagi</button>':`<p class="note" style="text-align:center">Tunggu ${esc(d.hostName||'pembuat')} menekan <b>Main lagi</b>.</p>`}</div>`;
+    hydrate(el);$('#rmX').onclick=()=>{document.body.classList.remove('oxon');roomClose()};const ag=$('#rmAgain');if(ag)ag.onclick=()=>roomRematch(ag);return}
+  const rev=ox.phase==='reveal';const left=Math.max(0,Math.ceil((OX_T-(Date.now()-(ROOM.oxT0||Date.now())))/1000));
+  el.innerHTML=`<div class="onbin oxbox" style="max-width:640px;gap:12px">
+   <div class="aved-top"><button class="back" id="oxQuit" aria-label="Keluar">✕</button><h2 style="flex:1">OX Survival · Soal ${ox.k+1}/${it.n}</h2><span class="pill">${alive.length} bertahan</span></div>
+   <div class="tcard oxq"><div class="oxqt">${it.q}</div><div class="oxclaim">Jawabannya: <b>${esc(String(it.claim).replace(/<[^>]+>/g,''))}</b></div>
+    ${rev?`<div class="oxrev ${it.side==='O'?'ok':'no'}">${it.side==='O'?'⭕ BENAR':'❌ SALAH'}${it.side==='X'?` · jawaban yang benar: <b>${esc(String(it.ans).replace(/<[^>]+>/g,''))}</b>`:''}</div>`:`<div class="oxtime"><i id="oxBar" style="width:${left/(OX_T/1000)*100}%"></i></div><p class="note" style="margin:0;text-align:center" id="oxLeft">${out?'Kamu sudah gugur. Tonton teman-temanmu!':`Sisa ${left} detik. Kamu boleh pindah sisi sebelum waktu habis.`}</p>`}</div>
+   <div class="oxarena"><button class="oxside o ${pick==='O'?'sel':''} ${rev?(it.side==='O'?'win':'lose'):''}" data-a="O" ${out||rev?'disabled':''}><span class="oxbig">⭕</span><b>BENAR</b><div class="oxavs">${side('O').map(av).join('')}</div></button>
+    <button class="oxside x ${pick==='X'?'sel':''} ${rev?(it.side==='X'?'win':'lose'):''}" data-a="X" ${out||rev?'disabled':''}><span class="oxbig">❌</span><b>SALAH</b><div class="oxavs">${side('X').map(av).join('')}</div></button></div>
+   ${none.length&&!rev?`<p class="note" style="margin:0">Belum memilih: ${none.map(p=>esc(p.uid===uid?'Kamu':String(p.name).split(' ')[0])).join(', ')}</p>`:''}
+   ${out?`<p class="note" style="margin:0;text-align:center">Gugur di soal ${(me.outAt||0)+1}.</p>`:''}</div>`;
+  hydrate(el);
+  el.querySelectorAll('.oxside').forEach(b=>b.onclick=()=>{if(out||rev)return;const a=b.dataset.a;if(Date.now()-(ROOM.oxT0||0)>OX_T){toast('lock','Waktu habis.');return}tone([a==='O'?720:520],.05);
+    FB.db.doc('rooms/'+ROOM.code).update({['players.'+uid+'.oxa']:{k:ox.k,a}}).catch(e=>toast('lock',fbErr(e)))});
+  $('#oxQuit').onclick=()=>{FB.db.doc('rooms/'+ROOM.code).update({['players.'+uid+'.left']:true}).catch(()=>{});document.body.classList.remove('oxon');roomClose(true);go('team')};
+  clearInterval(ROOM.oxTick);ROOM.oxTick=setInterval(()=>{if(!ROOM.doc||!ROOM.doc.ox){clearInterval(ROOM.oxTick);return}const l=Math.max(0,OX_T-(Date.now()-(ROOM.oxT0||Date.now())));const b=$('#oxBar'),t=$('#oxLeft');if(b)b.style.width=(l/OX_T*100)+'%';if(t&&!out)t.textContent=l>0?`Sisa ${Math.ceil(l/1000)} detik. Kamu boleh pindah sisi sebelum waktu habis.`:'Waktu habis! Menunggu hasil…';
+    if(d.host===uid)oxHostStep()},400)}
+/* pembuat ruang menjalankan putaran: tutup jawaban, tentukan yang gugur, lanjut soal berikutnya */
+function oxHostStep(){const d=ROOM.doc;if(!d||d.host!==FBX.user.uid||d.status!=='play'||ROOM.oxBusy)return;const ox=d.ox||{};const now=Date.now();
+  if(ox.phase==='q'&&ROOM.oxK===ox.k&&now-(ROOM.oxT0||now)>OX_T+1500){ROOM.oxBusy=true;const it=oxItem(d,ox.k),alive=oxAlive(d);
+    const wrong=alive.filter(([u,p])=>!(p.oxa&&p.oxa.k===ox.k&&p.oxa.a===it.side));const up={ox:{k:ox.k,phase:'reveal'}};
+    if(wrong.length<alive.length)wrong.forEach(([u])=>{up['players.'+u+'.out']=true;up['players.'+u+'.outAt']=ox.k});
+    ROOM.oxRevAt=now;FB.db.doc('rooms/'+ROOM.code).update(up).catch(()=>{}).finally(()=>{ROOM.oxBusy=false})}
+  else if(ox.phase==='reveal'&&now-(ROOM.oxRevAt||0)>OX_SHOW){ROOM.oxBusy=true;const n=oxItem(d,0).n,alive=oxAlive(d).length;
+    const fin=alive<=1&&Object.keys(d.players||{}).length>1||ox.k+1>=n;
+    FB.db.doc('rooms/'+ROOM.code).update(fin?{ox:{k:ox.k,phase:'end'},status:'done'}:{ox:{k:ox.k+1,phase:'q'}}).catch(()=>{}).finally(()=>{ROOM.oxBusy=false})}}
 function roomRender(){const d=ROOM.doc,el=$('#room'),uid=FBX.user.uid,me=d.players[uid];if(!me){roomClose();return}const host=d.host===uid;
   if(host&&d.status==='lobby'&&(d.max||8)===2&&Object.keys(d.players||{}).length>=2&&ROOM.autoGo!==ROOM.code+':'+(d.round||0)){ROOM.autoGo=ROOM.code+':'+(d.round||0);ROOM.bg=false;const a=$('#ajak');if(a)a.hidden=true;FB.db.doc('rooms/'+ROOM.code).update({status:'play',startAt:Date.now()}).catch(()=>{ROOM.autoGo=null})}if(ROOM.round!=null&&d.round!==ROOM.round&&!ROOM.playing){ROOM.pendingShow=false;if(!document.body.classList.contains('playing')){el&&(el.hidden=false)}else{game=null;clearInterval(timerId);if(arc.running)arcStop();go('team');el&&(el.hidden=false)}}ROOM.round=d.round;if(ROOM.pendingShow&&!ROOM.playing)return;if(d.status!=='lobby'||Object.keys(d.players||{}).length>1)rememberFriends(d);if(ROOM.bg&&d.status==='lobby'){ajakFoot();return}ROOM.bg=false;
+  if(roomFmt(d)==='ox'&&d.status!=='lobby'){oxRender();return}document.body.classList.remove('oxon');
   if(d.status==='play'&&!me.done&&!ROOM.playing){roomStart();return}
   if(ROOM.playing){roomLive();return}
   const rows=roomRows(d).filter(r=>!r.left||r.uid===uid),all=rows.every(r=>r.done),lobby=d.status==='lobby';
@@ -14976,7 +15073,9 @@ function roomRender(){const d=ROOM.doc,el=$('#room'),uid=FBX.user.uid,me=d.playe
    <div class="aved-top"><button class="back" id="rmX" aria-label="Tutup">✕</button><h2 style="flex:1">${lobby?'Ruang tantangan':'Hasil tantangan'}</h2></div>
    <div class="tcard" style="align-items:center;text-align:center;gap:8px"><small style="font-weight:800;color:var(--muted)">${esc(d.subjName)} · ${esc(d.title)} · ${d.n} soal · ${d.mode==='acak'&&d.gsel?d.gsel.map(gameName).join(', '):d.mode==='acak'?'Acak semua game':gameName(d.mode||'kuis')}</small><div class="fbcode-big">${ROOM.code}</div>
      <div class="rmicons"><a class="ghost icb icwa" target="_blank" rel="noopener" title="Kirim lewat WhatsApp" aria-label="Kirim lewat WhatsApp" href="https://wa.me/?text=${encodeURIComponent(`Aku menantangmu di JELAS! ${d.subjName}: ${d.title}. Buka ${link} atau masukkan kode ${ROOM.code} di menu Main Bareng.`)}"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.5 11.6a8.4 8.4 0 0 1-12.4 7.4L3.5 20.5 5 16.1A8.4 8.4 0 1 1 20.5 11.6Z"/><path d="M9 9.2c.3 2.6 2.3 4.6 5.4 5.6l1.2-1.4-2-1-1 .8c-1-.5-1.9-1.4-2.4-2.4l.8-1-1-2Z" fill="currentColor" stroke-width="1"/></svg></a><button class="ghost icb" id="rmCopy" title="Salin kode" aria-label="Salin kode"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2.5"/><path d="M5 15H4.5A1.5 1.5 0 0 1 3 13.5v-9A1.5 1.5 0 0 1 4.5 3h9A1.5 1.5 0 0 1 15 4.5V5"/></svg></button></div></div>
-   <div class="tcard"><h3>${lobby?`Pemain (${rows.length}/${d.max||8})`:'Peringkat'}</h3><div class="roomrows">${rows.map((r,i)=>`<div class="lrow ${r.uid===uid?'me':''}">${lobby?'':`<span class="rk ${i<3&&r.done?'top':''}">${r.done?i+1:'…'}</span>`}${avSpan({name:r.name,avatar:r.av})}<span class="nm">${esc(r.name)}${r.uid===d.host?' <small class="pill mute">pembuat</small>':''}</span><span class="xp">${lobby?'Siap':r.left?`<span class="pill bad">keluar</span> ${r.score||0}`:r.done?`${r.score} · ${fmtSec(r.t)}`:`main… ${r.i||0}/${d.n}`}</span></div>`).join('')}</div>
+   ${lobby&&host?fmtPicker(d):lobby&&roomFmt(d)!=='biasa'?`<p class="note" style="margin:0;text-align:center">Format: <b>${RFMT[roomFmt(d)]}</b></p>`:''}
+   ${!lobby&&roomFmt(d)==='tim'?`<div class="tcard">${teamBar(d)}${all?`<p style="margin:4px 0 0;text-align:center;font-weight:800">${(()=>{const t=teamSums(d);return t.A.v===t.B.v?'Seri! Kedua tim sama kuat 🤝':'🏆 '+(t.A.v>t.B.v?TEAM.A.n:TEAM.B.n)+' menang!'})()}</p>`:''}</div>`:''}
+   <div class="tcard"><h3>${lobby?`Pemain (${rows.length}/${d.max||8})`:'Peringkat'}</h3><div class="roomrows">${rows.map((r,i)=>`<div class="lrow ${r.uid===uid?'me':''}">${lobby?'':`<span class="rk ${i<3&&r.done?'top':''}">${r.done?i+1:'…'}</span>`}${avSpan({name:r.name,avatar:r.av})}<span class="nm">${r.tm&&TEAM[r.tm]?`<i class="tmdot" style="background:${TEAM[r.tm].c}" title="${TEAM[r.tm].n}"></i>`:''}${esc(r.name)}${r.uid===d.host?' <small class="pill mute">pembuat</small>':''}</span><span class="xp">${lobby?'Siap':r.left?`<span class="pill bad">keluar</span> ${r.score||0}`:r.done?`${r.score} · ${fmtSec(r.t)}`:`main… ${r.i||0}/${d.n}`}</span></div>`).join('')}</div>
      ${lobby?`<p class="note" style="margin:0">${host?'Tunggu teman bergabung, lalu tekan Mulai. Teman yang terlambat tetap bisa ikut memainkan soal yang sama.':'Menunggu pembuat tantangan menekan Mulai…'}</p>`:all?'':``}</div>
    ${lobby&&host?`<button class="primary press" id="rmGo" style="font-size:22px;padding:12px">Mulai sekarang</button><button class="ghost" id="rmMore">Ajak teman lagi</button>`:''}
    ${!lobby&&!me.done?`<button class="primary press" id="rmPlay">Main sekarang</button>`:''}
@@ -14984,8 +15083,10 @@ function roomRender(){const d=ROOM.doc,el=$('#room'),uid=FBX.user.uid,me=d.playe
    ${!lobby&&me.done&&!host?`<p class="note" style="text-align:center;margin:0">Mau main lagi? Tunggu ${esc(d.hostName||'pembuat')} menekan <b>Main lagi</b>, nanti ronde baru muncul otomatis.</p>`:''}
    </div>`;
   hydrate(el);$('#rmX').onclick=()=>{const dd=ROOM.doc,code=ROOM.code;if(dd&&code&&dd.status==='lobby'){if(dd.host!==FBX.user.uid)FB.db.doc('rooms/'+code).update({['players.'+FBX.user.uid]:FV().delete()}).catch(()=>{});else FB.db.doc('rooms/'+code).delete().catch(()=>{})}roomClose()};$('#rmCopy').onclick=()=>copyText(ROOM.code);
-  const g=$('#rmGo');if(g)g.onclick=()=>{g.disabled=true;FB.db.doc('rooms/'+ROOM.code).update({status:'play',startAt:Date.now()}).catch(e=>{g.disabled=false;toast('lock',fbErr(e))})};
+  const fp=$('#rmFmt');if(fp)fp.querySelectorAll('button').forEach(b=>b.onclick=()=>{const f=b.dataset.f;FB.db.doc('rooms/'+ROOM.code).update({fmt:f,max:f==='biasa'?Math.max(8,Object.keys(d.players||{}).length):30}).catch(e=>toast('lock',fbErr(e)))});
+  const g=$('#rmGo');if(g)g.onclick=()=>{g.disabled=true;const f=roomFmt(d);FB.db.doc('rooms/'+ROOM.code).update(Object.assign({status:'play',startAt:Date.now()},f==='tim'?teamAssign(d):{},f==='ox'?{ox:{k:0,phase:'q'}}:{})).catch(e=>{g.disabled=false;toast('lock',fbErr(e))})};
   const pl=$('#rmPlay');if(pl)pl.onclick=roomStart;const ag=$('#rmAgain');if(ag)ag.onclick=()=>{if(!all&&ag.dataset.c!=='1'){ag.dataset.c='1';ag.textContent='Ada yang belum selesai. Tekan lagi untuk mulai';return}roomRematch(ag)};const mo=$('#rmMore');if(mo)mo.onclick=()=>{el.hidden=true;ROOM.bg=true;openAjak()};
+  if(!lobby&&all&&roomFmt(d)==='tim'&&me.tm&&!(P.roomWins||[]).includes(ROOM.code+':tim'+(d.round||1))){const t=teamSums(d),o=me.tm==='A'?'B':'A';if(t[me.tm].v>t[o].v){P.roomWins=(P.roomWins||[]).concat(ROOM.code+':tim'+(d.round||1)).slice(-50);P.gems+=5;save();renderTop();toast('gem',TEAM[me.tm].n+' menang! +5 permata');try{burstConfetti()}catch(e){}}}
   if(!lobby&&all&&rows.length>1&&rows[0].uid===uid&&!(P.roomWins||[]).includes(ROOM.code)){P.roomWins=(P.roomWins||[]).concat(ROOM.code).slice(-50);P.gems+=10;save();renderTop();toast('gem','Juara tantangan! +10 permata');sfx.win&&sfx.win();burstConfetti&&burstConfetti()}}
 const fmtSec=t=>t?`${Math.floor(t/60)}:${String(t%60).padStart(2,'0')}`:'';
 function roomStart(){const d=ROOM.doc;if(ROOM.mm){ROOM.mm=false;MM.on=false;clearInterval(MM.hb);MM.my=null;try{mmWaitClose()}catch(e){}try{const op=Object.entries(d.players||{}).find(([u])=>u!==FBX.user.uid);if(op)toast('team','Lawan ditemukan: '+op[1].name+'!')}catch(e){}}let qs=[];try{qs=JSON.parse(d.qs)}catch(e){}if(!qs.length){toast('lock','Soal tantangan tidak bisa dibuka.');return}
@@ -15008,7 +15109,8 @@ function roomLive(){const d=ROOM.doc;let el=$('#roomRace');if(!d||!ROOM.playing|
   let fresh=false;if(!el){const pb=$('#vPlay .playbar');if(!pb)return;pb.insertAdjacentHTML('afterend','<div class="roomrace" id="roomRace"><div class="rrlist"></div></div>');el=$('#roomRace');fresh=true}
   if(el.hidden)fresh=true;el.hidden=false;const box=el.querySelector('.rrlist'),n=Math.max(1,d.n||1);
   const ps=roomPlayers().sort((a,b)=>(a.left-b.left)||(b.c-a.c)||(b.i-a.i));const old={};box.querySelectorAll('.rrp').forEach(a=>old[a.dataset.u]=a.getBoundingClientRect().left);
-  box.innerHTML=ps.map((p,k)=>`<span class="rrp ${p.me?'me':''} ${p.done?'rrdone':''} ${p.left?'rrleft':''}" data-u="${esc(p.uid)}" style="--rc:${p.col}"><b class="rrk">${k+1}</b>${avSpan({name:p.name,avatar:p.av})}<span class="rrt"><b>${esc(p.me?'Kamu':p.name.split(' ')[0])}</b><small>${p.c} benar${p.left?' · keluar':p.done?' · selesai':''}</small><i class="rrbar"><i style="width:${Math.round(Math.min(1,p.i/n)*100)}%"></i></i></span></span>`).join('');
+  {let tb=el.querySelector('.tmwrap');if(roomFmt(d)==='tim'){if(!tb){box.insertAdjacentHTML('beforebegin','<div class="tmwrap"></div>');tb=el.querySelector('.tmwrap')}tb.innerHTML=teamBar(d)}else if(tb)tb.remove()}
+  box.innerHTML=ps.map((p,k)=>`<span class="rrp ${p.me?'me':''} ${p.done?'rrdone':''} ${p.left?'rrleft':''}" data-u="${esc(p.uid)}" style="--rc:${p.col}"><b class="rrk">${k+1}</b>${avSpan({name:p.name,avatar:p.av})}<span class="rrt"><b>${(()=>{const t=d.players[p.uid]&&d.players[p.uid].tm;return t&&TEAM[t]?`<i class="tmdot" style="background:${TEAM[t].c}"></i>`:''})()}${esc(p.me?'Kamu':p.name.split(' ')[0])}</b><small>${p.c} benar${p.left?' · keluar':p.done?' · selesai':''}</small><i class="rrbar"><i style="width:${Math.round(Math.min(1,p.i/n)*100)}%"></i></i></span></span>`).join('');
   box.querySelectorAll('.rrp').forEach(a=>{const o=old[a.dataset.u];if(o==null)return;const dx=o-a.getBoundingClientRect().left;if(Math.abs(dx)>2){a.animate([{transform:`translateX(${dx}px)`},{transform:'none'}],{duration:450,easing:'cubic-bezier(.3,.9,.3,1)'})}});
   if(fresh)setTimeout(()=>{try{gameFit()}catch(e){}},80)}
 /* kabar saat teman keluar dari ruang atau tantangan */
@@ -15226,7 +15328,7 @@ function folBind(root,list,after){root.querySelectorAll('[data-follow]').forEach
   try{await folDo(f,on);if(on){try{sfx.ok()}catch(_){}toast('team',`Kamu mengikuti ${f.name}.`)}b.outerHTML=folBtn(f,b.classList.contains('sm'));folBind(root,list,after);after&&after()}catch(err){b.disabled=false;toast('lock',fbErr(err))}})}
 const shareIcon='<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M12 3 V15 M7 8 L12 3 L17 8 M5 13 V19 C5 20 6 21 7 21 H17 C18 21 19 20 19 19 V13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const qrIcon='<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><path d="M14 14h3v3h-3zM18 18h3v3h-3zM18 14h3M14 18v3" stroke-linecap="round"/></svg>';
-let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=247';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
+let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=249';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
 function qrMatrix(text){const Q=window.QRCodeLib,q=new Q(-1,Q.ECL.M);q.addData(text);q.make();const n=q.getModuleCount(),m=[];for(let r=0;r<n;r++){m.push([]);for(let c=0;c<n;c++)m[r].push(q.isDark(r,c))}return m}
 function qrSvgOf(m){const n=m.length;let d='';for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(m[r][c])d+=`M${c} ${r}h1.02v1.02h-1.02z`;
   return `<svg viewBox="-2 -2 ${n+4} ${n+4}" class="pcqr" shape-rendering="crispEdges" aria-label="Kode QR profil"><rect x="-2" y="-2" width="${n+4}" height="${n+4}" fill="#fff"/><path d="${d}" fill="#1C1E3D"/></svg>`}

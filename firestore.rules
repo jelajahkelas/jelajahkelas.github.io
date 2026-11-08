@@ -135,7 +135,7 @@ service cloud.firestore {
       allow update: if signedIn() && (resource.data.host == request.auth.uid
         || (changedKeys().hasOnly(['players'])
             && request.resource.data.players.diff(resource.data.players).affectedKeys().hasOnly([request.auth.uid])
-            && request.resource.data.players.size() <= 8));
+            && request.resource.data.players.size() <= 30));
       allow delete: if signedIn() && resource.data.host == request.auth.uid;
     }
 
