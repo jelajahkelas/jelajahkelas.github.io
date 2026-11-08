@@ -12366,10 +12366,10 @@ function renderPath(){const s=SUBJ(),pr=progOf(),done=pr.done;let h='';
 function scrollToCurrent(){const n=document.querySelector('.node.cur');if(n&&!$('#vLearn').hidden){const r=n.getBoundingClientRect();window.scrollTo({top:Math.max(0,window.scrollY+r.top-window.innerHeight*.45),behavior:'smooth'})}}
 function nodePop(ui,ni,row){const s=SUBJ(),u=s.units[ui],nd=NODES[ni],idx=ui*NODES.length+ni,done=progOf().done;let st=idx<done?'done':idx===done?'cur':'lock';if(ni===2&&spPending(ui))st='lock';
   let t='',p='',btn='';
-  if(nd.k==='lesson'){t=`Pelajaran ${nd.n} dari 2`;p=nd.n===1?`${u.t} · 5 soal`:`${u.t} · 5 soal termasuk ulasan unit sebelumnya`;btn=st==='done'?'Ulangi +5 XP':'Mulai +10 XP'}
+  if(nd.k==='lesson'){t=`Pelajaran ${nd.n} dari 2`;p=`${u.t} · 5 soal`;btn=st==='done'?'Ulangi +5 XP':'Mulai +10 XP'}
   if(nd.k==='game'){const m=MODE_LIST.find(x=>x.id===gameFor(s,ui));t=m.id==='kuis'?'Kuis bergambar':`Level game: ${m.name}`;p=`${m.desc}. 6 soal, lulus dengan ${CLS().lv==='tk'?2:3} jawaban benar.`;btn=st==='done'?'Main lagi +5 XP':'Main +10 XP'}
   if(nd.k==='chest'){t='Peti hadiah';p=st==='done'?'Peti ini sudah kamu buka.':'Berisi permata untuk belanja di Toko.';btn=st==='cur'?'Buka peti':''}
-  if(nd.k==='test'){t=`Ujian Unit ${ui+1}`;p='8 soal dari unit ini dan unit sebelumnya. Lulus dengan 70% benar.';btn=st==='done'?'Ulangi ujian +8 XP':'Mulai ujian +15 XP'}
+  if(nd.k==='test'){t=`Ujian Unit ${ui+1}`;p=`8 soal dari unit ${u.t}. Lulus dengan 70% benar.`;btn=st==='done'?'Ulangi ujian +8 XP':'Mulai ujian +15 XP'}
   if(st==='lock'){p='Selesaikan semua level di atasnya untuk membuka level ini.';btn=''}
   if(ni===2&&spPending(ui)&&st!=='done'){p='Selesaikan dulu level olahraga di atasnya, sebentar saja kok!';btn=''}
   row.insertAdjacentHTML('beforeend',`<div class="npop ${st==='lock'?'lock':''} ${st==='done'?'done':''}"><b>${esc(t)}</b><p>${esc(p)}</p>${btn?`<button class="primary press" id="nodeGo">${btn}</button>`:st==='lock'?'<button class="primary nplock" disabled>Terkunci</button>':''}</div>`);row.classList.add('popopen');
@@ -12667,6 +12667,10 @@ const _closeVideo1=closeVideo;closeVideo=function(){VX.open=false;VX.tok++;if(VX
  const start=()=>{mo.observe(document.body,{attributes:true,attributeFilter:['hidden'],subtree:true,childList:true});chk()};
  if(document.body)start();else document.addEventListener('DOMContentLoaded',start)})();
 /* ---------- starting a level ---------- */
+/* ambil n soal tanpa kembar; bila bank unit kecil, ulangan diubah jadi soal benar/salah agar tidak sama persis */
+function uniqQs(list,n){const seen=new Set(),out=[],rest=[];list.forEach(q=>{if(!q)return;const k=String(q.q);if(seen.has(k))rest.push(q);else{seen.add(k);out.push(q)}});
+  const bs=new Set();for(const q of rest){if(out.length>=n)break;const v=toBS(q);const k=v&&(v.q+v.ans);if(v&&!bs.has(k)){bs.add(k);out.push(v)}}
+  let i=0;while(out.length<n&&rest.length&&i<rest.length*2){out.push(rest[i%rest.length]);i++}return shuffle(out.slice(0,n))}
 function startNode(ui,ni){const s=SUBJ(),u=s.units[ui],nd=NODES[ni],idx=ui*NODES.length+ni,pr=progOf();const replay=idx<pr.done;
   if(idx>pr.done)return;
   if(ni===2&&spPending(ui)){openSport(ui);return}
@@ -12674,9 +12678,10 @@ function startNode(ui,ni){const s=SUBJ(),u=s.units[ui],nd=NODES[ni],idx=ui*NODES
   if(nd.k!=='game'&&!HUNL()&&P.hearts<=0){openHearts();return}
   const prev=s.units.slice(0,ui);const review=k=>prev.length?Array.from({length:k},()=>{const pu=pick(prev),q=unitQs(pu,1)[0];if(q)q.rev=pu.t;return q}):unitQs(u,k);
   let qs,mode='kuis';
-  if(nd.k==='lesson')qs=mixTypes(nd.n===1?unitQs(u,5):shuffle([...unitQs(u,3),...review(2)]),u);
-  else if(nd.k==='test')qs=shuffle([...unitQs(u,6),...review(2)]);
-  else{mode=gameFor(s,ui);qs=unitQs(u,mode==='kuis'?6:12).filter(q=>mode==='kuis'||!q.html).slice(0,6)}
+  /* semua soal di jalur belajar hanya dari unit yang sedang dipelajari */
+  if(nd.k==='lesson')qs=mixTypes(unitQs(u,5),u);
+  else if(nd.k==='test')qs=uniqQs(unitQs(u,16),8);
+  else{mode=gameFor(s,ui);qs=uniqQs(unitQs(u,mode==='kuis'?12:18).filter(q=>mode==='kuis'||!q.html),6)}
   beginRun({kind:nd.k,ui,ni,idx,replay,qs,mode,title:nd.k==='test'?`Ujian · ${u.t}`:u.t})}
 /* ===== Ragam soal: benar/salah, ketik jawaban, cocokkan pasangan + ulang soal lemah ===== */
 const qPlain=t=>String(t==null?'':t).replace(/<[^>]+>/g,'').trim();
