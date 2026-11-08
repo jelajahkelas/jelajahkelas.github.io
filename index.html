@@ -3923,7 +3923,7 @@ html[data-theme=malam] .plstick{background:#0a0f1e}
 <div class="syncpill" id="syncPill" hidden></div>
 <div class="toast" id="toast" hidden></div>
 
-<script src="av.js?v=259"></script>
+<script src="av.js?v=260"></script>
 <script>
 /* ---------- visual assets ---------- */
 const INK='#1B1E3D';
@@ -10170,17 +10170,20 @@ function drawBanner(c){const b=arc.banner;if(!b)return;const{W,H}=arc;c.save();c
 const lvHex=()=>CUR?CUR.color:getComputedStyle(document.documentElement).getPropertyValue(L.color).trim()||'#C8102E';
 
 /* ---------- layar penuh saat main game di HP + posisi layar sesuai game ---------- */
-const GAME_ORI={};
+/* posisi layar tiap game di HP: mendatar untuk game yang bergerak ke samping/arena lebar, tegak untuk game yang jatuh/naik atau berbentuk kartu */
+const GAME_ORI={lompat:'landscape',katak:'landscape',tembak:'landscape',ular:'landscape',penalti:'landscape',labirin:'landscape',zona:'landscape',
+  lari:'portrait',pacu:'portrait',balon:'portrait',tikus:'portrait',balap:'portrait',pancing:'portrait',basket:'portrait',buah:'portrait',layang:'portrait',
+  memori:'portrait',benarsalah:'portrait',susun:'portrait',kelompok:'portrait',urut:'portrait',kuis:'portrait'};
 const GFS={on:false,mine:false};
 function isTouchDev(){try{return matchMedia('(pointer:coarse)').matches}catch(e){return false}}
-/* semua game di HP dimainkan mendatar (landscape) agar layar lebih luas; perlu layar penuh agar rotasi bisa dikunci */
-function gameFS(mode){if(!isTouchDev()||DUEL)return;const ori=GAME_ORI[mode]||'landscape';try{window.scrollTo(0,0)}catch(e){}
+/* posisi layar game di HP mengikuti GAME_ORI */
+function gameFS(mode){if(!isTouchDev()||DUEL)return;const ori=GAME_ORI[mode]||'portrait';try{window.scrollTo(0,0)}catch(e){}
   document.body.classList.add('arcfs');document.body.dataset.ori=ori;GFS.on=true;
   const hint=()=>{if(mode==='lompat')return;if(ori==='landscape'&&innerHeight>innerWidth&&!GFS.hinted){GFS.hinted=true;toast('bolt','Putar HP ke posisi mendatar agar layar game lebih luas')}};
   const lock=()=>{try{const so=screen.orientation;if(so&&so.lock){const r=so.lock(ori);if(r&&r.then)r.then(()=>setTimeout(gameFit,300),()=>hint());}else hint()}catch(e){hint()}};
   /* Semua game tidak memakai layar penuh browser (muncul pesan 'Untuk keluar dari layar penuh…' yang menutupi tombol); posisi mendatar dibuat dengan memutar tampilan */
   /* seperti game Android (Mobile Legends): kunci 'landscape' mengikuti sensor dan tetap jalan walau kunci rotasi HP aktif. Di aplikasi terpasang (PWA) ini bisa tanpa layar penuh; kalau ditolak browser, tampilan diputar lewat CSS. */
-  {try{const so=screen.orientation;if(ori==='landscape'&&so&&so.lock){const r=so.lock('landscape');r&&r.then&&r.then(()=>{GFS.locked=true;setTimeout(()=>{lpOrient();gameFit()},250)},()=>{})}}catch(e){}
+  {try{const so=screen.orientation;if(so&&so.lock){const r=so.lock(ori);r&&r.then&&r.then(()=>{GFS.locked=true;setTimeout(()=>{lpOrient();gameFit()},250)},()=>{})}}catch(e){}
    setTimeout(gameFit,350);setTimeout(gameFit,900);return}
   try{const d=document.documentElement;if(ori==='landscape'&&!document.fullscreenElement&&d.requestFullscreen){const r=d.requestFullscreen({navigationUI:'hide'});GFS.mine=true;if(r&&r.then)r.then(lock,()=>{GFS.mine=false;lock()});else lock()}else lock()}catch(e){lock()}
   setTimeout(gameFit,350);setTimeout(gameFit,900)}
@@ -11119,7 +11122,7 @@ function lpTilt(left){const b=document.body;if(left&&!lpRotR())b.classList.add('
 addEventListener('devicemotion',e=>{const a=e.accelerationIncludingGravity;if(!a||a.x==null)return;LPT.motion=true;const x=LPT.ios?-a.x:a.x;if(x>5.5)lpTilt(true);else if(x<-5.5)lpTilt(false)});
 addEventListener('deviceorientation',e=>{if(LPT.motion)return;const g=e.gamma;if(g==null)return;if(g<-35)lpTilt(true);else if(g>35)lpTilt(false)});
 function lpTiltPerm(){try{if(lpRotOn()&&!lpTiltPerm.asked){lpTiltPerm.asked=true;if(typeof DeviceMotionEvent!=='undefined'&&DeviceMotionEvent.requestPermission)DeviceMotionEvent.requestPermission().catch(()=>{});if(typeof DeviceOrientationEvent!=='undefined'&&DeviceOrientationEvent.requestPermission)DeviceOrientationEvent.requestPermission().catch(()=>{})}}catch(e){}}
-function lpOrient(){try{const on=document.body.classList.contains('arcfs')&&!DUEL&&isTouchDev()&&innerHeight>innerWidth;if(on&&!lpRotOn()&&!LPT.motion&&!LPT.dflt){LPT.dflt=true;document.body.classList.add('lprotR')}document.body.classList.toggle('lprotate',on);if(on)dlRotVars()}catch(e){}}
+function lpOrient(){try{const on=document.body.classList.contains('arcfs')&&!DUEL&&isTouchDev()&&innerHeight>innerWidth&&(GAME_ORI[MODE]||'portrait')==='landscape';if(on&&!lpRotOn()&&!LPT.motion&&!LPT.dflt){LPT.dflt=true;document.body.classList.add('lprotR')}document.body.classList.toggle('lprotate',on);if(on)dlRotVars()}catch(e){}}
 addEventListener('resize',()=>{const was=lpRotOn();lpOrient();if(was!==lpRotOn()&&arc.running&&M)setTimeout(()=>{try{arcSize();M.setup()}catch(e){}},60)});
 function lpLand(){try{const d=document.documentElement,lock=()=>{try{const r=screen.orientation&&screen.orientation.lock&&screen.orientation.lock('landscape');r&&r.catch&&r.catch(()=>{})}catch(e){}};
   if(!document.fullscreenElement&&d.requestFullscreen){const r=d.requestFullscreen({navigationUI:'hide'});GFS.mine=true;r&&r.then?r.then(lock,lock):lock()}else lock()}catch(e){}}
@@ -15372,7 +15375,7 @@ function folBind(root,list,after){root.querySelectorAll('[data-follow]').forEach
   try{await folDo(f,on);if(on){try{sfx.ok()}catch(_){}toast('team',`Kamu mengikuti ${f.name}.`)}b.outerHTML=folBtn(f,b.classList.contains('sm'));folBind(root,list,after);after&&after()}catch(err){b.disabled=false;toast('lock',fbErr(err))}})}
 const shareIcon='<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M12 3 V15 M7 8 L12 3 L17 8 M5 13 V19 C5 20 6 21 7 21 H17 C18 21 19 20 19 19 V13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const qrIcon='<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><path d="M14 14h3v3h-3zM18 18h3v3h-3zM18 14h3M14 18v3" stroke-linecap="round"/></svg>';
-let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=259';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
+let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=260';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
 function qrMatrix(text){const Q=window.QRCodeLib,q=new Q(-1,Q.ECL.M);q.addData(text);q.make();const n=q.getModuleCount(),m=[];for(let r=0;r<n;r++){m.push([]);for(let c=0;c<n;c++)m[r].push(q.isDark(r,c))}return m}
 function qrSvgOf(m){const n=m.length;let d='';for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(m[r][c])d+=`M${c} ${r}h1.02v1.02h-1.02z`;
   return `<svg viewBox="-2 -2 ${n+4} ${n+4}" class="pcqr" shape-rendering="crispEdges" aria-label="Kode QR profil"><rect x="-2" y="-2" width="${n+4}" height="${n+4}" fill="#fff"/><path d="${d}" fill="#1C1E3D"/></svg>`}
