@@ -786,3 +786,114 @@ Object.assign(MATERI,{
  {h:'Membaca kata',p:'po - li - si dibaca polisi. sat - pam dibaca satpam.'}],
  sum:['Kanan-kiri, atas-bawah.','Setiap pekerja punya tugas.']}
 });
+
+/* Materi Kelas 1: Pancasila, PAI, PJOK, Seni Rupa (bab mengikuti buku Kurikulum Merdeka, bahasa disederhanakan untuk anak) */
+Object.assign(MATERI,{
+'g1/pancasila/0':{intro:'Aku senang punya banyak teman. Ayo kenali diri sendiri, teman, dan aturan bermain.',s:[
+ {h:'Aku mengenal diriku',li:['Sebutkan nama, umur, dan kesukaanmu saat berkenalan.','Jaga diri tetap rapi: mandi, sisir rambut, pakai baju bersih.','Lakukan sendiri hal kecil, misalnya memakai sepatu. Itu namanya mandiri.']},
+ {h:'Aku mengenal temanku',p:'Teman bisa berbeda: laki-laki atau perempuan, rambutnya, kulitnya, kesukaannya. Semua tetap teman kita.'},
+ {h:'Aturan bermain',p:'Lompat tali, engklek, gobak sodor, dan petak umpet punya aturan. Ikuti aturannya, bergiliran, dan jangan curang.'}],
+ sum:['Mandiri = bisa melakukan sendiri.','Ikuti aturan saat bermain.']},
+'g1/pancasila/1':{intro:'Di rumah juga ada aturan. Aturan dibuat supaya keluarga rukun dan nyaman.',s:[
+ {h:'Aturan di keluargaku',li:['Tidur tidak terlalu malam.','Bangun pagi dan merapikan tempat tidur.','Makan bersama dan tidak sambil berlari.']},
+ {h:'Patuh pada aturan',p:'Kalau kita patuh, rumah menjadi tertib dan kita jadi anak yang bertanggung jawab.'},
+ {h:'Peduli tempat tinggal',p:'Bantu menyapu, menyiram tanaman, dan buang sampah di tempat sampah.'}],
+ sum:['Aturan untuk kebaikan bersama.','Patuh membuat rumah nyaman.']},
+'g1/pancasila/2':{intro:'Indonesia adalah negara kita. Ayo kenali bendera, lagu kebangsaan, dan lambang negara.',s:[
+ {h:'Bendera Merah Putih',p:'Merah artinya berani, putih artinya suci. Saat upacara, kita berdiri tegak dan hormat kepada bendera.'},
+ {h:'Lagu Indonesia Raya',p:'Lagu kebangsaan kita adalah Indonesia Raya, ciptaan W.R. Supratman. Dinyanyikan saat upacara dengan sikap tegak.'},
+ {h:'Garuda Pancasila',p:'Lambang negara kita Garuda Pancasila. Semboyannya Bhinneka Tunggal Ika: berbeda-beda tetapi tetap satu.',tb:[['Sila','Simbol'],['1','bintang'],['2','rantai'],['3','pohon beringin'],['4','kepala banteng'],['5','padi dan kapas']]}],
+ sum:['Merah berani, putih suci.','Pancasila punya lima sila.']},
+'g1/pancasila/3':{intro:'Lingkungan rumah dan sekolah adalah tempat kita tinggal dan belajar. Ayo jaga bersama.',s:[
+ {h:'Tempat tinggalku',p:'Rumah punya kamar tidur, dapur, kamar mandi, dan ruang tamu. Gambar letak ruangan disebut denah.'},
+ {h:'Gotong royong',p:'Gotong royong artinya bekerja bersama-sama, misalnya kerja bakti. Pekerjaan jadi cepat dan ringan.'},
+ {h:'Sekolahku',p:'Di sekolah ada teman dari berbagai suku. Indonesia punya banyak pulau. Jaga kelas tetap bersih dengan piket.'}],
+ sum:['Gotong royong = bekerja bersama.','Piket membuat kelas bersih.']},
+'g1/pai/0':{intro:'Al-Qur\'an adalah kitab suci umat Islam. Ayo belajar huruf dan harakatnya.',s:[
+ {h:'Huruf hijaiah',p:'Huruf Al-Qur\'an disebut huruf hijaiah. Contoh: ا alif, ب ba, ت ta, ج jim.'},
+ {h:'Harakat',tb:[['Harakat','Bunyi','Contoh'],['fathah','a','بَ = ba'],['kasrah','i','بِ = bi'],['dhammah','u','بُ = bu']]},
+ {h:'Surah Al-Fatihah',p:'Al-Fatihah adalah surah pertama dan punya 7 ayat. Kita membacanya setiap salat.'}],
+ sum:['Fathah a, kasrah i, dhammah u.']},
+'g1/pai/1':{intro:'Rukun iman adalah hal yang wajib kita percayai.',s:[
+ {h:'Enam rukun iman',li:['Iman kepada Allah','Iman kepada malaikat','Iman kepada kitab','Iman kepada rasul','Iman kepada hari akhir','Iman kepada qada dan qadar']},
+ {h:'Allah Maha Pencipta',p:'Allah menciptakan langit, bumi, matahari, hewan, tumbuhan, dan kita.'},
+ {h:'Rasul Allah',p:'Rasul adalah utusan Allah. Rasul terakhir adalah Nabi Muhammad saw.'}],
+ sum:['Rukun iman ada enam.']},
+'g1/pai/2':{intro:'Ayo biasakan membaca basmalah dan hamdalah.',s:[
+ {h:'Basmalah',p:'Bismillāhir-raḥmānir-raḥīm: dengan nama Allah Yang Maha Pengasih lagi Maha Penyayang. Dibaca sebelum makan, belajar, dan kegiatan lain.'},
+ {h:'Hamdalah',p:'Alḥamdulillāh: segala puji bagi Allah. Dibaca setelah selesai makan dan saat mendapat nikmat.'},
+ {h:'Santun dan bersyukur',p:'Bicara dengan sopan dan berterima kasih kepada Allah atas semua nikmat.'}],
+ sum:['Mulai dengan basmalah, akhiri dengan hamdalah.']},
+'g1/pai/3':{intro:'Rukun Islam adalah lima hal yang wajib dilakukan seorang muslim.',s:[
+ {h:'Lima rukun Islam',li:['Membaca dua kalimat syahadat','Salat','Zakat','Puasa di bulan Ramadan','Haji ke Makkah bagi yang mampu']},
+ {h:'Dua kalimat syahadat',p:'Syahadat berisi pengakuan bahwa tiada Tuhan selain Allah dan Nabi Muhammad adalah utusan Allah.'}],
+ sum:['Rukun Islam ada lima.','Salat wajib lima waktu.']},
+'g1/pai/4':{intro:'Nabi dan rasul adalah orang pilihan Allah yang menjadi teladan kita.',s:[
+ {h:'Nabi dan rasul',p:'Ada 25 nabi dan rasul yang wajib kita ketahui, dari Nabi Adam a.s. sampai Nabi Muhammad saw.'},
+ {h:'Mukjizat',p:'Mukjizat adalah keistimewaan dari Allah, misalnya kapal Nabi Nuh a.s. dan Al-Qur\'an untuk Nabi Muhammad saw.'},
+ {h:'Hidup sederhana',p:'Nabi Muhammad saw. hidup sederhana. Kita meneladaninya dengan tidak boros dan tidak pamer.'}],
+ sum:['25 nabi dan rasul.','Mukjizat terbesar: Al-Qur\'an.']},
+'g1/pai/5':{intro:'Ayo lanjut belajar harakat dan menghafal Surah Al-Ikhlas.',s:[
+ {h:'Harakat lanjutan',tb:[['Tanda','Bunyi'],['fathatain','an'],['kasratain','in'],['dhammatain','un'],['sukun','huruf mati'],['tasydid','dibaca dobel']]},
+ {h:'Surah Al-Ikhlas',p:'Al-Ikhlas punya 4 ayat. Isinya: Allah Maha Esa, tempat meminta, tidak beranak dan tidak diperanakkan, dan tidak ada yang setara dengan-Nya.'}],
+ sum:['Tanwin: an, in, un.','Allah Maha Esa.']},
+'g1/pai/6':{intro:'Allah Maha Pengasih dan Maha Penyayang. Kita pun harus saling menyayangi.',s:[
+ {h:'Asmaulhusna',p:'Asmaulhusna adalah nama-nama baik milik Allah. Ar-Raḥmān artinya Maha Pengasih, Ar-Raḥīm artinya Maha Penyayang.'},
+ {h:'Menyayangi sesama',li:['Menolong teman yang jatuh.','Menyayangi adik dan orang tua.','Memberi makan hewan peliharaan.']}],
+ sum:['Ar-Raḥmān Maha Pengasih, Ar-Raḥīm Maha Penyayang.']},
+'g1/pai/7':{intro:'Anak saleh suka berterima kasih dan hidup disiplin.',s:[
+ {h:'Berterima kasih',p:'Ucapkan terima kasih saat dibantu atau diberi. Berterima kasih kepada orang tua dengan mematuhi nasihatnya.'},
+ {h:'Disiplin',p:'Disiplin artinya tertib dan tepat waktu, misalnya salat tepat waktu dan berangkat sekolah tidak terlambat.'}],
+ sum:['Terima kasih saat dibantu.','Disiplin = tepat waktu.']},
+'g1/pai/8':{intro:'Islam mengajarkan kita hidup bersih.',s:[
+ {h:'Najis dan hadas',p:'Najis adalah kotoran, seperti air kencing. Najis harus dibersihkan. Sebelum salat kita harus suci.'},
+ {h:'Wudu',li:['Niat','Membasuh telapak tangan','Berkumur','Membersihkan hidung','Membasuh wajah','Membasuh tangan sampai siku','Mengusap kepala','Membasuh telinga','Membasuh kaki']},
+ {h:'Tayamum',p:'Jika tidak ada air, kita bersuci dengan debu yang suci. Itu disebut tayamum.'}],
+ sum:['Wudu memakai air, tayamum memakai debu.']},
+'g1/pai/9':{intro:'Nabi Adam a.s. adalah manusia pertama yang diciptakan Allah.',s:[
+ {h:'Kisah Nabi Adam a.s.',li:['Allah menciptakan Nabi Adam dari tanah.','Nabi Adam tinggal di surga bersama Hawa.','Iblis menggoda mereka memakan buah yang dilarang.','Mereka diturunkan ke bumi.','Nabi Adam dan Hawa menyesal dan meminta ampun kepada Allah.']},
+ {h:'Teladan',p:'Jika berbuat salah, segera minta maaf dan jangan mengulanginya.'}],
+ sum:['Nabi Adam a.s. manusia pertama.','Segera minta maaf jika salah.']},
+'g1/pjok/0':{intro:'Tubuh kita bisa bergerak walaupun tidak berpindah tempat.',s:[
+ {h:'Gerak di tempat',li:['Menekuk: lutut atau siku dibengkokkan.','Memilin: badan diputar ke kanan dan kiri.','Mengayun: lengan diayun ke depan dan belakang.']},
+ {h:'Menirukan gerak',p:'Tirukan pohon tertiup angin, burung bangau berdiri satu kaki, atau pesawat terbang dengan tangan terentang.'}],
+ sum:['Gerak di tempat: kaki tidak berpindah.']},
+'g1/pjok/1':{intro:'Ayo bergerak berpindah dari satu tempat ke tempat lain.',s:[
+ {h:'Gerak berpindah tempat',p:'Berjalan, berlari, melompat, merangkak, dan berguling.'},
+ {h:'Menirukan hewan',tb:[['Hewan','Gerak'],['kelinci','melompat'],['kucing','merangkak'],['kuda','berlari']]},
+ {h:'Aman bergerak',p:'Berguling dilakukan di atas matras. Perhatikan teman di sekitarmu agar tidak bertabrakan.'}],
+ sum:['Gerak berpindah membuat tubuh pindah tempat.']},
+'g1/pjok/2':{intro:'Kita juga bisa bergerak sambil memakai benda, seperti bola.',s:[
+ {h:'Gerak dengan benda',li:['Melempar bola dengan tangan.','Menangkap bola: mata melihat bola.','Menendang bola dengan kaki.','Memantulkan bola ke lantai lalu menangkapnya.']}],
+ sum:['Lihat bolanya saat menangkap.']},
+'g1/pjok/3':{intro:'Bermain bersama lebih seru kalau kita saling menghormati.',s:[
+ {h:'Sikap saat bermain',li:['Hormati teman dan ikuti aturan.','Bergiliran dengan sabar.','Kembalikan alat ke tempatnya.','Ajak teman bekerja sama.']}],
+ sum:['Bermain sportif dan bertanggung jawab.']},
+'g1/pjok/4':{intro:'Tubuh yang bugar membuat kita kuat dan semangat belajar.',s:[
+ {h:'Berolahraga dengan benar',li:['Pemanasan sebelum berolahraga.','Bergerak aktif setiap hari.','Pendinginan setelah berolahraga.','Minum air putih secukupnya.']}],
+ sum:['Pemanasan dulu, pendinginan di akhir.']},
+'g1/pjok/5':{intro:'Kita belajar menjaga diri supaya selalu sehat dan aman.',s:[
+ {h:'Aman di jalan',p:'Menyeberang di zebra cross dan bersama orang dewasa.'},
+ {h:'Menjaga diri',li:['Tolak ajakan orang asing dan beri tahu orang tua atau guru.','Tubuhmu milikmu. Jika ada yang menyentuh bagian pribadimu, tolak dan ceritakan kepada orang dewasa yang kamu percaya.','Jika terluka, beri tahu guru atau orang tua.']},
+ {h:'Hidup sehat',p:'Cuci tangan sebelum makan, makan makanan bergizi, dan tidur cukup.'}],
+ sum:['Minta bantuan orang dewasa yang dipercaya.']},
+'g1/seni/0':{intro:'Ayo mengenal alat dan bahan untuk berkarya.',s:[
+ {h:'Alat berkarya',li:['Pensil dipegang dengan tiga jari.','Gunting dipakai hati-hati, ujungnya menjauhi badan.','Lem untuk menempel.']},
+ {h:'Bahan di sekitar',p:'Bahan alam: daun kering, ranting, biji-bijian. Bahan bekas: botol plastik, kardus, kertas koran. Memakai lagi barang bekas disebut daur ulang.'}],
+ sum:['Gunakan alat dengan aman.']},
+'g1/seni/1':{intro:'Di sekitar kita ada garis, bentuk, dan warna.',s:[
+ {h:'Garis',p:'Ada garis lurus (tepi meja), garis lengkung (pelangi), dan garis zig-zag.'},
+ {h:'Bentuk',p:'Lingkaran (jam dinding), segitiga (atap rumah), persegi (jendela).'},
+ {h:'Mencampur warna',tb:[['Campuran','Hasil'],['merah + kuning','jingga'],['biru + kuning','hijau'],['merah + biru','ungu']]}],
+ sum:['Unsur rupa: garis, bentuk, warna.']},
+'g1/seni/2':{intro:'Setiap alat dan bahan punya ciri yang berbeda.',s:[
+ {h:'Alat mewarnai',p:'Krayon terbuat dari lilin, spidol berisi tinta, pensil warna dari kayu. Hasil warnanya berbeda.'},
+ {h:'Melipat kertas',p:'Melipat kertas menjadi kapal atau bentuk lain disebut origami.'},
+ {h:'Rintang warna',p:'Gambar dengan krayon, lalu sapukan cat air di atasnya. Cat tidak menempel pada krayon, sehingga gambar terlihat jelas.'}],
+ sum:['Krayon menolak cat air.']},
+'g1/seni/3':{intro:'Ayo menyusun garis, bentuk, dan warna menjadi karya.',s:[
+ {h:'Menggambar dengan bentuk dasar',p:'Kucing bisa digambar dari lingkaran dan segitiga. Ikan dari oval dan segitiga.'},
+ {h:'Kolase',p:'Kolase adalah gambar yang dibuat dengan menempel potongan kertas, kain, atau daun.'},
+ {h:'Komposisi',p:'Komposisi adalah cara menyusun bentuk dan warna agar gambar terlihat indah.'}],
+ sum:['Kolase = menempel potongan bahan.']}
+});
