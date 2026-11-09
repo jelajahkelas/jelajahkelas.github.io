@@ -272,10 +272,104 @@ async function reminders() {
   }
 }
 
+// ===== Pengingat harian: runtunan, liga (gaya Duolingo), dan ajakan belajar =====
+// Paling banyak 2 notifikasi per murid per hari: (liga ATAU ajakan belajar) + pengingat runtunan.
+const TIER_NAMES = ['Perunggu', 'Perak', 'Emas', 'Safir', 'Rubi', 'Zamrud', 'Kecubung', 'Mutiara', 'Obsidian', 'Berlian'];
+const LG_SIZE = 30;
+function lgZones(t, n) {
+  let up = t >= TIER_NAMES.length - 1 || n < 2 ? 0 : Math.max(1, Math.round(n * (t === 0 ? 10 : 7) / LG_SIZE));
+  let dn = t === 0 || n < 6 ? 0 : Math.max(1, Math.round(n * 5 / LG_SIZE));
+  up = Math.min(up, n - 1); dn = Math.min(dn, n - up - 1); return { up, dn: Math.max(0, dn) };
+}
+async function listAllDocs(col, mask) {
+  const out = []; let page = '';
+  do {
+    const m = (mask || []).map((k) => '&mask.fieldPaths=' + encodeURIComponent(k)).join('');
+    const r = await fetch(`https://firestore.googleapis.com/v1/projects/${SA.project_id}/databases/(default)/documents/${col}?pageSize=300${m}${page ? '&pageToken=' + encodeURIComponent(page) : ''}`, { headers: { Authorization: 'Bearer ' + await accessToken() } });
+    const j = await r.json(); if (!r.ok) throw new Error(col + ' ' + r.status);
+    (j.documents || []).forEach((d) => out.push({ id: d.name.split('/').pop(), ...fieldsOf(d) }));
+    page = j.nextPageToken || '';
+  } while (page);
+  return out;
+}
+const pickBy = (arr, seed) => { let h = 0; for (const ch of seed) h = (h * 31 + ch.charCodeAt(0)) >>> 0; return arr[h % arr.length]; };
+const DAILY_MSG = [
+  ['📚 Waktunya belajar!', 'Lima menit saja cukup untuk satu pelajaran hari ini.'],
+  ['🦉 Si Burung Hantu menunggumu', 'Ayo lanjutkan jalur belajarmu, satu pelajaran saja.'],
+  ['🎮 Main sambil belajar, yuk!', 'Ada game seru menunggu di jalur belajarmu.'],
+  ['⭐ Kumpulkan XP hari ini', 'Satu pelajaran bisa memberimu XP dan permata.'],
+  ['🌱 Sedikit-sedikit lama-lama jadi bukit', 'Belajar sebentar hari ini, yuk!'],
+  ['🔥 Mulai runtunan baru hari ini', 'Belajar tiap hari membuat apimu terus menyala.'],
+];
+async function daily(now) {
+  now = now || new Date();
+  const wita = new Date(now.getTime() + 8 * 3600e3), today = wita.toISOString().slice(0, 10), hour = wita.getUTCHours(), dow = wita.getUTCDay();
+  const yest = new Date(wita.getTime() - 86400e3).toISOString().slice(0, 10);
+  const mon = new Date(wita.getTime() - ((dow + 6) % 7) * 86400e3).toISOString().slice(0, 10);
+  const log = (await getDoc('config/pushlog').catch(() => null)) || {};
+  const out = {};
+  const needLiga = [3, 5, 0].includes(dow) && hour >= 15 && hour < 21 && log.liga !== today;
+  const needDaily = hour >= 15 && hour < 21 && log.harian !== today;
+  const needStreak = hour >= 19 && hour < 23 && log.streak !== today;
+  if (!needLiga && !needDaily && !needStreak) return out;
+  const users = await listAllDocs('users', ['push', 'role', 'p']);
+  const info = {};
+  for (const u of users) {
+    if (u.role !== 'student' || !Array.isArray(u.push) || !u.push.length) continue;
+    let p = {}; try { p = JSON.parse(u.p || '{}'); } catch (_) {}
+    info[u.id] = { streak: +p.streak || 0, last: p.lastDay || '', studied: p.lastDay === today };
+  }
+  const gotLiga = new Set();
+  // 1. Liga: Rabu, Jumat, Minggu sore — sesuai posisi di grup ligamu
+  if (needLiga) {
+    await patchDoc('config/pushlog', { liga: today });
+    const rows = (await listAllDocs('lge', ['uid', 'w', 't', 'g', 'xp', 'upd'])).filter((r) => r.w === mon && r.g);
+    const groups = {}; rows.forEach((r) => { (groups[r.g] = groups[r.g] || []).push(r); });
+    let n = 0;
+    for (const g of Object.values(groups)) {
+      g.sort((a, b) => (+b.xp || 0) - (+a.xp || 0) || (+a.upd || 0) - (+b.upd || 0));
+      const t = +g[0].t || 0, z = lgZones(t, g.length), T = TIER_NAMES[t] || 'Perunggu';
+      for (let i = 0; i < g.length; i++) {
+        const r = g[i], rk = i + 1, u = info[r.uid]; if (!u || g.length < 2) continue;
+        let title, body;
+        if (z.up && rk <= z.up) { title = `🏆 Kamu di zona naik Liga ${T}!`; body = `Peringkat ${rk} dari ${g.length}. Tambah XP supaya posisimu tetap aman.`; }
+        else if (z.up && rk <= z.up + 3) { title = '⚔️ Saatnya bersaing!'; body = `Kamu peringkat ${rk} di Liga ${T}. Satu pelajaran lagi bisa membawamu ke zona naik.`; }
+        else if (z.dn && rk > g.length - z.dn) { title = `⚠️ Awas turun dari Liga ${T}!`; body = `Kamu peringkat ${rk} dari ${g.length}. Selesaikan pelajaran supaya tetap bertahan.`; }
+        else { title = `🏅 Liga ${T} masih berlangsung`; body = `Kamu peringkat ${rk} dari ${g.length}. Kejar teman di atasmu, yuk!`; }
+        if (dow === 0) title = '⏰ Liga berakhir malam ini! ' + title.replace(/^\S+\s/, '');
+        const s = await pushTo(r.uid, { type: 'liga', title, body }, 6 * 3600); if (s) { n += s; gotLiga.add(r.uid); }
+      }
+    }
+    out.liga = n;
+  }
+  // 2. Ajakan belajar harian: untuk murid yang belum belajar hari ini dan tidak punya runtunan (yang punya runtunan dapat pengingat runtunan)
+  if (needDaily) {
+    await patchDoc('config/pushlog', { harian: today });
+    let n = 0;
+    for (const [uid, u] of Object.entries(info)) {
+      if (u.studied || gotLiga.has(uid) || (u.streak >= 1 && u.last === yest)) continue;
+      const [title, body] = pickBy(DAILY_MSG, uid + today);
+      n += await pushTo(uid, { type: 'daily', title, body }, 6 * 3600);
+    }
+    out.harian = n;
+  }
+  // 3. Runtunan hampir padam: punya runtunan, belajar kemarin, belum belajar hari ini
+  if (needStreak) {
+    await patchDoc('config/pushlog', { streak: today });
+    let n = 0;
+    for (const [uid, u] of Object.entries(info)) {
+      if (u.studied || u.streak < 1 || u.last !== yest) continue;
+      n += await pushTo(uid, { type: 'streak', title: `🔥 Runtunan ${u.streak} hari hampir padam!`, body: 'Selesaikan satu pelajaran sebelum tengah malam supaya apimu tetap menyala.' }, 4 * 3600);
+    }
+    out.streak = n;
+  }
+  return out;
+}
+
 export default {
   async scheduled(event, env, ctx) {
     if (!SA) SA = JSON.parse(env.SERVICE_ACCOUNT);
-    ctx.waitUntil(reminders());
+    ctx.waitUntil(Promise.all([reminders(), daily().catch(() => {})]));
   },
   async fetch(request, env) {
     const origin = request.headers.get('Origin') || '';
