@@ -3,11 +3,11 @@
 // Tugasnya:
 //  1. Mengirim notifikasi yang antre di koleksi "pushq" (ditulis aplikasi jika server Cloudflare belum siap).
 //  2. Pengingat tugas terjadwal (sama dengan Cron Cloudflare).
-//  3. Pengingat runtunan sekali sehari pukul 19.00 WITA untuk murid yang belum belajar hari itu.
+//  3. Pengingat harian: liga, ajakan belajar, dan runtunan (lihat daily() di notif/worker.js).
 import fs from 'node:fs';
 
 const src = fs.readFileSync('notif/worker.js', 'utf8').replace('export default {', 'const __default = {')
-  + '\nexport { pushTo, getDoc, pushTask, listDocs, deleteDoc, reminders, patchDoc, accessToken };\nexport function setSA(x) { SA = x; }\n';
+  + '\nexport { pushTo, getDoc, pushTask, listDocs, deleteDoc, reminders, patchDoc, accessToken, daily };\nexport function setSA(x) { SA = x; }\n';
 fs.writeFileSync('/tmp/jelas-core.mjs', src);
 const C = await import('/tmp/jelas-core.mjs');
 const raw = process.env.FIREBASE_SERVICE_ACCOUNT;
@@ -102,21 +102,5 @@ console.log(`Antrean: ${q.length} permintaan, ${sent} notifikasi terkirim.`);
 // 2. pengingat tugas
 try { await C.reminders(); } catch (e) { console.log('pengingat tugas:', e.message); }
 
-// 3. pengingat runtunan, sekali sehari mulai pukul 19.00 WITA (UTC+8)
-const wita = new Date(Date.now() + 8 * 3600e3), today = wita.toISOString().slice(0, 10);
-if (wita.getUTCHours() >= 19 && wita.getUTCHours() < 22) {
-  const log = await C.getDoc('config/pushlog').catch(() => null);
-  if (!log || log.streak !== today) {
-    await C.patchDoc('config/pushlog', { streak: today });
-    const users = await listAll('users', ['push', 'role', 'p', 'name']);
-    let n = 0;
-    for (const u of users) {
-      if (u.role !== 'student' || !Array.isArray(u.push) || !u.push.length) continue;
-      let p = {}; try { p = JSON.parse(u.p || '{}'); } catch (_) {}
-      const st = +p.streak || 0;
-      if (st < 1 || p.lastDay === today) continue;
-      n += await C.pushTo(u.id, { type: 'streak', title: `🔥 Runtunan ${st} hari hampir padam!`, body: 'Selesaikan satu pelajaran sebelum tengah malam supaya apimu tetap menyala.' }, 4 * 3600);
-    }
-    console.log(`Pengingat runtunan: ${n} notifikasi.`);
-  }
-}
+// 3. pengingat harian: liga (Rabu/Jumat/Minggu sore), ajakan belajar, dan runtunan hampir padam — paling banyak 2 per murid per hari
+try { const r = await C.daily(); console.log('Pengingat harian:', JSON.stringify(r)); } catch (e) { console.log('pengingat harian:', e.message); }

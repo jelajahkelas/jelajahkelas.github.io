@@ -1,5 +1,5 @@
 // Selalu ambil versi terbaru dari internet; pakai salinan tersimpan hanya saat offline.
-const CACHE = 'jelajah-kelas-v263';
+const CACHE = 'jelajah-kelas-v264';
 self.addEventListener('install', e => self.skipWaiting());
 // Hapus salinan versi lama supaya penyimpanan di HP tidak menumpuk setiap kali aplikasi diperbarui.
 self.addEventListener('activate', e => e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k !== CACHE).map(k => caches.delete(k)))).then(() => self.clients.claim())));
@@ -31,6 +31,11 @@ self.addEventListener('notificationclick', e => {
     if (d.type === 'task' && d.tid) {
       if (list.length) { list[0].postMessage({ task: d.tid }); return list[0].focus && list[0].focus(); }
       return self.clients.openWindow('./?tugas=' + encodeURIComponent(d.tid));
+    }
+    if (d.type === 'liga' || d.type === 'daily' || d.type === 'streak') {
+      const tab = d.type === 'liga' ? 'liga' : 'belajar';
+      if (list.length) { list[0].postMessage({ go: tab }); return list[0].focus && list[0].focus(); }
+      return self.clients.openWindow('./?buka=' + tab);
     }
     const msg = { inv: d.inv, code: d.code, action };
     if (list.length) { const c = list[0]; c.postMessage(msg); return c.focus && c.focus(); }
