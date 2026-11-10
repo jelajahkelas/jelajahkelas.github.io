@@ -14,4 +14,4 @@ const key = crypto.randomBytes(32), iv = crypto.randomBytes(12), c = crypto.crea
 const enc = Buffer.concat([c.update(JSON.stringify(out)), c.final()]), tag = c.getAuthTag();
 const ek = crypto.publicEncrypt({ key: fs.readFileSync('.github/scripts/diag_pub.pem'), oaepHash: 'sha256' }, key);
 fs.writeFileSync('diag.json', JSON.stringify({ ek: ek.toString('base64'), iv: iv.toString('base64'), tag: tag.toString('base64'), d: enc.toString('base64') }));
-console.log('selesai, hasil terenkripsi');
+console.log('DIAG:' + fs.readFileSync('diag.json', 'utf8'));
