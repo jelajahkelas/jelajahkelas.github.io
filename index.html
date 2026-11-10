@@ -3943,7 +3943,7 @@ html[data-theme=malam] .plstick{background:#0a0f1e}
 <div class="syncpill" id="syncPill" hidden></div>
 <div class="toast" id="toast" hidden></div>
 
-<script src="av.js?v=277"></script>
+<script src="av.js?v=278"></script>
 <script>
 /* ---------- visual assets ---------- */
 const INK='#1B1E3D';
@@ -14797,14 +14797,27 @@ async function fbFacebook(btn){if(!firebase.auth.FacebookAuthProvider){toast('lo
   finally{if(btn)btn.disabled=false}}
 window.fbFacebook=fbFacebook;
 /* akun yang pernah masuk di perangkat ini (tanpa sandi) */
-const ACC={get(){try{return JSON.parse(localStorage.getItem('jelas-accts')||'[]')}catch(e){return []}},put(l){try{localStorage.setItem('jelas-accts',JSON.stringify(l.slice(0,5)))}catch(e){}}};
-function accRemember(){const u=FBX.user;if(!u||FBX.admin)return;const teach=document.body.classList.contains('teacher');const t=teach&&T();
+const ACC={get(){try{return JSON.parse(localStorage.getItem('jelas-accts')||'[]')}catch(e){return []}},put(l){try{localStorage.setItem('jelas-accts',JSON.stringify(l.slice(0,20)))}catch(e){}}};
+/* sesi tersimpan per akun: tiap akun punya instance Firebase sendiri di perangkat ini, jadi bisa masuk lagi tanpa sandi */
+const ACCS={kept:{}};
+function accApp(uid){const n='acc_'+uid;return firebase.apps.find(a=>a.name===n)||firebase.initializeApp(window.FB_CONFIG,n)}
+async function accKeep(){const u=FB.auth.currentUser;if(!u||ACCS.kept[u.uid])return;ACCS.kept[u.uid]=1;try{await accApp(u.uid).auth().updateCurrentUser(u)}catch(e){ACCS.kept[u.uid]=0;console.warn('simpan sesi',e)}}
+function accSaved(uid){return new Promise(res=>{let done=false;const a=accApp(uid).auth();const t=setTimeout(()=>{if(!done){done=true;res(a.currentUser||null)}},4000);const off=a.onAuthStateChanged(u=>{if(done)return;done=true;clearTimeout(t);off();res(u||null)})})}
+async function accSwitch(a,btn){if(btn)btn.disabled=true;busy(true);
+  try{const u=await accSaved(a.uid);if(u&&u.uid===a.uid){try{await u.getIdToken(true)}catch(e){throw e}setSession(null);await FB.auth.updateCurrentUser(u);return true}}
+  catch(e){console.warn('masuk otomatis',e);try{await accApp(a.uid).auth().signOut()}catch(_){}}
+  finally{busy(false);if(btn)btn.disabled=false}
+  return false}
+async function accForget(uid){try{const a=accApp(uid);await a.auth().signOut();await a.delete()}catch(e){}delete ACCS.kept[uid]}
+window.accForget=accForget;
+function accRemember(){const u=FBX.user;if(!u||!P&&!document.body.classList.contains('teacher')&&!FBX.admin)return;accKeep();const teach=document.body.classList.contains('teacher');const t=teach&&T();
   const prov=(u.providerData||[]).some(x=>x&&x.providerId==='facebook.com')?'facebook':(u.providerData||[]).some(x=>x&&x.providerId==='google.com')&&!(u.providerData||[]).some(x=>x&&x.providerId==='password')?'google':'password';
-  const isStu=!teach&&P;const row={uid:u.uid,name:isStu?P.name:(t&&t.name)||u.displayName||'Guru',handle:isStu?(P.user||''):(u.email||''),av:isStu?(P.avatar||null):null,color:isStu?P.color:'#26BF66',prov,role:isStu?'student':'teacher',t:Date.now()};
-  if(!row.handle&&!row.name)return;const l=ACC.get().filter(x=>x.uid!==u.uid);l.unshift(row);const k=JSON.stringify(l.slice(0,5));if(k!==localStorage.getItem('jelas-accts'))ACC.put(l)}
+  const isStu=!teach&&P&&!FBX.admin;const row={uid:u.uid,name:isStu?P.name:(t&&t.name)||u.displayName||'Guru',handle:isStu?(P.user||''):(u.email||''),av:isStu?(P.avatar||null):null,color:isStu?P.color:'#7C4DFF',prov,role:isStu?'student':'teacher',t:Date.now()};
+  if(FBX.admin&&!teach){row.name=u.displayName||'Admin';row.handle=u.email||'';row.role='admin'}
+  if(!row.handle&&!row.name)return;const l=ACC.get().filter(x=>x.uid!==u.uid);l.unshift(row);const k=JSON.stringify(l.slice(0,20));if(k!==localStorage.getItem('jelas-accts'))ACC.put(l)}
 setInterval(()=>{try{accRemember()}catch(e){}},15000);
 const _accGo=go;go=function(t){_accGo.apply(this,arguments);try{accRemember()}catch(e){}};
-function accAv(a){if(a.av)return `<span class="avatar avimg" style="--av:${avBgColor(a.av)}">${avatarSVG(a.av)}</span>`;return `<span class="avatar" style="--av:${a.color||'#26BF66'}">${esc((a.name||'?')[0].toUpperCase())}</span>`}
+function accAv(a){if(a.av)return `<span class="avatar avimg" style="--av:${avBgColor(a.av)}">${avatarSVG(a.av)}</span>`;return `<span class="avatar" style="--av:${!a.color||a.color==='#26BF66'?'#7C4DFF':a.color}">${esc((a.name||'?')[0].toUpperCase())}</span>`}
 function showBack(edit){const el=$('#auth');el.hidden=false;$('#onb').hidden=true;const l=ACC.get();if(!l.length){WEL.force=true;showWelcome();return}
   el.innerHTML=`<div class="onbin dwel dback"><div class="dmid">${edit?'':'<div class="mascot dmas" data-mascot data-mood="happy"></div>'}<h1 class="dh">${edit?'Kelola Akun':'Masuk kembali'}</h1>
    <div class="dacc">${l.map(a=>`<button class="dacr" data-acc="${esc(a.uid)}">${edit?'<span class="dminus" aria-hidden="true"></span>':''}${accAv(a)}<span class="grow"><b>${esc(a.name)}</b><small>${esc(a.handle||(a.prov==='google'?'Akun Google':a.prov==='facebook'?'Akun Facebook':''))}</small></span>${edit?'':'<span class="dchev" aria-hidden="true">›</span>'}</button>`).join('')}
@@ -14812,8 +14825,8 @@ function showBack(edit){const el=$('#auth');el.hidden=false;$('#onb').hidden=tru
    <div class="dfoot"><button class="dlink ${edit?'go':''}" id="dMng">${edit?'SELESAI MENGEDIT':'KELOLA AKUN'}</button></div></div>`;
   hydrate(el);
   el.querySelectorAll('[data-acc]').forEach(b=>b.onclick=()=>{const a=l.find(x=>x.uid===b.dataset.acc);if(!a)return;
-    if(edit){ACC.put(ACC.get().filter(x=>x.uid!==a.uid));showBack(ACC.get().length?true:false);return}
-    if(a.prov==='google')fbGoogle(b);else if(a.prov==='facebook')fbFacebook(b);else showLogin(a.handle)});
+    if(edit){ACC.put(ACC.get().filter(x=>x.uid!==a.uid));accForget(a.uid);showBack(ACC.get().length?true:false);return}
+    accSwitch(a,b).then(ok=>{if(ok)return;toast('lock','Sesi akun ini sudah berakhir. Masuk sekali lagi, berikutnya cukup ketuk.');if(a.prov==='google')fbGoogle(b);else if(a.prov==='facebook')fbFacebook(b);else showLogin(a.handle)})});
   const ad=$('#dAdd');if(ad)ad.onclick=()=>{WEL.force=true;showWelcome()};
   $('#dMng').onclick=()=>showBack(!edit)}
 window.showBack=showBack;
@@ -14867,7 +14880,7 @@ async function fbDeleteAccount(pw){const u=FBX.user,me=FBX.me||{},st=!isT();
     else{for(const c of tclsList())if(c.id!==u.uid){try{await tclsDelete(c.id)}catch(e){}}const cid=u.uid;FBX.cid=cid;try{const sn=await FB.db.doc('classes/'+cid).get();FBX.classDoc=sn.exists?sn.data():FBX.classDoc}catch(e){}for(const t of await list('classes/'+cid+'/tasks')){await del('reminders/'+t);for(const d of await list('classes/'+cid+'/tasks/'+t+'/done'))await del('classes/'+cid+'/tasks/'+t+'/done/'+d);await del('classes/'+cid+'/tasks/'+t)}
       for(const d of await list('classes/'+cid+'/board'))await del('classes/'+cid+'/board/'+d);
       const code=FBX.classDoc&&FBX.classDoc.code;if(code)await del('classCodes/'+code);await FB.db.doc('classes/'+cid).delete().catch(()=>{})}
-    await FB.db.doc('users/'+u.uid).delete();await u.delete()}
+    await FB.db.doc('users/'+u.uid).delete();const duid=u.uid;await u.delete();try{ACC.put(ACC.get().filter(x=>x.uid!==duid));accForget(duid)}catch(e){}}
   finally{FBX.busy=false}
   setSession(null);APP={profiles:[],cur:null,sessions:[],deleted:[],bank:[]};store.set('app',APP);P=null;FBX.me=null;FBX.classDoc=null;
   document.body.classList.remove('teacher','fb-free');$('#adminPanel').hidden=true;showWelcome()}
@@ -15595,7 +15608,7 @@ function folBind(root,list,after){root.querySelectorAll('[data-follow]').forEach
   try{await folDo(f,on);if(on){try{sfx.ok()}catch(_){}toast('team',`Kamu mengikuti ${f.name}.`)}b.outerHTML=folBtn(f,b.classList.contains('sm'));folBind(root,list,after);after&&after()}catch(err){b.disabled=false;toast('lock',fbErr(err))}})}
 const shareIcon='<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M12 3 V15 M7 8 L12 3 L17 8 M5 13 V19 C5 20 6 21 7 21 H17 C18 21 19 20 19 19 V13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const qrIcon='<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><path d="M14 14h3v3h-3zM18 18h3v3h-3zM18 14h3M14 18v3" stroke-linecap="round"/></svg>';
-let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=277';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
+let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=278';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
 function qrMatrix(text){const Q=window.QRCodeLib,q=new Q(-1,Q.ECL.M);q.addData(text);q.make();const n=q.getModuleCount(),m=[];for(let r=0;r<n;r++){m.push([]);for(let c=0;c<n;c++)m[r].push(q.isDark(r,c))}return m}
 function qrSvgOf(m){const n=m.length;let d='';for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(m[r][c])d+=`M${c} ${r}h1.02v1.02h-1.02z`;
   return `<svg viewBox="-2 -2 ${n+4} ${n+4}" class="pcqr" shape-rendering="crispEdges" aria-label="Kode QR profil"><rect x="-2" y="-2" width="${n+4}" height="${n+4}" fill="#fff"/><path d="${d}" fill="#1C1E3D"/></svg>`}
