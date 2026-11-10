@@ -1,10 +1,10 @@
-# Diagnosa akun (hanya membaca data), dijalankan manual.
+# Diagnosa akun (hanya membaca data), dijalankan manual. Hasil terenkripsi.
 name: Cek akun
 on:
   workflow_dispatch:
     inputs:
-      user: { description: 'nama pengguna', default: 'farid' }
-      nama: { description: 'potongan nama', default: 'farid' }
+      docs: { description: 'dokumen', default: '' }
+      uids: { description: 'uid', default: '' }
 jobs:
   cek:
     runs-on: ubuntu-latest
@@ -17,5 +17,7 @@ jobs:
       - run: npm i --no-save google-auth-library@9 >/dev/null 2>&1 && node .github/scripts/cek.mjs
         env:
           FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
-          CEK_USER: ${{ github.event.inputs.user }}
-          CEK_NAMA: ${{ github.event.inputs.nama }}
+          CEK_DOCS: ${{ github.event.inputs.docs }}
+          CEK_UIDS: ${{ github.event.inputs.uids }}
+      - uses: actions/upload-artifact@v4
+        with: { name: diag, path: diag.json, retention-days: 1 }
