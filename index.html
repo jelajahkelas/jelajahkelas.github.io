@@ -3979,7 +3979,7 @@ html[data-theme=malam] .plstick{background:#0a0f1e}
 <div class="syncpill" id="syncPill" hidden></div>
 <div class="toast" id="toast" hidden></div>
 
-<script src="av.js?v=283"></script>
+<script src="av.js?v=284"></script>
 <script>
 /* ---------- visual assets ---------- */
 const INK='#1B1E3D';
@@ -11567,8 +11567,8 @@ function pondStep(dt){const D=DUEL,Pd=D.pond,G=pondGeo();Pd.t+=dt;Pd.rip.forEach
      if(u>=1){f.h=0;f.sq=.25;f.land=1;Pd.rip.push({x:j.x1,y:j.y1,t:0});
       if(j.fin){f.fin=1;f.jump=null}
       else if(j.ok){f.c=j.c;f.row=j.row;f.jump=null}
-      else{Pd.sunk[j.c+','+j.row]=1;f.fallAt={x:j.x1,y:j.y1};f.jump=null;f.fall=.001}}}}
-   else if(f.fall>0){f.fall=Math.min(1.6,f.fall+dt*1.5);f.wx=f.fallAt.x;f.wy=f.fallAt.y;if(f.fall>=1.6){f.fall=0;f.pop=1;f.wx=base.x;f.wy=base.y}}
+      else{Pd.sunk[j.c+','+j.row]=1;f.sunkKey=j.c+','+j.row;f.fallAt={x:j.x1,y:j.y1};f.jump=null;f.fall=.001}}}}
+   else if(f.fall>0){f.fall=Math.min(1.6,f.fall+dt*1.5);f.wx=f.fallAt.x;f.wy=f.fallAt.y;if(f.fall>=1.6){f.fall=0;f.pop=1;f.wx=base.x;f.wy=base.y;/* daun yang tenggelam muncul lagi ke permukaan */if(f.sunkKey){delete Pd.sunk[f.sunkKey];(Pd.rise=Pd.rise||{})[f.sunkKey]=0;f.sunkKey=null}}}
    else if(!f.fin){f.wx=base.x;f.wy=base.y;f.sq+=(0-f.sq)*Math.min(1,dt*10)}
    {let d=face-f.rot;d=Math.atan2(Math.sin(d),Math.cos(d));f.rot+=d*Math.min(1,dt*fk)}}
   /* kamera: kedua katak selalu terlihat, menjauh (zoom out) bila jarak mereka besar */
@@ -11585,7 +11585,8 @@ function pondDraw(dt){const D=DUEL;if(!D||!D.rctx)return;if(!D.pond)pondInit();p
   for(let row=-r1;row<=-r0;row++){if(row<-6)continue;for(let cc=-3;cc<=3;cc++){const key=cc+','+row;const w=pondXY(cc,row,G);let x=sx(w.x),y=sy(w.y);if(y<landY+r*.4||y<-r||y>H+r)continue;
     if(Pd.sunk[key]){c.strokeStyle='rgba(255,255,255,.5)';c.lineWidth=2;for(let k=1;k<=3;k++){c.beginPath();c.arc(x,y,r*.25*k,0,7);c.stroke()}continue}
     const lk=Katak.cellLook(cc,row);x+=Math.sin(tm*.9+lk.ph)*1.5;y+=Math.sin(tm*1.3+lk.ph)*2;const o=opt.get(key);
-    Katak.leaf(c,x,y,r,o?'#255E22':cc===0?'#1A4318':'#1E4A1C',null,lk.rot+Math.sin(tm*.7+lk.ph)*.06,lk.v);
+    let rs=1;if(Pd.rise&&Pd.rise[key]!=null){Pd.rise[key]+=dt*2.2;const u=Math.min(1,Pd.rise[key]);rs=u<1?u*(1.12-.12*u)+Math.sin(u*Math.PI)*.08:1;if(u>=1)delete Pd.rise[key];c.strokeStyle=`rgba(255,255,255,${.6*(1-u)})`;c.lineWidth=2;c.beginPath();c.arc(x,y,r*(1+u*.5),0,7);c.stroke()}
+    if(rs<1){c.save();c.globalAlpha=Math.max(.15,rs)}Katak.leaf(c,x,y,r*rs,o?'#255E22':cc===0?'#1A4318':'#1E4A1C',null,lk.rot+Math.sin(tm*.7+lk.ph)*.06,lk.v);if(rs<1)c.restore();
     if(o){const bR=Math.max(9,r*.36);c.fillStyle=o.col;c.beginPath();c.arc(x,y,bR,0,7);c.fill();c.strokeStyle='#fff';c.lineWidth=2.5;c.stroke();c.fillStyle='#fff';c.font=`900 ${Math.round(bR*1.15)}px ${FONT}`;c.textAlign='center';c.textBaseline='middle';c.fillText(o.L,x,y+1)}}}
   /* daratan FINIS */
   if(landY>-40){c.fillStyle='#E9C982';c.fillRect(0,0,W,landY+30*z);c.fillStyle='#6DB65B';c.fillRect(0,0,W,landY+16*z);c.fillStyle='#5AA24B';for(let x=6;x<W;x+=22){c.beginPath();c.moveTo(x,landY+16*z);c.lineTo(x+5,landY+4*z);c.lineTo(x+10,landY+16*z);c.fill()}
@@ -15696,7 +15697,7 @@ function folBind(root,list,after){root.querySelectorAll('[data-follow]').forEach
   try{await folDo(f,on);if(on){try{sfx.ok()}catch(_){}toast('team',`Kamu mengikuti ${f.name}.`)}b.outerHTML=folBtn(f,b.classList.contains('sm'));folBind(root,list,after);after&&after()}catch(err){b.disabled=false;toast('lock',fbErr(err))}})}
 const shareIcon='<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M12 3 V15 M7 8 L12 3 L17 8 M5 13 V19 C5 20 6 21 7 21 H17 C18 21 19 20 19 19 V13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const qrIcon='<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><path d="M14 14h3v3h-3zM18 18h3v3h-3zM18 14h3M14 18v3" stroke-linecap="round"/></svg>';
-let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=283';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
+let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=284';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
 function qrMatrix(text){const Q=window.QRCodeLib,q=new Q(-1,Q.ECL.M);q.addData(text);q.make();const n=q.getModuleCount(),m=[];for(let r=0;r<n;r++){m.push([]);for(let c=0;c<n;c++)m[r].push(q.isDark(r,c))}return m}
 function qrSvgOf(m){const n=m.length;let d='';for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(m[r][c])d+=`M${c} ${r}h1.02v1.02h-1.02z`;
   return `<svg viewBox="-2 -2 ${n+4} ${n+4}" class="pcqr" shape-rendering="crispEdges" aria-label="Kode QR profil"><rect x="-2" y="-2" width="${n+4}" height="${n+4}" fill="#fff"/><path d="${d}" fill="#1C1E3D"/></svg>`}
