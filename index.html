@@ -3581,6 +3581,22 @@ body.evtv .evrk li{font-size:20px}
 /* layar pendek (HP kecil): masuk kembali tetap muat satu layar */
 @media (max-height:700px){.dback .dmas{width:84px}.dback .dh{font-size:24px;margin:2px 0 6px}.dback .dacr{padding:10px 14px;gap:12px}.dback .dacr .avatar{width:44px;height:44px}.dmas.big{width:130px}}
 @media (max-height:600px){.dback .dmas{display:none}}
+/* Lompat Katak berdua: kolam bersama di tengah, pemain di kiri dan kanan */
+body.dpond.duelon #vDuel{position:fixed!important;inset:0;z-index:40;background:var(--card);padding:env(safe-area-inset-top,0px) env(safe-area-inset-right,0px) env(safe-area-inset-bottom,0px) env(safe-area-inset-left,0px)!important;gap:0!important;display:flex!important;flex-direction:column}
+body.dpond.duelon #vDuel[hidden]{display:none!important}
+body.dpond #vDuel .duel.haspond{flex:1;min-height:0;display:grid!important;grid-template-columns:minmax(0,1fr) minmax(0,1.25fr) minmax(0,1fr)!important;grid-template-rows:minmax(0,1fr)!important;gap:0!important}
+body.dpond #vDuel .haspond .drace{order:0!important;grid-column:auto!important;height:auto!important;min-height:0;border:0;border-radius:0;border-left:3px solid var(--line);border-right:3px solid var(--line)}
+body.dpond #vDuel .haspond .dside{transform:none!important;height:auto!important;min-height:0;border:0!important;border-top:8px solid var(--tc)!important;border-radius:0!important;box-shadow:none!important;padding:10px 12px;gap:8px}
+body.dpond #vDuel .haspond .dq{font-size:clamp(14px,2.1vw,26px);line-height:1.3;min-height:0;max-height:38%;overflow:auto}
+body.dpond #vDuel .haspond .dopts{flex:1;min-height:0;display:grid;grid-template-columns:1fr;grid-auto-rows:1fr;gap:8px}
+body.dpond #vDuel .haspond .dopts .opt{min-height:0;height:100%;font-size:clamp(13px,1.8vw,24px);padding:6px 10px}
+body.dpond #vDuel .haspond .dopts .opt .k{background:var(--tc);color:#fff;border-color:transparent}
+body.dpond #vDuel .haspond .hint{display:none}
+body.dpond #vDuel .haspond .dfb{min-height:1.2em;margin:0;font-size:13px}
+body.dpond.duelon #vDuel .duelbar{position:absolute;left:50%;top:6px;right:auto;bottom:auto;transform:translateX(-50%);z-index:6;flex-direction:row;gap:6px}
+body.dpond.duelon #vDuel .duelbar .eyebrow{display:none}
+body.dpond.duelon #vDuel .duelbar .back{min-height:30px;min-width:34px;padding:2px 8px}
+@media (max-height:500px),(max-width:700px){body.dpond #vDuel .haspond .dside{padding:5px 7px;gap:4px;border-top-width:5px!important}body.dpond #vDuel .haspond .dname{font-size:15px}body.dpond #vDuel .haspond .dfb{display:none}body.dpond #vDuel .haspond .dopts{gap:5px}body.dpond #vDuel .haspond .dq{font-size:13px}body.dpond #vDuel .haspond .dopts .opt{font-size:13px;padding:3px 6px}}
 /* Toko: judul bagian besar gelap */
 html body:not(.teacher) #vShop .shopsec h3{font-size:22px!important;color:var(--ink)!important;text-transform:none!important;letter-spacing:0!important}
 /* Profil: ringkasan tanpa kotak */
@@ -3963,7 +3979,7 @@ html[data-theme=malam] .plstick{background:#0a0f1e}
 <div class="syncpill" id="syncPill" hidden></div>
 <div class="toast" id="toast" hidden></div>
 
-<script src="av.js?v=282"></script>
+<script src="av.js?v=283"></script>
 <script>
 /* ---------- visual assets ---------- */
 const INK='#1B1E3D';
@@ -11519,7 +11535,7 @@ function startDuel(){
     el.innerHTML=`<div class="dhead"><span class="dname">${esc(name)}</span><span class="dprog"></span><span class="dscore">0</span></div><div class="dq"></div><div class="timer"><i></i></div>${kind==='arcade'?'<div class="stage dstage"><canvas aria-label="Arena '+esc(name)+'"></canvas></div>':'<div class="opts dopts"></div>'}<p class="dfb"></p><p class="hint">${DHELP[s]}</p><div class="overlay dwait" hidden><div class="box"><b class="ttl" style="color:${color}">Selesai!</b><p>Tunggu lawan menyelesaikan soalnya…</p></div></div>`;
     if(s===0&&isPhone()&&!race)el.classList.add('flip');
     grid.appendChild(el);
-    if(s===0&&race){grid.insertAdjacentHTML('beforeend','<div class="drace"><canvas aria-label="Lintasan balapan"></canvas></div>');DUEL.rcv=grid.querySelector('.drace canvas')}
+    if(s===0&&race){grid.insertAdjacentHTML('beforeend',`<div class="drace${race==='frog'?' dpondc':''}"><canvas aria-label="${race==='frog'?'Kolam bersama':'Lintasan balapan'}"></canvas></div>`);DUEL.rcv=grid.querySelector('.drace canvas')}
     const sd={idx:s,name,color,root:el,el:{q:el.querySelector('.dq'),bar:el.querySelector('.timer i'),stage:el.querySelector('.dstage'),cv:el.querySelector('canvas'),opts:el.querySelector('.dopts'),fb:el.querySelector('.dfb'),prog:el.querySelector('.dprog'),score:el.querySelector('.dscore'),wait:el.querySelector('.dwait')},
       game:{qs:shuffle(base.map(q=>JSON.parse(JSON.stringify(q)))),i:0,score:0,correct:0,streak:0,best:0,results:[],lives:3,mode:MODE},
       arc:{running:true,keys:{},parts:[],banner:null,state:'intro'},M:kind==='arcade'?Object.create(MODES[MODE]):null,mode:MODE,done:false};
@@ -11527,12 +11543,63 @@ function startDuel(){
   }
   for(const sd of DUEL.sides){if(kind==='arcade'){bindDuelCanvas(sd);withSide(sd,()=>duelSize(sd))}withSide(sd,()=>duelShowQ(sd,true))}
   if(kind==='arcade')setTimeout(()=>{if(DUEL)DUEL.sides.forEach(sd=>withSide(sd,()=>{duelSize(sd);M.setup()}))},120);
-  if(race){grid.classList.add('hasrace');if(isTouchDev())duelLand(true);setTimeout(duelRaceSize,60);setTimeout(duelRaceSize,700)}else grid.classList.remove('hasrace');
+  grid.classList.remove('hasrace','haspond');document.body.classList.toggle('dpond',race==='frog');if(race){grid.classList.add(race==='frog'?'haspond':'hasrace');if(race==='frog')pondInit();if(isTouchDev()&&(race!=='frog'||innerHeight>innerWidth||isPhone()))duelLand(true);setTimeout(duelRaceSize,60);setTimeout(duelRaceSize,700)}
   $('#duelCountN').textContent='3';$('#duelCount').hidden=false;
   DUEL.raf=requestAnimationFrame(duelLoop);
 }
 /* Main berdua untuk game balapan: lintasan bersama di tengah layar, jawaban di layar masing-masing. Benar maju, salah mundur sedikit. */
-const DUEL_RACE={pacu:'boat',lari:'run',balap:'car'};
+const DUEL_RACE={pacu:'boat',lari:'run',balap:'car',katak:'frog'};
+/* Lompat Katak berdua: satu kolam bersama di tengah layar, soal dan jawaban masing-masing di kiri dan kanan.
+   Pemain kiri memakai 3 lajur kiri, pemain kanan 3 lajur kanan. Jawaban A/B/C = daun kiri/tengah/kanan di depan kataknya. */
+const POND={zone:[[-3,-2,-1],[1,2,3]]};
+function pondInit(){const D=DUEL;D.pond={frogs:[0,1].map(s=>({s,c:POND.zone[s][1],row:0,wx:0,wy:0,jump:null,fall:0,pop:0,rot:0,h:0,sq:0,land:0,fin:0})),sunk:{},rip:[],camY:0,z:1,t:0}}
+function pondGeo(){const D=DUEL,W=D.rW||300,H=D.rH||300;const cg=W/7.3,rg=cg*1.08,r=Math.min(cg*.44,rg*.44);return {W,H,cg,rg,r}}
+function pondXY(c,row,G){return {x:c*G.cg,y:-row*G.rg}}
+function pondJump(s,k,ok){const D=DUEL;if(!D||!D.pond)return;const f=D.pond.frogs[s];if(k<0){f.pop=1;return}
+  const G=pondGeo(),c=POND.zone[s][Math.max(0,Math.min(2,k))],row=f.row+1,from=pondXY(f.c,f.row,G),to=pondXY(c,row,G);
+  f.jump={t:-.11,x0:from.x,y0:from.y,x1:to.x,y1:to.y,c,row,ok,go:false}}
+function pondFinish(s){const D=DUEL;if(!D||!D.pond)return;const f=D.pond.frogs[s];if(f.row<GROUP.per||f.fin)return;const G=pondGeo(),a=pondXY(f.c,f.row,G);f.jump={t:-.11,x0:a.x,y0:a.y,x1:a.x,y1:-(GROUP.per+1)*G.rg,fin:true,go:false}}
+function pondStep(dt){const D=DUEL,Pd=D.pond,G=pondGeo();Pd.t+=dt;Pd.rip.forEach(q=>q.t+=dt);Pd.rip=Pd.rip.filter(q=>q.t<.9);
+  for(const f of Pd.frogs){f.land=Math.max(0,f.land-dt*3.2);f.pop=Math.max(0,f.pop-dt*2.5);const base=pondXY(f.c,f.row,G);let face=0,fk=3;
+   if(f.jump){const j=f.jump;j.t+=dt;face=Math.atan2(j.x1-j.x0,-(j.y1-j.y0));fk=16;
+    if(j.t<0){f.sq=.22*(1-(-j.t)/.11);f.wx=j.x0;f.wy=j.y0;f.h=0}
+    else{if(!j.go){j.go=true;Pd.rip.push({x:j.x0,y:j.y0,t:0})}const u=Math.min(1,j.t/.5),e=1-Math.pow(1-u,1.7);f.wx=j.x0+(j.x1-j.x0)*e;f.wy=j.y0+(j.y1-j.y0)*e;f.h=Math.sin(u*Math.PI);f.sq=-.16*Math.sin(Math.min(1,u*1.6)*Math.PI*.5)*(1-u);
+     if(u>=1){f.h=0;f.sq=.25;f.land=1;Pd.rip.push({x:j.x1,y:j.y1,t:0});
+      if(j.fin){f.fin=1;f.jump=null}
+      else if(j.ok){f.c=j.c;f.row=j.row;f.jump=null}
+      else{Pd.sunk[j.c+','+j.row]=1;f.fallAt={x:j.x1,y:j.y1};f.jump=null;f.fall=.001}}}}
+   else if(f.fall>0){f.fall=Math.min(1.6,f.fall+dt*1.5);f.wx=f.fallAt.x;f.wy=f.fallAt.y;if(f.fall>=1.6){f.fall=0;f.pop=1;f.wx=base.x;f.wy=base.y}}
+   else if(!f.fin){f.wx=base.x;f.wy=base.y;f.sq+=(0-f.sq)*Math.min(1,dt*10)}
+   {let d=face-f.rot;d=Math.atan2(Math.sin(d),Math.cos(d));f.rot+=d*Math.min(1,dt*fk)}}
+  /* kamera: kedua katak selalu terlihat, menjauh (zoom out) bila jarak mereka besar */
+  const ys=Pd.frogs.map(f=>f.wy),lo=Math.min(...ys),hi=Math.max(...ys),span=hi-lo+G.rg*2.6,z=clamp(G.H*.86/span,.42,1);
+  Pd.z+=(z-Pd.z)*Math.min(1,dt*3);const ty=(lo+hi)/2-G.rg*.9;Pd.camY+=(ty-Pd.camY)*Math.min(1,dt*4)}
+function pondDraw(dt){const D=DUEL;if(!D||!D.rctx)return;if(!D.pond)pondInit();pondStep(dt);const c=D.rctx,Pd=D.pond,G=pondGeo(),{W,H}=G,z=Pd.z,tm=Pd.t;
+  const sx=x=>W/2+x*z,sy=y=>H*.55+(y-Pd.camY)*z,r=G.r*z;
+  const g=c.createLinearGradient(0,0,0,H);g.addColorStop(0,'#3FCDF4');g.addColorStop(1,'#1FB2EA');c.fillStyle=g;c.fillRect(0,0,W,H);
+  if(!Katak.caus){const pg=game;game={kat:{camX:0,camY:0}};try{Katak.water(c,W,H)}finally{game=pg}}c.save();c.translate((Math.sin(tm*.4)*6)%260,(-Pd.camY*z*.9)%260);c.fillStyle=Katak.caus;c.fillRect(-260,-260,W+520,H+520);c.restore();
+  const N=GROUP.per,landY=sy(-(N+.55)*G.rg);
+  const r0=Math.floor((Pd.camY-H*.6/z)/G.rg)-1,r1=Math.ceil((Pd.camY+H*.6/z)/G.rg)+1;
+  /* daun-daun kolam */
+  const opt=new Map();D.sides.forEach((sd,s)=>{const f=Pd.frogs[s];if(sd.arc.state==='play'&&!f.jump&&!f.fall&&!sd.done)POND.zone[s].forEach((cc,k)=>opt.set(cc+','+(f.row+1),{L:'ABC'[k],col:sd.color}))});
+  for(let row=-r1;row<=-r0;row++){if(row<-6)continue;for(let cc=-3;cc<=3;cc++){const key=cc+','+row;const w=pondXY(cc,row,G);let x=sx(w.x),y=sy(w.y);if(y<landY+r*.4||y<-r||y>H+r)continue;
+    if(Pd.sunk[key]){c.strokeStyle='rgba(255,255,255,.5)';c.lineWidth=2;for(let k=1;k<=3;k++){c.beginPath();c.arc(x,y,r*.25*k,0,7);c.stroke()}continue}
+    const lk=Katak.cellLook(cc,row);x+=Math.sin(tm*.9+lk.ph)*1.5;y+=Math.sin(tm*1.3+lk.ph)*2;const o=opt.get(key);
+    Katak.leaf(c,x,y,r,o?'#255E22':cc===0?'#1A4318':'#1E4A1C',null,lk.rot+Math.sin(tm*.7+lk.ph)*.06,lk.v);
+    if(o){const bR=Math.max(9,r*.36);c.fillStyle=o.col;c.beginPath();c.arc(x,y,bR,0,7);c.fill();c.strokeStyle='#fff';c.lineWidth=2.5;c.stroke();c.fillStyle='#fff';c.font=`900 ${Math.round(bR*1.15)}px ${FONT}`;c.textAlign='center';c.textBaseline='middle';c.fillText(o.L,x,y+1)}}}
+  /* daratan FINIS */
+  if(landY>-40){c.fillStyle='#E9C982';c.fillRect(0,0,W,landY+30*z);c.fillStyle='#6DB65B';c.fillRect(0,0,W,landY+16*z);c.fillStyle='#5AA24B';for(let x=6;x<W;x+=22){c.beginPath();c.moveTo(x,landY+16*z);c.lineTo(x+5,landY+4*z);c.lineTo(x+10,landY+16*z);c.fill()}
+   c.fillStyle='#fff';rr(c,W/2-50,landY-30,100,24,12);c.fill();c.fillStyle='#14213D';c.font=`900 13px ${FONT}`;c.textAlign='center';c.textBaseline='middle';c.fillText('FINIS 🏁',W/2,landY-18)}
+  /* garis tengah pemisah lajur */
+  c.strokeStyle='rgba(255,255,255,.18)';c.setLineDash([6,10]);c.lineWidth=2;c.beginPath();c.moveTo(sx(0),Math.max(0,landY+30*z));c.lineTo(sx(0),H);c.stroke();c.setLineDash([]);
+  Pd.rip.forEach(q=>{const a=1-q.t/.9;c.strokeStyle=`rgba(255,255,255,${.6*a})`;c.lineWidth=2;c.beginPath();c.ellipse(sx(q.x),sy(q.y)+4,r*(1+q.t*.9),r*(.75+q.t*.6),0,0,7);c.stroke()});
+  /* katak kedua pemain */
+  D.sides.forEach((sd,s)=>{const f=Pd.frogs[s],x=sx(f.wx),y=sy(f.wy)-4+(f.jump?0:f.land*4),fl=Math.min(1,f.fall),sc=(r/46)*(1+f.h*.35)*(1-fl*.5)*(1-f.pop*.35);
+   if(fl>0){c.strokeStyle=`rgba(255,255,255,${.9-fl*.4})`;c.lineWidth=2;for(let k=1;k<=3;k++){c.beginPath();c.ellipse(x,y+6,(12+k*10)*fl*z,(4+k*3)*fl*z,0,0,7);c.stroke()}}
+   drawFrogTop(c,x,y,sc,sd.color,1-fl*.8,f.h,f.rot,f.sq,tm+s);
+   if(!f.jump&&fl===0){c.font=`900 12px ${FONT}`;const t=sd.name,tw=c.measureText(t).width+14;c.fillStyle=sd.color;rr(c,x-tw/2,y+r*.75,tw,18,9);c.fill();c.fillStyle='#fff';c.textAlign='center';c.textBaseline='middle';c.fillText(t,x,y+r*.75+9.5)}
+   if(f.fin){c.font=`900 14px ${FONT}`;c.fillStyle='#FFD54A';c.textAlign='center';c.fillText('🏁 Sampai!',x,y-r*1.1)}})}
+
 /* Balapan berdua di HP memakai posisi mendatar: lintasan di atas, jawaban pemain kiri dan kanan di bawah. Tidak ada layar terbalik. */
 let DLAND={mine:false};
 function duelLand(on){const b=document.body;
@@ -11543,7 +11610,7 @@ const duelHold=()=>false;
 function dlRotVars(){const r=document.documentElement.style;r.setProperty('--rw',innerHeight+'px');r.setProperty('--rh',innerWidth+'px');if(DUEL&&DUEL.rcv)setTimeout(duelRaceSize,60)}addEventListener('resize',()=>{if(document.body.classList.contains('dlrot'))dlRotVars()});
 window.addEventListener('orientationchange',()=>{if(DUEL&&DUEL.race){setTimeout(duelRaceSize,300);setTimeout(duelRaceSize,800)}});
 function duelRaceSize(){if(!DUEL||!DUEL.rcv)return;const cv=DUEL.rcv,W=cv.parentElement.clientWidth,H=cv.parentElement.clientHeight||150;const dpr=Math.min(2,window.devicePixelRatio||1);cv.width=Math.round(W*dpr);cv.height=Math.round(H*dpr);cv.style.width=W+'px';cv.style.height=H+'px';DUEL.rW=W;DUEL.rH=H;DUEL.rctx=cv.getContext('2d');DUEL.rctx.setTransform(dpr,0,0,dpr,0,0)}
-function duelRaceDraw(dt){const D=DUEL;if(!D||!D.race||!D.rctx)return;const c=D.rctx,W=D.rW,H=D.rH,tot=Math.max(1,GROUP.per);D.rph=(D.rph||0)+dt*9;D.rpos=D.rpos||[0,0];
+function duelRaceDraw(dt){const D=DUEL;if(!D||!D.race||!D.rctx)return;if(D.race==='frog')return pondDraw(dt);const c=D.rctx,W=D.rW,H=D.rH,tot=Math.max(1,GROUP.per);D.rph=(D.rph||0)+dt*9;D.rpos=D.rpos||[0,0];
   const pos=D.sides.map(sd=>{const g=sd.game,wrong=g.results.filter(r=>r===false).length;return Math.max(0,g.correct-.5*wrong)});
   pos.forEach((p,k)=>{D.rpos[k]+=(p-D.rpos[k])*Math.min(1,dt*3)});const lh=H/2,fx=W-34;
   if(D.race==='boat'){const g=c.createLinearGradient(0,0,0,H);g.addColorStop(0,'#2196F3');g.addColorStop(1,'#1565C0');c.fillStyle=g;c.fillRect(0,0,W,H);
@@ -11580,20 +11647,20 @@ function duelShowQ(sd,first){
   if(!first)arc.state='play';sd.el.bar.style.width='100%';
   if(DUEL.rand&&!first){const opts=DUEL.rand.filter(x=>x!==sd.mode);const m=pick(opts.length?opts:DUEL.rand);sd.mode=m;MODE=m;sd.M=Object.create(MODES[m]);M=sd.M;arc.parts=[];arc.banner=null;arc.keys={};duelSize(sd)}
   if(DUEL.kind==='arcade')M.setup();
-  else{sd.el.opts.innerHTML=q.opts.map((o,k)=>`<button class="opt" data-k="${k}"><span class="k">${sd.idx?'7890'[k]:k+1}</span><span class="t">${o}</span></button>`).join('');
+  else{sd.el.opts.innerHTML=q.opts.map((o,k)=>`<button class="opt" data-k="${k}"><span class="k">${DUEL.race==='frog'?'ABC'[k]:sd.idx?'7890'[k]:k+1}</span><span class="t">${o}</span></button>`).join('');
     sd.el.opts.querySelectorAll('.opt').forEach(b=>b.onclick=()=>withSide(sd,()=>duelResolve(sd,+b.dataset.k)))}
   duelHUD(sd);
 }
 function duelResolve(sd,k){
   if(arc.state!=='play')return;arc.state='resolved';const g=sd.game,q=g.qs[g.i];const ok=k>=0&&q.opts[k]===q.ans;const frac=Math.max(0,1-arc.t/arc.limit);
-  g.results[g.i]=ok;q.ok=ok;q.team=sd.name;q.picked=k>=0?q.opts[k]:'(waktu habis)';
+  g.results[g.i]=ok;q.ok=ok;q.team=sd.name;if(DUEL.race==='frog')pondJump(sd.idx,k,ok);q.picked=k>=0?q.opts[k]:'(waktu habis)';
   if(ok){g.streak++;g.correct++;const gained=10+Math.ceil(frac*10)+Math.min(g.streak-1,5)*2;g.score+=gained;sfx.ok();arc.banner={text:'Benar! +'+gained,color:'#1C8A57',t:0};arc.wait=1.1;sd.el.fb.className='dfb ok';sd.el.fb.textContent=pick(PRAISE)+' +'+gained}
   else{g.streak=0;sfx.bad();arc.banner={text:k<0?'Waktu habis!':'Ups, salah!',color:'#C9362A',t:0};arc.wait=2.4;sd.el.fb.className='dfb';sd.el.fb.innerHTML=(k<0?'Waktu habis. ':'Salah. ')+(q.html?'':'Jawaban benar: <b>'+q.ans+'</b>');sd.root.classList.remove('shake');void sd.root.offsetWidth;sd.root.classList.add('shake')}
   if(DUEL.kind==='kuis')sd.el.opts.querySelectorAll('.opt').forEach((b,i)=>{b.disabled=true;if(q.opts[i]===q.ans)b.classList.add('right');else if(i===k)b.classList.add('wrong')});
   duelHUD(sd);
 }
 function duelNext(sd){const g=sd.game;
-  if(g.i>=g.qs.length-1){sd.done=true;arc.state='done';sd.el.fb.textContent='';sd.el.wait.hidden=false;if(DUEL.sides.every(x=>x.done))setTimeout(finishDuel,800);return}
+  if(g.i>=g.qs.length-1){sd.done=true;arc.state='done';sd.el.fb.textContent='';sd.el.wait.hidden=false;if(DUEL.race==='frog')pondFinish(sd.idx);if(DUEL.sides.every(x=>x.done))setTimeout(finishDuel,DUEL.race==='frog'?1800:800);return}
   g.i++;duelShowQ(sd)}
 function stepSide(sd,dt){
   if(arc.state==='play'){arc.t+=dt;if(M)M.update(dt);if(arc.state==='play'){sd.el.bar.style.width=Math.max(0,100*(1-arc.t/arc.limit))+'%';if(arc.t>=arc.limit+((M&&M.extra)||0))duelResolve(sd,-1)}}
@@ -11610,7 +11677,7 @@ function duelLoop(ts){
   if(DUEL&&DUEL.race)duelRaceDraw(dt);
   if(DUEL&&DUEL.active)DUEL.raf=requestAnimationFrame(duelLoop);
 }
-function stopDuel(){if(!DUEL)return;if(DUEL.race)duelLand(false);DUEL.active=false;cancelAnimationFrame(DUEL.raf);$('#duelCount').hidden=true;DUEL=null}
+function stopDuel(){if(!DUEL)return;if(DUEL.race)duelLand(false);document.body.classList.remove('dpond');DUEL.active=false;cancelAnimationFrame(DUEL.raf);$('#duelCount').hidden=true;DUEL=null}
 function finishDuel(){if(!DUEL)return;const d=DUEL;stopDuel();
   game={qs:[...d.sides[0].game.qs,...d.sides[1].game.qs],mode:d.mode,results:[],correct:0,lives:3,
     group:{format:'terbagi',teams:d.sides.map(sd=>({name:sd.name,color:sd.color,score:sd.game.score,correct:sd.game.correct})),locked:[]}};
@@ -15629,7 +15696,7 @@ function folBind(root,list,after){root.querySelectorAll('[data-follow]').forEach
   try{await folDo(f,on);if(on){try{sfx.ok()}catch(_){}toast('team',`Kamu mengikuti ${f.name}.`)}b.outerHTML=folBtn(f,b.classList.contains('sm'));folBind(root,list,after);after&&after()}catch(err){b.disabled=false;toast('lock',fbErr(err))}})}
 const shareIcon='<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M12 3 V15 M7 8 L12 3 L17 8 M5 13 V19 C5 20 6 21 7 21 H17 C18 21 19 20 19 19 V13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const qrIcon='<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><path d="M14 14h3v3h-3zM18 18h3v3h-3zM18 14h3M14 18v3" stroke-linecap="round"/></svg>';
-let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=282';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
+let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=283';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
 function qrMatrix(text){const Q=window.QRCodeLib,q=new Q(-1,Q.ECL.M);q.addData(text);q.make();const n=q.getModuleCount(),m=[];for(let r=0;r<n;r++){m.push([]);for(let c=0;c<n;c++)m[r].push(q.isDark(r,c))}return m}
 function qrSvgOf(m){const n=m.length;let d='';for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(m[r][c])d+=`M${c} ${r}h1.02v1.02h-1.02z`;
   return `<svg viewBox="-2 -2 ${n+4} ${n+4}" class="pcqr" shape-rendering="crispEdges" aria-label="Kode QR profil"><rect x="-2" y="-2" width="${n+4}" height="${n+4}" fill="#fff"/><path d="${d}" fill="#1C1E3D"/></svg>`}
