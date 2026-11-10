@@ -3541,6 +3541,14 @@ body.lprotate.lprotR #modal,body.lprotate.lprotR #pauseOv{top:0!important;left:v
 body.lprotate #modal .mbox,body.lprotate #pauseOv .pausebox{max-height:calc(var(--rh,100vw) - 24px);overflow:auto}
 body.lprotate #toast{width:max-content;top:50%!important;left:44px!important;transform:translate(-50%,-50%) rotate(-90deg)!important;max-width:calc(var(--rw,100vh) - 40px)}
 body.lprotate.lprotR #toast{left:calc(100% - 44px)!important;transform:translate(-50%,-50%) rotate(90deg)!important}
+/* Evaluasi di TV: tampilan besar, tanpa menu guru */
+body.evtv .ttop{display:none!important}body.teacher.ttop-on.evtv .main.wrap{padding-top:24px!important}
+body.evtv .stile .stars{display:flex;gap:2px;font-size:20px;color:#D9DCE3}body.evtv .stile .stars i{font-style:normal}body.evtv .stile .stars i.on{color:#FFC800}
+.stile .stars{display:flex;gap:2px;font-size:16px;color:#D9DCE3}.stile .stars i{font-style:normal}.stile .stars i.on{color:#FFC800}.stile .sc.ok{background:var(--green)}
+@media (min-width:1200px){body.evtv #vTRun{zoom:1.3}body.evtv #vDone .done{zoom:1.45}body.evtv #modal .mbox{zoom:1.35}body.evtv .stiles{grid-template-columns:repeat(auto-fill,minmax(170px,1fr))}}
+@media (min-width:2400px){body.evtv #vTRun{zoom:1.8}body.evtv #vDone .done{zoom:2}body.evtv #modal .mbox{zoom:1.8}}
+/* Evaluasi di TV: menu samping guru disembunyikan agar layar penuh untuk murid */
+body.teacher[data-tab="trun"] .side,body.teacher.playing .side{display:none!important}
 /* Toko: judul bagian besar gelap */
 html body:not(.teacher) #vShop .shopsec h3{font-size:22px!important;color:var(--ink)!important;text-transform:none!important;letter-spacing:0!important}
 /* Profil: ringkasan tanpa kotak */
@@ -3923,7 +3931,7 @@ html[data-theme=malam] .plstick{background:#0a0f1e}
 <div class="syncpill" id="syncPill" hidden></div>
 <div class="toast" id="toast" hidden></div>
 
-<script src="av.js?v=264"></script>
+<script src="av.js?v=265"></script>
 <script>
 /* ---------- visual assets ---------- */
 const INK='#1B1E3D';
@@ -9799,7 +9807,7 @@ function renderSetup(){
   $('#fmtNote').textContent=GROUP.format==='terbagi'?'Layar dibagi dua dan dua pemain (atau dua tim) bermain bersamaan. Pemain kiri menyentuh layar kiri atau memakai W A S D, F, dan angka 1–4. Pemain kanan menyentuh layar kanan atau memakai tombol panah, Enter, dan 7 8 9 0. Semua game bisa dipakai.':GROUP.format==='giliran'?'Tim bergantian menjawab satu soal per giliran. Semua jenis game bisa dipakai, cocok untuk dimainkan di depan kelas.':'Semua tim melihat soal yang sama. Tim tercepat menekan tombolnya (keyboard atau klik guru), lalu menjawab. Benar +15, salah −5 dan tim lain boleh merebut. Memakai tampilan Kuis.';
   $('#perSeg').className='';$('#perSeg').innerHTML=stepperHTML('perStep',clamp(+GROUP.per||3,1,30),1,30);bindStepper('perStep',v=>{GROUP.per=v;store.set('group',GROUP)});
 }
-function applyTV(){document.body.classList.toggle('tv',TV&&window.innerWidth>=700)}
+function applyTV(){document.body.classList.toggle('tv',(TV||document.body.classList.contains('evtv'))&&window.innerWidth>=700)}
 const MODE_LIST=[
  {id:'lompat',name:'Petualangan Blok',desc:'Jelajahi level, sundul kotak tanya, capai FINIS',help:'Mulai dari START. Geser analog di kiri untuk berjalan (dorong ke atas untuk melompat), atau tekan tombol lompat di kanan. Sundul kotak tanya ? untuk membuka soal. Kumpulkan bintang, injak kumbang, hindari lubang. Bendera FINIS terbuka setelah semua kotak tanya dibuka. Keyboard: ← → berjalan, Spasi melompat, 1–4 menjawab.',
   icon:'<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"><rect x="16" y="4" width="16" height="13" rx="3"/><path d="M24 8v5" /><circle cx="24" cy="26" r="4"/><path d="M24 30v6l-5 7M24 36l5 7M18 33l6-3 6 3"/><path d="M4 44h40"/></svg>'},
@@ -12127,7 +12135,7 @@ function openHearts(){openModal(`<h3>Nyawamu habis</h3><div class="mascot" data-
 /* ---------- navigation ---------- */
 let curTab='learn';let TABSTK=[],TABBACK=false;
 const TAB_VIEW={learn:'vLearn',team:'vTeam',league:'vLeague',quest:'vQuest',shop:'vShop',profile:'vProfile'};
-function go(tab){if(!TABBACK&&tab!==curTab&&curTab!=='play'&&tab!=='play'){TABSTK=TABSTK.filter(x=>x!==curTab&&x!==tab);TABSTK.push(curTab);if(TABSTK.length>15)TABSTK.shift()}curTab=tab;if(tab!=='play')gameFSOff();closePop();document.body.dataset.tab=tab;setTimeout(()=>{try{renderSideFoot()}catch(e){}},0);if(document.body.classList.contains('teacher')&&T())applyTheme(T().cls,null);document.querySelectorAll('.nav').forEach(n=>n.setAttribute('aria-current',n.dataset.tab===tab?'page':'false'));
+function go(tab){if(!TABBACK&&tab!==curTab&&curTab!=='play'&&tab!=='play'){TABSTK=TABSTK.filter(x=>x!==curTab&&x!==tab);TABSTK.push(curTab);if(TABSTK.length>15)TABSTK.shift()}curTab=tab;if(tab!=='play')gameFSOff();closePop();document.body.dataset.tab=tab;{const was=document.body.classList.contains('evtv');document.body.classList.toggle('evtv',tab==='trun'||(tab==='play'&&was));if(was!==document.body.classList.contains('evtv'))applyTV()}setTimeout(()=>{try{renderSideFoot()}catch(e){}},0);if(document.body.classList.contains('teacher')&&T())applyTheme(T().cls,null);document.querySelectorAll('.nav').forEach(n=>n.setAttribute('aria-current',n.dataset.tab===tab?'page':'false'));
   if(tab==='learn')renderPath();if(tab==='team')renderTeam();if(tab==='league')renderLeague();if(tab==='quest')renderQuests();if(tab==='shop')renderShop();if(tab==='profile')renderProfile();if(TEACH_R[tab])TEACH_R[tab]();
   show(TAB_VIEW[tab]);renderTop();$('#practiceFab')&&($('#practiceFab').hidden=tab!=='learn');if(tab==='learn')setTimeout(scrollToCurrent,60)}
 
@@ -13367,37 +13375,52 @@ function evTidy(){const v=$('#vTEval');[...v.querySelectorAll(':scope > .tcard')
   const n=students().length,last=EV.game?`<p class="sub" style="margin:0">Terakhir: ${esc((tCls().subjects.find(x=>x.id===EV.subj)||{}).name||'')} · ${gameName(EV.game)} · ${EV.n} soal</p>`:'';
   v.insertAdjacentHTML('beforeend',`<div class="tcard evnew"><span class="evnew-ic"><i data-icon="tv"></i></span><div class="grow"><h3>Evaluasi baru</h3>${last}</div><button class="primary press" id="evWiz" ${n?'':'disabled'}>Siapkan evaluasi</button>${n?'':'<p class="note">Belum ada murid. Tambahkan di menu <button class="smallbtn" data-go="tstud">Murid</button></p>'}</div>`);
   hydrate(v);bindTeacherLinks(v);$('#evWiz').onclick=evalWizard}
+/* sandi guru agar murid tidak bisa keluar ke menu guru dari layar evaluasi */
+function evLockOk(pw){const t=T();return !!t&&((t.evPin&&tHash(pw)===t.evPin)||((t.pinHash||t.pin)&&teacherCheck(pw)))}
+/* PIN layar evaluasi: dibuat sekali, dipakai untuk keluar dari layar evaluasi dan melihat nilai */
+function evPinSetup(after){openModal(`<div class="pinbox"><span style="width:60px">${ICONS.teach}</span><h3>Buat PIN guru untuk TV</h3><p class="note">Layar evaluasi akan dipakai murid. Buat PIN 4–6 angka supaya murid tidak bisa keluar ke menu guru atau melihat nilai teman.</p><input id="epA" type="password" inputmode="numeric" maxlength="6" placeholder="PIN baru" style="font-size:22px;padding:12px;border-radius:14px;border:2px solid var(--line);width:100%;max-width:280px;text-align:center"><input id="epB" type="password" inputmode="numeric" maxlength="6" placeholder="Ulangi PIN" style="font-size:22px;padding:12px;border-radius:14px;border:2px solid var(--line);width:100%;max-width:280px;text-align:center"><p class="note" id="epErr" style="color:var(--red);min-height:1em;margin:0"></p><div class="acts"><button class="ghost" id="epSkip">Nanti saja</button><button class="primary" id="epOk">Simpan PIN</button></div></div>`);
+  $('#epOk').onclick=()=>{const a=$('#epA').value.trim(),b=$('#epB').value.trim();if(!/^\d{4,6}$/.test(a)){$('#epErr').textContent='PIN harus 4–6 angka.';return}if(a!==b){$('#epErr').textContent='PIN tidak sama.';return}const t=T();t.evPin=tHash(a);t.upd=Date.now();save();closeModal();toast('teach','PIN guru tersimpan.');after&&after()};
+  $('#epSkip').onclick=()=>{EV_PIN_SKIP=true;closeModal();after&&after()};setTimeout(()=>$('#epA').focus(),80)}
+let EV_PIN_SKIP=false;
+function tLock(cb,why){const t=T();if(!t||!(t.evPin||t.pinHash||t.pin)){cb();return}
+  openModal(`<div class="pinbox"><span style="width:60px">${ICONS.teach}</span><h3>Khusus guru</h3><p class="note">${why||'Masukkan PIN atau sandi guru untuk keluar dari layar evaluasi.'}</p><input id="tlPw" type="password" autocomplete="current-password" placeholder="PIN atau sandi guru" style="font-size:20px;padding:12px;border-radius:14px;border:2px solid var(--line);width:100%;max-width:320px"><p class="note" id="tlErr" style="color:var(--red);min-height:1em;margin:0"></p><div class="acts"><button class="ghost" id="tlNo">Batal</button><button class="primary" id="tlYes">Buka</button></div></div>`);
+  const go2=()=>{if(evLockOk($('#tlPw').value)){closeModal();cb()}else{$('#tlErr').textContent='PIN atau sandi salah.';sfx.bad();$('#tlPw').select()}};
+  $('#tlYes').onclick=go2;$('#tlNo').onclick=closeModal;$('#tlPw').onkeydown=e=>{if(e.key==='Enter')go2()};setTimeout(()=>$('#tlPw').focus(),80)}
+let EV_SHOW=false;
 function curEval(){const s=EVR&&APP.sessions.find(x=>x.id===EVR.sid);const e=s&&s.evals.find(x=>x.id===EVR.eid);return {sess:s,e}}
 let RUN_ALL=false;
-function renderTRun(){const {sess,e}=curEval();if(!e){go('teval');return}const t=T();const list=students();const attFilled=Object.keys(sess.att).length>0;
+function renderTRun(){const {sess,e}=curEval();if(!e){go('teval');return}const t=T();if(!(t.evPin||t.pinHash||t.pin)&&!EV_PIN_SKIP&&$('#modal').hidden)setTimeout(()=>{if(curTab==='trun'&&$('#modal').hidden)evPinSetup()},300);const list=students();const attFilled=Object.keys(sess.att).length>0;
   const part=RUN_ALL||!attFilled?list:list.filter(p=>sess.att[p.id]==='H');const done=part.filter(p=>e.results[p.id]);
   const scores=Object.values(e.results).map(r=>r.score);
   $('#vTRun').innerHTML=`<div class="evalhead"><div class="grow"><h2>${esc(e.subjName)}: ${esc(e.unit)}</h2><p>${gameName(e.game)} · ${e.n} soal per murid${e.fmt&&e.fmt!=='solo'?` · ${FMT[e.fmt]} · Pilih ${e.fmt==='terbagi'?'2':'2–6'} murid, lalu tekan Mulai`:' · Ketuk namamu untuk mulai'}</p></div><span class="evalprog">${done.length} / ${part.length} dinilai</span><button class="ghost" id="runBack">Selesai</button></div>
-   ${done.length===part.length&&part.length?`<div class="tcard" style="flex-direction:row;align-items:center;gap:14px;flex-wrap:wrap"><div class="mascot" data-mascot data-mood="happy" style="width:80px"></div><div style="flex:1;min-width:200px"><h3>Semua murid sudah dinilai!</h3><p class="sub" style="margin:0">Rata-rata kelas ${av(scores)}. Nilai sudah tersimpan di rapor.</p></div><button class="primary" data-go="trapor">Lihat rapor</button></div>`:''}
+   ${done.length===part.length&&part.length?`<div class="tcard" style="flex-direction:row;align-items:center;gap:14px;flex-wrap:wrap"><div class="mascot" data-mascot data-mood="happy" style="width:80px"></div><div style="flex:1;min-width:200px"><h3>Semua murid sudah dinilai! Hebat, kelas ${esc(tCls().full||'')}!</h3><p class="sub" style="margin:0">Nilai sudah tersimpan di rapor.${EV_SHOW?` Rata-rata kelas ${av(scores)}.`:''}</p></div><button class="primary" id="evRapor">Lihat rapor</button></div>`:''}
    ${e.fmt&&e.fmt!=='solo'?`<div class="tcard evsel"><div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><b style="flex:1;min-width:180px">${EVSEL.length?`Dipilih: ${EVSEL.map(id=>esc((APP.profiles.find(x=>x.id===id)||{name:'?'}).name)).join(', ')}`:'Belum ada murid dipilih'}</b><button class="ghost" id="evAuto">Pilih acak</button><button class="primary" id="evGo" ${EVSEL.length>=2&&(e.fmt!=='terbagi'||EVSEL.length===2)?'':'disabled'}>Mulai ${FMT[e.fmt]}</button></div></div>`:''}
-   <div class="stiles">${part.map(p=>{const r=e.results[p.id];const sel=EVSEL.includes(p.id);return `<button class="stile ${r?'done':''} ${sel?'sel':''}" data-p="${p.id}">${sel?`<span class="selno">${EVSEL.indexOf(p.id)+1}</span>`:''}${r?`<span class="sc ${r.score<t.kkm?'low':''}">${r.score}</span>`:''}${avatarOf(p)}<b>${esc(p.name)}</b><small>${p.no?'No. '+p.no:''}${r?' · Selesai':''}</small></button>`}).join('')}</div>
+   <div class="stiles">${part.map(p=>{const r=e.results[p.id];const sel=EVSEL.includes(p.id);return `<button class="stile ${r?'done':''} ${sel?'sel':''}" data-p="${p.id}">${sel?`<span class="selno">${EVSEL.indexOf(p.id)+1}</span>`:''}${r?(EV_SHOW?`<span class="sc ${r.score<t.kkm?'low':''}">${r.score}</span>`:`<span class="sc ok">✓</span>`):''}${avatarOf(p)}<b>${esc(p.name)}</b><small>${p.no?'No. '+p.no:''}${r?' · Selesai':''}</small>${r&&!EV_SHOW?`<span class="stars">${[0,1,2].map(i=>`<i class="${i<evStars(r.score)?'on':''}">★</i>`).join('')}</span>`:''}</button>`}).join('')}</div>
    ${attFilled?`<button class="ghost" id="runAll" style="align-self:flex-start">${RUN_ALL?'Tampilkan yang hadir saja':'Tampilkan semua murid'}</button>`:''}
-   ${done.length?`<div class="tcard"><h3>Hasil sementara</h3><div class="tablewrap"><table class="ttable"><thead><tr><th>No</th><th>Nama</th><th class="num">Benar</th><th class="num">Nilai</th><th>Status</th></tr></thead><tbody>${done.sort((a,b)=>e.results[b.id].score-e.results[a.id].score).map(p=>{const r=e.results[p.id];return `<tr><td>${p.no||''}</td><td class="nm">${esc(p.name)}</td><td class="num">${r.correct}/${r.total}</td><td class="num score ${r.score<t.kkm?'low':''}">${r.score}</td><td>${statusPill(r.score)}</td></tr>`}).join('')}</tbody></table></div></div>`:''}`;
-  bindTeacherLinks($('#vTRun'));
-  $('#runBack').onclick=()=>{fsOff();go('tdash')};
+   ${done.length?`<button class="ghost" id="evShow" style="align-self:flex-start">${EV_SHOW?'Sembunyikan nilai':'🔒 Lihat nilai (guru)'}</button>`:''}
+   ${done.length&&EV_SHOW?`<div class="tcard"><h3>Hasil sementara</h3><div class="tablewrap"><table class="ttable"><thead><tr><th>No</th><th>Nama</th><th class="num">Benar</th><th class="num">Nilai</th><th>Status</th></tr></thead><tbody>${done.sort((a,b)=>e.results[b.id].score-e.results[a.id].score).map(p=>{const r=e.results[p.id];return `<tr><td>${p.no||''}</td><td class="nm">${esc(p.name)}</td><td class="num">${r.correct}/${r.total}</td><td class="num score ${r.score<t.kkm?'low':''}">${r.score}</td><td>${statusPill(r.score)}</td></tr>`}).join('')}</tbody></table></div></div>`:''}`;
+  bindTeacherLinks($('#vTRun'));{const rp=$('#evRapor');if(rp)rp.onclick=()=>tLock(()=>{fsOff();go('trapor')})}
+  $('#runBack').onclick=()=>tLock(()=>{EV_SHOW=false;fsOff();go('tdash')});{const sv=$('#evShow');if(sv)sv.onclick=()=>{if(EV_SHOW){EV_SHOW=false;renderTRun()}else tLock(()=>{EV_SHOW=true;renderTRun()},'Nilai murid hanya untuk guru. Masukkan sandi guru untuk menampilkannya.')}}
   if(e.fmt&&e.fmt!=='solo'){const max=e.fmt==='terbagi'?2:6;
     $('#vTRun').querySelectorAll('.stile').forEach(b=>b.onclick=()=>{const id=b.dataset.p;if(EVSEL.includes(id))EVSEL=EVSEL.filter(x=>x!==id);else{if(EVSEL.length>=max)EVSEL.shift();EVSEL.push(id)}tone([600],.03);renderTRun()});
     $('#evAuto').onclick=()=>{const left=part.filter(p=>!e.results[p.id]);const pool=(left.length>=2?left:part).map(p=>p.id);EVSEL=shuffle(pool).slice(0,Math.min(max,e.fmt==='terbagi'?2:4,pool.length));renderTRun()};
     $('#evGo').onclick=()=>{fsOn();evalGroupStart(EVSEL.slice())};const ra0=$('#runAll');if(ra0)ra0.onclick=()=>{RUN_ALL=!RUN_ALL;renderTRun()};bindTeacherLinks($('#vTRun'));return}const ra=$('#runAll');if(ra)ra.onclick=()=>{RUN_ALL=!RUN_ALL;renderTRun()};
   $('#vTRun').querySelectorAll('.stile').forEach(b=>b.onclick=()=>{const p=APP.profiles.find(x=>x.id===b.dataset.p),r=e.results[p.id];
-    openModal(`<div class="mascot" data-mascot data-mood="happy" style="width:110px;margin:0 auto"></div><h3 style="text-align:center">${r?`${esc(p.name)} sudah dinilai (${r.score})`:`Siap, ${esc(p.name)}?`}</h3><p style="text-align:center">${r?'Mengulang akan mengganti nilai sebelumnya.':`${e.n} soal ${esc(e.unit)} lewat game ${gameName(e.game)}.`}</p><div class="acts"><button class="ghost" id="mNo">Batal</button><button class="primary" id="mYes">${r?'Ulangi':'Mulai!'}</button></div>`);
+    if(r&&!b.dataset.ok){tLock(()=>{b.dataset.ok=1;b.click()},`${esc(p.name)} sudah dinilai. Hanya guru yang bisa mengulang evaluasinya.`);return}delete b.dataset.ok;
+    openModal(`<div class="mascot" data-mascot data-mood="happy" style="width:110px;margin:0 auto"></div><h3 style="text-align:center">${r?`${esc(p.name)} sudah dinilai`:`Siap, ${esc(p.name)}?`}</h3><p style="text-align:center">${r?'Mengulang akan mengganti nilai sebelumnya.':`${e.n} soal ${esc(e.unit)} lewat game ${gameName(e.game)}.`}</p><div class="acts"><button class="ghost" id="mNo">Batal</button><button class="primary" id="mYes">${r?'Ulangi':'Mulai!'}</button></div>`);
     $('#mNo').onclick=closeModal;$('#mYes').onclick=()=>{closeModal();fsOn();runEvalFor(p.id)}})}
 function runEvalFor(pid){const {e}=curEval();const c=tCls(),s=c.subjects.find(x=>x.id===e.subj)||c.subjects[0];const p=APP.profiles.find(x=>x.id===pid);let qs;
   if(e.bank){const b=(APP.bank||[]).find(x=>x.id===e.bank);if(!b||!b.qs.length){toast('quiz','Paket soal ini sudah dihapus.');return}qs=bankQs(b,e.n)}
   else{const u=s.units[e.ui]||s.units[0];qs=unitQs(u,e.game==='kuis'?e.n:e.n*2).filter(q=>e.game==='kuis'||!q.html).slice(0,e.n)}
   beginRun({kind:'eval',qs,mode:e.game,title:`Evaluasi · ${e.unit}`,cls:c.id,subj:s,pid,who:p.name})}
+function evStars(sc){const k=T()?T().kkm:75;return sc>=90?3:sc>=k?2:sc>=50?1:0}
 function evalDone(){const g=game,o=g.lesson;clearInterval(timerId);if(arc.running)arcStop();$('#checkBar').hidden=true;const {e}=curEval();const t=T();
   const score=Math.round(g.correct/o.target*100),secs=Math.round((Date.now()-o.start)/1000);
   if(e){e.results[o.pid]={score,correct:g.correct,total:o.target,secs,at:Date.now()}}
   const p=APP.profiles.find(x=>x.id===o.pid);if(p){ensureDay(p);p.upd=Date.now();p.xp+=10;p.week.xp+=10;p.today.xp+=10}save();
   const pass=score>=t.kkm,stars=score>=90?3:score>=t.kkm?2:score>=50?1:0;
-  const v=$('#vDone');v.innerHTML=`<div class="done"><div class="mascot" data-mascot data-mood="${pass?'happy':'sad'}"></div><h2 class="gold">${esc(p?p.name:'')}: ${score}</h2><div class="bigstars">${[0,1,2].map(i=>`<span class="${i<stars?'':'off'}">★</span>`).join('')}</div><p class="sub">Benar ${g.correct} dari ${o.target} soal. ${pass?'Tuntas, hebat!':`Belum mencapai KKM ${t.kkm}. Tetap semangat!`} Nilai sudah masuk rapor.</p><div class="acts"><button class="primary" id="evNext">Murid berikutnya</button></div></div>`;
-  hydrate(v);show('vDone');if(pass){sfx.win();setTimeout(burstConfetti,150)}$('#evNext').onclick=()=>{game=null;go('trun')};setTimeout(()=>$('#evNext').focus({preventScroll:true}),60)}
+  const v=$('#vDone');v.innerHTML=`<div class="done"><div class="mascot" data-mascot data-mood="${pass?'happy':'sad'}"></div><h2 class="gold">${esc(p?p.name:'')}: ${score}</h2><div class="bigstars">${[0,1,2].map(i=>`<span class="${i<stars?'':'off'}">★</span>`).join('')}</div><p class="sub">Benar ${g.correct} dari ${o.target} soal. ${pass?'Tuntas, hebat!':`Belum mencapai KKM ${t.kkm}. Tetap semangat!`} Nilai sudah masuk rapor.</p><div class="acts"><button class="primary" id="evNext">Murid berikutnya <span id="evCd">(10)</span></button></div></div>`;
+  hydrate(v);show('vDone');if(pass){sfx.win();setTimeout(burstConfetti,150)}let cd=10;clearInterval(window.evCdT);window.evCdT=setInterval(()=>{cd--;const el=$('#evCd');if(!el||$('#vDone').hidden){clearInterval(window.evCdT);return}el.textContent=`(${cd})`;if(cd<=0){clearInterval(window.evCdT);$('#evNext').click()}},1000);$('#evNext').onclick=()=>{clearInterval(window.evCdT);game=null;go('trun')};setTimeout(()=>$('#evNext').focus({preventScroll:true}),60)}
 
 /* ---------- evaluasi berkelompok: bergiliran, rebutan, layar terbagi ---------- */
 function evalGroupStart(pids){const {e}=curEval();if(!e||pids.length<2)return;const c=tCls(),s=c.subjects.find(x=>x.id===e.subj)||c.subjects[0];let make,fit;
@@ -15423,7 +15446,7 @@ function folBind(root,list,after){root.querySelectorAll('[data-follow]').forEach
   try{await folDo(f,on);if(on){try{sfx.ok()}catch(_){}toast('team',`Kamu mengikuti ${f.name}.`)}b.outerHTML=folBtn(f,b.classList.contains('sm'));folBind(root,list,after);after&&after()}catch(err){b.disabled=false;toast('lock',fbErr(err))}})}
 const shareIcon='<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M12 3 V15 M7 8 L12 3 L17 8 M5 13 V19 C5 20 6 21 7 21 H17 C18 21 19 20 19 19 V13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const qrIcon='<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><path d="M14 14h3v3h-3zM18 18h3v3h-3zM18 14h3M14 18v3" stroke-linecap="round"/></svg>';
-let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=264';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
+let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=265';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
 function qrMatrix(text){const Q=window.QRCodeLib,q=new Q(-1,Q.ECL.M);q.addData(text);q.make();const n=q.getModuleCount(),m=[];for(let r=0;r<n;r++){m.push([]);for(let c=0;c<n;c++)m[r].push(q.isDark(r,c))}return m}
 function qrSvgOf(m){const n=m.length;let d='';for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(m[r][c])d+=`M${c} ${r}h1.02v1.02h-1.02z`;
   return `<svg viewBox="-2 -2 ${n+4} ${n+4}" class="pcqr" shape-rendering="crispEdges" aria-label="Kode QR profil"><rect x="-2" y="-2" width="${n+4}" height="${n+4}" fill="#fff"/><path d="${d}" fill="#1C1E3D"/></svg>`}
