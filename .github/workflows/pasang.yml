@@ -36,8 +36,10 @@ jobs:
         run: |
           if [ -z "$CLOUDFLARE_API_TOKEN" ] || [ -z "$CLOUDFLARE_ACCOUNT_ID" ]; then
             echo "Kunci Cloudflare belum diisi di GitHub Secrets, langkah ini dilewati."; exit 0; fi
-          export CLOUDFLARE_API_TOKEN="$(printf '%s' "$CLOUDFLARE_API_TOKEN" | tr -d '[:space:]')"
-          echo "Panjang token: ${#CLOUDFLARE_API_TOKEN} karakter"
+          # ambil token saja walau yang ditempel berisi teks lain (mis. CLOUDFLARE_API_TOKEN=... atau Account ID)
+          RAW="$CLOUDFLARE_API_TOKEN"; TOK="$(printf '%s' "$RAW" | sed 's/CLOUDFLARE_API_TOKEN//g' | grep -oE '[A-Za-z0-9_-]{30,}' | grep -vE '^[0-9a-f]{32}$' | head -1)"
+          echo "Isi secret: $(printf '%s' "$RAW" | wc -c) karakter; token ditemukan: ${#TOK} karakter"
+          export CLOUDFLARE_API_TOKEN="${TOK:-$RAW}"
           npx --yes wrangler@3 deploy
       - name: Kirim kunci Firebase ke server notifikasi
         working-directory: notif
@@ -48,5 +50,8 @@ jobs:
         run: |
           if [ -z "$CLOUDFLARE_API_TOKEN" ] || [ -z "$CLOUDFLARE_ACCOUNT_ID" ] || [ -z "$SA" ]; then
             echo "Kunci belum lengkap, langkah ini dilewati."; exit 0; fi
-          export CLOUDFLARE_API_TOKEN="$(printf '%s' "$CLOUDFLARE_API_TOKEN" | tr -d '[:space:]')"
+          # ambil token saja walau yang ditempel berisi teks lain (mis. CLOUDFLARE_API_TOKEN=... atau Account ID)
+          RAW="$CLOUDFLARE_API_TOKEN"; TOK="$(printf '%s' "$RAW" | sed 's/CLOUDFLARE_API_TOKEN//g' | grep -oE '[A-Za-z0-9_-]{30,}' | grep -vE '^[0-9a-f]{32}$' | head -1)"
+          echo "Isi secret: $(printf '%s' "$RAW" | wc -c) karakter; token ditemukan: ${#TOK} karakter"
+          export CLOUDFLARE_API_TOKEN="${TOK:-$RAW}"
           printf '%s' "$SA" | npx --yes wrangler@3 secret put SERVICE_ACCOUNT
