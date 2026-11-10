@@ -3943,7 +3943,7 @@ html[data-theme=malam] .plstick{background:#0a0f1e}
 <div class="syncpill" id="syncPill" hidden></div>
 <div class="toast" id="toast" hidden></div>
 
-<script src="av.js?v=275"></script>
+<script src="av.js?v=276"></script>
 <script>
 /* ---------- visual assets ---------- */
 const INK='#1B1E3D';
@@ -10610,7 +10610,8 @@ const Katak={
   const me=this.cellXY(K.c,K.row);this.frog={wx:me.x,wy:me.y,jump:null,on:null,fall:0,fin:null,h:0,rot:0,sq:0,land:0,rip:[]};
   this.last=K.step>=game.qs.length-1;this.finT=0;
   /* tepi FINIS selalu di depan daun jawaban, tidak menutupinya */
-  this.finWY=Math.min(...this.pads.map(p=>this.cellXY(p.c,p.row).y))-this.rg*.95;
+  /* tepi FINIS terlihat sejak awal di kejauhan dan makin dekat setiap soal; pada soal terakhir tepat di depan daun jawaban */
+  {const left=Math.max(1,game.qs.length-K.step);this.finWY=Math.min(...this.pads.map(p=>this.cellXY(p.c,p.row).y))-this.rg*.95-(left-1)*this.rg*.75;if(K.finY==null)K.finY=this.finWY}
   if(K.camX==null){K.camX=me.x;K.camY=me.y}},
  sx(wx){return this.bx+(wx-game.kat.camX)},sy(wy){return this.by+(wy-game.kat.camY)},
  padXY(p){const w=this.cellXY(p.c,p.row);return {x:this.sx(w.x),y:this.sy(w.y)}},
@@ -10631,8 +10632,9 @@ const Katak={
      if(arc.state==='play'){burst(this.sx(fr.wx),this.sy(fr.wy),ok?'#BFE3FF':'#7FB8E0',10);arcResolve(j.p.i)}}}}
   else{fr.sq+=(0-fr.sq)*Math.min(1,dt*10);
    if(fr.on){if(fr.on.i!==arc.ci){fr.on.sink=Math.min(1,fr.on.sink+dt*1.5);fr.fall=Math.min(1,fr.fall+dt*1.5)}
-    else if(this.last&&!fr.fin){this.finT+=dt;if(this.finT>.3){fr.on=null;fr.jump={t:-.11,x0:fr.wx,y0:fr.wy,x1:fr.wx,y1:this.finWY-this.r*.9,fin:true,go:false}}}}}
+    else if(this.last&&!fr.fin){this.finT+=dt;if(this.finT>.3){fr.on=null;fr.jump={t:-.11,x0:fr.wx,y0:fr.wy,x1:fr.wx,y1:K.finY-this.r*.9,fin:true,go:false}}}}}
   {let d=face-fr.rot;d=Math.atan2(Math.sin(d),Math.cos(d));fr.rot+=d*Math.min(1,dt*fk)}
+  if(K.finY!=null&&this.finWY!=null)K.finY+=(this.finWY-K.finY)*(1-Math.exp(-dt*2.5));
   const tx=fr.fall>0?K.camX:fr.wx,ty=fr.fall>0?K.camY:fr.wy;const k=1-Math.exp(-dt*5);K.camX+=(tx-K.camX)*k;K.camY+=(ty-K.camY)*k},
  update(dt){this.step(dt)},idle(dt){this.step(dt)},
  /* daun teratai digambar sekali ke kanvas cadangan (tulang daun, tepi, kilau), lalu diputar */
@@ -10680,13 +10682,13 @@ const Katak={
   return Object.values(spots)},
  draw(c){const{W,H}=arc,tm=performance.now()/1000,r=this.r,K=game.kat,fr=this.frog;
   this.water(c,W,H);
-  const finY=this.last?this.sy(this.finWY):null;
+  const finY=K.finY!=null&&this.sy(K.finY)>-40?this.sy(K.finY):null;
   const isPad=(cc,rr)=>this.pads.find(p=>p.c===cc&&p.row===rr);
   const c0=Math.floor((K.camX-W/2-this.cg)/this.cg),c1=Math.ceil((K.camX+W/2+this.cg)/this.cg),r0=Math.floor((-K.camY-(H-this.by)-this.rg)/this.rg),r1=Math.ceil((-K.camY+this.by+this.rg)/this.rg);
   for(let cc=c0;cc<=c1;cc++)for(let rr=r0;rr<=r1;rr++){if(isPad(cc,rr))continue;if(cc===K.c&&rr===K.row)continue;const w=this.cellXY(cc,rr),x=this.sx(w.x),y=this.sy(w.y);if(finY!=null&&y<finY+r*.6)continue;
    if(K.sunk[cc+','+rr]){c.strokeStyle='rgba(255,255,255,.5)';c.lineWidth=2;for(let k=1;k<=3;k++){c.beginPath();c.arc(x,y,r*.25*k,0,7);c.stroke()}continue}
    const lk=this.cellLook(cc,rr);this.leaf(c,x+Math.sin(tm*.9+lk.ph)*1.5,y+Math.sin(tm*1.3+lk.ph)*2,r,'#1E4A1C',null,lk.rot+Math.sin(tm*.7+lk.ph)*.06,lk.v)}
-  if(finY!=null){const by=finY;c.fillStyle='#E9C982';c.fillRect(0,by-400,W,436);c.fillStyle='#6DB65B';c.fillRect(0,by-400,W,418);
+  if(finY!=null){const by=finY;c.fillStyle='#E9C982';c.fillRect(0,0,W,by+36);c.fillStyle='#6DB65B';c.fillRect(0,0,W,by+18);
    c.fillStyle='#5AA24B';for(let x=6;x<W;x+=22){c.beginPath();c.moveTo(x,by+18);c.lineTo(x+5,by+6);c.lineTo(x+10,by+18);c.fill()}
    const fx=W/2+60;c.fillStyle='#14213D';c.fillRect(fx,by-44,4,56);for(let a=0;a<3;a++)for(let b=0;b<4;b++){c.fillStyle=(a+b)%2?'#14213D':'#fff';c.fillRect(fx+4+b*9,by-44+a*7,9,7)}
    c.fillStyle='#fff';rr(c,W/2-120,by-30,96,26,13);c.fill();c.fillStyle='#14213D';c.font=`900 14px ${FONT}`;c.textAlign='center';c.textBaseline='middle';c.fillText('FINIS 🏁',W/2-72,by-17)}
@@ -10721,8 +10723,14 @@ const Katak={
     if(g.jump||g.t<1)o.air=true});
    const x=this.sx(w.x),y=this.sy(w.y);if(y>-r&&y<H+r){const nm=sp.list.filter(o=>!o.air).map(o=>o.me?'Kamu':String(o.name).split(' ')[0]);const txt=nm.slice(0,3).join(' · ')+(nm.length>3?` +${nm.length-3}`:'');
     if(nm.length&&!(sp.list.length===1&&sp.list[0].me))tagsLater.push([x,y+r*.82,txt,sp.list.length===1?(sp.list[0].col||'#FF8A3D'):'#14213D'])}}
-  /* teman di luar layar: penanda panah */
-  if(this.np>1)spots.forEach(sp=>{const y=this.sy(this.cellXY(sp.c,sp.row).y);sp.list.filter(o=>!o.me).forEach((o,k)=>{if(y<-r){this.tag(c,Math.min(W-50,Math.max(50,this.sx(this.cellXY(sp.c,sp.row).x))),14+k*20,'▲ '+String(o.name).split(' ')[0],o.col||'#FF8A3D')}else if(y>H+r){this.tag(c,Math.min(W-50,Math.max(50,this.sx(this.cellXY(sp.c,sp.row).x))),H-14-k*20,'▼ '+String(o.name).split(' ')[0],o.col||'#FF8A3D')}})});
+  /* teman di luar layar: panah di tepi layar dengan inisial nama */
+  if(this.np>1)spots.forEach(sp=>sp.list.forEach(o=>{if(o.me)return;const g=GP[o.uid];if(!g)return;const x=this.sx(g.x),y=this.sy(g.y),m=26;
+   if(x>-r*.3&&x<W+r*.3&&y>-r*.3&&y<H+r*.3)return;
+   const cx=W/2,cy=H/2,dx=x-cx,dy=y-cy,k=Math.min(Math.abs((W/2-m-12)/(dx||1e-6)),Math.abs((H/2-m)/(dy||1e-6)));const ax=cx+dx*k,ay=cy+dy*k,ang=Math.atan2(dy,dx);
+   const ini=String(o.name||'?').trim().split(/\s+/).slice(0,2).map(w=>w[0]||'').join('').toUpperCase()||'?',col=o.col||'#FF8A3D';
+   c.save();c.translate(ax,ay);c.rotate(ang);c.fillStyle=col;c.beginPath();c.moveTo(m+4,0);c.lineTo(m-8,-9);c.lineTo(m-8,9);c.closePath();c.fill();c.restore();
+   c.fillStyle=col;c.beginPath();c.arc(ax,ay,m-6,0,7);c.fill();c.strokeStyle='#fff';c.lineWidth=3;c.stroke();
+   c.fillStyle='#fff';c.font=`900 ${ini.length>1?14:17}px ${FONT}`;c.textAlign='center';c.textBaseline='middle';c.fillText(ini,ax,ay+1)}));
   const st=Object.assign({},fr.jump||fr.fall>0||fr.fin||!mine?{ox:0,oy:0,sc:base}:mine);
   {const mo=this.myOff=this.myOff||{ox:0,oy:0,sc:base};const kk=Math.min(1,dt*10);mo.ox+=(st.ox-mo.ox)*kk;mo.oy+=(st.oy-mo.oy)*kk;mo.sc+=(st.sc-mo.sc)*kk;if(fr.jump){mo.ox=0;mo.oy=0;mo.sc=base}Object.assign(st,{ox:mo.ox,oy:mo.oy,sc:mo.sc})}
   const x=this.sx(fr.wx)+st.ox,y=this.sy(fr.wy)+st.oy-4+(fr.jump?0:fr.land*5),s=(1+fr.h*.35)*st.sc*(1-fr.fall*.5)*(1-(K.pop||0)*.4);
@@ -15584,7 +15592,7 @@ function folBind(root,list,after){root.querySelectorAll('[data-follow]').forEach
   try{await folDo(f,on);if(on){try{sfx.ok()}catch(_){}toast('team',`Kamu mengikuti ${f.name}.`)}b.outerHTML=folBtn(f,b.classList.contains('sm'));folBind(root,list,after);after&&after()}catch(err){b.disabled=false;toast('lock',fbErr(err))}})}
 const shareIcon='<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M12 3 V15 M7 8 L12 3 L17 8 M5 13 V19 C5 20 6 21 7 21 H17 C18 21 19 20 19 19 V13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const qrIcon='<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><path d="M14 14h3v3h-3zM18 18h3v3h-3zM18 14h3M14 18v3" stroke-linecap="round"/></svg>';
-let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=275';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
+let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=276';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
 function qrMatrix(text){const Q=window.QRCodeLib,q=new Q(-1,Q.ECL.M);q.addData(text);q.make();const n=q.getModuleCount(),m=[];for(let r=0;r<n;r++){m.push([]);for(let c=0;c<n;c++)m[r].push(q.isDark(r,c))}return m}
 function qrSvgOf(m){const n=m.length;let d='';for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(m[r][c])d+=`M${c} ${r}h1.02v1.02h-1.02z`;
   return `<svg viewBox="-2 -2 ${n+4} ${n+4}" class="pcqr" shape-rendering="crispEdges" aria-label="Kode QR profil"><rect x="-2" y="-2" width="${n+4}" height="${n+4}" fill="#fff"/><path d="${d}" fill="#1C1E3D"/></svg>`}
