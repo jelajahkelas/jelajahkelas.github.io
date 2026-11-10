@@ -1,0 +1,21 @@
+# Diagnosa akun (hanya membaca data), dijalankan manual.
+name: Cek akun
+on:
+  workflow_dispatch:
+    inputs:
+      user: { description: 'nama pengguna', default: 'farid' }
+      nama: { description: 'potongan nama', default: 'farid' }
+jobs:
+  cek:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with: { sparse-checkout: .github }
+      - uses: actions/setup-node@v4
+        with: { node-version: 20 }
+      - run: npm i --no-save google-auth-library@9 >/dev/null 2>&1 && node .github/scripts/cek.mjs
+        env:
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          CEK_USER: ${{ github.event.inputs.user }}
+          CEK_NAMA: ${{ github.event.inputs.nama }}
