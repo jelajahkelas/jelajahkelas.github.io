@@ -3931,7 +3931,7 @@ html[data-theme=malam] .plstick{background:#0a0f1e}
 <div class="syncpill" id="syncPill" hidden></div>
 <div class="toast" id="toast" hidden></div>
 
-<script src="av.js?v=266"></script>
+<script src="av.js?v=267"></script>
 <script>
 /* ---------- visual assets ---------- */
 const INK='#1B1E3D';
@@ -13856,6 +13856,25 @@ function duoWizard(){const c=CLS();const st={n1:GROUP.duo1||P.name,n2:GROUP.duo2
      PLAY='group';L=lvOf();setLvColor(L);document.documentElement.style.setProperty('--lvc',sb.color);S={id:sb.id,name:sb.name,fit:sb.fit,make:()=>shuffle(sb.units.flatMap(u=>unitQs(u,3)))};close();openGames()}}})}
 
 /* ---------- evaluasi guru: bertahap ---------- */
+/* tulis soal langsung di alur Evaluasi */
+function evDraftHtml(d){const f=d.f;return `<div class="tfield"><label for="ewTitle">Judul paket</label><input id="ewTitle" maxlength="40" value="${esc(d.title)}"></div>
+  <div class="tcard evdraft"><div class="tfield"><label for="ewQ">Soal ${d.qs.length+1}</label><textarea class="note-area" id="ewQ" style="min-height:64px" placeholder="Contoh: Hasil dari 3/4 + 1/4 adalah …">${esc(f.q)}</textarea></div>
+   <div class="optedit">${['A','B','C','D'].map((L,i)=>`<label class="oe"><input type="radio" name="ewKey" value="${i}" ${f.a===i?'checked':''} aria-label="Kunci ${L}"><b>${L}</b><input id="ewO${i}" maxlength="60" value="${esc(f.opts[i]||'')}" placeholder="Pilihan ${L}${i>1?' (boleh kosong)':''}"></label>`).join('')}</div>
+   <p class="note" style="margin:0">Tandai bulatan di depan jawaban yang benar.</p><p class="note" id="ewErr" style="color:var(--bad);font-weight:700;margin:0"></p>
+   <button class="ghost press" id="ewAdd">+ Simpan soal ini, tulis soal berikutnya</button></div>
+  ${d.qs.length?`<ol class="qlist">${d.qs.map((q,k)=>`<li><div class="qq">${esc(q.q)}</div><div class="qo">${q.opts.map((o,i)=>o?`<span class="${i===q.a?'key':''}">${'ABCD'[i]}. ${esc(o)}</span>`:'').join('')}</div><div class="qa"><button class="smallbtn danger" data-ewd="${k}">Hapus</button></div></li>`).join('')}</ol>`:''}
+  <p class="note">${d.qs.length?`${d.qs.length} soal siap. Tekan <b>Lanjut</b> jika sudah cukup.`:'Belum ada soal.'} Paket ini juga tersimpan di menu Soal untuk dipakai lagi.</p>`}
+function evDraftRead(d){const f=d.f;const q=$('#ewQ');if(!q)return;f.q=q.value;f.opts=[0,1,2,3].map(i=>$('#ewO'+i).value);const k=document.querySelector('input[name="ewKey"]:checked');f.a=k?+k.value:0;const t=$('#ewTitle');if(t)d.title=t.value}
+function evDraftAdd(d,soft){evDraftRead(d);const f=d.f,q=f.q.trim(),opts=f.opts.map(o=>o.trim());
+  if(!q&&!opts.some(Boolean))return soft?true:'Pertanyaan belum diisi.';
+  if(!q)return 'Pertanyaan belum diisi.';if(opts.filter(Boolean).length<2)return 'Isi minimal dua pilihan jawaban.';if(!opts[f.a])return 'Kunci jawaban harus pada pilihan yang sudah diisi.';
+  if(new Set(opts.filter(Boolean).map(o=>o.toLowerCase())).size!==opts.filter(Boolean).length)return 'Ada pilihan jawaban yang sama.';
+  d.qs.push({id:'q'+Date.now().toString(36)+R(100,999),q,opts,a:f.a,exp:''});d.f={q:'',opts:['','','',''],a:0};return true}
+function evDraftBind(el,d,re){const err=m=>{$('#ewErr').textContent=m;try{sfx.bad()}catch(e){}};
+  $('#ewAdd').onclick=()=>{const r=evDraftAdd(d);if(r!==true)return err(r);try{tone([660,880],.05)}catch(e){}re();setTimeout(()=>{const q=$('#ewQ');if(q)q.focus()},30)};
+  el.querySelectorAll('.evdraft input,#ewQ,#ewTitle').forEach(x=>{x.addEventListener('input',()=>evDraftRead(d));x.addEventListener('change',()=>evDraftRead(d));
+    x.addEventListener('keydown',e=>{if(e.key==='Enter'&&x.id!=='ewQ'&&x.id!=='ewTitle'){e.preventDefault();e.stopPropagation();$('#ewAdd').click()}})});
+  el.querySelectorAll('[data-ewd]').forEach(b=>b.onclick=()=>{evDraftRead(d);d.qs.splice(+b.dataset.ewd,1);re()})}
 function evalWizard(){if(window.modFetch&&(MOD.list===null||MOD.cid!==tcid())){const b=$('#evWiz');if(b)b.disabled=true;window.modFetch().catch(()=>{MOD.list=MOD.list||[]}).finally(()=>{if(b)b.disabled=false;evalWizard2()});return}evalWizard2()}
 function evalWizard2(){normBank();const c=tCls();const st={subj:EV.subj&&c.subjects.some(x=>x.id===EV.subj)?EV.subj:c.subjects[0].id,src:EV.src||'u:0',game:EV.game,fmt:EV.fmt||'solo',n:EV.n||5};
   st.kind=st.src.startsWith('b:')?'sendiri':st.src.startsWith('m:')?'modul':'jelas';
@@ -13865,14 +13884,17 @@ function evalWizard2(){normBank();const c=tCls();const st={subj:EV.subj&&c.subje
   wizard({title:'Evaluasi di TV',state:st,steps:[
     {t:'Mata pelajaran apa?',html:s=>wzOpts(c.subjects.map(x=>({v:x.id,l:x.name,g:x.glyph,c:x.color})),s.subj),pick:(s,v)=>{if(s.subj!==v){s.subj=v;s.src='u:0';s.kind='jelas';s.game=null}}},
     {t:'Soal dari mana?',html:s=>{const sb=subj(s),nb=bankOf(sb.id).filter(b=>b.qs.length).length,nm=evModBabs(sb.id).length;
-       return wzOpts([{v:'jelas',l:'Jalur Belajar JELAS',s:`${sb.units.length} unit sesuai buku Kurikulum Merdeka`,g:'🦉'},{v:'modul',l:'Modul guru',s:nm?`${nm} bab dari modul buatanmu`:'Belum ada modul untuk mapel ini. Buat di menu Modul.',g:'📘'},{v:'sendiri',l:'Soal sendiri',s:nb?`${nb} paket soal buatanmu`:'Belum ada paket soal. Buat di menu Soal.',g:'✍️'}],s.kind)},
+       return wzOpts([{v:'jelas',l:'Jalur Belajar JELAS',s:`${sb.units.length} unit sesuai buku Kurikulum Merdeka`,g:'🦉'},{v:'modul',l:'Modul guru',s:nm?`${nm} bab dari modul buatanmu`:'Belum ada modul untuk mapel ini. Buat di menu Modul.',g:'📘'},{v:'sendiri',l:'Soal sendiri',s:nb?`${nb} paket soal buatanmu, atau tulis soal baru sekarang`:'Tulis soalnya langsung di sini',g:'✍️'}],s.kind)},
      pick:(s,v)=>{const sb=subj(s);if(s.kind===v)return;s.kind=v;s.game=null;const mb=evModBabs(sb.id),bk=bankOf(sb.id).filter(b=>b.qs.length);
-       s.src=v==='jelas'?'u:0':v==='modul'?(mb[0]?mb[0].v:''):(bk[0]?'b:'+bk[0].id:'')},
-     ok:s=>{const sb=subj(s);if(s.kind==='modul'&&!evModBabs(sb.id).length)return 'Belum ada modul untuk mapel ini. Buat dulu di menu Modul.';if(s.kind==='sendiri'&&!bankOf(sb.id).filter(b=>b.qs.length).length)return 'Belum ada paket soal untuk mapel ini. Buat dulu di menu Soal.';return true}},
+       s.draft=null;s.src=v==='jelas'?'u:0':v==='modul'?(mb[0]?mb[0].v:''):(bk[0]?'b:'+bk[0].id:'new')},
+     ok:s=>{const sb=subj(s);if(s.kind==='modul'&&!evModBabs(sb.id).length)return 'Belum ada modul untuk mapel ini. Buat dulu di menu Modul.';return true}},
     {t:'Materi hari ini',html:s=>{const sb=subj(s);
        if(s.kind==='modul')return wzOpts(evModBabs(sb.id).map(x=>({v:x.v,l:`Bab ${x.i+1}: ${x.bb.t}`,s:`${x.m.title}${x.bb.bank&&x.bb.bank.qs?` · ${x.bb.bank.qs.length} soal guru`:''}`})),s.src);
-       if(s.kind==='sendiri')return wzOpts(bankOf(sb.id).filter(b=>b.qs.length).map(b=>({v:'b:'+b.id,l:b.title,s:`${b.qs.length} soal`})),s.src);
-       return wzOpts(sb.units.map((u,i)=>({v:'u:'+i,l:`Unit ${i+1}: ${u.t}`,s:u.d||''})),s.src)},pick:(s,v)=>{if(s.src!==v){s.src=v;s.game=null}}},
+       if(s.kind==='sendiri')return wzOpts([{v:'new',l:'+ Tulis soal baru sekarang',s:'Ketik soal pilihan ganda langsung di sini'}].concat(bankOf(sb.id).filter(b=>b.qs.length).map(b=>({v:'b:'+b.id,l:b.title,s:`${b.qs.length} soal`}))),s.draft?'new':s.src);
+       return wzOpts(sb.units.map((u,i)=>({v:'u:'+i,l:`Unit ${i+1}: ${u.t}`,s:u.d||''})),s.src)},pick:(s,v)=>{if(v==='new'){if(!s.draft){const sb=subj(s);s.draft={id:'b'+Date.now().toString(36)+R(10,99),subj:sb.id,subjName:sb.name,title:'Evaluasi '+sb.name+' '+new Date().toLocaleDateString('id-ID',{day:'numeric',month:'short'}),qs:[],upd:Date.now(),f:{q:'',opts:['','','',''],a:0}}}s.src='new';s.game=null;return}if(s.src!==v){s.src=v;s.draft=null;s.game=null}}},
+    {t:'Tulis soalnya',sub:'Soal pilihan ganda. Isi pertanyaan, minimal dua pilihan, lalu tandai kunci jawabannya.',auto:false,skip:s=>!(s.kind==='sendiri'&&s.draft),html:s=>evDraftHtml(s.draft),bind:(el,s,re)=>evDraftBind(el,s.draft,re),
+     ok:s=>{const d=s.draft;const r=evDraftAdd(d,true);if(r!==true)return r;if(!d.qs.length)return 'Tambahkan minimal satu soal.';d.title=(d.title||'').trim()||'Soal evaluasi';
+       const ex=(APP.bank=APP.bank||[]).find(b=>b.id===d.id);const keep={id:d.id,subj:d.subj,subjName:d.subjName,title:d.title,qs:d.qs,upd:Date.now()};if(ex)Object.assign(ex,keep);else APP.bank.push(keep);save();s.src='b:'+d.id;s.game=null;return true}},
     {t:'Pakai game apa?',html:s=>{const src=srcOf(s),games=allGames(FIT[src.fit]);if(!games.includes(s.game))s.game=games[0];return `<div class="modes wzmodes">${games.map(id=>{const m=MODE_LIST.find(x=>x.id===id);return `<button class="mode" data-wv="${id}" style="--mc:${MCOL[id]}" aria-pressed="${id===s.game}"><span class="mi">${m.icon}</span><span class="mn">${m.name}</span><span class="md">${m.desc}</span></button>`}).join('')}</div>`},pick:(s,v)=>s.game=v},
     {t:'Cara bermain',html:s=>wzOpts(EV_FMTS.map(f=>({v:f[0],l:f[1],s:f[2]})),s.fmt),pick:(s,v)=>s.fmt=v},
     {t:'Berapa soal per murid?',auto:false,html:s=>{const src=srcOf(s);return wzOpts([3,5,10].map(n=>({v:n,l:n+' soal'})),s.n,true)+((src.bank||src.modQs)&&src.count<s.n?`<p class="note">Paket ini hanya punya ${src.count} soal, jadi setiap murid mendapat ${src.count} soal.</p>`:'')+`<p class="note">${attFilled?`Peserta: ${part.length} murid yang hadir menurut absensi hari ini.`:`Absensi hari ini belum diisi, jadi semua ${list.length} murid ikut.`}</p>`},pick:(s,v)=>s.n=+v}],
@@ -15463,7 +15485,7 @@ function folBind(root,list,after){root.querySelectorAll('[data-follow]').forEach
   try{await folDo(f,on);if(on){try{sfx.ok()}catch(_){}toast('team',`Kamu mengikuti ${f.name}.`)}b.outerHTML=folBtn(f,b.classList.contains('sm'));folBind(root,list,after);after&&after()}catch(err){b.disabled=false;toast('lock',fbErr(err))}})}
 const shareIcon='<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M12 3 V15 M7 8 L12 3 L17 8 M5 13 V19 C5 20 6 21 7 21 H17 C18 21 19 20 19 19 V13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const qrIcon='<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><path d="M14 14h3v3h-3zM18 18h3v3h-3zM18 14h3M14 18v3" stroke-linecap="round"/></svg>';
-let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=266';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
+let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=267';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
 function qrMatrix(text){const Q=window.QRCodeLib,q=new Q(-1,Q.ECL.M);q.addData(text);q.make();const n=q.getModuleCount(),m=[];for(let r=0;r<n;r++){m.push([]);for(let c=0;c<n;c++)m[r].push(q.isDark(r,c))}return m}
 function qrSvgOf(m){const n=m.length;let d='';for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(m[r][c])d+=`M${c} ${r}h1.02v1.02h-1.02z`;
   return `<svg viewBox="-2 -2 ${n+4} ${n+4}" class="pcqr" shape-rendering="crispEdges" aria-label="Kode QR profil"><rect x="-2" y="-2" width="${n+4}" height="${n+4}" fill="#fff"/><path d="${d}" fill="#1C1E3D"/></svg>`}
