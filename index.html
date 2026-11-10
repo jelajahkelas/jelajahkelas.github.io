@@ -3943,7 +3943,7 @@ html[data-theme=malam] .plstick{background:#0a0f1e}
 <div class="syncpill" id="syncPill" hidden></div>
 <div class="toast" id="toast" hidden></div>
 
-<script src="av.js?v=272"></script>
+<script src="av.js?v=273"></script>
 <script>
 /* ---------- visual assets ---------- */
 const INK='#1B1E3D';
@@ -10636,17 +10636,25 @@ const Katak={
   const tx=fr.fall>0?K.camX:fr.wx,ty=fr.fall>0?K.camY:fr.wy;const k=1-Math.exp(-dt*5);K.camX+=(tx-K.camX)*k;K.camY+=(ty-K.camY)*k},
  update(dt){this.step(dt)},idle(dt){this.step(dt)},
  /* daun teratai digambar sekali ke kanvas cadangan (tulang daun, tepi, kilau), lalu diputar */
- leafImg(rad,col,edge){const key=rad+col+edge;this.lc=this.lc||{};if(this.lc[key])return this.lc[key];
-  const S=Math.ceil(rad*2+12),cv=document.createElement('canvas'),dpr=Math.min(2,window.devicePixelRatio||1);cv.width=cv.height=S*dpr;const c=cv.getContext('2d');c.scale(dpr,dpr);c.translate(S/2,S/2);
-  const notch=.2;/* takik menghadap ke kanan (sudut 0), diputar saat digambar */
-  const path=()=>{c.beginPath();c.moveTo(rad*.08,0);c.arc(0,0,rad,notch,Math.PI*2-notch);c.closePath()};
-  path();const g=c.createRadialGradient(-rad*.3,-rad*.35,rad*.1,0,0,rad);g.addColorStop(0,shade(col,.18));g.addColorStop(1,col);c.fillStyle=g;c.fill();
+ leafImg(rad,col,edge,v){v=v||0;const key=rad+col+edge+v;this.lc=this.lc||{};if(this.lc[key])return this.lc[key];
+  const S=Math.ceil(rad*2+20),cv=document.createElement('canvas'),dpr=Math.min(2,window.devicePixelRatio||1);cv.width=cv.height=S*dpr;let c=cv.getContext('2d');c.scale(dpr,dpr);c.translate(S/2,S/2);
+  /* 3 jenis daun: robekan utama kecil/sedang/besar, tepi sedikit bergelombang, jenis tertentu punya sobekan kecil tambahan */
+  const notch=[.09,.17,.28][v%3],ph=v*1.7,wob=t=>rad*(1+.01*Math.sin(t*4+ph)+.006*Math.sin(t*9+ph*2));
+  const tear=v%3===0?{a:2.3,w:.035,d:.3}:v%3===2?{a:-2.0,w:.03,d:.4}:null;
+  const path=()=>{c.beginPath();c.moveTo(rad*.06,0);const N=140,a0=notch,a1=Math.PI*2-notch;
+   for(let k=0;k<=N;k++){const t=a0+(a1-a0)*k/N;
+    if(tear){let d=Math.atan2(Math.sin(t-tear.a),Math.cos(t-tear.a));if(Math.abs(d)<tear.w){const m=1-Math.abs(d)/tear.w;const R=wob(t)*(1-tear.d*m);c.lineTo(Math.cos(t)*R,Math.sin(t)*R);continue}}
+    c.lineTo(Math.cos(t)*wob(t),Math.sin(t)*wob(t))}c.closePath()};
+    path();const g=c.createRadialGradient(-rad*.3,-rad*.35,rad*.1,0,0,rad);g.addColorStop(0,shade(col,.18));g.addColorStop(1,col);c.fillStyle=g;c.fill();
   c.save();path();c.clip();c.strokeStyle='rgba(255,255,255,.10)';c.lineWidth=Math.max(1,rad*.025);
-  for(let k=0;k<11;k++){const a=notch+.25+k*(Math.PI*2-2*notch-.5)/10;c.beginPath();c.moveTo(rad*.08,0);c.quadraticCurveTo(Math.cos(a-.12)*rad*.5,Math.sin(a-.12)*rad*.5,Math.cos(a)*rad*.95,Math.sin(a)*rad*.95);c.stroke()}
-  c.strokeStyle=edge||shade(col,-.35);c.lineWidth=Math.max(2,rad*.07);c.beginPath();c.arc(0,0,rad-c.lineWidth/2,notch,Math.PI*2-notch);c.stroke();c.restore();
-  this.lc[key]={cv,S};return this.lc[key]},
- leaf(c,x,y,rad,col,edge,rot){const L=this.leafImg(Math.round(rad),col,edge||'');c.fillStyle='rgba(6,60,100,.25)';c.beginPath();c.ellipse(x+2,y+5,rad,rad*.96,0,0,7);c.fill();
-  c.save();c.translate(x,y);c.rotate(rot||0);c.drawImage(L.cv,-L.S/2,-L.S/2,L.S,L.S);c.restore()},
+  for(let k=0;k<11;k++){const a=notch+.25+k*(Math.PI*2-2*notch-.5)/10;c.beginPath();c.moveTo(rad*.06,0);c.quadraticCurveTo(Math.cos(a-.12)*rad*.5,Math.sin(a-.12)*rad*.5,Math.cos(a)*rad*.95,Math.sin(a)*rad*.95);c.stroke()}
+  c.strokeStyle=edge||shade(col,-.35);c.lineWidth=Math.max(2,rad*.07);path();c.stroke();c.restore();
+  const sh=document.createElement('canvas');sh.width=sh.height=S*dpr;const sc=sh.getContext('2d');sc.scale(dpr,dpr);sc.translate(S/2,S/2);
+  {const cc=c;c=sc;path();c.fillStyle='rgba(6,60,100,.28)';c.fill();c=cc}
+  this.lc[key]={cv,sh,S};return this.lc[key]},
+ leaf(c,x,y,rad,col,edge,rot,v){const L=this.leafImg(Math.round(rad),col,edge||'',v);
+  c.save();c.translate(x+2,y+5);c.rotate(rot||0);c.drawImage(L.sh,-L.S/2,-L.S/2,L.S,L.S);c.restore();c.save();c.translate(x,y);c.rotate(rot||0);c.drawImage(L.cv,-L.S/2,-L.S/2,L.S,L.S);c.restore()},
+ cellLook(cc,rr){const h=((cc*73856093)^(rr*19349663))>>>0;return {v:h%3,rot:((h>>3)%628)/100,ph:(h%100)/16}},
  water(c,W,H){const K=game.kat;
   if(!this.bg||this.bgH!==H){const g=c.createLinearGradient(0,0,0,H);g.addColorStop(0,'#3FCDF4');g.addColorStop(1,'#1FB2EA');this.bg=g;this.bgH=H}
   c.fillStyle=this.bg;c.fillRect(0,0,W,H);
@@ -10672,7 +10680,7 @@ const Katak={
   const c0=Math.floor((K.camX-W/2-this.cg)/this.cg),c1=Math.ceil((K.camX+W/2+this.cg)/this.cg),r0=Math.floor((-K.camY-(H-this.by)-this.rg)/this.rg),r1=Math.ceil((-K.camY+this.by+this.rg)/this.rg);
   for(let cc=c0;cc<=c1;cc++)for(let rr=r0;rr<=r1;rr++){if(isPad(cc,rr))continue;if(cc===K.c&&rr===K.row)continue;const w=this.cellXY(cc,rr),x=this.sx(w.x),y=this.sy(w.y);if(finY!=null&&y<finY+r*.6)continue;
    if(K.sunk[cc+','+rr]){c.strokeStyle='rgba(255,255,255,.5)';c.lineWidth=2;for(let k=1;k<=3;k++){c.beginPath();c.arc(x,y,r*.25*k,0,7);c.stroke()}continue}
-   const hsh=((cc*73856093)^(rr*19349663))>>>0,ph=(hsh%100)/16;this.leaf(c,x+Math.sin(tm*.9+ph)*1.5,y+Math.sin(tm*1.3+ph)*2,r,'#1E4A1C',null,(hsh%628)/100+Math.sin(tm*.7+ph)*.06)}
+   const lk=this.cellLook(cc,rr);this.leaf(c,x+Math.sin(tm*.9+lk.ph)*1.5,y+Math.sin(tm*1.3+lk.ph)*2,r,'#1E4A1C',null,lk.rot+Math.sin(tm*.7+lk.ph)*.06,lk.v)}
   if(finY!=null){const by=finY;c.fillStyle='#E9C982';c.fillRect(0,by-400,W,436);c.fillStyle='#6DB65B';c.fillRect(0,by-400,W,418);
    c.fillStyle='#5AA24B';for(let x=6;x<W;x+=22){c.beginPath();c.moveTo(x,by+18);c.lineTo(x+5,by+6);c.lineTo(x+10,by+18);c.fill()}
    const fx=W/2+60;c.fillStyle='#14213D';c.fillRect(fx,by-44,4,56);for(let a=0;a<3;a++)for(let b=0;b<4;b++){c.fillStyle=(a+b)%2?'#14213D':'#fff';c.fillRect(fx+4+b*9,by-44+a*7,9,7)}
@@ -10681,11 +10689,11 @@ const Katak={
   /* daun jawaban */
   const done=arc.state==='resolved';
   for(const p of this.pads){const q=this.padXY(p),y=q.y+p.sink*12+Math.sin(tm*1.6+p.c*1.7+p.row)*1.6+(fr.on===p?fr.land*5:0),ok=done&&p.i===arc.ci,bad=p.sink>0;c.save();c.globalAlpha=1-p.sink*.85;
-   this.leaf(c,q.x,y,r,ok?'#1F9E4E':bad?'#9E3328':'#255E22',ok?'#0F6B31':bad?'#6E1F17':'#123A14',-Math.PI/2);
+   {const lk=this.cellLook(p.c,p.row);this.leaf(c,q.x,y,r,ok?'#1F9E4E':bad?'#9E3328':'#255E22',ok?'#0F6B31':bad?'#6E1F17':'#123A14',lk.rot,lk.v)}
    const bR=Math.max(10,r*.2);c.fillStyle='#8BC34A';c.beginPath();c.arc(q.x,y-r+bR*.3,bR,0,7);c.fill();c.fillStyle='#fff';c.font=`900 ${Math.round(bR*1.1)}px ${FONT}`;c.textAlign='center';c.textBaseline='middle';c.fillText(p.L,q.x,y-r+bR*.3+1);
    drawFit(c,p.f,q.x,y+4,'#fff');c.restore()}
   /* daun tempat katak berdiri */
-  {const w=this.cellXY(K.c,K.row);if(!(fr.fin)&&!(fr.on&&fr.on.i===arc.ci)){const x=this.sx(w.x),y=this.sy(w.y)+(fr.jump?0:fr.land*5);this.leaf(c,x,y,r*(1-(K.pop||0)*.3)*(1-fr.land*.05),'#255E22','#123A14',-Math.PI/2)}}
+  {const w=this.cellXY(K.c,K.row);if(!(fr.fin)&&!(fr.on&&fr.on.i===arc.ci)){const x=this.sx(w.x),y=this.sy(w.y)+(fr.jump?0:fr.land*5);const lk=this.cellLook(K.c,K.row);this.leaf(c,x,y,r*(1-(K.pop||0)*.3)*(1-fr.land*.05),'#255E22','#123A14',lk.rot,lk.v)}}
   /* katak: ukuran sama untuk semua pemain; berbagi daun = berjejer lebih kecil */
   const base=r/(this.np>1?44:46);const slot=m=>m<=1?[[0,0]]:m===2?[[-.42,0],[.42,0]]:m===3?[[-.42,.22],[.42,.22],[0,-.4]]:[[-.42,-.3],[.42,-.3],[-.42,.35],[.42,.35]];
   const shr=m=>m<=1?1:m===2?.8:m===3?.72:.64;
@@ -15559,7 +15567,7 @@ function folBind(root,list,after){root.querySelectorAll('[data-follow]').forEach
   try{await folDo(f,on);if(on){try{sfx.ok()}catch(_){}toast('team',`Kamu mengikuti ${f.name}.`)}b.outerHTML=folBtn(f,b.classList.contains('sm'));folBind(root,list,after);after&&after()}catch(err){b.disabled=false;toast('lock',fbErr(err))}})}
 const shareIcon='<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M12 3 V15 M7 8 L12 3 L17 8 M5 13 V19 C5 20 6 21 7 21 H17 C18 21 19 20 19 19 V13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const qrIcon='<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><path d="M14 14h3v3h-3zM18 18h3v3h-3zM18 14h3M14 18v3" stroke-linecap="round"/></svg>';
-let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=272';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
+let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=273';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
 function qrMatrix(text){const Q=window.QRCodeLib,q=new Q(-1,Q.ECL.M);q.addData(text);q.make();const n=q.getModuleCount(),m=[];for(let r=0;r<n;r++){m.push([]);for(let c=0;c<n;c++)m[r].push(q.isDark(r,c))}return m}
 function qrSvgOf(m){const n=m.length;let d='';for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(m[r][c])d+=`M${c} ${r}h1.02v1.02h-1.02z`;
   return `<svg viewBox="-2 -2 ${n+4} ${n+4}" class="pcqr" shape-rendering="crispEdges" aria-label="Kode QR profil"><rect x="-2" y="-2" width="${n+4}" height="${n+4}" fill="#fff"/><path d="${d}" fill="#1C1E3D"/></svg>`}
