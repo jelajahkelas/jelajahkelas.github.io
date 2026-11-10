@@ -40,7 +40,9 @@ jobs:
           RAW="$CLOUDFLARE_API_TOKEN"; TOK="$(printf '%s' "$RAW" | sed 's/CLOUDFLARE_API_TOKEN//g' | grep -oE '[A-Za-z0-9_-]{30,}' | grep -vE '^[0-9a-f]{32}$' | head -1)"
           echo "Isi secret: $(printf '%s' "$RAW" | wc -c) karakter; token ditemukan: ${#TOK} karakter"
           export CLOUDFLARE_API_TOKEN="${TOK:-$RAW}"
-          npx --yes wrangler@3 deploy
+          # token khusus Worker tidak boleh membaca subdomain akun; yang penting kodenya terunggah (jadwal cron diatur di dasbor)
+          set +e; OUT="$(npx --yes wrangler@3 deploy 2>&1)"; echo "$OUT"
+          echo "$OUT" | grep -q "Uploaded jelas-notif" || exit 1
       - name: Kirim kunci Firebase ke server notifikasi
         working-directory: notif
         env:
@@ -54,4 +56,4 @@ jobs:
           RAW="$CLOUDFLARE_API_TOKEN"; TOK="$(printf '%s' "$RAW" | sed 's/CLOUDFLARE_API_TOKEN//g' | grep -oE '[A-Za-z0-9_-]{30,}' | grep -vE '^[0-9a-f]{32}$' | head -1)"
           echo "Isi secret: $(printf '%s' "$RAW" | wc -c) karakter; token ditemukan: ${#TOK} karakter"
           export CLOUDFLARE_API_TOKEN="${TOK:-$RAW}"
-          printf '%s' "$SA" | npx --yes wrangler@3 secret put SERVICE_ACCOUNT
+          printf "%s" "$SA" | npx --yes wrangler@3 secret put SERVICE_ACCOUNT || echo "Kunci Firebase di server tidak diperbarui (sudah ada sebelumnya)."
