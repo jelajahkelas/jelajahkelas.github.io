@@ -3931,7 +3931,7 @@ html[data-theme=malam] .plstick{background:#0a0f1e}
 <div class="syncpill" id="syncPill" hidden></div>
 <div class="toast" id="toast" hidden></div>
 
-<script src="av.js?v=265"></script>
+<script src="av.js?v=266"></script>
 <script>
 /* ---------- visual assets ---------- */
 const INK='#1B1E3D';
@@ -13347,7 +13347,12 @@ function fsOn(){try{const d=document.documentElement;if(!document.fullscreenElem
 function fsOff(){try{if(document.fullscreenElement&&document.exitFullscreen){const r=document.exitFullscreen();r&&r.catch&&r.catch(()=>{})}}catch(e){}}
 const EV_FMTS=[['solo','Satu per satu','Murid maju bergantian, masing-masing menjawab semua soalnya sendiri.'],['giliran','Bergiliran','2–6 murid bermain di satu layar, bergantian menjawab satu soal setiap giliran.'],['rebutan','Rebutan','2–6 murid melihat soal yang sama. Yang paling cepat menekan tombolnya boleh menjawab. Memakai tampilan Kuis.'],['terbagi','Layar terbagi','Layar dibagi dua, 2 murid bermain bersamaan dengan soal yang sama.']];
 function evalSubj(){const c=tCls();return c.subjects.find(s=>s.id===EV.subj)||c.subjects[0]}
-function evalSource(s){if(EV.src&&EV.src.startsWith('b:')){const b=(APP.bank||[]).find(x=>x.id===EV.src.slice(2)&&x.subj===s.id&&x.qs.length);if(b)return {bank:b,title:b.title,fit:bankFit(b),count:b.qs.length}}
+/* bab modul guru untuk mapel ini: nilai 'm:<idModul>:<noBab>' */
+function evModBabs(sid){return (MOD.list||[]).filter(m=>m.subj===sid&&(m.babs||[]).length).flatMap(m=>m.babs.map((bb,i)=>({v:'m:'+m.id+':'+i,m,bb,i})))}
+function evalSource(s){if(EV.src&&EV.src.startsWith('m:')){const [,mid,bi]=EV.src.split(':');const m=(MOD.list||[]).find(x=>x.id===mid),bb=m&&m.babs[+bi];
+    if(bb){if(bb.bank&&bb.bank.qs&&bb.bank.qs.length){const b={id:'mod',qs:bb.bank.qs};return {mod:{mid,bi:+bi,title:m.title},modQs:bb.bank.qs,title:bb.t,fit:bankFit(b),count:bb.bank.qs.length}}
+      const u=modUnit(bb.src);if(u)return {mod:{mid,bi:+bi,title:m.title},modSrc:bb.src,unit:u,title:bb.t,fit:u.fit||s.fit}}EV.src='u:0'}
+  if(EV.src&&EV.src.startsWith('b:')){const b=(APP.bank||[]).find(x=>x.id===EV.src.slice(2)&&x.subj===s.id&&x.qs.length);if(b)return {bank:b,title:b.title,fit:bankFit(b),count:b.qs.length}}
   let ui=EV.src&&EV.src.startsWith('u:')?+EV.src.slice(2):0;if(!(ui<s.units.length))ui=0;EV.src='u:'+ui;const u=s.units[ui];return {ui,unit:u,title:u.t,fit:u.fit||s.fit}}
 function renderTEval(){normBank();const c=tCls(),s=evalSubj();EV.subj=s.id;const src=evalSource(s);const games=allGames(FIT[src.fit]);if(!games.includes(EV.game))EV.game=games[0];
   const today=dayKey(),sess=sessionOf(today,false);const attFilled=sess&&Object.keys(sess.att).length>0;const list=students();const part=attFilled?list.filter(p=>sess.att[p.id]==='H'):list;
@@ -13382,14 +13387,14 @@ function evPinSetup(after){openModal(`<div class="pinbox"><span style="width:60p
   $('#epOk').onclick=()=>{const a=$('#epA').value.trim(),b=$('#epB').value.trim();if(!/^\d{4,6}$/.test(a)){$('#epErr').textContent='PIN harus 4–6 angka.';return}if(a!==b){$('#epErr').textContent='PIN tidak sama.';return}const t=T();t.evPin=tHash(a);t.upd=Date.now();save();closeModal();toast('teach','PIN guru tersimpan.');after&&after()};
   $('#epSkip').onclick=()=>{EV_PIN_SKIP=true;closeModal();after&&after()};setTimeout(()=>$('#epA').focus(),80)}
 let EV_PIN_SKIP=false;
-function tLock(cb,why){const t=T();if(!t||!(t.evPin||t.pinHash||t.pin)){cb();return}
+function tLock(cb,why){cb();return;const t=T();
   openModal(`<div class="pinbox"><span style="width:60px">${ICONS.teach}</span><h3>Khusus guru</h3><p class="note">${why||'Masukkan PIN atau sandi guru untuk keluar dari layar evaluasi.'}</p><input id="tlPw" type="password" autocomplete="current-password" placeholder="PIN atau sandi guru" style="font-size:20px;padding:12px;border-radius:14px;border:2px solid var(--line);width:100%;max-width:320px"><p class="note" id="tlErr" style="color:var(--red);min-height:1em;margin:0"></p><div class="acts"><button class="ghost" id="tlNo">Batal</button><button class="primary" id="tlYes">Buka</button></div></div>`);
   const go2=()=>{if(evLockOk($('#tlPw').value)){closeModal();cb()}else{$('#tlErr').textContent='PIN atau sandi salah.';sfx.bad();$('#tlPw').select()}};
   $('#tlYes').onclick=go2;$('#tlNo').onclick=closeModal;$('#tlPw').onkeydown=e=>{if(e.key==='Enter')go2()};setTimeout(()=>$('#tlPw').focus(),80)}
 let EV_SHOW=false;
 function curEval(){const s=EVR&&APP.sessions.find(x=>x.id===EVR.sid);const e=s&&s.evals.find(x=>x.id===EVR.eid);return {sess:s,e}}
 let RUN_ALL=false;
-function renderTRun(){const {sess,e}=curEval();if(!e){go('teval');return}const t=T();if(!(t.evPin||t.pinHash||t.pin)&&!EV_PIN_SKIP&&$('#modal').hidden)setTimeout(()=>{if(curTab==='trun'&&$('#modal').hidden)evPinSetup()},300);const list=students();const attFilled=Object.keys(sess.att).length>0;
+function renderTRun(){const {sess,e}=curEval();if(!e){go('teval');return}const t=T();const list=students();const attFilled=Object.keys(sess.att).length>0;
   const part=RUN_ALL||!attFilled?list:list.filter(p=>sess.att[p.id]==='H');const done=part.filter(p=>e.results[p.id]);
   const scores=Object.values(e.results).map(r=>r.score);
   $('#vTRun').innerHTML=`<div class="evalhead"><div class="grow"><h2>${esc(e.subjName)}: ${esc(e.unit)}</h2><p>${gameName(e.game)} · ${e.n} soal per murid${e.fmt&&e.fmt!=='solo'?` · ${FMT[e.fmt]} · Pilih ${e.fmt==='terbagi'?'2':'2–6'} murid, lalu tekan Mulai`:' · Ketuk namamu untuk mulai'}</p></div><span class="evalprog">${done.length} / ${part.length} dinilai</span><button class="ghost" id="runBack">Selesai</button></div>
@@ -13397,7 +13402,7 @@ function renderTRun(){const {sess,e}=curEval();if(!e){go('teval');return}const t
    ${e.fmt&&e.fmt!=='solo'?`<div class="tcard evsel"><div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><b style="flex:1;min-width:180px">${EVSEL.length?`Dipilih: ${EVSEL.map(id=>esc((APP.profiles.find(x=>x.id===id)||{name:'?'}).name)).join(', ')}`:'Belum ada murid dipilih'}</b><button class="ghost" id="evAuto">Pilih acak</button><button class="primary" id="evGo" ${EVSEL.length>=2&&(e.fmt!=='terbagi'||EVSEL.length===2)?'':'disabled'}>Mulai ${FMT[e.fmt]}</button></div></div>`:''}
    <div class="stiles">${part.map(p=>{const r=e.results[p.id];const sel=EVSEL.includes(p.id);return `<button class="stile ${r?'done':''} ${sel?'sel':''}" data-p="${p.id}">${sel?`<span class="selno">${EVSEL.indexOf(p.id)+1}</span>`:''}${r?(EV_SHOW?`<span class="sc ${r.score<t.kkm?'low':''}">${r.score}</span>`:`<span class="sc ok">✓</span>`):''}${avatarOf(p)}<b>${esc(p.name)}</b><small>${p.no?'No. '+p.no:''}${r?' · Selesai':''}</small>${r&&!EV_SHOW?`<span class="stars">${[0,1,2].map(i=>`<i class="${i<evStars(r.score)?'on':''}">★</i>`).join('')}</span>`:''}</button>`}).join('')}</div>
    ${attFilled?`<button class="ghost" id="runAll" style="align-self:flex-start">${RUN_ALL?'Tampilkan yang hadir saja':'Tampilkan semua murid'}</button>`:''}
-   ${done.length?`<button class="ghost" id="evShow" style="align-self:flex-start">${EV_SHOW?'Sembunyikan nilai':'🔒 Lihat nilai (guru)'}</button>`:''}
+   ${done.length?`<button class="ghost" id="evShow" style="align-self:flex-start">${EV_SHOW?'Sembunyikan nilai':'Lihat nilai (guru)'}</button>`:''}
    ${done.length&&EV_SHOW?`<div class="tcard"><h3>Hasil sementara</h3><div class="tablewrap"><table class="ttable"><thead><tr><th>No</th><th>Nama</th><th class="num">Benar</th><th class="num">Nilai</th><th>Status</th></tr></thead><tbody>${done.sort((a,b)=>e.results[b.id].score-e.results[a.id].score).map(p=>{const r=e.results[p.id];return `<tr><td>${p.no||''}</td><td class="nm">${esc(p.name)}</td><td class="num">${r.correct}/${r.total}</td><td class="num score ${r.score<t.kkm?'low':''}">${r.score}</td><td>${statusPill(r.score)}</td></tr>`}).join('')}</tbody></table></div></div>`:''}`;
   bindTeacherLinks($('#vTRun'));{const rp=$('#evRapor');if(rp)rp.onclick=()=>tLock(()=>{fsOff();go('trapor')})}
   $('#runBack').onclick=()=>tLock(()=>{EV_SHOW=false;fsOff();go('tdash')});{const sv=$('#evShow');if(sv)sv.onclick=()=>{if(EV_SHOW){EV_SHOW=false;renderTRun()}else tLock(()=>{EV_SHOW=true;renderTRun()},'Nilai murid hanya untuk guru. Masukkan sandi guru untuk menampilkannya.')}}
@@ -13409,9 +13414,12 @@ function renderTRun(){const {sess,e}=curEval();if(!e){go('teval');return}const t
     if(r&&!b.dataset.ok){tLock(()=>{b.dataset.ok=1;b.click()},`${esc(p.name)} sudah dinilai. Hanya guru yang bisa mengulang evaluasinya.`);return}delete b.dataset.ok;
     openModal(`<div class="mascot" data-mascot data-mood="happy" style="width:110px;margin:0 auto"></div><h3 style="text-align:center">${r?`${esc(p.name)} sudah dinilai`:`Siap, ${esc(p.name)}?`}</h3><p style="text-align:center">${r?'Mengulang akan mengganti nilai sebelumnya.':`${e.n} soal ${esc(e.unit)} lewat game ${gameName(e.game)}.`}</p><div class="acts"><button class="ghost" id="mNo">Batal</button><button class="primary" id="mYes">${r?'Ulangi':'Mulai!'}</button></div>`);
     $('#mNo').onclick=closeModal;$('#mYes').onclick=()=>{closeModal();fsOn();runEvalFor(p.id)}})}
+function evMake(e,s){if(e.bank){const b=(APP.bank||[]).find(x=>x.id===e.bank);if(!b||!b.qs.length)return null;return {make:n=>bankQs(b,n||b.qs.length),fit:bankFit(b),bank:true}}
+  if(e.modQs&&e.modQs.length){const b={qs:e.modQs};return {make:n=>bankQs(b,n||b.qs.length),fit:bankFit(b),bank:true}}
+  const u=(e.modSrc&&modUnit(e.modSrc))||s.units[e.ui]||s.units[0];return {make:n=>unitQs(u,n||12),fit:u.fit||s.fit,unit:u}}
 function runEvalFor(pid){const {e}=curEval();const c=tCls(),s=c.subjects.find(x=>x.id===e.subj)||c.subjects[0];const p=APP.profiles.find(x=>x.id===pid);let qs;
-  if(e.bank){const b=(APP.bank||[]).find(x=>x.id===e.bank);if(!b||!b.qs.length){toast('quiz','Paket soal ini sudah dihapus.');return}qs=bankQs(b,e.n)}
-  else{const u=s.units[e.ui]||s.units[0];qs=unitQs(u,e.game==='kuis'?e.n:e.n*2).filter(q=>e.game==='kuis'||!q.html).slice(0,e.n)}
+  const mk=evMake(e,s);if(!mk){toast('quiz','Paket soal ini sudah dihapus.');return}
+  qs=mk.bank?mk.make(e.n):mk.make(e.game==='kuis'?e.n:e.n*2).filter(q=>e.game==='kuis'||!q.html).slice(0,e.n)
   beginRun({kind:'eval',qs,mode:e.game,title:`Evaluasi · ${e.unit}`,cls:c.id,subj:s,pid,who:p.name})}
 function evStars(sc){const k=T()?T().kkm:75;return sc>=90?3:sc>=k?2:sc>=50?1:0}
 function evalDone(){const g=game,o=g.lesson;clearInterval(timerId);if(arc.running)arcStop();$('#checkBar').hidden=true;const {e}=curEval();const t=T();
@@ -13424,8 +13432,7 @@ function evalDone(){const g=game,o=g.lesson;clearInterval(timerId);if(arc.runnin
 
 /* ---------- evaluasi berkelompok: bergiliran, rebutan, layar terbagi ---------- */
 function evalGroupStart(pids){const {e}=curEval();if(!e||pids.length<2)return;const c=tCls(),s=c.subjects.find(x=>x.id===e.subj)||c.subjects[0];let make,fit;
-  if(e.bank){const b=(APP.bank||[]).find(x=>x.id===e.bank);if(!b||!b.qs.length){toast('quiz','Paket soal ini sudah dihapus.');return}make=()=>bankQs(b,b.qs.length);fit=bankFit(b)}
-  else{const u=s.units[e.ui]||s.units[0];make=()=>unitQs(u,12);fit=u.fit||s.fit}
+  {const mk=evMake(e,s);if(!mk){toast('quiz','Paket soal ini sudah dihapus.');return}make=()=>mk.make();fit=mk.fit}
   const names=pids.map(id=>(APP.profiles.find(x=>x.id===id)||{name:'Murid'}).name);
   EVG={pids,names,fmt:e.fmt,per:e.n,prev:{PLAY,GROUP,MODE}};
   L=LEVELS.find(l=>l.id===c.lv)||LEVELS[1];S={id:s.id,name:s.name,make,fit};MODE=e.fmt==='rebutan'?'kuis':e.game;
@@ -13849,19 +13856,29 @@ function duoWizard(){const c=CLS();const st={n1:GROUP.duo1||P.name,n2:GROUP.duo2
      PLAY='group';L=lvOf();setLvColor(L);document.documentElement.style.setProperty('--lvc',sb.color);S={id:sb.id,name:sb.name,fit:sb.fit,make:()=>shuffle(sb.units.flatMap(u=>unitQs(u,3)))};close();openGames()}}})}
 
 /* ---------- evaluasi guru: bertahap ---------- */
-function evalWizard(){normBank();const c=tCls();const st={subj:EV.subj&&c.subjects.some(x=>x.id===EV.subj)?EV.subj:c.subjects[0].id,src:EV.src||'u:0',game:EV.game,fmt:EV.fmt||'solo',n:EV.n||5};
+function evalWizard(){if(window.modFetch&&(MOD.list===null||MOD.cid!==tcid())){const b=$('#evWiz');if(b)b.disabled=true;window.modFetch().catch(()=>{MOD.list=MOD.list||[]}).finally(()=>{if(b)b.disabled=false;evalWizard2()});return}evalWizard2()}
+function evalWizard2(){normBank();const c=tCls();const st={subj:EV.subj&&c.subjects.some(x=>x.id===EV.subj)?EV.subj:c.subjects[0].id,src:EV.src||'u:0',game:EV.game,fmt:EV.fmt||'solo',n:EV.n||5};
+  st.kind=st.src.startsWith('b:')?'sendiri':st.src.startsWith('m:')?'modul':'jelas';
   const subj=s=>c.subjects.find(x=>x.id===s.subj);
   const srcOf=s=>{EV.subj=s.subj;EV.src=s.src;return evalSource(subj(s))};
   const today=dayKey(),sess=sessionOf(today,false),attFilled=sess&&Object.keys(sess.att).length>0,list=students(),part=attFilled?list.filter(p=>sess.att[p.id]==='H'):list;
   wizard({title:'Evaluasi di TV',state:st,steps:[
-    {t:'Mata pelajaran apa?',html:s=>wzOpts(c.subjects.map(x=>({v:x.id,l:x.name,g:x.glyph,c:x.color})),s.subj),pick:(s,v)=>{if(s.subj!==v){s.subj=v;s.src='u:0';s.game=null}}},
-    {t:'Materi hari ini',html:s=>{const sb=subj(s),banks=bankOf(sb.id).filter(b=>b.qs.length);return wzOpts(sb.units.map((u,i)=>({v:'u:'+i,l:`Unit ${i+1}: ${u.t}`,s:u.d||''})).concat(banks.map(b=>({v:'b:'+b.id,l:b.title,s:`Soal buatanmu · ${b.qs.length} soal`}))),s.src)},pick:(s,v)=>{if(s.src!==v){s.src=v;s.game=null}}},
+    {t:'Mata pelajaran apa?',html:s=>wzOpts(c.subjects.map(x=>({v:x.id,l:x.name,g:x.glyph,c:x.color})),s.subj),pick:(s,v)=>{if(s.subj!==v){s.subj=v;s.src='u:0';s.kind='jelas';s.game=null}}},
+    {t:'Soal dari mana?',html:s=>{const sb=subj(s),nb=bankOf(sb.id).filter(b=>b.qs.length).length,nm=evModBabs(sb.id).length;
+       return wzOpts([{v:'jelas',l:'Jalur Belajar JELAS',s:`${sb.units.length} unit sesuai buku Kurikulum Merdeka`,g:'🦉'},{v:'modul',l:'Modul guru',s:nm?`${nm} bab dari modul buatanmu`:'Belum ada modul untuk mapel ini. Buat di menu Modul.',g:'📘'},{v:'sendiri',l:'Soal sendiri',s:nb?`${nb} paket soal buatanmu`:'Belum ada paket soal. Buat di menu Soal.',g:'✍️'}],s.kind)},
+     pick:(s,v)=>{const sb=subj(s);if(s.kind===v)return;s.kind=v;s.game=null;const mb=evModBabs(sb.id),bk=bankOf(sb.id).filter(b=>b.qs.length);
+       s.src=v==='jelas'?'u:0':v==='modul'?(mb[0]?mb[0].v:''):(bk[0]?'b:'+bk[0].id:'')},
+     ok:s=>{const sb=subj(s);if(s.kind==='modul'&&!evModBabs(sb.id).length)return 'Belum ada modul untuk mapel ini. Buat dulu di menu Modul.';if(s.kind==='sendiri'&&!bankOf(sb.id).filter(b=>b.qs.length).length)return 'Belum ada paket soal untuk mapel ini. Buat dulu di menu Soal.';return true}},
+    {t:'Materi hari ini',html:s=>{const sb=subj(s);
+       if(s.kind==='modul')return wzOpts(evModBabs(sb.id).map(x=>({v:x.v,l:`Bab ${x.i+1}: ${x.bb.t}`,s:`${x.m.title}${x.bb.bank&&x.bb.bank.qs?` · ${x.bb.bank.qs.length} soal guru`:''}`})),s.src);
+       if(s.kind==='sendiri')return wzOpts(bankOf(sb.id).filter(b=>b.qs.length).map(b=>({v:'b:'+b.id,l:b.title,s:`${b.qs.length} soal`})),s.src);
+       return wzOpts(sb.units.map((u,i)=>({v:'u:'+i,l:`Unit ${i+1}: ${u.t}`,s:u.d||''})),s.src)},pick:(s,v)=>{if(s.src!==v){s.src=v;s.game=null}}},
     {t:'Pakai game apa?',html:s=>{const src=srcOf(s),games=allGames(FIT[src.fit]);if(!games.includes(s.game))s.game=games[0];return `<div class="modes wzmodes">${games.map(id=>{const m=MODE_LIST.find(x=>x.id===id);return `<button class="mode" data-wv="${id}" style="--mc:${MCOL[id]}" aria-pressed="${id===s.game}"><span class="mi">${m.icon}</span><span class="mn">${m.name}</span><span class="md">${m.desc}</span></button>`}).join('')}</div>`},pick:(s,v)=>s.game=v},
     {t:'Cara bermain',html:s=>wzOpts(EV_FMTS.map(f=>({v:f[0],l:f[1],s:f[2]})),s.fmt),pick:(s,v)=>s.fmt=v},
-    {t:'Berapa soal per murid?',auto:false,html:s=>{const src=srcOf(s);return wzOpts([3,5,10].map(n=>({v:n,l:n+' soal'})),s.n,true)+(src.bank&&src.count<s.n?`<p class="note">Paket ini hanya punya ${src.count} soal, jadi setiap murid mendapat ${src.count} soal.</p>`:'')+`<p class="note">${attFilled?`Peserta: ${part.length} murid yang hadir menurut absensi hari ini.`:`Absensi hari ini belum diisi, jadi semua ${list.length} murid ikut.`}</p>`},pick:(s,v)=>s.n=+v}],
-   summary:s=>{const src=srcOf(s);return `<b>${esc(subj(s).name)}</b> · ${esc(src.title)} · ${gameName(s.fmt==='rebutan'?'kuis':s.game)} · ${EV_FMTS.find(f=>f[0]===s.fmt)[1]} · ${s.n} soal`},
+    {t:'Berapa soal per murid?',auto:false,html:s=>{const src=srcOf(s);return wzOpts([3,5,10].map(n=>({v:n,l:n+' soal'})),s.n,true)+((src.bank||src.modQs)&&src.count<s.n?`<p class="note">Paket ini hanya punya ${src.count} soal, jadi setiap murid mendapat ${src.count} soal.</p>`:'')+`<p class="note">${attFilled?`Peserta: ${part.length} murid yang hadir menurut absensi hari ini.`:`Absensi hari ini belum diisi, jadi semua ${list.length} murid ikut.`}</p>`},pick:(s,v)=>s.n=+v}],
+   summary:s=>{const src=srcOf(s);return `<b>${esc(subj(s).name)}</b> · ${s.kind==='modul'?'Modul guru':s.kind==='sendiri'?'Soal sendiri':'Jalur JELAS'}: ${esc(src.title)} · ${gameName(s.fmt==='rebutan'?'kuis':s.game)} · ${EV_FMTS.find(f=>f[0]===s.fmt)[1]} · ${s.n} soal`},
    finish:{label:'Mulai evaluasi di TV',run:(s,b,close)=>{if(!list.length)throw new Error('Belum ada murid. Tambahkan di menu Murid.');Object.assign(EV,{subj:s.subj,src:s.src,game:s.game,fmt:s.fmt,n:s.n});const sb=subj(s),src=evalSource(sb);
-     const ss=sessionOf(today,true);const e={id:'e'+Date.now().toString(36),subj:sb.id,subjName:sb.name,ui:src.bank?null:src.ui,bank:src.bank?src.bank.id:null,unit:src.title,game:s.fmt==='rebutan'?'kuis':s.game,fmt:s.fmt,n:src.bank?Math.min(s.n,src.count):s.n,results:{},at:Date.now()};
+     const ss=sessionOf(today,true);const e={id:'e'+Date.now().toString(36),subj:sb.id,subjName:sb.name,ui:src.bank||src.mod?null:src.ui,bank:src.bank?src.bank.id:null,mod:src.mod||null,modQs:src.modQs||null,modSrc:src.modSrc||null,unit:src.title,game:s.fmt==='rebutan'?'kuis':s.game,fmt:s.fmt,n:src.bank||src.modQs?Math.min(s.n,src.count):s.n,results:{},at:Date.now()};
      ss.evals.push(e);save();EVR={sid:ss.id,eid:e.id};EVSEL=[];close();fsOn();go('trun')}}})}
 function welcomeSlides(){const n=(typeof MODE_LIST!=='undefined'&&MODE_LIST.length)||19;
   const S=[['game','#1CB0F6','Belajar lewat game',`${n} game seru seperti tembak, balap, dan labirin, dengan soal sesuai kelas dari TK sampai SMA/SMK.`],
@@ -14815,7 +14832,7 @@ function modSrc(grade,subj,title,pos,tot){const words=t=>String(t||'').toLowerCa
   pools.forEach((cid,pi)=>{const c=COURSE.find(x=>x.id===cid),s=c&&c.subjects.find(x=>x.id===subj);if(!s)return;s.units.forEach((u,ui)=>{const sc=words(u.t+' '+(u.d||'')).filter(w=>tw.has(w)||[...tw].some(x=>x.slice(0,5)===w.slice(0,5))).length*10-pi;if(sc>bs){bs=sc;best={cls:cid,subj,ui}}})});
   if(best)return best;for(const cid of pools){const c=COURSE.find(x=>x.id===cid),s=c&&c.subjects.find(x=>x.id===subj);if(s&&s.units.length)return {cls:cid,subj,ui:tot?Math.min(s.units.length-1,Math.floor((pos||0)/tot*s.units.length)):0}}return null}
 function modUnit(src){if(!src)return null;return unitByTitle(src.cls,src.subj,src.t,src.ui)}
-async function modFetch(force){const cid=tcid();if(!force&&MOD.list&&MOD.cid===cid)return MOD.list;const q=await FB.db.collection('classes/'+cid+'/mods').get();MOD.cid=cid;MOD.list=q.docs.map(d=>Object.assign({id:d.id},d.data())).sort((a,b)=>(a.created||0)-(b.created||0));return MOD.list}
+async function modFetch(force){const cid=tcid();if(!force&&MOD.list&&MOD.cid===cid)return MOD.list;const q=await FB.db.collection('classes/'+cid+'/mods').get();MOD.cid=cid;MOD.list=q.docs.map(d=>Object.assign({id:d.id},d.data())).sort((a,b)=>(a.created||0)-(b.created||0));return MOD.list}window.modFetch=modFetch;
 async function modSave(m){const cid=tcid();m.upd=Date.now();const d=Object.assign({},m);delete d.id;await FB.db.doc('classes/'+cid+'/mods/'+m.id).set(d);const i=MOD.list.findIndex(x=>x.id===m.id);if(i<0)MOD.list.push(m);else MOD.list[i]=m}
 function renderTMod(){const v=$('#vTMod');if(!v)return;const c=tCls();
   if(MOD.edit){const m=(MOD.list||[]).find(x=>x.id===MOD.edit);if(m)return renderModEditor(m)}
@@ -15446,7 +15463,7 @@ function folBind(root,list,after){root.querySelectorAll('[data-follow]').forEach
   try{await folDo(f,on);if(on){try{sfx.ok()}catch(_){}toast('team',`Kamu mengikuti ${f.name}.`)}b.outerHTML=folBtn(f,b.classList.contains('sm'));folBind(root,list,after);after&&after()}catch(err){b.disabled=false;toast('lock',fbErr(err))}})}
 const shareIcon='<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M12 3 V15 M7 8 L12 3 L17 8 M5 13 V19 C5 20 6 21 7 21 H17 C18 21 19 20 19 19 V13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const qrIcon='<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><path d="M14 14h3v3h-3zM18 18h3v3h-3zM18 14h3M14 18v3" stroke-linecap="round"/></svg>';
-let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=265';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
+let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=266';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
 function qrMatrix(text){const Q=window.QRCodeLib,q=new Q(-1,Q.ECL.M);q.addData(text);q.make();const n=q.getModuleCount(),m=[];for(let r=0;r<n;r++){m.push([]);for(let c=0;c<n;c++)m[r].push(q.isDark(r,c))}return m}
 function qrSvgOf(m){const n=m.length;let d='';for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(m[r][c])d+=`M${c} ${r}h1.02v1.02h-1.02z`;
   return `<svg viewBox="-2 -2 ${n+4} ${n+4}" class="pcqr" shape-rendering="crispEdges" aria-label="Kode QR profil"><rect x="-2" y="-2" width="${n+4}" height="${n+4}" fill="#fff"/><path d="${d}" fill="#1C1E3D"/></svg>`}
