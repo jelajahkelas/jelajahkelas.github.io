@@ -3982,7 +3982,7 @@ html[data-theme=malam] .plstick{background:#0a0f1e}
 <div class="syncpill" id="syncPill" hidden></div>
 <div class="toast" id="toast" hidden></div>
 
-<script src="av.js?v=285"></script>
+<script src="av.js?v=286"></script>
 <script>
 /* ---------- visual assets ---------- */
 const INK='#1B1E3D';
@@ -10349,6 +10349,7 @@ function arcNext(){
   if(MODE!=='lompat'&&MODE!=='katak'){const card=$('#qcard');card.classList.remove('pop','shake');void card.offsetWidth;card.classList.add('pop')}
 }
 function arcStop(){arc.running=false;cancelAnimationFrame(arc.raf);$('#arcFb').hidden=true;$('#arcStart').hidden=true}
+{const _an0=arcNext;arcNext=function(){if(MODE==='katak'&&M===Katak&&game.i>=game.qs.length-1&&Katak.room()&&!Katak.wait&&(ROOM.acc?ROOM.acc.done:0)+game.qs.length>=ROOM.doc.n){$('#arcFb').hidden=true;arc.banner=null;Katak.startWait();return}_an0()}}
 {const _an=arcNext;arcNext=function(){if(MODE==='lompat'&&M===Lompat&&Lompat.w&&!Lompat.w.done&&game.lives>0&&game.i>=game.qs.length-1){$('#arcFb').hidden=true;Lompat.w.finishOn=true;arc.banner={text:'Lari ke FINIS! ▶',color:'#1C8A57',t:0};arc.state='play';arc.t=0;arc.limit=1e9;return}_an()};
  const _as=arcStop;arcStop=function(){document.body.classList.remove('lpx','lprotate');try{$('#timer').classList.remove('lpon')}catch(e){}_as()}}
 
@@ -10640,7 +10641,7 @@ const Katak={
   this.cg=W*.33*z;this.r=Math.round(clamp(Math.min(W*.155,H*.085),40,74)*z);this.rg=Math.max(this.r*2.15,H*.15*z);const r=this.r;
   this.bx=W/2;this.by=H-Math.max(r+12,H*.13);
   if(!game.kat||game.kat.qs!==game.qs){game.kat={qs:game.qs,step:0,c:0,row:0,camX:0,camY:0,sunk:{}};this.gp={};this.myOff=null}const K=game.kat;
-  if(K.back){K.back=false;K.pop=1}
+  if(K.back){K.back=false;K.pop=1;K.rise=0}this.toDone=false;
   /* tetangga di depan: kolom samping naik setengah baris, tengah naik satu baris */
   const cand=n<=2?[[-1,0],[1,0]]:[[-1,0],[0,1],[1,0]];
   const y0=this.cellXY(K.c,K.row).y;
@@ -10657,7 +10658,10 @@ const Katak={
  padXY(p){const w=this.cellXY(p.c,p.row);return {x:this.sx(w.x),y:this.sy(w.y)}},
  hit(p,x,y){const q=this.padXY(p);return Math.hypot(x-q.x,y-q.y)<this.r+10},
  jumpTo(p){const fr=this.frog;if(fr.jump||fr.on||arc.state!=='play')return;const w=this.cellXY(p.c,p.row);fr.jump={p,t:-.11,x0:fr.wx,y0:fr.wy,x1:w.x,y1:w.y,go:false}},
- down(x,y){const p=this.pads.find(p=>this.hit(p,x,y));if(p)this.jumpTo(p)},
+ down(x,y){if(this.wait&&this.wait.t>15){this.wait=null;arcStop();finish();return}const p=this.pads.find(p=>this.hit(p,x,y));if(p)this.jumpTo(p)},
+ room(){return !!(game.lesson&&game.lesson.room&&typeof ROOM!=="undefined"&&ROOM.doc&&window.roomPlayers)},
+ /* main bersama: yang sampai duluan menunggu di darat sampai semua katak sampai, baru hasil muncul */
+ startWait(){this.wait={t:0,chk:0,left:1,tot:this.players().length};try{const uid=FBX.user.uid,acc=ROOM.acc||{correct:0,done:0};FB.db.doc('rooms/'+ROOM.code).update({['players.'+uid+'.i']:Math.min(acc.done+game.qs.length,ROOM.doc.n),['players.'+uid+'.c']:acc.correct+(game.correct||0)}).catch(()=>{})}catch(e){}},
  key(k){if(/^[1-4]$/.test(k)){const p=this.pads.find(p=>p.L==='ABCD'[+k-1]);if(p)this.jumpTo(p)}},
  step(dt){const fr=this.frog,K=game.kat;dt=Math.min(isFinite(dt)&&dt>0?dt:.016,.05);K.pop=Math.max(0,(K.pop||0)-dt*3);
   fr.land=Math.max(0,fr.land-dt*3.2);fr.rip.forEach(q=>q.t+=dt);fr.rip=fr.rip.filter(q=>q.t<.9);
@@ -10668,12 +10672,17 @@ const Katak={
     const u=Math.min(1,j.t/JT),e=1-Math.pow(1-u,1.7);fr.wx=j.x0+(j.x1-j.x0)*e;fr.wy=j.y0+(j.y1-j.y0)*e;fr.h=Math.sin(u*Math.PI);fr.sq=-.16*Math.sin(Math.min(1,u*1.6)*Math.PI*.5)*(1-u);
     if(u>=1){fr.jump=null;fr.h=0;fr.sq=.25;fr.land=1;if(!j.fin)fr.rip.push({x:fr.wx,y:fr.wy,t:0});if(j.fin){fr.fin=1;burst(this.sx(fr.wx),this.sy(fr.wy),'#FFD54A',22);tone([523,659,784,1046],.06);return}
      fr.on=j.p;const ok=j.p.i===arc.ci;K.step++;
-     if(ok){K.c=j.p.c;K.row=j.p.row}else{K.back=true;K.sunk[j.p.c+','+j.p.row]=1}
+     K.c=j.p.c;K.row=j.p.row;if(!ok)K.back=true;/* salah tetap maju: daunnya tenggelam lalu muncul lagi bersama katak */
      if(arc.state==='play'){burst(this.sx(fr.wx),this.sy(fr.wy),ok?'#BFE3FF':'#7FB8E0',10);arcResolve(j.p.i)}}}}
   else{fr.sq+=(0-fr.sq)*Math.min(1,dt*10);
-   if(fr.on){if(fr.on.i!==arc.ci){fr.on.sink=Math.min(1,fr.on.sink+dt*1.5);fr.fall=Math.min(1,fr.fall+dt*1.5)}
+   if(!fr.on&&!fr.fin&&!this.toDone&&arc.state==='resolved'&&arc.picked===-1){this.toDone=true;const wp=this.pads.find(p=>p.i!==arc.ci)||this.pads[0];const w=this.cellXY(wp.c,wp.row);fr.jump={p:wp,t:-.11,x0:fr.wx,y0:fr.wy,x1:w.x,y1:w.y,go:false}}
+   if(fr.on){if(fr.on.i!==arc.ci&&!fr.resurf){fr.on.sink=Math.min(1,fr.on.sink+dt*1.5);fr.fall=Math.min(1,fr.fall+dt*1.5);if(this.last&&fr.fall>=1){fr.resurf=true;fr.fall=0;fr.on.sink=0;K.pop=1;K.rise=0}}
     else if(this.last&&!fr.fin){this.finT+=dt;if(this.finT>.3){fr.on=null;fr.jump={t:-.11,x0:fr.wx,y0:fr.wy,x1:fr.wx,y1:K.finY-this.r*.9,fin:true,go:false}}}}}
   {let d=face-fr.rot;d=Math.atan2(Math.sin(d),Math.cos(d));fr.rot+=d*Math.min(1,dt*fk)}
+  if(K.rise!=null){K.rise+=dt*2.2;if(K.rise>=1)K.rise=null}
+  if(fr.fin){fr.ht=(fr.ht||0)+dt;const Pp=1.15,k=Math.floor(fr.ht/Pp),u=Math.min(1,(fr.ht%Pp)/(Pp*.42)),A=this.r*.9,a=k%2?A:-A,b=k%2?-A:A,e=u<1?.5-.5*Math.cos(u*Math.PI):1;fr.hopX=a+(b-a)*e;fr.h=u<1?Math.sin(u*Math.PI)*.8:0;const tr=(b>a?1:-1)*Math.PI/2*.85;let d=(u<1?tr:0)-fr.rot;d=Math.atan2(Math.sin(d),Math.cos(d));fr.rot+=d*Math.min(1,dt*10)}
+  if(this.wait){this.wait.t+=dt;this.wait.chk-=dt;if(this.wait.chk<=0){this.wait.chk=.5;const ps=this.players(),n=ROOM.doc?ROOM.doc.n:game.qs.length;const left=ps.filter(p=>!p.me&&!p.done&&!p.left&&(p.i||0)<n);this.wait.left=left.length;this.wait.tot=ps.length;
+    if(!left.length||this.wait.t>240){this.wait=null;setTimeout(()=>{arcStop();finish()},900)}}}
   if(K.finY!=null&&this.finWY!=null)K.finY+=(this.finWY-K.finY)*(1-Math.exp(-dt*2.5));
   const tx=fr.fall>0?K.camX:fr.wx,ty=fr.fall>0?K.camY:fr.wy;const k=1-Math.exp(-dt*5);K.camX+=(tx-K.camX)*k;K.camY+=(ty-K.camY)*k},
  update(dt){this.step(dt)},idle(dt){this.step(dt)},
@@ -10715,10 +10724,13 @@ const Katak={
  crowd(){const K=game.kat,ps=this.players();const spots={};const key=(c,row)=>c+','+row;const F=K.fr=K.fr||{};
   const add=(c,row,o)=>{const k=key(c,row);(spots[k]=spots[k]||{c,row,list:[]}).list.push(o)};
   add(K.c,K.row,{me:true,uid:'_me',name:'Kamu',col:'#8E44AD'});
-  ps.filter(p=>!p.me).forEach(p=>{let f=F[p.uid];if(!f||p.c<f.c)f=F[p.uid]={c:0,i:p.i,cell:{c:0,row:0}};
-   while(f.c<p.c){f.cell=this.fwd(f.cell,p.uid,f.c);f.c++;f.i=p.i}
-   if(p.i>f.i){f.i=p.i;f.miss=performance.now()}/* salah jawab: tercebur sebentar di daunnya */
+  const nTot=ROOM.doc?ROOM.doc.n:game.qs.length;
+  ps.filter(p=>!p.me).forEach(p=>{let f=F[p.uid];if(!f||(p.i||0)<f.n)f=F[p.uid]={n:0,c:0,cell:{c:0,row:0}};
+   /* setiap jawaban (benar atau salah) membuat katak maju satu daun; salah = daunnya sempat tenggelam */
+   while(f.n<(p.i||0)){f.cell=this.fwd(f.cell,p.uid,f.n);f.n++;if((p.c||0)>f.c)f.c++;else f.miss=performance.now()}
+   if(p.done||(p.i||0)>=nTot){(spots.land=spots.land||{land:true,list:[]}).list.push(Object.assign({},p,{f}));return}
    add(f.cell.c,f.cell.row,Object.assign({},p,{f}))});
+  if(this.frog&&this.frog.fin&&spots[key(K.c,K.row)]){const me=spots[key(K.c,K.row)];me.list=me.list.filter(o=>!o.me);if(!me.list.length)delete spots[key(K.c,K.row)];(spots.land=spots.land||{land:true,list:[]}).list.unshift({me:true,uid:'_me',name:'Kamu',col:'#8E44AD'})}
   return Object.values(spots)},
  draw(c){const{W,H}=arc,tm=performance.now()/1000,r=this.r,K=game.kat,fr=this.frog;
   this.water(c,W,H);
@@ -10740,14 +10752,15 @@ const Katak={
    const bR=Math.max(10,r*.2);c.fillStyle='#8BC34A';c.beginPath();c.arc(q.x,y-r+bR*.3,bR,0,7);c.fill();c.fillStyle='#fff';c.font=`900 ${Math.round(bR*1.1)}px ${FONT}`;c.textAlign='center';c.textBaseline='middle';c.fillText(p.L,q.x,y-r+bR*.3+1);
    drawFit(c,p.f,q.x,y+4,'#fff');c.restore()}
   /* daun tempat katak berdiri */
-  {const w=this.cellXY(K.c,K.row);if(!(fr.fin)&&!(fr.on&&fr.on.i===arc.ci)){const x=this.sx(w.x),y=this.sy(w.y)+(fr.jump?0:fr.land*5);const lk=this.cellLook(K.c,K.row);this.leaf(c,x,y,r*(1-(K.pop||0)*.3)*(1-fr.land*.05),'#255E22','#123A14',lk.rot,lk.v)}}
+  {const w=this.cellXY(K.c,K.row);if(!(fr.fin)&&!(fr.on&&fr.on.i===arc.ci)){const x=this.sx(w.x),y=this.sy(w.y)+(fr.jump?0:fr.land*5);const lk=this.cellLook(K.c,K.row);const ru=K.rise!=null?Math.min(1,K.rise):1,rs=ru<1?ru*(1.12-.12*ru)+Math.sin(ru*Math.PI)*.08:1;if(ru<1){c.strokeStyle=`rgba(255,255,255,${.6*(1-ru)})`;c.lineWidth=2;c.beginPath();c.arc(x,y,r*(1+ru*.5),0,7);c.stroke()}this.leaf(c,x,y,r*rs*(1-fr.land*.05),'#255E22','#123A14',lk.rot,lk.v)}}
   /* katak: ukuran sama untuk semua pemain; berbagi daun = berjejer lebih kecil */
   const base=r/(this.np>1?44:46);const slot=m=>m<=1?[[0,0]]:m===2?[[-.42,0],[.42,0]]:m===3?[[-.42,.22],[.42,.22],[0,-.4]]:[[-.42,-.3],[.42,-.3],[-.42,.35],[.42,.35]];
   const shr=m=>m<=1?1:m===2?.8:m===3?.72:.64;
   const spots=this.np>1?this.crowd():[{c:K.c,row:K.row,list:[{me:true}]}];
   let mine=null;const tagsLater=[];const now=performance.now(),dt=Math.min(.05,Math.max(0,(now-(this.lastDraw||now))/1000));this.lastDraw=now;const GP=this.gp=this.gp||{};
-  for(const sp of spots){const w=this.cellXY(sp.c,sp.row),L=sp.list.slice(0,4),sl=slot(L.length),sc=base*shr(L.length);
-   L.forEach((o,k)=>{const ox=sl[k][0]*r,oy=sl[k][1]*r;if(o.me){mine={ox,oy,sc};return}
+  const landX=fr.fin?fr.wx:K.camX;
+  for(const sp of spots){const w=sp.land?{x:landX,y:(K.finY!=null?K.finY:fr.wy)-r*.9}:this.cellXY(sp.c,sp.row),L=sp.land?sp.list.slice(0,8):sp.list.slice(0,4),sl=sp.land?L.map((_,k)=>[((k>>1)+1)*1.7*(k%2?-1:1),0]):slot(L.length),sc=sp.land?base*(L.length>4?.75:.9):base*shr(L.length);
+   L.forEach((o,k)=>{const ox=sl[k][0]*r,oy=sl[k][1]*r;if(o.me){mine=sp.land?null:{ox,oy,sc};return}
     /* animasi lompat teman: dari posisi lama ke daun baru, melengkung seperti katak kita */
     const tx=w.x+ox,ty=w.y+oy;let g=GP[o.uid];if(!g)g=GP[o.uid]={x:tx,y:ty,x0:tx,y0:ty,tx,ty,t:1,rot:0,sc};
     if(Math.hypot(tx-g.tx,ty-g.ty)>1){const far=Math.hypot(tx-g.x,ty-g.y)>r*.9;g.x0=g.x;g.y0=g.y;g.tx=tx;g.ty=ty;g.t=far?-.1:.6;g.jump=far}
@@ -10755,7 +10768,8 @@ const Katak={
     let h=0;if(g.t<0){h=0}else if(g.jump){const u=g.t,e=1-Math.pow(1-u,1.7);g.x=g.x0+(g.tx-g.x0)*e;g.y=g.y0+(g.ty-g.y0)*e;h=Math.sin(u*Math.PI);if(u>=1){g.jump=false;g.land=now}}
     else{const kk=Math.min(1,dt*10);g.x+=(g.tx-g.x)*kk;g.y+=(g.ty-g.y)*kk}
     const face=g.jump?Math.atan2(g.tx-g.x0,-(g.ty-g.y0)):0;{let d=face-g.rot;d=Math.atan2(Math.sin(d),Math.cos(d));g.rot+=d*Math.min(1,dt*(g.jump?16:3))}
-    const x=this.sx(g.x),y=this.sy(g.y);if(y<-r*2||y>H+r*2)return;
+    let hx=0;if(sp.land&&!g.jump){const ph=(tm*1.1+k*.37)%1.15,u=Math.min(1,ph/.48);h=u<1?Math.sin(u*Math.PI)*.7:0;hx=Math.sin(tm*.9+k)*r*.35}
+    const x=this.sx(g.x)+hx,y=this.sy(g.y);if(y<-r*2||y>H+r*2)return;
     const miss=o.f&&o.f.miss?Math.max(0,1-(now-o.f.miss)/1200):0,landT=g.land?Math.max(0,1-(now-g.land)/300):0;
     if(miss>0){c.strokeStyle=`rgba(255,255,255,${miss*.8})`;c.lineWidth=2;for(let q=1;q<=3;q++){c.beginPath();c.ellipse(x,y+6,(10+q*10)*(1.2-miss*.5),(4+q*3)*(1.2-miss*.5),0,0,7);c.stroke()}}
     if(landT>0){c.strokeStyle=`rgba(255,255,255,${landT*.6})`;c.lineWidth=2;c.beginPath();c.ellipse(x,y+4,r*(1.5-landT*.5),r*(1.1-landT*.4),0,0,7);c.stroke()}
@@ -10773,12 +10787,13 @@ const Katak={
    c.fillStyle='#fff';c.font=`900 ${ini.length>1?14:17}px ${FONT}`;c.textAlign='center';c.textBaseline='middle';c.fillText(ini,ax,ay+1)}));
   const st=Object.assign({},fr.jump||fr.fall>0||fr.fin||!mine?{ox:0,oy:0,sc:base}:mine);
   {const mo=this.myOff=this.myOff||{ox:0,oy:0,sc:base};const kk=Math.min(1,dt*10);mo.ox+=(st.ox-mo.ox)*kk;mo.oy+=(st.oy-mo.oy)*kk;mo.sc+=(st.sc-mo.sc)*kk;if(fr.jump){mo.ox=0;mo.oy=0;mo.sc=base}Object.assign(st,{ox:mo.ox,oy:mo.oy,sc:mo.sc})}
-  const x=this.sx(fr.wx)+st.ox,y=this.sy(fr.wy)+st.oy-4+(fr.jump?0:fr.land*5),s=(1+fr.h*.35)*st.sc*(1-fr.fall*.5)*(1-(K.pop||0)*.4);
+  const x=this.sx(fr.wx)+st.ox+(fr.fin?fr.hopX||0:0),y=this.sy(fr.wy)+st.oy-4+(fr.jump||fr.fin?0:fr.land*5),s=(1+fr.h*.35)*st.sc*(1-fr.fall*.5)*(1-(K.pop||0)*.4);
   if(fr.fall>0){c.strokeStyle=`rgba(255,255,255,${.9-fr.fall*.4})`;c.lineWidth=2;for(let k=1;k<=3;k++){c.beginPath();c.ellipse(x,y+6,(14+k*12)*fr.fall,(5+k*4)*fr.fall,0,0,7);c.stroke()}}
   drawFrogTop(c,x,y,s,'#8E44AD',1-fr.fall*.8,fr.h,fr.rot,fr.sq,tm);
   tagsLater.forEach(t=>this.tag(c,...t));
   if(this.np>1&&!fr.jump&&!fr.fin&&mine&&mine.ox===0&&mine.oy===0)this.tag(c,x,this.sy(fr.wy)+r*.82,'Kamu','#8E44AD');
-  if(fr.fin){c.fillStyle='rgba(20,33,61,.75)';rr(c,W/2-84,H/2-24,168,48,24);c.fill();c.fillStyle='#FFD54A';c.font=`900 22px ${FONT}`;c.textAlign='center';c.textBaseline='middle';c.fillText('Sampai FINIS!',W/2,H/2)}
+  if(fr.fin){const wt=this.wait;const t1=wt?`Menunggu teman… ${Math.max(0,(wt.tot||1)-(wt.left||0))}/${wt.tot||1} sampai`:'Sampai FINIS!';c.font=`900 ${wt?17:22}px ${FONT}`;const tw=c.measureText(t1).width+40;c.fillStyle='rgba(20,33,61,.78)';rr(c,W/2-tw/2,H/2-24,tw,48,24);c.fill();c.fillStyle='#FFD54A';c.textAlign='center';c.textBaseline='middle';c.fillText(t1,W/2,H/2);
+   if(wt&&wt.t>15){c.font=`700 13px ${FONT}`;c.fillStyle='#fff';c.fillText('Ketuk layar untuk melihat hasil sekarang',W/2,H/2+40)}}
   const tot=game.qs.length,stp=Math.min(tot,K.step),x0=W-12,y0=24,y1=H-24;c.fillStyle='rgba(255,255,255,.35)';rr(c,x0-4,y0,8,y1-y0,4);c.fill();
   c.fillStyle='#FFD54A';const py=y1-(y1-y0)*stp/tot;rr(c,x0-4,py,8,y1-py,4);c.fill();c.font='14px sans-serif';c.textAlign='center';c.textBaseline='middle';c.fillText('🏁',x0-2,y0-10);
   c.fillStyle='#5DBB4A';c.beginPath();c.arc(x0,py,7,0,7);c.fill();c.strokeStyle='#fff';c.lineWidth=2;c.stroke()},
@@ -11558,10 +11573,10 @@ const POND={zone:[[-3,-2,-1],[1,2,3]]};
 function pondInit(){const D=DUEL;D.pond={frogs:[0,1].map(s=>({s,c:POND.zone[s][1],row:0,wx:0,wy:0,jump:null,fall:0,pop:0,rot:0,h:0,sq:0,land:0,fin:0})),sunk:{},rip:[],camY:0,z:1,t:0}}
 function pondGeo(){const D=DUEL,W=D.rW||300,H=D.rH||300;const cg=W/7.3,rg=cg*1.08,r=Math.min(cg*.44,rg*.44);return {W,H,cg,rg,r}}
 function pondXY(c,row,G){return {x:c*G.cg,y:-row*G.rg}}
-function pondJump(s,k,ok){const D=DUEL;if(!D||!D.pond)return;const f=D.pond.frogs[s];if(k<0){f.pop=1;return}
+function pondJump(s,k,ok){const D=DUEL;if(!D||!D.pond)return;const f=D.pond.frogs[s];if(k<0)k=1;/* waktu habis: tetap melompat ke daun tengah lalu tercebur */
   const G=pondGeo(),c=POND.zone[s][Math.max(0,Math.min(2,k))],row=f.row+1,from=pondXY(f.c,f.row,G),to=pondXY(c,row,G);
   f.jump={t:-.11,x0:from.x,y0:from.y,x1:to.x,y1:to.y,c,row,ok,go:false}}
-function pondFinish(s){const D=DUEL;if(!D||!D.pond)return;const f=D.pond.frogs[s];if(f.row<GROUP.per||f.fin)return;const G=pondGeo(),a=pondXY(f.c,f.row,G);f.jump={t:-.11,x0:a.x,y0:a.y,x1:a.x,y1:-(GROUP.per+1)*G.rg,fin:true,go:false}}
+function pondFinish(s){const D=DUEL;if(!D||!D.pond)return;const f=D.pond.frogs[s];if(f.fin)return;if(f.jump||f.fall>0){setTimeout(()=>pondFinish(s),300);return}const G=pondGeo(),a=pondXY(f.c,f.row,G);f.jump={t:-.11,x0:a.x,y0:a.y,x1:a.x,y1:-(GROUP.per+1)*G.rg,fin:true,go:false}}
 function pondStep(dt){const D=DUEL,Pd=D.pond,G=pondGeo();Pd.t+=dt;Pd.rip.forEach(q=>q.t+=dt);Pd.rip=Pd.rip.filter(q=>q.t<.9);
   for(const f of Pd.frogs){f.land=Math.max(0,f.land-dt*3.2);f.pop=Math.max(0,f.pop-dt*2.5);const base=pondXY(f.c,f.row,G);let face=0,fk=3;
    if(f.jump){const j=f.jump;j.t+=dt;face=Math.atan2(j.x1-j.x0,-(j.y1-j.y0));fk=16;
@@ -11570,9 +11585,10 @@ function pondStep(dt){const D=DUEL,Pd=D.pond,G=pondGeo();Pd.t+=dt;Pd.rip.forEach
      if(u>=1){f.h=0;f.sq=.25;f.land=1;Pd.rip.push({x:j.x1,y:j.y1,t:0});
       if(j.fin){f.fin=1;f.jump=null}
       else if(j.ok){f.c=j.c;f.row=j.row;f.jump=null}
-      else{Pd.sunk[j.c+','+j.row]=1;f.sunkKey=j.c+','+j.row;f.fallAt={x:j.x1,y:j.y1};f.jump=null;f.fall=.001}}}}
+      else{Pd.sunk[j.c+','+j.row]=1;f.sunkKey=j.c+','+j.row;f.fallAt={x:j.x1,y:j.y1};f.jump=null;f.fall=.001;f.c=j.c;f.row=j.row/* salah tetap maju */}}}}
    else if(f.fall>0){f.fall=Math.min(1.6,f.fall+dt*1.5);f.wx=f.fallAt.x;f.wy=f.fallAt.y;if(f.fall>=1.6){f.fall=0;f.pop=1;f.wx=base.x;f.wy=base.y;/* daun yang tenggelam muncul lagi ke permukaan */if(f.sunkKey){delete Pd.sunk[f.sunkKey];(Pd.rise=Pd.rise||{})[f.sunkKey]=0;f.sunkKey=null}}}
    else if(!f.fin){f.wx=base.x;f.wy=base.y;f.sq+=(0-f.sq)*Math.min(1,dt*10)}
+   else{/* sudah di darat: melompat mondar-mandir menunggu lawan */f.ht=(f.ht||0)+dt;const Pp=1.15,k=Math.floor(f.ht/Pp),u=Math.min(1,(f.ht%Pp)/(Pp*.42)),A=G.cg*.7,a=k%2?A:-A,b=k%2?-A:A,e=u<1?.5-.5*Math.cos(u*Math.PI):1;f.finX=f.finX!=null?f.finX:f.wx;f.wx=f.finX+a+(b-a)*e;f.h=u<1?Math.sin(u*Math.PI)*.8:0;face=u<1?(b>a?1:-1)*Math.PI/2*.85:0;fk=10}
    {let d=face-f.rot;d=Math.atan2(Math.sin(d),Math.cos(d));f.rot+=d*Math.min(1,dt*fk)}}
   /* kamera: kedua katak selalu terlihat, menjauh (zoom out) bila jarak mereka besar */
   const ys=Pd.frogs.map(f=>f.wy),lo=Math.min(...ys),hi=Math.max(...ys),span=hi-lo+G.rg*2.6,z=clamp(G.H*.86/span,.42,1);
@@ -11666,7 +11682,7 @@ function duelResolve(sd,k){
   duelHUD(sd);
 }
 function duelNext(sd){const g=sd.game;
-  if(g.i>=g.qs.length-1){sd.done=true;arc.state='done';sd.el.fb.textContent='';sd.el.wait.hidden=false;if(DUEL.race==='frog')pondFinish(sd.idx);if(DUEL.sides.every(x=>x.done))setTimeout(finishDuel,DUEL.race==='frog'?1800:800);return}
+  if(g.i>=g.qs.length-1){sd.done=true;arc.state='done';sd.el.fb.textContent='';sd.el.wait.hidden=false;if(DUEL.race==='frog')pondFinish(sd.idx);if(DUEL.sides.every(x=>x.done)){if(DUEL.race==='frog'){const w=()=>{if(!DUEL)return;if(DUEL.pond.frogs.every(f=>f.fin))setTimeout(finishDuel,1600);else setTimeout(w,300)};setTimeout(w,500)}else setTimeout(finishDuel,800)};return}
   g.i++;duelShowQ(sd)}
 function stepSide(sd,dt){
   if(arc.state==='play'){arc.t+=dt;if(M)M.update(dt);if(arc.state==='play'){sd.el.bar.style.width=Math.max(0,100*(1-arc.t/arc.limit))+'%';if(arc.t>=arc.limit+((M&&M.extra)||0))duelResolve(sd,-1)}}
@@ -13100,7 +13116,7 @@ function startPractice(){const s=SUBJ(),doneUnits=Math.max(1,Math.floor(progOf()
   beginRun({kind:'practice',qs:mixTypes(shuffle([...wk,...fresh]),pick(pool)),mode:'kuis',title:`Latihan · ${s.name}`})}
 function beginRun(o){PLAY='solo';{const rr=document.getElementById('roomRace');if(rr&&!o.room)rr.hidden=true}L=o.cls?LEVELS.find(l=>l.id===COURSE.find(c=>c.id===o.cls).lv):lvOf();const s=o.subj||SUBJ();S={id:s.id,name:o.title||s.name,make:()=>o.qs};MODE=o.mode;setLvColor(L);document.documentElement.style.setProperty('--lvc',s.color);
   const usesHearts=o.kind==='lesson'||o.kind==='test';
-  game={qs:o.qs,i:0,score:0,correct:0,lives:o.kind==='game'?(L&&L.id==='tk'?999:3):(usesHearts&&!HUNL()?P.hearts:999),streak:0,best:0,results:[],locked:false,mode:o.mode,buzz:null,group:null,
+  game={qs:o.qs,i:0,score:0,correct:0,lives:o.kind==='game'?(L&&L.id==='tk'||o.mode==='katak'?999:3):(usesHearts&&!HUNL()?P.hearts:999),streak:0,best:0,results:[],locked:false,mode:o.mode,buzz:null,group:null,
     lesson:Object.assign({},o,{target:o.qs.length,reask:(o.kind==='lesson'||o.kind==='practice')&&!o.noReask,answers:0,wrong:0,start:Date.now(),usesHearts})};
   show('vPlay');document.body.classList.toggle('lessonmode',o.mode==='kuis');try{loadMateri().catch(()=>{})}catch(e){}
   $('#turn').hidden=true;$('#buzz').hidden=true;$('#teamBar').hidden=true;$('#feedback').hidden=true;
@@ -15702,7 +15718,7 @@ function folBind(root,list,after){root.querySelectorAll('[data-follow]').forEach
   try{await folDo(f,on);if(on){try{sfx.ok()}catch(_){}toast('team',`Kamu mengikuti ${f.name}.`)}b.outerHTML=folBtn(f,b.classList.contains('sm'));folBind(root,list,after);after&&after()}catch(err){b.disabled=false;toast('lock',fbErr(err))}})}
 const shareIcon='<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M12 3 V15 M7 8 L12 3 L17 8 M5 13 V19 C5 20 6 21 7 21 H17 C18 21 19 20 19 19 V13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const qrIcon='<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><path d="M14 14h3v3h-3zM18 18h3v3h-3zM18 14h3M14 18v3" stroke-linecap="round"/></svg>';
-let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=285';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
+let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=286';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
 function qrMatrix(text){const Q=window.QRCodeLib,q=new Q(-1,Q.ECL.M);q.addData(text);q.make();const n=q.getModuleCount(),m=[];for(let r=0;r<n;r++){m.push([]);for(let c=0;c<n;c++)m[r].push(q.isDark(r,c))}return m}
 function qrSvgOf(m){const n=m.length;let d='';for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(m[r][c])d+=`M${c} ${r}h1.02v1.02h-1.02z`;
   return `<svg viewBox="-2 -2 ${n+4} ${n+4}" class="pcqr" shape-rendering="crispEdges" aria-label="Kode QR profil"><rect x="-2" y="-2" width="${n+4}" height="${n+4}" fill="#fff"/><path d="${d}" fill="#1C1E3D"/></svg>`}
