@@ -3549,6 +3549,15 @@ body.evtv .stile .stars{display:flex;gap:2px;font-size:20px;color:#D9DCE3}body.e
 @media (min-width:2400px){body.evtv #vTRun{zoom:1.8}body.evtv #vDone .done{zoom:2}body.evtv #modal .mbox{zoom:1.8}}
 /* Evaluasi di TV: menu samping guru disembunyikan agar layar penuh untuk murid */
 body.teacher[data-tab="trun"] .side,body.teacher.playing .side{display:none!important}
+.evboard .evrk{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:8px}
+.evrk li{display:flex;align-items:center;gap:10px;padding:8px 12px;border:2px solid var(--line);border-radius:14px;background:var(--card)}
+.evrk li .avatar{width:40px;height:40px;flex:none;font-size:18px}.evrk li b{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.evrk .rk{min-width:34px;text-align:center;font-weight:900;font-size:20px;color:var(--muted)}.evrk .rkt{font-size:13px;color:var(--muted);white-space:nowrap}
+.evrk .rks{min-width:48px;text-align:center;font-weight:900;font-size:20px;color:#fff;background:var(--green);border-radius:12px;padding:2px 8px}
+.evrk li.top .rk{font-size:28px}.evrk li.t1{border-color:#FFC800;background:#FFF8D6}.evrk li.t2{border-color:#C0C6D0}.evrk li.t3{border-color:#E8A15C}
+[data-theme=malam] .evrk li.t1{background:#3a3210}
+.evmyrk{font-size:24px;font-weight:900;color:var(--blue);margin:4px 0}
+body.evtv .evrk li{font-size:20px}
 /* Toko: judul bagian besar gelap */
 html body:not(.teacher) #vShop .shopsec h3{font-size:22px!important;color:var(--ink)!important;text-transform:none!important;letter-spacing:0!important}
 /* Profil: ringkasan tanpa kotak */
@@ -3931,7 +3940,7 @@ html[data-theme=malam] .plstick{background:#0a0f1e}
 <div class="syncpill" id="syncPill" hidden></div>
 <div class="toast" id="toast" hidden></div>
 
-<script src="av.js?v=267"></script>
+<script src="av.js?v=268"></script>
 <script>
 /* ---------- visual assets ---------- */
 const INK='#1B1E3D';
@@ -13391,7 +13400,12 @@ function tLock(cb,why){cb();return;const t=T();
   openModal(`<div class="pinbox"><span style="width:60px">${ICONS.teach}</span><h3>Khusus guru</h3><p class="note">${why||'Masukkan PIN atau sandi guru untuk keluar dari layar evaluasi.'}</p><input id="tlPw" type="password" autocomplete="current-password" placeholder="PIN atau sandi guru" style="font-size:20px;padding:12px;border-radius:14px;border:2px solid var(--line);width:100%;max-width:320px"><p class="note" id="tlErr" style="color:var(--red);min-height:1em;margin:0"></p><div class="acts"><button class="ghost" id="tlNo">Batal</button><button class="primary" id="tlYes">Buka</button></div></div>`);
   const go2=()=>{if(evLockOk($('#tlPw').value)){closeModal();cb()}else{$('#tlErr').textContent='PIN atau sandi salah.';sfx.bad();$('#tlPw').select()}};
   $('#tlYes').onclick=go2;$('#tlNo').onclick=closeModal;$('#tlPw').onkeydown=e=>{if(e.key==='Enter')go2()};setTimeout(()=>$('#tlPw').focus(),80)}
-let EV_SHOW=false;
+let EV_SHOW=true;
+function evRank(e,ids){const L=ids.filter(id=>e.results[id]).map(id=>({id,r:e.results[id]})).sort((a,b)=>b.r.score-a.r.score||(a.r.secs||0)-(b.r.secs||0));let rk=0;L.forEach((x,i)=>{if(!i||x.r.score!==L[i-1].r.score||(x.r.secs||0)!==(L[i-1].r.secs||0))rk=i+1;x.rank=rk});return L}
+const evMedal=r=>r===1?'🥇':r===2?'🥈':r===3?'🥉':r;
+const evTime=s=>s==null?'':s>=60?`${Math.floor(s/60)}m ${s%60}d`:`${s} dtk`;
+function evBoard(e,part){const L=evRank(e,part.map(p=>p.id));if(!L.length)return '';const nm=id=>(APP.profiles.find(x=>x.id===id)||{name:'?'});
+  return `<div class="tcard evboard"><h3>🏆 Peringkat</h3><ol class="evrk">${L.map(x=>{const p=nm(x.id);return `<li class="${x.rank<=3?'top t'+x.rank:''}"><span class="rk">${evMedal(x.rank)}</span>${avatarOf(p)}<b>${esc(p.name)}</b><span class="rkt">${x.r.correct}/${x.r.total} · ${evTime(x.r.secs)}</span><span class="rks">${x.r.score}</span></li>`}).join('')}</ol><p class="note" style="margin:0">Nilai sama? Yang lebih cepat menyelesaikan berada di atas.</p></div>`}
 function curEval(){const s=EVR&&APP.sessions.find(x=>x.id===EVR.sid);const e=s&&s.evals.find(x=>x.id===EVR.eid);return {sess:s,e}}
 let RUN_ALL=false;
 function renderTRun(){const {sess,e}=curEval();if(!e){go('teval');return}const t=T();const list=students();const attFilled=Object.keys(sess.att).length>0;
@@ -13400,12 +13414,12 @@ function renderTRun(){const {sess,e}=curEval();if(!e){go('teval');return}const t
   $('#vTRun').innerHTML=`<div class="evalhead"><div class="grow"><h2>${esc(e.subjName)}: ${esc(e.unit)}</h2><p>${gameName(e.game)} · ${e.n} soal per murid${e.fmt&&e.fmt!=='solo'?` · ${FMT[e.fmt]} · Pilih ${e.fmt==='terbagi'?'2':'2–6'} murid, lalu tekan Mulai`:' · Ketuk namamu untuk mulai'}</p></div><span class="evalprog">${done.length} / ${part.length} dinilai</span><button class="ghost" id="runBack">Selesai</button></div>
    ${done.length===part.length&&part.length?`<div class="tcard" style="flex-direction:row;align-items:center;gap:14px;flex-wrap:wrap"><div class="mascot" data-mascot data-mood="happy" style="width:80px"></div><div style="flex:1;min-width:200px"><h3>Semua murid sudah dinilai! Hebat, kelas ${esc(tCls().full||'')}!</h3><p class="sub" style="margin:0">Nilai sudah tersimpan di rapor.${EV_SHOW?` Rata-rata kelas ${av(scores)}.`:''}</p></div><button class="primary" id="evRapor">Lihat rapor</button></div>`:''}
    ${e.fmt&&e.fmt!=='solo'?`<div class="tcard evsel"><div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><b style="flex:1;min-width:180px">${EVSEL.length?`Dipilih: ${EVSEL.map(id=>esc((APP.profiles.find(x=>x.id===id)||{name:'?'}).name)).join(', ')}`:'Belum ada murid dipilih'}</b><button class="ghost" id="evAuto">Pilih acak</button><button class="primary" id="evGo" ${EVSEL.length>=2&&(e.fmt!=='terbagi'||EVSEL.length===2)?'':'disabled'}>Mulai ${FMT[e.fmt]}</button></div></div>`:''}
+   ${evBoard(e,part)}
    <div class="stiles">${part.map(p=>{const r=e.results[p.id];const sel=EVSEL.includes(p.id);return `<button class="stile ${r?'done':''} ${sel?'sel':''}" data-p="${p.id}">${sel?`<span class="selno">${EVSEL.indexOf(p.id)+1}</span>`:''}${r?(EV_SHOW?`<span class="sc ${r.score<t.kkm?'low':''}">${r.score}</span>`:`<span class="sc ok">✓</span>`):''}${avatarOf(p)}<b>${esc(p.name)}</b><small>${p.no?'No. '+p.no:''}${r?' · Selesai':''}</small>${r&&!EV_SHOW?`<span class="stars">${[0,1,2].map(i=>`<i class="${i<evStars(r.score)?'on':''}">★</i>`).join('')}</span>`:''}</button>`}).join('')}</div>
    ${attFilled?`<button class="ghost" id="runAll" style="align-self:flex-start">${RUN_ALL?'Tampilkan yang hadir saja':'Tampilkan semua murid'}</button>`:''}
-   ${done.length?`<button class="ghost" id="evShow" style="align-self:flex-start">${EV_SHOW?'Sembunyikan nilai':'Lihat nilai (guru)'}</button>`:''}
-   ${done.length&&EV_SHOW?`<div class="tcard"><h3>Hasil sementara</h3><div class="tablewrap"><table class="ttable"><thead><tr><th>No</th><th>Nama</th><th class="num">Benar</th><th class="num">Nilai</th><th>Status</th></tr></thead><tbody>${done.sort((a,b)=>e.results[b.id].score-e.results[a.id].score).map(p=>{const r=e.results[p.id];return `<tr><td>${p.no||''}</td><td class="nm">${esc(p.name)}</td><td class="num">${r.correct}/${r.total}</td><td class="num score ${r.score<t.kkm?'low':''}">${r.score}</td><td>${statusPill(r.score)}</td></tr>`}).join('')}</tbody></table></div></div>`:''}`;
+   `;
   bindTeacherLinks($('#vTRun'));{const rp=$('#evRapor');if(rp)rp.onclick=()=>tLock(()=>{fsOff();go('trapor')})}
-  $('#runBack').onclick=()=>tLock(()=>{EV_SHOW=false;fsOff();go('tdash')});{const sv=$('#evShow');if(sv)sv.onclick=()=>{if(EV_SHOW){EV_SHOW=false;renderTRun()}else tLock(()=>{EV_SHOW=true;renderTRun()},'Nilai murid hanya untuk guru. Masukkan sandi guru untuk menampilkannya.')}}
+  $('#runBack').onclick=()=>tLock(()=>{fsOff();go('tdash')});
   if(e.fmt&&e.fmt!=='solo'){const max=e.fmt==='terbagi'?2:6;
     $('#vTRun').querySelectorAll('.stile').forEach(b=>b.onclick=()=>{const id=b.dataset.p;if(EVSEL.includes(id))EVSEL=EVSEL.filter(x=>x!==id);else{if(EVSEL.length>=max)EVSEL.shift();EVSEL.push(id)}tone([600],.03);renderTRun()});
     $('#evAuto').onclick=()=>{const left=part.filter(p=>!e.results[p.id]);const pool=(left.length>=2?left:part).map(p=>p.id);EVSEL=shuffle(pool).slice(0,Math.min(max,e.fmt==='terbagi'?2:4,pool.length));renderTRun()};
@@ -13427,7 +13441,7 @@ function evalDone(){const g=game,o=g.lesson;clearInterval(timerId);if(arc.runnin
   if(e){e.results[o.pid]={score,correct:g.correct,total:o.target,secs,at:Date.now()}}
   const p=APP.profiles.find(x=>x.id===o.pid);if(p){ensureDay(p);p.upd=Date.now();p.xp+=10;p.week.xp+=10;p.today.xp+=10}save();
   const pass=score>=t.kkm,stars=score>=90?3:score>=t.kkm?2:score>=50?1:0;
-  const v=$('#vDone');v.innerHTML=`<div class="done"><div class="mascot" data-mascot data-mood="${pass?'happy':'sad'}"></div><h2 class="gold">${esc(p?p.name:'')}: ${score}</h2><div class="bigstars">${[0,1,2].map(i=>`<span class="${i<stars?'':'off'}">★</span>`).join('')}</div><p class="sub">Benar ${g.correct} dari ${o.target} soal. ${pass?'Tuntas, hebat!':`Belum mencapai KKM ${t.kkm}. Tetap semangat!`} Nilai sudah masuk rapor.</p><div class="acts"><button class="primary" id="evNext">Murid berikutnya <span id="evCd">(10)</span></button></div></div>`;
+  const v=$('#vDone');v.innerHTML=`<div class="done"><div class="mascot" data-mascot data-mood="${pass?'happy':'sad'}"></div><h2 class="gold">${esc(p?p.name:'')}: ${score}</h2><div class="bigstars">${[0,1,2].map(i=>`<span class="${i<stars?'':'off'}">★</span>`).join('')}</div><p class="sub">Benar ${g.correct} dari ${o.target} soal. ${pass?'Tuntas, hebat!':`Belum mencapai KKM ${t.kkm}. Tetap semangat!`} Nilai sudah masuk rapor.</p>${(()=>{const L=evRank(e,Object.keys(e.results)),me=L.find(x=>x.id===o.pid);return me?`<p class="evmyrk">${me.rank<=3?evMedal(me.rank)+' ':''}Peringkat ${me.rank} dari ${L.length}</p>`:''})()}<div class="acts"><button class="primary" id="evNext">Murid berikutnya <span id="evCd">(10)</span></button></div></div>`;
   hydrate(v);show('vDone');if(pass){sfx.win();setTimeout(burstConfetti,150)}let cd=10;clearInterval(window.evCdT);window.evCdT=setInterval(()=>{cd--;const el=$('#evCd');if(!el||$('#vDone').hidden){clearInterval(window.evCdT);return}el.textContent=`(${cd})`;if(cd<=0){clearInterval(window.evCdT);$('#evNext').click()}},1000);$('#evNext').onclick=()=>{clearInterval(window.evCdT);game=null;go('trun')};setTimeout(()=>$('#evNext').focus({preventScroll:true}),60)}
 
 /* ---------- evaluasi berkelompok: bergiliran, rebutan, layar terbagi ---------- */
@@ -15485,7 +15499,7 @@ function folBind(root,list,after){root.querySelectorAll('[data-follow]').forEach
   try{await folDo(f,on);if(on){try{sfx.ok()}catch(_){}toast('team',`Kamu mengikuti ${f.name}.`)}b.outerHTML=folBtn(f,b.classList.contains('sm'));folBind(root,list,after);after&&after()}catch(err){b.disabled=false;toast('lock',fbErr(err))}})}
 const shareIcon='<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M12 3 V15 M7 8 L12 3 L17 8 M5 13 V19 C5 20 6 21 7 21 H17 C18 21 19 20 19 19 V13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const qrIcon='<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><path d="M14 14h3v3h-3zM18 18h3v3h-3zM18 14h3M14 18v3" stroke-linecap="round"/></svg>';
-let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=267';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
+let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=268';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
 function qrMatrix(text){const Q=window.QRCodeLib,q=new Q(-1,Q.ECL.M);q.addData(text);q.make();const n=q.getModuleCount(),m=[];for(let r=0;r<n;r++){m.push([]);for(let c=0;c<n;c++)m[r].push(q.isDark(r,c))}return m}
 function qrSvgOf(m){const n=m.length;let d='';for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(m[r][c])d+=`M${c} ${r}h1.02v1.02h-1.02z`;
   return `<svg viewBox="-2 -2 ${n+4} ${n+4}" class="pcqr" shape-rendering="crispEdges" aria-label="Kode QR profil"><rect x="-2" y="-2" width="${n+4}" height="${n+4}" fill="#fff"/><path d="${d}" fill="#1C1E3D"/></svg>`}
