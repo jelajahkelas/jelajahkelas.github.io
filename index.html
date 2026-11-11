@@ -3619,6 +3619,51 @@ body.duelon #vDuel .opt{-webkit-tap-highlight-color:transparent}
 .rlbig{font-family:var(--title);font-size:40px;color:var(--tc)}.rlbig small{font-size:16px;color:var(--muted);margin-left:4px}
 .rlteam ol{margin:8px 0 0;padding-left:20px;max-height:220px;overflow:auto}.rlteam li span{display:inline-block;min-width:60%}.rlteam li b{float:right}
 @media (max-width:600px){.rlcols{grid-template-columns:1fr}}
+/* ===== Tampilan TV (layar lebar) ===== */
+@media (min-width:1600px){
+ body.tv.teacher [id^="vT"]:not(#vTRun){zoom:1.22}
+ body.tv.teacher .side{zoom:1.15}
+ body.tv.teacher .ttop{zoom:1.18}
+}
+body.tv .playbar{min-height:76px;gap:14px;padding:10px 16px}
+body.tv .playbar .back{min-height:52px;min-width:52px;font-size:20px;padding:6px 16px}
+body.tv .playbar .dots{height:22px}body.tv .playbar .dots>*{height:22px;border-radius:11px}
+body.tv .playbar .hearts svg{width:38px;height:38px}
+body.tv .playbar .chip.coin{font-size:28px;padding:6px 16px}body.tv .playbar .chip.coin .coinic{width:30px;height:30px}
+.evwho{display:inline-flex;align-items:baseline;gap:8px;background:var(--lvc,#7C4DFF);color:#fff;font-family:var(--title);font-size:20px;padding:4px 14px;border-radius:999px;white-space:nowrap;max-width:32vw;overflow:hidden;text-overflow:ellipsis}
+.evwho small{font-family:var(--body);font-size:12px;font-weight:800;opacity:.85}
+.evwho[hidden]{display:none}
+body.tv .evwho{font-size:30px;padding:6px 22px}body.tv .evwho small{font-size:16px}
+body.tv .arcstart .box,body.tv #arcStart .box{max-width:720px;font-size:22px}body.tv #arcStart h2,body.tv #arcStart .ttl{font-size:44px}body.tv #arcStart button{font-size:26px;padding:16px}
+/* layar Evaluasi: kartu nama memenuhi layar, peringkat di samping */
+.evmain{display:block}
+@media (min-width:1200px){
+ body.evtv #vTRun{max-width:none!important;width:100%}
+ body.evtv.teacher main.wrap,body.evtv main.wrap{max-width:none!important}
+ body.evtv .evmain{display:grid;grid-template-columns:minmax(0,1fr) 430px;gap:16px;align-items:start}
+ body.evtv .evmain .evside{position:sticky;top:8px}
+ body.evtv .evmain .evboard .evrk{grid-template-columns:1fr}
+ body.evtv .stiles{grid-template-columns:repeat(auto-fill,minmax(180px,1fr))!important}
+ body.evtv .stile b{font-size:22px}body.evtv .stile .avatar{width:84px;height:84px;font-size:36px}
+ body.evtv .evalhead h2{font-size:30px}body.evtv .evalhead p{font-size:17px}
+}
+/* hitung mundur 3-2-1 */
+.cd321{position:fixed;inset:0;z-index:70;display:grid;place-items:center;background:rgba(20,16,50,.55);pointer-events:none}
+.cd321 b{font-family:var(--title);font-size:min(40vw,320px);color:#fff;text-shadow:0 10px 0 rgba(0,0,0,.25);animation:cdpop .8s ease}
+.cd321 b.mulai{font-size:min(16vw,150px);color:#FFD54A;animation:cdpop .6s ease}
+@keyframes cdpop{0%{transform:scale(.3);opacity:0}35%{transform:scale(1.15);opacity:1}70%{transform:scale(1)}100%{transform:scale(.9);opacity:.2}}
+/* podium juara */
+.podium{text-align:center;display:flex;flex-direction:column;align-items:center;gap:10px}
+.podium h2{margin:0;font-size:32px}.podium .pods{display:flex;align-items:flex-end;justify-content:center;gap:14px;margin:10px 0 6px;width:100%}
+.pod{display:flex;flex-direction:column;align-items:center;gap:6px;width:min(30%,190px)}
+.pod .who{display:flex;flex-direction:column;align-items:center;gap:4px;animation:podin .7s ease both}.pod.p1 .who{animation-delay:.9s}.pod.p2 .who{animation-delay:.5s}.pod.p3 .who{animation-delay:.1s}
+.pod .who .avatar{width:74px;height:74px;font-size:32px}.pod.p1 .who .avatar{width:96px;height:96px}
+.pod .who b{font-size:18px;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.pod .who span{font-size:13px;color:var(--muted);font-weight:700}
+.pod .block{width:100%;border-radius:14px 14px 0 0;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding-top:10px;color:#fff;font-family:var(--title)}
+.pod .block i{font-style:normal;font-size:34px}.pod .block em{font-style:normal;font-size:40px}
+.pod.p1 .block{height:170px;background:linear-gradient(#FFD54A,#F2A900)}.pod.p2 .block{height:120px;background:linear-gradient(#D8DEE8,#9AA5B8)}.pod.p3 .block{height:90px;background:linear-gradient(#F0B27A,#C8762C)}
+@keyframes podin{0%{transform:translateY(-40px) scale(.6);opacity:0}100%{transform:none;opacity:1}}
+body.evtv .podium{zoom:1.2}
 /* Toko: judul bagian besar gelap */
 html body:not(.teacher) #vShop .shopsec h3{font-size:22px!important;color:var(--ink)!important;text-transform:none!important;letter-spacing:0!important}
 /* Profil: ringkasan tanpa kotak */
@@ -3790,7 +3835,8 @@ html[data-theme=malam] .plstick{background:#0a0f1e}
 <style>html,body{margin:0}</style>
 </head>
 <body>
-<noscript><main style="max-width:760px;margin:0 auto;padding:24px 16px;font-family:system-ui,sans-serif"><h1>JELAS: belajar gratis sambil main, dari TK sampai SMA/SMK</h1><p>JELAS (Jelajah Kelas) adalah aplikasi belajar Kurikulum Merdeka berbentuk game. Aktifkan JavaScript untuk memakai aplikasinya.</p><p><a href="tentang.html">Tentang JELAS</a> · <a href="belajar/">Materi per kelas</a></p><ul><li><a href="belajar/tk.html">Materi TK</a></li><li><a href="belajar/sd-kelas-1.html">Materi SD Kelas 1</a></li><li><a href="belajar/sd-kelas-2.html">Materi SD Kelas 2</a></li><li><a href="belajar/sd-kelas-3.html">Materi SD Kelas 3</a></li><li><a href="belajar/sd-kelas-4.html">Materi SD Kelas 4</a></li><li><a href="belajar/sd-kelas-5.html">Materi SD Kelas 5</a></li><li><a href="belajar/sd-kelas-6.html">Materi SD Kelas 6</a></li><li><a href="belajar/smp-kelas-7.html">Materi SMP Kelas 7</a></li><li><a href="belajar/smp-kelas-8.html">Materi SMP Kelas 8</a></li><li><a href="belajar/smp-kelas-9.html">Materi SMP Kelas 9</a></li><li><a href="belajar/sma-smk-kelas-10.html">Materi SMA/SMK Kelas 10</a></li><li><a href="belajar/sma-smk-kelas-11.html">Materi SMA/SMK Kelas 11</a></li><li><a href="belajar/sma-smk-kelas-12.html">Materi SMA/SMK Kelas 12</a></li></ul></main></noscript>\n
+<noscript><main style="max-width:760px;margin:0 auto;padding:24px 16px;font-family:system-ui,sans-serif"><h1>JELAS: belajar gratis sambil main, dari TK sampai SMA/SMK</h1><p>JELAS (Jelajah Kelas) adalah aplikasi belajar Kurikulum Merdeka berbentuk game. Aktifkan JavaScript untuk memakai aplikasinya.</p><p><a href="tentang.html">Tentang JELAS</a> · <a href="belajar/">Materi per kelas</a></p><ul><li><a href="belajar/tk.html">Materi TK</a></li><li><a href="belajar/sd-kelas-1.html">Materi SD Kelas 1</a></li><li><a href="belajar/sd-kelas-2.html">Materi SD Kelas 2</a></li><li><a href="belajar/sd-kelas-3.html">Materi SD Kelas 3</a></li><li><a href="belajar/sd-kelas-4.html">Materi SD Kelas 4</a></li><li><a href="belajar/sd-kelas-5.html">Materi SD Kelas 5</a></li><li><a href="belajar/sd-kelas-6.html">Materi SD Kelas 6</a></li><li><a href="belajar/smp-kelas-7.html">Materi SMP Kelas 7</a></li><li><a href="belajar/smp-kelas-8.html">Materi SMP Kelas 8</a></li><li><a href="belajar/smp-kelas-9.html">Materi SMP Kelas 9</a></li><li><a href="belajar/sma-smk-kelas-10.html">Materi SMA/SMK Kelas 10</a></li><li><a href="belajar/sma-smk-kelas-11.html">Materi SMA/SMK Kelas 11</a></li><li><a href="belajar/sma-smk-kelas-12.html">Materi SMA/SMK Kelas 12</a></li></ul></main></noscript>
+
 
 <div class="world" aria-hidden="true">
   <div class="sun"></div>
@@ -3924,7 +3970,7 @@ html[data-theme=malam] .plstick{background:#0a0f1e}
       <div class="playbar">
         <button class="back" id="quitBtn" aria-label="Keluar">✕<span class="long"> Keluar</span></button><button class="back pausebtn" id="pauseBtn" aria-label="Jeda permainan" title="Jeda (Esc)"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><rect x="6" y="5" width="4" height="14" rx="1.5" fill="currentColor"/><rect x="14" y="5" width="4" height="14" rx="1.5" fill="currentColor"/></svg></button>
         <div class="dots" id="dots"></div>
-        <span class="hearts" id="hearts" aria-label="Nyawa"></span>
+        <span class="evwho" id="evWho" hidden></span><span class="hearts" id="hearts" aria-label="Nyawa"></span>
         <span class="chip coin" id="scoreChip"><i class="coinic"></i><span id="score">0</span></span>
       </div>
       <div class="teambar" id="teamBar" hidden></div>
@@ -4001,7 +4047,7 @@ html[data-theme=malam] .plstick{background:#0a0f1e}
 <div class="syncpill" id="syncPill" hidden></div>
 <div class="toast" id="toast" hidden></div>
 
-<script src="av.js?v=288"></script>
+<script src="av.js?v=290"></script>
 <script>
 /* ---------- visual assets ---------- */
 const INK='#1B1E3D';
@@ -9877,7 +9923,8 @@ function renderSetup(){
   $('#fmtNote').textContent=GROUP.format==='terbagi'?'Layar dibagi dua dan dua pemain (atau dua tim) bermain bersamaan. Pemain kiri menyentuh layar kiri atau memakai W A S D, F, dan angka 1–4. Pemain kanan menyentuh layar kanan atau memakai tombol panah, Enter, dan 7 8 9 0. Semua game bisa dipakai.':GROUP.format==='giliran'?'Tim bergantian menjawab satu soal per giliran. Semua jenis game bisa dipakai, cocok untuk dimainkan di depan kelas.':'Semua tim melihat soal yang sama. Tim tercepat menekan tombolnya (keyboard atau klik guru), lalu menjawab. Benar +15, salah −5 dan tim lain boleh merebut. Memakai tampilan Kuis.';
   $('#perSeg').className='';$('#perSeg').innerHTML=stepperHTML('perStep',clamp(+GROUP.per||3,1,30),1,30);bindStepper('perStep',v=>{GROUP.per=v;store.set('group',GROUP)});
 }
-function applyTV(){document.body.classList.toggle('tv',(TV||document.body.classList.contains('evtv'))&&window.innerWidth>=700)}
+function applyTV(){const b=document.body;b.classList.toggle('tv',(TV||b.classList.contains('evtv')||b.classList.contains('teacher')&&window.innerWidth>=1600)&&window.innerWidth>=700)}
+window.addEventListener('resize',()=>{try{applyTV()}catch(e){}});
 const MODE_LIST=[
  {id:'lompat',name:'Petualangan Blok',desc:'Jelajahi level, sundul kotak tanya, capai FINIS',help:'Mulai dari START. Geser analog di kiri untuk berjalan (dorong ke atas untuk melompat), atau tekan tombol lompat di kanan. Sundul kotak tanya ? untuk membuka soal. Kumpulkan bintang, injak kumbang, hindari lubang. Bendera FINIS terbuka setelah semua kotak tanya dibuka. Keyboard: ← → berjalan, Spasi melompat, 1–4 menjawab.',
   icon:'<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"><rect x="16" y="4" width="16" height="13" rx="3"/><path d="M24 8v5" /><circle cx="24" cy="26" r="4"/><path d="M24 30v6l-5 7M24 36l5 7M18 33l6-3 6 3"/><path d="M4 44h40"/></svg>'},
@@ -10008,6 +10055,7 @@ function launch(){
 }
 function renderHUD(){
   if(CUR)return duelHUD(CUR);
+  {const w=$('#evWho');if(w){const who=game&&game.lesson&&game.lesson.kind==='eval'&&game.lesson.who;w.hidden=!who;if(who)w.innerHTML=`<small>Giliran</small> ${esc(who)}`}}
   if(game.lesson&&game.mode==='kuis'){{const d=$('#dots'),w=Math.min(100,game.correct/game.lesson.target*100);let lb=d.querySelector('.lbar');if(!lb){d.innerHTML='<span class="lbar"><i style="width:0%"></i><em class="lcombo"></em></span>';lb=d.querySelector('.lbar');void lb.offsetWidth}
    lb.querySelector('i').style.width=w+'%';const hot=game.streak>=3;lb.classList.toggle('hot',hot);const lc=lb.querySelector('.lcombo');const t=hot?`${game.streak} BERTURUT-TURUT!`:'';if(lc.textContent!==t){lc.textContent=t;lc.classList.remove('pop');void lc.offsetWidth;if(t)lc.classList.add('pop')}}$('#hearts').hidden=false;$('#hearts').innerHTML=lessonHearts();$('#scoreChip').hidden=true;$('#teamBar').hidden=true;$('#combo').textContent=game.streak>=3?`${game.streak} beruntun!`:'';return}
   const grp=game.group;
@@ -10316,7 +10364,7 @@ function arcIntro(first){
   $('#asText').textContent=first?modeInfo().help:`Soal ${game.i+1} dari ${game.qs.length}. Perwakilan ${t.name} silakan maju.`;
   $('#arcStart').hidden=false;setTimeout(()=>$('#asGo').focus({preventScroll:true}),50);
 }
-function arcGo(){lpTiltPerm();$('#arcStart').hidden=true;arc.state='play';tone([523,784],.08);if(MODE!=='lompat'){const sp=qSpeech(arc.q);if(sp)say(sp)}}
+function arcGo(){if(game&&game.lesson&&game.lesson.kind==='eval'&&!game.cd321){game.cd321=true;$('#arcStart').hidden=true;bigCountdown(()=>arcGo());return}lpTiltPerm();$('#arcStart').hidden=true;arc.state='play';tone([523,784],.08);if(MODE!=='lompat'){const sp=qSpeech(arc.q);if(sp)say(sp)}}
 function katQ(q){if(!q||!q.opts||q.opts.length<=3||q.kat3)return q;const keep=new Set([q.ans,...shuffle(q.opts.filter(o=>o!==q.ans)).slice(0,2)]);return Object.assign({},q,{opts:q.opts.filter(o=>keep.has(o)),kat3:true})}
 function arcShowQ(){
   if(MODE==='urut'&&game.qs[game.i]&&!game.qs[game.i].urut)game.qs[game.i]=urutQ(game.qs[game.i]);
@@ -10346,7 +10394,7 @@ function arcLoop(ts){
 function arcResolve(k){
   if(CUR)return duelResolve(CUR,k);
   if(arc.state!=='play')return;arc.state='resolved';arc.picked=k;
-  const r=applyResult(k,Math.max(0,1-arc.t/arc.limit));
+  const r=applyResult(k,Math.max(0,1-arc.t/arc.limit));if(r.ok&&document.body.classList.contains('evtv'))miniConfetti();
   if(r.ok&&MODE!=='lompat')popFx($('#cv'),'+'+r.gained);
   if(r.ok){arc.banner={text:(r.team?r.team.name:pick(PRAISE))+' +'+r.gained,color:'#1C8A57',t:0};arc.wait=1.25;arc.autoNext=true;if(L.id==='tk')say('Hebat, benar!')}
   else{arc.banner={text:k<0?'Waktu habis!':'Ups, salah!',color:'#C9362A',t:0};arc.wait=.8;arc.fbPending=true}
@@ -11454,6 +11502,8 @@ const Lompat={
   c.fillStyle=TH.night?'rgba(255,255,255,.18)':'rgba(255,255,255,.95)';this.clouds.forEach(cl=>{const x=((cl.x-cam*.15)%(6*260)+6*260)%(6*260)-120;c.beginPath();c.arc(x,cl.y,16*cl.s+8,0,7);c.arc(x+20*cl.s,cl.y-8,20*cl.s+6,0,7);c.arc(x+42*cl.s,cl.y,14*cl.s+8,0,7);c.fill()});
   // tanah dengan lubang
   const segs=[];let sx=-200;w.pits.slice().sort((a,b)=>a.x-b.x).forEach(p=>{segs.push([sx,p.x]);sx=p.x+p.w});segs.push([sx,w.L+400]);
+  /* lubang terlihat sebagai lubang gelap, bukan potongan langit */
+  {const pg=c.createLinearGradient(0,G,0,H);pg.addColorStop(0,'#3A2550');pg.addColorStop(1,'#120A20');c.fillStyle=pg;c.fillRect(0,G+4,W,H-G)}
   segs.forEach(([a,b])=>{const x0=X(a),x1=X(b);if(x1<0||x0>W)return;c.fillStyle=TH.dirt;c.fillRect(x0,G,x1-x0,H-G);c.fillStyle=TH.grass;c.fillRect(x0,G,x1-x0,9);c.strokeStyle='rgba(90,40,10,.3)';c.lineWidth=2;
    for(let y=G+18;y<H;y+=14){c.beginPath();c.moveTo(x0,y);c.lineTo(x1,y);c.stroke()}});
   // START
@@ -11695,6 +11745,7 @@ function duelShowQ(sd,first){
 function duelResolve(sd,k){
   if(arc.state!=='play')return;arc.state='resolved';const g=sd.game,q=g.qs[g.i];const ok=k>=0&&q.opts[k]===q.ans;const frac=Math.max(0,1-arc.t/arc.limit);
   g.results[g.i]=ok;q.ok=ok;q.team=sd.name;if(GROUP.relay){const t=relayTurn(sd);if(t){const st=sd.relayStats=sd.relayStats||{};const r=st[t.i]=st[t.i]||{c:0,n:0};r.n++;if(ok)r.c++;q.team=t.name+' ('+sd.name+')'}}if(DUEL.race==='frog')pondJump(sd.idx,k,ok);q.picked=k>=0?q.opts[k]:'(waktu habis)';
+  if(ok&&document.body.classList.contains('evtv')){const rc=sd.root.getBoundingClientRect();miniConfetti(rc.left+rc.width/2,rc.top+rc.height*.4)}
   if(ok){g.streak++;g.correct++;const gained=10+Math.ceil(frac*10)+Math.min(g.streak-1,5)*2;g.score+=gained;sfx.ok();arc.banner={text:'Benar! +'+gained,color:'#1C8A57',t:0};arc.wait=1.1;sd.el.fb.className='dfb ok';sd.el.fb.textContent=pick(PRAISE)+' +'+gained}
   else{g.streak=0;sfx.bad();arc.banner={text:k<0?'Waktu habis!':'Ups, salah!',color:'#C9362A',t:0};arc.wait=2.4;sd.el.fb.className='dfb';sd.el.fb.innerHTML=(k<0?'Waktu habis. ':'Salah. ')+(q.html?'':'Jawaban benar: <b>'+q.ans+'</b>');sd.root.classList.remove('shake');void sd.root.offsetWidth;sd.root.classList.add('shake')}
   if(DUEL.kind==='kuis')sd.el.opts.querySelectorAll('.opt').forEach((b,i)=>{b.disabled=true;if(q.opts[i]===q.ans)b.classList.add('right');else if(i===k)b.classList.add('wrong')});
@@ -12366,7 +12417,7 @@ function openHearts(){openModal(`<h3>Nyawamu habis</h3><div class="mascot" data-
 /* ---------- navigation ---------- */
 let curTab='learn';let TABSTK=[],TABBACK=false;
 const TAB_VIEW={learn:'vLearn',team:'vTeam',league:'vLeague',quest:'vQuest',shop:'vShop',profile:'vProfile'};
-function go(tab){if(!TABBACK&&tab!==curTab&&curTab!=='play'&&tab!=='play'){TABSTK=TABSTK.filter(x=>x!==curTab&&x!==tab);TABSTK.push(curTab);if(TABSTK.length>15)TABSTK.shift()}curTab=tab;if(tab!=='play')gameFSOff();closePop();document.body.dataset.tab=tab;{const was=document.body.classList.contains('evtv');document.body.classList.toggle('evtv',tab==='trun'||(tab==='play'&&was));if(was!==document.body.classList.contains('evtv'))applyTV()}setTimeout(()=>{try{renderSideFoot()}catch(e){}},0);if(document.body.classList.contains('teacher')&&T())applyTheme(T().cls,null);document.querySelectorAll('.nav').forEach(n=>n.setAttribute('aria-current',n.dataset.tab===tab?'page':'false'));
+function go(tab){setTimeout(()=>{try{applyTV()}catch(e){}},0);if(!TABBACK&&tab!==curTab&&curTab!=='play'&&tab!=='play'){TABSTK=TABSTK.filter(x=>x!==curTab&&x!==tab);TABSTK.push(curTab);if(TABSTK.length>15)TABSTK.shift()}curTab=tab;if(tab!=='play')gameFSOff();closePop();document.body.dataset.tab=tab;{const was=document.body.classList.contains('evtv');document.body.classList.toggle('evtv',tab==='trun'||(tab==='play'&&was));if(was!==document.body.classList.contains('evtv'))applyTV()}setTimeout(()=>{try{renderSideFoot()}catch(e){}},0);if(document.body.classList.contains('teacher')&&T())applyTheme(T().cls,null);document.querySelectorAll('.nav').forEach(n=>n.setAttribute('aria-current',n.dataset.tab===tab?'page':'false'));
   if(tab==='learn')renderPath();if(tab==='team')renderTeam();if(tab==='league')renderLeague();if(tab==='quest')renderQuests();if(tab==='shop')renderShop();if(tab==='profile')renderProfile();if(TEACH_R[tab])TEACH_R[tab]();
   show(TAB_VIEW[tab]);renderTop();$('#practiceFab')&&($('#practiceFab').hidden=tab!=='learn');if(tab==='learn')setTimeout(scrollToCurrent,60)}
 
@@ -13634,13 +13685,13 @@ function renderTRun(){const {sess,e}=curEval();if(!e){go('teval');return}const t
   const part=RUN_ALL||!attFilled?list:list.filter(p=>sess.att[p.id]==='H');const done=part.filter(p=>e.results[p.id]);
   const scores=Object.values(e.results).map(r=>r.score);
   $('#vTRun').innerHTML=`<div class="evalhead"><div class="grow"><h2>${esc(e.subjName)}: ${esc(e.unit)}</h2><p>${gameName(e.game)} · ${e.fmt==='estafet'?`${FMT.estafet} · Atur kelompok, lalu tekan Mulai`:`${e.n} soal per murid${e.fmt&&e.fmt!=='solo'?` · ${FMT[e.fmt]} · Pilih ${e.fmt==='terbagi'?'2':'2–6'} murid, lalu tekan Mulai`:' · Ketuk namamu untuk mulai'}`}</p></div><span class="evalprog">${done.length} / ${part.length} dinilai</span><button class="ghost" id="runBack">Selesai</button></div>
-   ${done.length===part.length&&part.length?`<div class="tcard" style="flex-direction:row;align-items:center;gap:14px;flex-wrap:wrap"><div class="mascot" data-mascot data-mood="happy" style="width:80px"></div><div style="flex:1;min-width:200px"><h3>Semua murid sudah dinilai! Hebat, kelas ${esc(tCls().full||'')}!</h3><p class="sub" style="margin:0">Nilai sudah tersimpan di rapor.${EV_SHOW?` Rata-rata kelas ${av(scores)}.`:''}</p></div><button class="primary" id="evRapor">Lihat rapor</button></div>`:''}
+   ${done.length===part.length&&part.length?`<div class="tcard" style="flex-direction:row;align-items:center;gap:14px;flex-wrap:wrap"><div class="mascot" data-mascot data-mood="happy" style="width:80px"></div><div style="flex:1;min-width:200px"><h3>Semua murid sudah dinilai! Hebat, kelas ${esc(tCls().full||'')}!</h3><p class="sub" style="margin:0">Nilai sudah tersimpan di rapor.${EV_SHOW?` Rata-rata kelas ${av(scores)}.`:''}</p></div><button class="ghost" id="evPod">🏆 Lihat podium</button><button class="primary" id="evRapor">Lihat rapor</button></div>`:''}
    ${e.fmt==='estafet'?evRelayCard(e,part):''}${e.fmt&&e.fmt!=='solo'&&e.fmt!=='estafet'?`<div class="tcard evsel"><div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><b style="flex:1;min-width:180px">${EVSEL.length?`Dipilih: ${EVSEL.map(id=>esc((APP.profiles.find(x=>x.id===id)||{name:'?'}).name)).join(', ')}`:'Belum ada murid dipilih'}</b><button class="ghost" id="evAuto">Pilih acak</button><button class="primary" id="evGo" ${EVSEL.length>=2&&(e.fmt!=='terbagi'||EVSEL.length===2)?'':'disabled'}>Mulai ${FMT[e.fmt]}</button></div></div>`:''}
-   ${evBoard(e,part)}
-   <div class="stiles">${part.map(p=>{const r=e.results[p.id];const sel=EVSEL.includes(p.id);return `<button class="stile ${r?'done':''} ${sel?'sel':''}" data-p="${p.id}">${sel?`<span class="selno">${EVSEL.indexOf(p.id)+1}</span>`:''}${r?(EV_SHOW?`<span class="sc ${r.score<t.kkm?'low':''}">${r.score}</span>`:`<span class="sc ok">✓</span>`):''}${avatarOf(p)}<b>${esc(p.name)}</b><small>${p.no?'No. '+p.no:''}${r?' · Selesai':''}</small>${r&&!EV_SHOW?`<span class="stars">${[0,1,2].map(i=>`<i class="${i<evStars(r.score)?'on':''}">★</i>`).join('')}</span>`:''}</button>`}).join('')}</div>
+   <div class="evmain"><div class="stiles">${part.map(p=>{const r=e.results[p.id];const sel=EVSEL.includes(p.id);return `<button class="stile ${r?'done':''} ${sel?'sel':''}" data-p="${p.id}">${sel?`<span class="selno">${EVSEL.indexOf(p.id)+1}</span>`:''}${r?(EV_SHOW?`<span class="sc ${r.score<t.kkm?'low':''}">${r.score}</span>`:`<span class="sc ok">✓</span>`):''}${avatarOf(p)}<b>${esc(p.name)}</b><small>${p.no?'No. '+p.no:''}${r?' · Selesai':''}</small>${r&&!EV_SHOW?`<span class="stars">${[0,1,2].map(i=>`<i class="${i<evStars(r.score)?'on':''}">★</i>`).join('')}</span>`:''}</button>`}).join('')}</div>${(()=>{const b=evBoard(e,part);return b?`<aside class="evside">${b}</aside>`:''})()}</div>
    ${attFilled?`<button class="ghost" id="runAll" style="align-self:flex-start">${RUN_ALL?'Tampilkan yang hadir saja':'Tampilkan semua murid'}</button>`:''}
    `;
   bindTeacherLinks($('#vTRun'));{const rp=$('#evRapor');if(rp)rp.onclick=()=>tLock(()=>{fsOff();go('trapor')})}
+  {const pb=$('#evPod');if(pb){pb.onclick=()=>evPodium(e,part);if(!e.podium){e.podium=1;save();setTimeout(()=>evPodium(e,part),500)}}}
   $('#runBack').onclick=()=>tLock(()=>{fsOff();go('tdash')});
   if(e.fmt==='estafet'){evRelayBind(e,part);const ra0=$('#runAll');if(ra0)ra0.onclick=()=>{RUN_ALL=!RUN_ALL;EVTEAM=null;renderTRun()};return}
   if(e.fmt&&e.fmt!=='solo'){const max=e.fmt==='terbagi'?2:6;
@@ -13654,6 +13705,21 @@ function renderTRun(){const {sess,e}=curEval();if(!e){go('teval');return}const t
 function evMake(e,s){if(e.bank){const b=(APP.bank||[]).find(x=>x.id===e.bank);if(!b||!b.qs.length)return null;return {make:n=>bankQs(b,n||b.qs.length),fit:bankFit(b),bank:true}}
   if(e.modQs&&e.modQs.length){const b={qs:e.modQs};return {make:n=>bankQs(b,n||b.qs.length),fit:bankFit(b),bank:true}}
   const u=(e.modSrc&&modUnit(e.modSrc))||s.units[e.ui]||s.units[0];return {make:n=>unitQs(u,n||12),fit:u.fit||s.fit,unit:u}}
+/* ---------- suasana panggung di TV: hitung mundur, konfeti kecil, podium juara ---------- */
+function bigCountdown(cb){const o=document.createElement('div');o.className='cd321';document.body.appendChild(o);let n=3;
+  const step=()=>{if(n>0){o.innerHTML=`<b>${n}</b>`;o.firstChild.classList.add('go');try{tone([440],.12)}catch(e){}n--;setTimeout(step,800)}else{o.innerHTML='<b class="mulai">MULAI!</b>';try{tone([660,880],.1)}catch(e){}setTimeout(()=>{o.remove();cb()},600)}};step()}
+function miniConfetti(x,y){const box=document.createElement('canvas');box.style.cssText='position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:60';document.body.appendChild(box);
+  const c=box.getContext('2d'),W=box.width=innerWidth,H=box.height=innerHeight;x=x==null?W/2:x;y=y==null?H*.4:y;const cols=['#FFC23D','#26BF66','#FF5A5F','#3D8BFF','#FF6FA8','#9B6BFF'];
+  const ps=Array.from({length:60},()=>{const a=Math.random()*Math.PI*2,v=200+Math.random()*420;return {x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v-260,c:pick(cols),s:5+Math.random()*7,r:Math.random()*6}});let t0=performance.now(),last=t0;
+  const f=now=>{const dt=Math.min(.05,(now-last)/1000);last=now;c.clearRect(0,0,W,H);ps.forEach(p=>{p.vy+=700*dt;p.x+=p.vx*dt;p.y+=p.vy*dt;p.r+=dt*8;c.save();c.translate(p.x,p.y);c.rotate(p.r);c.fillStyle=p.c;c.fillRect(-p.s/2,-p.s/4,p.s,p.s/2);c.restore()});
+    if(now-t0<1400)requestAnimationFrame(f);else box.remove()};requestAnimationFrame(f)}
+function applause(){try{const A=window.AudioContext||window.webkitAudioContext;const ac=new A(),len=ac.sampleRate*1.8,buf=ac.createBuffer(1,len,ac.sampleRate),d=buf.getChannelData(0);
+  for(let i=0;i<len;i++){const t=i/ac.sampleRate,env=Math.min(1,t*6)*Math.max(0,1-t/1.8);d[i]=(Math.random()*2-1)*env*(Math.random()<.08?1:.25)}
+  const src=ac.createBufferSource();src.buffer=buf;const fl=ac.createBiquadFilter();fl.type='bandpass';fl.frequency.value=1800;fl.Q.value=.6;const g=ac.createGain();g.gain.value=.5;src.connect(fl).connect(g).connect(ac.destination);src.start();setTimeout(()=>ac.close(),2200)}catch(e){}}
+function evPodium(e,part){const L0=evRank(e,part.map(p=>p.id)).slice(0,3);if(!L0.length)return;const pf=id=>APP.profiles.find(x=>x.id===id)||{name:'?'};
+  const order=[L0[1],L0[0],L0[2]].map((x,i)=>x?{x,pos:[2,1,3][i]}:null).filter(Boolean);
+  openModal(`<div class="podium"><h2>🏆 Juara Evaluasi</h2><p class="sub">${esc(e.subjName)} · ${esc(e.unit)}</p><div class="pods">${order.map(({x,pos})=>{const p=pf(x.id);return `<div class="pod p${pos}"><div class="who">${avatarOf(p)}<b>${esc(p.name)}</b><span>${x.r.score} · ${evTime(x.r.secs)}</span></div><div class="block"><i>${['🥇','🥈','🥉'][pos-1]}</i><em>${pos}</em></div></div>`}).join('')}</div><button class="primary" id="podOk">Tutup</button></div>`,'Juara evaluasi');
+  $('#podOk').onclick=closeModal;applause();sfx.win&&sfx.win();burstConfetti();setTimeout(burstConfetti,900)}
 function runEvalFor(pid){const {e}=curEval();const c=tCls(),s=c.subjects.find(x=>x.id===e.subj)||c.subjects[0];const p=APP.profiles.find(x=>x.id===pid);let qs;
   const mk=evMake(e,s);if(!mk){toast('quiz','Paket soal ini sudah dihapus.');return}
   qs=mk.bank?mk.make(e.n):mk.make(e.game==='kuis'?e.n:e.n*2).filter(q=>e.game==='kuis'||!q.html).slice(0,e.n)
@@ -15767,7 +15833,7 @@ function folBind(root,list,after){root.querySelectorAll('[data-follow]').forEach
   try{await folDo(f,on);if(on){try{sfx.ok()}catch(_){}toast('team',`Kamu mengikuti ${f.name}.`)}b.outerHTML=folBtn(f,b.classList.contains('sm'));folBind(root,list,after);after&&after()}catch(err){b.disabled=false;toast('lock',fbErr(err))}})}
 const shareIcon='<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M12 3 V15 M7 8 L12 3 L17 8 M5 13 V19 C5 20 6 21 7 21 H17 C18 21 19 20 19 19 V13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const qrIcon='<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><path d="M14 14h3v3h-3zM18 18h3v3h-3zM18 14h3M14 18v3" stroke-linecap="round"/></svg>';
-let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=288';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
+let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=290';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
 function qrMatrix(text){const Q=window.QRCodeLib,q=new Q(-1,Q.ECL.M);q.addData(text);q.make();const n=q.getModuleCount(),m=[];for(let r=0;r<n;r++){m.push([]);for(let c=0;c<n;c++)m[r].push(q.isDark(r,c))}return m}
 function qrSvgOf(m){const n=m.length;let d='';for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(m[r][c])d+=`M${c} ${r}h1.02v1.02h-1.02z`;
   return `<svg viewBox="-2 -2 ${n+4} ${n+4}" class="pcqr" shape-rendering="crispEdges" aria-label="Kode QR profil"><rect x="-2" y="-2" width="${n+4}" height="${n+4}" fill="#fff"/><path d="${d}" fill="#1C1E3D"/></svg>`}
