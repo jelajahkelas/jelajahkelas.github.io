@@ -3600,6 +3600,22 @@ body.dpond.duelon #vDuel .duelbar .back{min-height:30px;min-width:34px;padding:2
 /* main berdua: dua sentuhan sekaligus tidak dianggap cubit-zoom atau gulir */
 body.duelon #vDuel,body.duelon #vDuel *{touch-action:none;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
 body.duelon #vDuel .opt{-webkit-tap-highlight-color:transparent}
+/* Estafet 2 kelompok */
+.rlcols{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.rlcol{border:3px solid var(--tc);border-radius:16px;padding:10px;background:color-mix(in srgb,var(--tc) 8%,var(--card))}
+.rlcol h4{margin:0 0 8px;color:var(--tc);font-family:var(--title);font-size:20px;display:flex;justify-content:space-between;align-items:baseline}.rlcol h4 small{font-family:var(--body);font-size:13px;color:var(--muted)}
+.rlcol ol{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:6px}
+.rlm{width:100%;display:flex;align-items:center;gap:8px;padding:6px 8px;border:2px solid var(--line);border-radius:12px;background:var(--card);font:inherit;cursor:pointer;text-align:left}
+.rlm .avatar{width:34px;height:34px;flex:none;font-size:15px}.rlm b{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.rlm span{font-weight:900;color:var(--tc)}
+.drelay{display:flex;align-items:center;justify-content:space-between;gap:8px;background:var(--tc);color:#fff;border-radius:14px;padding:6px 12px;flex-wrap:wrap}
+.drelay .rlnow{display:flex;align-items:baseline;gap:8px}.drelay .rlnow small{font-weight:800;opacity:.85}.drelay .rlnow b{font-family:var(--title);font-size:clamp(18px,2.4vw,30px)}
+.drelay .rlnext{font-size:13px;font-weight:700;opacity:.9}
+.drelay.pop{animation:rlpop .45s ease}@keyframes rlpop{0%{transform:scale(.9)}60%{transform:scale(1.05)}100%{transform:scale(1)}}
+.rlres{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;width:100%;max-width:720px}
+.rlteam{border:3px solid var(--tc);padding:14px;text-align:left}.rlteam.win{box-shadow:0 0 0 4px #FFD54A}.rlteam h3{margin:0;color:var(--tc)}
+.rlbig{font-family:var(--title);font-size:40px;color:var(--tc)}.rlbig small{font-size:16px;color:var(--muted);margin-left:4px}
+.rlteam ol{margin:8px 0 0;padding-left:20px;max-height:220px;overflow:auto}.rlteam li span{display:inline-block;min-width:60%}.rlteam li b{float:right}
+@media (max-width:600px){.rlcols{grid-template-columns:1fr}}
 /* Toko: judul bagian besar gelap */
 html body:not(.teacher) #vShop .shopsec h3{font-size:22px!important;color:var(--ink)!important;text-transform:none!important;letter-spacing:0!important}
 /* Profil: ringkasan tanpa kotak */
@@ -3982,7 +3998,7 @@ html[data-theme=malam] .plstick{background:#0a0f1e}
 <div class="syncpill" id="syncPill" hidden></div>
 <div class="toast" id="toast" hidden></div>
 
-<script src="av.js?v=286"></script>
+<script src="av.js?v=287"></script>
 <script>
 /* ---------- visual assets ---------- */
 const INK='#1B1E3D';
@@ -9835,7 +9851,7 @@ function say(t){if(!soundOn||!t)return;try{const s=window.speechSynthesis;s.canc
 let L=null,S=null,game=null,timerId=null,M=null,DUEL=null,CUR=null;
 const isPhone=()=>window.matchMedia('(max-width:600px)').matches;
 function closeMenu(){const t=document.getElementById('tools');if(t){t.classList.remove('open');document.getElementById('menuBtn').setAttribute('aria-expanded','false')}}
-const FMT={giliran:'Bergiliran',rebutan:'Rebutan',terbagi:'Layar terbagi'};
+const FMT={giliran:'Bergiliran',rebutan:'Rebutan',terbagi:'Layar terbagi',estafet:'Estafet 2 kelompok'};
 let MODE=store.get('mode','tembak');
 const TEAM_COLORS=['#D33A2C','#1E6FD9','#1C8A57','#C98A00','#8E44AD','#E06A12'];
 const TEAM_DEF=['Tim Merah','Tim Biru','Tim Hijau','Tim Kuning','Tim Ungu','Tim Oranye'];
@@ -11617,7 +11633,7 @@ function pondDraw(dt){const D=DUEL;if(!D||!D.rctx)return;if(!D.pond)pondInit();p
   D.sides.forEach((sd,s)=>{const f=Pd.frogs[s],x=sx(f.wx),y=sy(f.wy)-4+(f.jump?0:f.land*4),fl=Math.min(1,f.fall),sc=(r/46)*(1+f.h*.35)*(1-fl*.5)*(1-f.pop*.35);
    if(fl>0){c.strokeStyle=`rgba(255,255,255,${.9-fl*.4})`;c.lineWidth=2;for(let k=1;k<=3;k++){c.beginPath();c.ellipse(x,y+6,(12+k*10)*fl*z,(4+k*3)*fl*z,0,0,7);c.stroke()}}
    drawFrogTop(c,x,y,sc,sd.color,1-fl*.8,f.h,f.rot,f.sq,tm+s);
-   if(!f.jump&&fl===0){c.font=`900 12px ${FONT}`;const t=sd.name,tw=c.measureText(t).width+14;c.fillStyle=sd.color;rr(c,x-tw/2,y+r*.75,tw,18,9);c.fill();c.fillStyle='#fff';c.textAlign='center';c.textBaseline='middle';c.fillText(t,x,y+r*.75+9.5)}
+   if(!f.jump&&fl===0){c.font=`900 12px ${FONT}`;const rt=GROUP.relay&&relayTurn(sd),t=rt&&!sd.done?rt.name:sd.name,tw=c.measureText(t).width+14;c.fillStyle=sd.color;rr(c,x-tw/2,y+r*.75,tw,18,9);c.fill();c.fillStyle='#fff';c.textAlign='center';c.textBaseline='middle';c.fillText(t,x,y+r*.75+9.5)}
    if(f.fin){c.font=`900 14px ${FONT}`;c.fillStyle='#FFD54A';c.textAlign='center';c.fillText('🏁 Sampai!',x,y-r*1.1)}})}
 
 /* Balapan berdua di HP memakai posisi mendatar: lintasan di atas, jawaban pemain kiri dan kanan di bawah. Tidak ada layar terbalik. */
@@ -11662,7 +11678,7 @@ function bindDuelCanvas(sd){const cv=sd.el.cv;const P=e=>{const r=cv.getBounding
 function duelHUD(sd){const g=sd.game;sd.el.score.textContent=g.score;sd.el.prog.textContent=`Soal ${Math.min(g.i+1,g.qs.length)}/${g.qs.length}`+(DUEL&&DUEL.rand?` · ${(MODE_LIST.find(x=>x.id===sd.mode)||{name:sd.mode}).name}`:'')}
 function duelShowQ(sd,first){
   if(sd.mode==='urut'&&sd.game.qs[sd.game.i]&&!sd.game.qs[sd.game.i].urut)sd.game.qs[sd.game.i]=urutQ(sd.game.qs[sd.game.i]);if(sd.mode==='katak'&&sd.game.qs[sd.game.i])sd.game.qs[sd.game.i]=katQ(sd.game.qs[sd.game.i]);
-  const g=sd.game,q=g.qs[g.i];sd.el.q.innerHTML=q.q;sd.el.fb.textContent='';sd.el.fb.className='dfb';
+  const g=sd.game,q=g.qs[g.i];sd.el.q.innerHTML=q.q;sd.el.fb.textContent='';sd.el.fb.className='dfb';if(GROUP.relay)relayShow(sd);
   arc.q=q;arc.labels=q.opts.map(strip);arc.ci=q.opts.indexOf(q.ans);arc.t=0;arc.limit=READ[L.id];arc.speed=SPEED[L.id];arc.wait=0;arc.banner=null;
   if(!first)arc.state='play';sd.el.bar.style.width='100%';
   if(DUEL.rand&&!first){const opts=DUEL.rand.filter(x=>x!==sd.mode);const m=pick(opts.length?opts:DUEL.rand);sd.mode=m;MODE=m;sd.M=Object.create(MODES[m]);M=sd.M;arc.parts=[];arc.banner=null;arc.keys={};duelSize(sd)}
@@ -11675,7 +11691,7 @@ function duelShowQ(sd,first){
 }
 function duelResolve(sd,k){
   if(arc.state!=='play')return;arc.state='resolved';const g=sd.game,q=g.qs[g.i];const ok=k>=0&&q.opts[k]===q.ans;const frac=Math.max(0,1-arc.t/arc.limit);
-  g.results[g.i]=ok;q.ok=ok;q.team=sd.name;if(DUEL.race==='frog')pondJump(sd.idx,k,ok);q.picked=k>=0?q.opts[k]:'(waktu habis)';
+  g.results[g.i]=ok;q.ok=ok;q.team=sd.name;if(GROUP.relay){const t=relayTurn(sd);if(t){const st=sd.relayStats=sd.relayStats||{};const r=st[t.i]=st[t.i]||{c:0,n:0};r.n++;if(ok)r.c++;q.team=t.name+' ('+sd.name+')'}}if(DUEL.race==='frog')pondJump(sd.idx,k,ok);q.picked=k>=0?q.opts[k]:'(waktu habis)';
   if(ok){g.streak++;g.correct++;const gained=10+Math.ceil(frac*10)+Math.min(g.streak-1,5)*2;g.score+=gained;sfx.ok();arc.banner={text:'Benar! +'+gained,color:'#1C8A57',t:0};arc.wait=1.1;sd.el.fb.className='dfb ok';sd.el.fb.textContent=pick(PRAISE)+' +'+gained}
   else{g.streak=0;sfx.bad();arc.banner={text:k<0?'Waktu habis!':'Ups, salah!',color:'#C9362A',t:0};arc.wait=2.4;sd.el.fb.className='dfb';sd.el.fb.innerHTML=(k<0?'Waktu habis. ':'Salah. ')+(q.html?'':'Jawaban benar: <b>'+q.ans+'</b>');sd.root.classList.remove('shake');void sd.root.offsetWidth;sd.root.classList.add('shake')}
   if(DUEL.kind==='kuis')sd.el.opts.querySelectorAll('.opt').forEach((b,i)=>{b.disabled=true;if(q.opts[i]===q.ans)b.classList.add('right');else if(i===k)b.classList.add('wrong')});
@@ -11700,7 +11716,7 @@ function duelLoop(ts){
   if(DUEL&&DUEL.active)DUEL.raf=requestAnimationFrame(duelLoop);
 }
 function stopDuel(){if(!DUEL)return;if(DUEL.race)duelLand(false);document.body.classList.remove('dpond');DUEL.active=false;cancelAnimationFrame(DUEL.raf);$('#duelCount').hidden=true;DUEL=null}
-function finishDuel(){if(!DUEL)return;const d=DUEL;stopDuel();
+function finishDuel(){if(!DUEL)return;const d=DUEL;stopDuel();if(EVG&&EVG.relay){evalRelayDone(d);return}
   game={qs:[...d.sides[0].game.qs,...d.sides[1].game.qs],mode:d.mode,results:[],correct:0,lives:3,
     group:{format:'terbagi',teams:d.sides.map(sd=>({name:sd.name,color:sd.color,score:sd.game.score,correct:sd.game.correct})),locked:[]}};
   finishGroup();
@@ -13557,7 +13573,7 @@ function renderTAtt(){const t=T(),list=students();ATT_DATE=ATT_DATE||dayKey();co
 let EV={subj:null,src:'u:0',game:null,n:5,fmt:'solo'},EVR=null,EVSEL=[],EVG=null;
 function fsOn(){try{const d=document.documentElement;if(!document.fullscreenElement&&d.requestFullscreen){const r=d.requestFullscreen();r&&r.catch&&r.catch(()=>{})}}catch(e){}}
 function fsOff(){try{if(document.fullscreenElement&&document.exitFullscreen){const r=document.exitFullscreen();r&&r.catch&&r.catch(()=>{})}}catch(e){}}
-const EV_FMTS=[['solo','Satu per satu','Murid maju bergantian, masing-masing menjawab semua soalnya sendiri.'],['giliran','Bergiliran','2–6 murid bermain di satu layar, bergantian menjawab satu soal setiap giliran.'],['rebutan','Rebutan','2–6 murid melihat soal yang sama. Yang paling cepat menekan tombolnya boleh menjawab. Memakai tampilan Kuis.'],['terbagi','Layar terbagi','Layar dibagi dua, 2 murid bermain bersamaan dengan soal yang sama.']];
+const EV_FMTS=[['solo','Satu per satu','Murid maju bergantian, masing-masing menjawab semua soalnya sendiri.'],['giliran','Bergiliran','2–6 murid bermain di satu layar, bergantian menjawab satu soal setiap giliran.'],['rebutan','Rebutan','2–6 murid melihat soal yang sama. Yang paling cepat menekan tombolnya boleh menjawab. Memakai tampilan Kuis.'],['terbagi','Layar terbagi','Layar dibagi dua, 2 murid bermain bersamaan dengan soal yang sama.'],['estafet','Estafet 2 kelompok','Kelas dibagi dua kelompok yang berbaris. Murid terdepan menjawab satu soal, lalu maju teman di belakangnya, begitu seterusnya sampai soal habis.']];
 function evalSubj(){const c=tCls();return c.subjects.find(s=>s.id===EV.subj)||c.subjects[0]}
 /* bab modul guru untuk mapel ini: nilai 'm:<idModul>:<noBab>' */
 function evModBabs(sid){return (MOD.list||[]).filter(m=>m.subj===sid&&(m.babs||[]).length).flatMap(m=>m.babs.map((bb,i)=>({v:'m:'+m.id+':'+i,m,bb,i})))}
@@ -13614,15 +13630,16 @@ let RUN_ALL=false;
 function renderTRun(){const {sess,e}=curEval();if(!e){go('teval');return}const t=T();const list=students();const attFilled=Object.keys(sess.att).length>0;
   const part=RUN_ALL||!attFilled?list:list.filter(p=>sess.att[p.id]==='H');const done=part.filter(p=>e.results[p.id]);
   const scores=Object.values(e.results).map(r=>r.score);
-  $('#vTRun').innerHTML=`<div class="evalhead"><div class="grow"><h2>${esc(e.subjName)}: ${esc(e.unit)}</h2><p>${gameName(e.game)} · ${e.n} soal per murid${e.fmt&&e.fmt!=='solo'?` · ${FMT[e.fmt]} · Pilih ${e.fmt==='terbagi'?'2':'2–6'} murid, lalu tekan Mulai`:' · Ketuk namamu untuk mulai'}</p></div><span class="evalprog">${done.length} / ${part.length} dinilai</span><button class="ghost" id="runBack">Selesai</button></div>
+  $('#vTRun').innerHTML=`<div class="evalhead"><div class="grow"><h2>${esc(e.subjName)}: ${esc(e.unit)}</h2><p>${gameName(e.game)} · ${e.fmt==='estafet'?`${FMT.estafet} · Atur kelompok, lalu tekan Mulai`:`${e.n} soal per murid${e.fmt&&e.fmt!=='solo'?` · ${FMT[e.fmt]} · Pilih ${e.fmt==='terbagi'?'2':'2–6'} murid, lalu tekan Mulai`:' · Ketuk namamu untuk mulai'}`}</p></div><span class="evalprog">${done.length} / ${part.length} dinilai</span><button class="ghost" id="runBack">Selesai</button></div>
    ${done.length===part.length&&part.length?`<div class="tcard" style="flex-direction:row;align-items:center;gap:14px;flex-wrap:wrap"><div class="mascot" data-mascot data-mood="happy" style="width:80px"></div><div style="flex:1;min-width:200px"><h3>Semua murid sudah dinilai! Hebat, kelas ${esc(tCls().full||'')}!</h3><p class="sub" style="margin:0">Nilai sudah tersimpan di rapor.${EV_SHOW?` Rata-rata kelas ${av(scores)}.`:''}</p></div><button class="primary" id="evRapor">Lihat rapor</button></div>`:''}
-   ${e.fmt&&e.fmt!=='solo'?`<div class="tcard evsel"><div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><b style="flex:1;min-width:180px">${EVSEL.length?`Dipilih: ${EVSEL.map(id=>esc((APP.profiles.find(x=>x.id===id)||{name:'?'}).name)).join(', ')}`:'Belum ada murid dipilih'}</b><button class="ghost" id="evAuto">Pilih acak</button><button class="primary" id="evGo" ${EVSEL.length>=2&&(e.fmt!=='terbagi'||EVSEL.length===2)?'':'disabled'}>Mulai ${FMT[e.fmt]}</button></div></div>`:''}
+   ${e.fmt==='estafet'?evRelayCard(e,part):''}${e.fmt&&e.fmt!=='solo'&&e.fmt!=='estafet'?`<div class="tcard evsel"><div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><b style="flex:1;min-width:180px">${EVSEL.length?`Dipilih: ${EVSEL.map(id=>esc((APP.profiles.find(x=>x.id===id)||{name:'?'}).name)).join(', ')}`:'Belum ada murid dipilih'}</b><button class="ghost" id="evAuto">Pilih acak</button><button class="primary" id="evGo" ${EVSEL.length>=2&&(e.fmt!=='terbagi'||EVSEL.length===2)?'':'disabled'}>Mulai ${FMT[e.fmt]}</button></div></div>`:''}
    ${evBoard(e,part)}
    <div class="stiles">${part.map(p=>{const r=e.results[p.id];const sel=EVSEL.includes(p.id);return `<button class="stile ${r?'done':''} ${sel?'sel':''}" data-p="${p.id}">${sel?`<span class="selno">${EVSEL.indexOf(p.id)+1}</span>`:''}${r?(EV_SHOW?`<span class="sc ${r.score<t.kkm?'low':''}">${r.score}</span>`:`<span class="sc ok">✓</span>`):''}${avatarOf(p)}<b>${esc(p.name)}</b><small>${p.no?'No. '+p.no:''}${r?' · Selesai':''}</small>${r&&!EV_SHOW?`<span class="stars">${[0,1,2].map(i=>`<i class="${i<evStars(r.score)?'on':''}">★</i>`).join('')}</span>`:''}</button>`}).join('')}</div>
    ${attFilled?`<button class="ghost" id="runAll" style="align-self:flex-start">${RUN_ALL?'Tampilkan yang hadir saja':'Tampilkan semua murid'}</button>`:''}
    `;
   bindTeacherLinks($('#vTRun'));{const rp=$('#evRapor');if(rp)rp.onclick=()=>tLock(()=>{fsOff();go('trapor')})}
   $('#runBack').onclick=()=>tLock(()=>{fsOff();go('tdash')});
+  if(e.fmt==='estafet'){evRelayBind(e,part);const ra0=$('#runAll');if(ra0)ra0.onclick=()=>{RUN_ALL=!RUN_ALL;EVTEAM=null;renderTRun()};return}
   if(e.fmt&&e.fmt!=='solo'){const max=e.fmt==='terbagi'?2:6;
     $('#vTRun').querySelectorAll('.stile').forEach(b=>b.onclick=()=>{const id=b.dataset.p;if(EVSEL.includes(id))EVSEL=EVSEL.filter(x=>x!==id);else{if(EVSEL.length>=max)EVSEL.shift();EVSEL.push(id)}tone([600],.03);renderTRun()});
     $('#evAuto').onclick=()=>{const left=part.filter(p=>!e.results[p.id]);const pool=(left.length>=2?left:part).map(p=>p.id);EVSEL=shuffle(pool).slice(0,Math.min(max,e.fmt==='terbagi'?2:4,pool.length));renderTRun()};
@@ -13648,6 +13665,35 @@ function evalDone(){const g=game,o=g.lesson;clearInterval(timerId);if(arc.runnin
   hydrate(v);show('vDone');if(pass){sfx.win();setTimeout(burstConfetti,150)}let cd=10;clearInterval(window.evCdT);window.evCdT=setInterval(()=>{cd--;const el=$('#evCd');if(!el||$('#vDone').hidden){clearInterval(window.evCdT);return}el.textContent=`(${cd})`;if(cd<=0){clearInterval(window.evCdT);$('#evNext').click()}},1000);$('#evNext').onclick=()=>{clearInterval(window.evCdT);game=null;go('trun')};setTimeout(()=>$('#evNext').focus({preventScroll:true}),60)}
 
 /* ---------- evaluasi berkelompok: bergiliran, rebutan, layar terbagi ---------- */
+/* ---------- Estafet 2 kelompok: kelas dibagi dua barisan, murid bergantian maju menjawab satu soal ---------- */
+let EVTEAM=null;
+function evRelayTeams(e,part){const ids=part.map(p=>p.id);if(!EVTEAM||EVTEAM.eid!==e.id||[...EVTEAM.a,...EVTEAM.b].some(id=>!ids.includes(id))||ids.some(id=>!EVTEAM.a.includes(id)&&!EVTEAM.b.includes(id))){const sh=shuffle(ids.slice());EVTEAM={eid:e.id,a:sh.filter((_,i)=>i%2===0),b:sh.filter((_,i)=>i%2===1)}}return EVTEAM}
+function evRelayPer(e,T0){return Math.max(e.n,T0.a.length,T0.b.length)}
+function evRelayCard(e,part){const T0=evRelayTeams(e,part),nm=id=>(APP.profiles.find(x=>x.id===id)||{name:'?'});const per=evRelayPer(e,T0);
+  const col=(k,ids,c)=>`<div class="rlcol" style="--tc:${c}"><h4>${k==='a'?'Kelompok A':'Kelompok B'} <small>${ids.length} murid</small></h4><ol>${ids.map((id,i)=>`<li><button class="rlm" data-rt="${k}" data-rid="${id}" title="Pindahkan ke kelompok lain">${avatarOf(nm(id))}<b>${esc(nm(id).name)}</b><span>${i+1}</span></button></li>`).join('')}</ol></div>`;
+  return `<div class="tcard rlcard"><div class="rlcols">${col('a',T0.a,TEAM_COLORS[0])}${col('b',T0.b,TEAM_COLORS[1])}</div>
+   <p class="sub" style="margin:0">Urutan nomor = urutan barisan. Ketuk nama untuk memindahkannya ke kelompok lain. Setiap kelompok menjawab <b>${per} soal</b>${per>e.n?' (ditambah supaya semua murid kebagian giliran)':''}.</p>
+   <div class="acts" style="justify-content:flex-start"><button class="ghost" id="rlShuf">Acak ulang kelompok</button><button class="primary" id="rlGo" ${T0.a.length&&T0.b.length?'':'disabled'}>Mulai Estafet</button></div></div>`}
+function evRelayBind(e,part){$('#vTRun').querySelectorAll('.rlm').forEach(b=>b.onclick=()=>{const k=b.dataset.rt,id=b.dataset.rid,o=k==='a'?'b':'a';EVTEAM[k]=EVTEAM[k].filter(x=>x!==id);EVTEAM[o].push(id);tone([600],.03);renderTRun()});
+  $('#rlShuf').onclick=()=>{EVTEAM=null;renderTRun()};$('#rlGo').onclick=()=>{fsOn();evalRelayStart(e,EVTEAM)};$('#vTRun').querySelectorAll('.stile').forEach(b=>b.onclick=null)}
+function evalRelayStart(e,T0){const c=tCls(),s=c.subjects.find(x=>x.id===e.subj)||c.subjects[0];const mk=evMake(e,s);if(!mk){toast('quiz','Paket soal ini sudah dihapus.');return}
+  const nm=id=>(APP.profiles.find(x=>x.id===id)||{name:'Murid'}).name;const per=evRelayPer(e,T0);
+  EVG={relay:true,teams:[T0.a.slice(),T0.b.slice()],fmt:'estafet',per,prev:{PLAY,GROUP,MODE}};
+  L=LEVELS.find(l=>l.id===c.lv)||LEVELS[1];S={id:s.id,name:s.name,make:()=>mk.make(),fit:mk.fit};MODE=e.game;
+  PLAY='group';GROUP={n:2,names:['Kelompok A','Kelompok B'],format:'terbagi',per,relay:[T0.a.map(nm),T0.b.map(nm)]};setLvColor(L);document.documentElement.style.setProperty('--lvc',s.color);launch()}
+function relayTurn(sd){const R=GROUP.relay&&GROUP.relay[sd.idx];if(!R||!R.length)return null;const i=sd.game.i%R.length;return {i,name:R[i],next:R[(i+1)%R.length]}}
+function relayShow(sd){const t=relayTurn(sd);if(!t)return;let el=sd.root.querySelector('.drelay');if(!el){el=document.createElement('div');el.className='drelay';sd.root.querySelector('.dhead').after(el)}
+  el.innerHTML=`<span class="rlnow"><small>Giliran</small><b>${esc(t.name)}</b></span>${GROUP.relay[sd.idx].length>1?`<span class="rlnext">berikutnya: ${esc(t.next)}</span>`:''}`;el.classList.remove('pop');void el.offsetWidth;el.classList.add('pop')}
+function evalRelayDone(d){const ev=EVG,{e}=curEval(),t=T();const rows=[];
+  d.sides.forEach((sd,s)=>{const ids=ev.teams[s],st=sd.relayStats||{};ids.forEach((pid,i)=>{const r=st[i]||{c:0,n:0};if(!r.n)return;const score=Math.round(r.c/r.n*100);
+     if(e)e.results[pid]={score,correct:r.c,total:r.n,at:Date.now(),fmt:'estafet',team:s};const p=APP.profiles.find(x=>x.id===pid);if(p){ensureDay(p);p.upd=Date.now();p.xp+=10;p.week.xp+=10;p.today.xp+=10}});
+   rows.push({name:sd.name,color:sd.color,correct:sd.game.correct,total:sd.game.qs.length,pts:sd.game.score,mem:ids.map((pid,i)=>({name:(APP.profiles.find(x=>x.id===pid)||{name:'?'}).name,c:(st[i]||{}).c||0,n:(st[i]||{}).n||0}))})});
+  evalGroupEnd();save();const win=rows[0].correct===rows[1].correct?(rows[0].pts===rows[1].pts?-1:rows[0].pts>rows[1].pts?0:1):rows[0].correct>rows[1].correct?0:1;
+  const v=$('#vDone');v.innerHTML=`<div class="done"><div class="mascot" data-mascot data-mood="happy"></div><h2 class="gold">${win<0?'Hasil seri!':'Juara: '+esc(rows[win].name)}</h2>
+   <div class="rlres">${rows.map((r,i)=>`<div class="card rlteam ${i===win?'win':''}" style="--tc:${r.color}"><h3>${i===win?'🏆 ':''}${esc(r.name)}</h3><div class="rlbig">${r.correct}<small>/${r.total} benar</small></div><p class="sub" style="margin:0">${r.pts} poin</p>
+     <ol>${r.mem.map(m=>`<li><span>${esc(m.name)}</span><b>${m.n?`${m.c}/${m.n}`:'–'}</b></li>`).join('')}</ol></div>`).join('')}</div>
+   <p class="sub">Nilai tiap murid (jawaban benar dari soal yang dijawabnya) sudah masuk rapor. KKM ${t.kkm}.</p><div class="acts"><button class="primary" id="evNext">Lanjut evaluasi</button></div></div>`;
+  hydrate(v);show('vDone');sfx.win();setTimeout(burstConfetti,150);$('#evNext').onclick=()=>{game=null;go('trun')}}
 function evalGroupStart(pids){const {e}=curEval();if(!e||pids.length<2)return;const c=tCls(),s=c.subjects.find(x=>x.id===e.subj)||c.subjects[0];let make,fit;
   {const mk=evMake(e,s);if(!mk){toast('quiz','Paket soal ini sudah dihapus.');return}make=()=>mk.make();fit=mk.fit}
   const names=pids.map(id=>(APP.profiles.find(x=>x.id===id)||{name:'Murid'}).name);
@@ -14113,8 +14159,8 @@ function evalWizard2(){normBank();const c=tCls();const st={subj:EV.subj&&c.subje
      ok:s=>{const d=s.draft;const r=evDraftAdd(d,true);if(r!==true)return r;if(!d.qs.length)return 'Tambahkan minimal satu soal.';d.title=(d.title||'').trim()||'Soal evaluasi';
        const ex=(APP.bank=APP.bank||[]).find(b=>b.id===d.id);const keep={id:d.id,subj:d.subj,subjName:d.subjName,title:d.title,qs:d.qs,upd:Date.now()};if(ex)Object.assign(ex,keep);else APP.bank.push(keep);save();s.src='b:'+d.id;s.game=null;return true}},
     {t:'Pakai game apa?',html:s=>{const src=srcOf(s),games=allGames(FIT[src.fit]);if(!games.includes(s.game))s.game=games[0];return `<div class="modes wzmodes">${games.map(id=>{const m=MODE_LIST.find(x=>x.id===id);return `<button class="mode" data-wv="${id}" style="--mc:${MCOL[id]}" aria-pressed="${id===s.game}"><span class="mi">${m.icon}</span><span class="mn">${m.name}</span><span class="md">${m.desc}</span></button>`}).join('')}</div>`},pick:(s,v)=>s.game=v},
-    {t:'Cara bermain',html:s=>wzOpts(EV_FMTS.map(f=>({v:f[0],l:f[1],s:f[2]})),s.fmt),pick:(s,v)=>s.fmt=v},
-    {t:'Berapa soal per murid?',auto:false,html:s=>{const src=srcOf(s);return wzOpts([3,5,10].map(n=>({v:n,l:n+' soal'})),s.n,true)+((src.bank||src.modQs)&&src.count<s.n?`<p class="note">Paket ini hanya punya ${src.count} soal, jadi setiap murid mendapat ${src.count} soal.</p>`:'')+`<p class="note">${attFilled?`Peserta: ${part.length} murid yang hadir menurut absensi hari ini.`:`Absensi hari ini belum diisi, jadi semua ${list.length} murid ikut.`}</p>`},pick:(s,v)=>s.n=+v}],
+    {t:'Cara bermain',html:s=>wzOpts(EV_FMTS.map(f=>({v:f[0],l:f[1],s:f[2]})),s.fmt),pick:(s,v)=>{s.fmt=v;if(v==='estafet'&&s.n<10)s.n=10;if(v!=='estafet'&&s.n>10)s.n=5}},
+    {t:'Berapa soal per murid?',tf:s=>s.fmt==='estafet'?'Berapa soal per kelompok?':null,auto:false,html:s=>{const src=srcOf(s);return (s.fmt==='estafet'?'<p class="note">Estafet: jumlah soal untuk tiap kelompok. Kalau anggota kelompok lebih banyak, soal otomatis ditambah supaya semua kebagian giliran.</p>':'')+wzOpts((s.fmt==='estafet'?[10,15,20,30]:[3,5,10]).map(n=>({v:n,l:n+' soal'})),s.n,true)+((src.bank||src.modQs)&&src.count<s.n?`<p class="note">Paket ini hanya punya ${src.count} soal, jadi setiap murid mendapat ${src.count} soal.</p>`:'')+`<p class="note">${attFilled?`Peserta: ${part.length} murid yang hadir menurut absensi hari ini.`:`Absensi hari ini belum diisi, jadi semua ${list.length} murid ikut.`}</p>`},pick:(s,v)=>s.n=+v}],
    summary:s=>{const src=srcOf(s);return `<b>${esc(subj(s).name)}</b> · ${s.kind==='modul'?'Modul guru':s.kind==='sendiri'?'Soal sendiri':'Jalur JELAS'}: ${esc(src.title)} · ${gameName(s.fmt==='rebutan'?'kuis':s.game)} · ${EV_FMTS.find(f=>f[0]===s.fmt)[1]} · ${s.n} soal`},
    finish:{label:'Mulai evaluasi di TV',run:(s,b,close)=>{if(!list.length)throw new Error('Belum ada murid. Tambahkan di menu Murid.');Object.assign(EV,{subj:s.subj,src:s.src,game:s.game,fmt:s.fmt,n:s.n});const sb=subj(s),src=evalSource(sb);
      const ss=sessionOf(today,true);const e={id:'e'+Date.now().toString(36),subj:sb.id,subjName:sb.name,ui:src.bank||src.mod?null:src.ui,bank:src.bank?src.bank.id:null,mod:src.mod||null,modQs:src.modQs||null,modSrc:src.modSrc||null,unit:src.title,game:s.fmt==='rebutan'?'kuis':s.game,fmt:s.fmt,n:src.bank||src.modQs?Math.min(s.n,src.count):s.n,results:{},at:Date.now()};
@@ -15718,7 +15764,7 @@ function folBind(root,list,after){root.querySelectorAll('[data-follow]').forEach
   try{await folDo(f,on);if(on){try{sfx.ok()}catch(_){}toast('team',`Kamu mengikuti ${f.name}.`)}b.outerHTML=folBtn(f,b.classList.contains('sm'));folBind(root,list,after);after&&after()}catch(err){b.disabled=false;toast('lock',fbErr(err))}})}
 const shareIcon='<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M12 3 V15 M7 8 L12 3 L17 8 M5 13 V19 C5 20 6 21 7 21 H17 C18 21 19 20 19 19 V13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const qrIcon='<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><path d="M14 14h3v3h-3zM18 18h3v3h-3zM18 14h3M14 18v3" stroke-linecap="round"/></svg>';
-let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=286';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
+let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=287';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
 function qrMatrix(text){const Q=window.QRCodeLib,q=new Q(-1,Q.ECL.M);q.addData(text);q.make();const n=q.getModuleCount(),m=[];for(let r=0;r<n;r++){m.push([]);for(let c=0;c<n;c++)m[r].push(q.isDark(r,c))}return m}
 function qrSvgOf(m){const n=m.length;let d='';for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(m[r][c])d+=`M${c} ${r}h1.02v1.02h-1.02z`;
   return `<svg viewBox="-2 -2 ${n+4} ${n+4}" class="pcqr" shape-rendering="crispEdges" aria-label="Kode QR profil"><rect x="-2" y="-2" width="${n+4}" height="${n+4}" fill="#fff"/><path d="${d}" fill="#1C1E3D"/></svg>`}
