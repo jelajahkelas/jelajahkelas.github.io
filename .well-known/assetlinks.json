@@ -1,0 +1,8 @@
+[{
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target": {
+        "namespace": "android_app",
+        "package_name": "io.github.jelajahkelas.twa",
+        "sha256_cert_fingerprints": ["A1:89:24:D7:79:64:1B:C2:D8:08:E0:32:AD:70:50:C7:DD:EB:B4:BF:41:B2:CF:F3:F3:EC:AF:BA:0A:F0:36:A7"]
+      }
+    }]
