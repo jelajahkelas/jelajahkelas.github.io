@@ -33,6 +33,7 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@700;800&display=swap">
+<script>window.IS_PLAY=(function(){try{if(/^android-app:\/\/io\.github\.jelajahkelas\.twa/.test(document.referrer))sessionStorage.setItem('jelas-play','1');return sessionStorage.getItem('jelas-play')==='1'}catch(e){return false}})();</script>
 <script>window.__bip=null;window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();window.__bip=e;try{window.instReady&&instReady()}catch(_){}});</script>
 <script>(function(){try{var t=localStorage.getItem('jelas-theme')||'siang';if(t==='auto')t=matchMedia('(prefers-color-scheme: dark)').matches?'malam':'siang';document.documentElement.dataset.theme=t}catch(e){}})()</script>
 <style>
@@ -14850,6 +14851,10 @@ function tdTools(v){const head=v.querySelector('.thead');if(!head||head.querySel
 document.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&(e.key==='k'||e.key==='K')&&document.body.classList.contains('teacher')){const i=document.querySelector('#tTop #tdSearch')||document.querySelector('#tdSearch');if(i){e.preventDefault();i.focus()}}});
 document.addEventListener('click',e=>{if(!e.target.closest('.tsearch')&&!e.target.closest('#tbSearchBtn')){const sf=document.querySelector('#tBarTools .tsearch.open');if(sf)sf.classList.remove('open')}if(!e.target.closest('.tbellw')){const p=$('#tdPop');if(p&&!p.hidden){p.hidden=true;const b=$('#tdBell');b&&b.setAttribute('aria-expanded','false')}}if(!e.target.closest('.tsearch')){const r=$('#tdRes');if(r)r.hidden=true}});
 window.proAsk=proAsk;
+if(window.IS_PLAY){proAsk=function(){openModal(`<div style="text-align:center"><span style="display:inline-block;width:64px">${ICONS.trophy||''}</span><h3>JELAS Pro</h3><p>Fitur ini termasuk paket Pro untuk guru.</p></div>
+   <div class="plist">${PRO_LIST.map(x=>`<div class="pl"><span style="width:30px;flex:none">${ICONS[x[0]]||''}</span><span class="grow"><b>${x[1]}</b></span></div>`).join('')}</div>
+   <p class="note">Paket Pro belum bisa diaktifkan dari aplikasi ini.</p>
+   <div class="acts"><button class="primary" id="mNo">Mengerti</button></div>`);$('#mNo').onclick=closeModal};window.proAsk=proAsk}
 window.proNavTag=()=>{const t=$('#navProTag'),n=$('#navPro');if(!t)return;t.textContent=isPaid()?'AKTIF':inTrial()?trialLeft()+' hari':'';n.classList.toggle('on',isPaid())};
 /* ---------- menu Murid versi online ---------- */
 renderTStud=function(){const list=students(),c=tCls();const online=list.filter(p=>p._remote).length;
