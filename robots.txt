@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /notif/
+Disallow: /salin.html
+
+Sitemap: https://jelajahkelas.github.io/sitemap.xml
