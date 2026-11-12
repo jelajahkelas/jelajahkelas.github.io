@@ -1,5 +1,5 @@
 // Selalu ambil versi terbaru dari internet; pakai salinan tersimpan hanya saat offline.
-const CACHE = 'jelajah-kelas-v304';
+const CACHE = 'jelajah-kelas-v305';
 self.addEventListener('install', e => self.skipWaiting());
 // Hapus salinan versi lama supaya penyimpanan di HP tidak menumpuk setiap kali aplikasi diperbarui.
 self.addEventListener('activate', e => e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k !== CACHE).map(k => caches.delete(k)))).then(() => self.clients.claim())));
@@ -19,7 +19,8 @@ self.addEventListener('fetch', e => {
   // Hanya halaman aplikasi yang disimpan sebagai './'; halaman lain (materi, privasi) disimpan dengan alamatnya sendiri.
   const isApp = url.pathname === '/' || url.pathname.endsWith('/index.html') && !url.pathname.includes('/belajar/');
   const key = req.mode === 'navigate' ? (isApp ? './' : url.origin + url.pathname) : url.origin + url.pathname;
-  e.respondWith(fetch(req).then(res => {
+  // Halaman aplikasi selalu dicek ulang ke server (lewati cache HTTP 10 menit milik GitHub Pages).
+  e.respondWith(fetch(req.mode === 'navigate' ? new Request(req, { cache: 'no-cache' }) : req).then(res => {
     if (res.ok && res.type === 'basic') { const copy = res.clone(); caches.open(CACHE).then(c => c.put(key, copy)).catch(() => {}); }
     return res;
   }).catch(() => caches.match(key).then(r => r || (isApp || req.mode !== 'navigate' ? caches.match('./') : undefined))));
