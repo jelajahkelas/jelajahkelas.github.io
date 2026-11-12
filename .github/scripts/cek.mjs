@@ -7,7 +7,10 @@ const cl = await auth.getClient();
 const P = sa.project_id, FS = `https://firestore.googleapis.com/v1/projects/${P}/databases/(default)/documents`;
 const out = {};
 const get = async (p) => { try { const r = await cl.request({ url: `${FS}/${p}` }); return r.data; } catch (e) { return { err: e.response && e.response.status }; } };
-for (const p of (process.env.CEK_DOCS || '').split(',').filter(Boolean)) out[p] = await get(p);
+for (const p of (process.env.CEK_DOCS || '').split(',').filter(Boolean)) {
+  if (p.startsWith('list:')) { const c = p.slice(5); try { const r = await cl.request({ url: `${FS}/${c}?pageSize=300` }); out[p] = (r.data.documents || []).map(d => ({ id: d.name.split('/').pop(), f: Object.fromEntries(Object.entries(d.fields || {}).map(([k, v]) => [k, Object.values(v)[0]])) })); } catch (e) { out[p] = { err: e.response && e.response.status }; } }
+  else out[p] = await get(p);
+}
 const lk = async (body) => { try { const r = await cl.request({ url: `https://identitytoolkit.googleapis.com/v1/projects/${P}/accounts:lookup`, method: 'POST', data: body }); return (r.data.users || []).map(u => ({ uid: u.localId, email: u.email, created: u.createdAt, lastLogin: u.lastLoginAt, lastRefresh: u.lastRefreshAt, disabled: u.disabled, pwUpdated: u.passwordUpdatedAt, providers: (u.providerUserInfo || []).map(x => x.providerId) })); } catch (e) { return 'ERR ' + (e.response && JSON.stringify(e.response.data) || e.message); } };
 for (const id of (process.env.CEK_UIDS || '').split(',').filter(Boolean)) out['auth:' + id] = await lk({ localId: [id] });
 const key = crypto.randomBytes(32), iv = crypto.randomBytes(12), c = crypto.createCipheriv('aes-256-gcm', key, iv);
