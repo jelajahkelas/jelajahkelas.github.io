@@ -3495,7 +3495,16 @@ html[data-theme=malam] .adme{color:var(--ink)}
 .aduprof .aduacts .adbad{grid-column:1/-1;border-color:#F5C2C2;color:#C0392B;background:#FFF6F6}
 .aduidn{margin:14px 0 0;font-size:10.5px;color:var(--muted,#999);text-align:center;font-family:ui-monospace,monospace;word-break:break-all}
 @media(max-width:440px){.adusum{gap:6px}.adut{padding:8px 3px 6px}.adut b{font-size:15px}.adut small{font-size:9.5px}.adui{width:26px;height:26px}.adui svg{width:17px;height:17px}}
-.aduprof .aduacts button:nth-last-child(2):nth-child(odd){grid-column:1/-1}
+#mbox:has(.aduprof){max-width:640px!important;width:100%;overflow:hidden auto}
+.aduclose{position:absolute;right:-6px;top:-8px;z-index:2;width:34px;height:34px;border-radius:50%;border:0;background:rgba(255,255,255,.25);color:#fff;font-size:16px;font-weight:900;cursor:pointer}.aduclose:hover{background:rgba(255,255,255,.4)}
+.aduprof .adukvs{display:grid;grid-template-columns:repeat(3,1fr);gap:0;padding:4px 6px}
+.aduprof .adukv{flex-direction:column;justify-content:flex-start;gap:1px;padding:7px 8px;border-bottom:0;font-size:13px;min-width:0}
+.aduprof .adukv span{font-size:11px;font-weight:700}.aduprof .adukv b{text-align:left;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.aduprof .aduacts{display:flex;flex-wrap:nowrap;gap:8px;margin-top:12px}.aduprof .aduacts button{flex:1 1 0;min-width:0;min-height:40px;padding:0 6px;font-size:12px;white-space:nowrap}
+.aduprof .aduacts .adbad{grid-column:auto}
+.aduprof .adusum{margin:12px 0 6px}.aduprof .adumini{margin:0 0 10px}
+@media(max-width:560px){.aduprof .adukvs{grid-template-columns:repeat(2,1fr)}.aduprof .aduacts{display:grid;grid-template-columns:1fr 1fr}.aduprof .aduacts .adbad{grid-column:1/-1}.aduprof .aduacts button:nth-last-child(2):nth-child(odd){grid-column:1/-1}}
+
 .adurole.off,.adoff{background:#FEE2E2;color:#DC2626;font-style:normal;font-size:11px;padding:2px 8px;border-radius:999px;font-weight:800}
 .adcsv{min-height:44px;padding:0 14px;white-space:nowrap}.adrowh{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
 .adnb.addot{position:relative}.adnb.addot::after{content:'';position:absolute;top:6px;left:34px;width:10px;height:10px;border-radius:50%;background:#FF4B4B;border:2px solid var(--card,#fff)}
@@ -4068,7 +4077,7 @@ html[data-theme=malam] .plstick{background:#0a0f1e}
 <div class="syncpill" id="syncPill" hidden></div>
 <div class="toast" id="toast" hidden></div>
 
-<script src="av.js?v=294"></script>
+<script src="av.js?v=295"></script>
 <script>
 /* ---------- visual assets ---------- */
 const INK='#1B1E3D';
@@ -15859,7 +15868,7 @@ function folBind(root,list,after){root.querySelectorAll('[data-follow]').forEach
   try{await folDo(f,on);if(on){try{sfx.ok()}catch(_){}toast('team',`Kamu mengikuti ${f.name}.`)}b.outerHTML=folBtn(f,b.classList.contains('sm'));folBind(root,list,after);after&&after()}catch(err){b.disabled=false;toast('lock',fbErr(err))}})}
 const shareIcon='<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M12 3 V15 M7 8 L12 3 L17 8 M5 13 V19 C5 20 6 21 7 21 H17 C18 21 19 20 19 19 V13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const qrIcon='<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><path d="M14 14h3v3h-3zM18 18h3v3h-3zM18 14h3M14 18v3" stroke-linecap="round"/></svg>';
-let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=294';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
+let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=295';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
 function qrMatrix(text){const Q=window.QRCodeLib,q=new Q(-1,Q.ECL.M);q.addData(text);q.make();const n=q.getModuleCount(),m=[];for(let r=0;r<n;r++){m.push([]);for(let c=0;c<n;c++)m[r].push(q.isDark(r,c))}return m}
 function qrSvgOf(m){const n=m.length;let d='';for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(m[r][c])d+=`M${c} ${r}h1.02v1.02h-1.02z`;
   return `<svg viewBox="-2 -2 ${n+4} ${n+4}" class="pcqr" shape-rendering="crispEdges" aria-label="Kode QR profil"><rect x="-2" y="-2" width="${n+4}" height="${n+4}" fill="#fff"/><path d="${d}" fill="#1C1E3D"/></svg>`}
@@ -16131,7 +16140,7 @@ function aduOpen(r){if(!r)return;const p=aduP(r)||{},st=p.stats||{},now=Date.now
   const tile=(ic,col,v,l)=>`<div class="adut" style="--c:${col}"><span class="adui">${ICONS[ic]||''}</span><b>${v}</b><small>${l}</small></div>`;
   const stats=r.role==='teacher'?'':`<div class="adusum">${tile('bolt','#8B5CF6',(r.xp||p.xp||0).toLocaleString('id-ID'),'XP')+tile('flame','#FF8A00',nv(p.streak),'Runtunan')+tile('gem','#1CB0F6',nv(p.gems).toLocaleString('id-ID'),'Permata')+tile('league','#E0A800',esc(String(t)),'Liga')}</div>
    <div class="adumini">${[[st.lessons||0,'pelajaran'],[st.correct||0,'soal benar'],[best,'hari rekor'],[(p.pets||[]).length,'peliharaan']].map(([v,l])=>`<span><b>${(+v||0).toLocaleString('id-ID')}</b> ${l}</span>`).join('')}</div>`;
-  openModal(`<div class="aduprof"><div class="aduban"></div><div class="aduhd">${aduAv(r,true)}<div class="aduid"><h3>${esc(r.name||r.username||r.email||'Tanpa nama')}</h3><p>${r.username?'@'+esc(r.username):esc(r.email||'')}</p><div class="aduchipz"><span class="adurole ${r.role==='teacher'?'t':''}">${r.role==='teacher'?'Guru':'Murid'}</span>${r.disabled?'<span class="adurole off">Nonaktif</span>':`<span class="aduon${r.upd&&now-r.upd<864e5?' live':''}">${r.upd&&now-r.upd<864e5?'Aktif hari ini':'Aktif '+aduAgo(r.upd)}</span>`}</div></div></div>${stats}<div class="adukvs">${body}</div><div class="aduacts"><button class="ghost press" data-aa="nama">Ubah nama</button>${r.role==='student'?`<button class="ghost press" data-aa="pindah">Pindah kelas</button>${r.classId?'<button class="ghost press" data-aa="keluar">Keluarkan dari kelas</button>':''}`:''}${isAdminRow(r)?'':`<button class="ghost press" data-aa="${r.disabled?'on':'off'}">${r.disabled?'Aktifkan lagi':'Nonaktifkan'}</button><button class="ghost press adbad" data-aa="hapus">Hapus data</button>`}</div><p class="aduidn">ID ${esc(r.id)}</p></div><div class="acts"><button class="ghost" id="mNo">Tutup</button></div>`);
+  openModal(`<div class="aduprof"><div class="aduban"></div><button class="aduclose" id="mNo" aria-label="Tutup">✕</button><div class="aduhd">${aduAv(r,true)}<div class="aduid"><h3>${esc(r.name||r.username||r.email||'Tanpa nama')}</h3><p>${r.username?'@'+esc(r.username):esc(r.email||'')}</p><div class="aduchipz"><span class="adurole ${r.role==='teacher'?'t':''}">${r.role==='teacher'?'Guru':'Murid'}</span>${r.disabled?'<span class="adurole off">Nonaktif</span>':`<span class="aduon${r.upd&&now-r.upd<864e5?' live':''}">${r.upd&&now-r.upd<864e5?'Aktif hari ini':'Aktif '+aduAgo(r.upd)}</span>`}</div></div></div>${stats}<div class="adukvs">${body}</div><div class="aduacts"><button class="ghost press" data-aa="nama">Ubah nama</button>${r.role==='student'?`<button class="ghost press" data-aa="pindah">Pindah kelas</button>${r.classId?'<button class="ghost press" data-aa="keluar">Keluarkan</button>':''}`:''}${isAdminRow(r)?'':`<button class="ghost press" data-aa="${r.disabled?'on':'off'}">${r.disabled?'Aktifkan lagi':'Nonaktifkan'}</button><button class="ghost press adbad" data-aa="hapus">Hapus data</button>`}</div><p class="aduidn">ID ${esc(r.id)}</p></div>`);
   $('#mNo').onclick=closeModal;document.querySelectorAll('#mbox [data-aa]').forEach(b=>b.onclick=()=>aduAct(r,b.dataset.aa))}
 function isAdminRow(r){return !!(FBX.user&&r.id===FBX.user.uid)}
 function aduInit(){if(!$('#aduCard'))return;aduCount();
