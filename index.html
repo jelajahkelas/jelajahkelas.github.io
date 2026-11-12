@@ -16051,6 +16051,11 @@ function notifBanner(){let el=$('#notifBar');if(isT()||!P||!FBX.user||notifOff()
   el.innerHTML=`<div class="notifbar2"><span class="nb-ic" aria-hidden="true">🔔</span><span class="grow"><b>Nyalakan pengingat</b><small>Tugas guru &amp; tantangan teman</small></span><button class="smallbtn" id="nbOn">Nyalakan</button><button class="nx" id="nbX" aria-label="Nanti saja">✕</button></div>`;
   $('#nbOn').onclick=notifEnable;$('#nbX').onclick=()=>{DISMISS.set('notifbar',(st==='denied'?7:3)*864e5);el.remove()}}
 function notifEnable(){const st=notifState();
+  if(st==='denied'&&window.IS_PLAY&&!notifEnable._tried){notifEnable._tried=1;try{Notification.requestPermission().then(r=>{if(r==='granted'){notifEnable._tried=0;notifEnable()}else notifEnable()})}catch(e){notifEnable()}return}
+  if(st==='denied'&&window.IS_PLAY){openModal(`<div style="text-align:center"><span style="font-size:48px">🔕</span><h3>Notifikasi JELAS masih mati</h3></div><p>Nyalakan lewat pengaturan HP:</p>
+    <ol style="margin:0 0 8px;padding-left:20px;line-height:1.7"><li>Buka <b>Setelan</b> HP, lalu <b>Aplikasi</b>.</li><li>Pilih <b>JELAS</b>, lalu <b>Notifikasi</b>.</li><li>Nyalakan <b>Izinkan notifikasi</b>.</li><li>Tutup lalu buka lagi JELAS.</li></ol>
+    <p class="note" style="margin:0">Cara cepat: tahan ikon JELAS di layar HP → <b>Info aplikasi</b> → <b>Notifikasi</b>.</p>
+    <div class="acts"><button class="primary" id="mNo">Mengerti</button></div>`);$('#mNo').onclick=closeModal;return}
   if(st==='denied'){openModal(`<div style="text-align:center"><span style="font-size:48px">🔕</span><h3>Notifikasi diblokir</h3></div><p>Izinkan lagi lewat pengaturan HP:</p>
     <ol style="margin:0 0 8px;padding-left:20px;line-height:1.7"><li>Ketuk ikon <b>gembok</b> atau <b>⋮</b> di Chrome, lalu <b>Setelan situs</b> (<i>Site settings</i>).</li><li>Pilih <b>Notifikasi</b>, lalu <b>Izinkan</b>.</li><li>Kalau JELAS sudah dipasang di layar utama: tahan ikon JELAS → <b>Info aplikasi</b> → <b>Notifikasi</b> → nyalakan.</li><li>Buka lagi JELAS.</li></ol>
     <div class="acts"><button class="primary" id="mNo">Mengerti</button></div>`);$('#mNo').onclick=closeModal;return}
