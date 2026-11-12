@@ -4090,7 +4090,7 @@ html[data-theme=malam] .plstick{background:#0a0f1e}
 <div class="syncpill" id="syncPill" hidden></div>
 <div class="toast" id="toast" hidden></div>
 
-<script src="av.js?v=298"></script>
+<script src="av.js?v=299"></script>
 <script>
 /* ---------- visual assets ---------- */
 const INK='#1B1E3D';
@@ -14385,6 +14385,8 @@ const FBX={user:null,me:null,admin:false,unsub:[],t:null,busy:false,cfg:{},class
 (function(){const seen=new Set();let n=0;
   const noise=/ResizeObserver loop|^Script error\.?$|chrome-extension:|moz-extension:|safari-extension:|Failed to fetch|NetworkError|Load failed|network-request-failed|unavailable|offline|AbortError|The user aborted|Notification|messaging\/|installations\/|QuotaExceeded|play\(\) request was interrupted|NotAllowedError/i;
   const ver=()=>{try{const sc=document.querySelector('script[src*="av.js?v="]');return sc?sc.src.split('v=')[1]:''}catch(e){return ''}};
+  window.jelasDiag=function(msg){try{if(typeof FB==='undefined'||!FB||!FB.db||typeof FBX==='undefined'||!FBX.user)return;const k='dg_'+msg.slice(0,60);if(seen.has(k))return;seen.add(k);
+    FB.db.collection('errors').add({msg:('DIAG '+msg).slice(0,300),src:'diag',line:0,col:0,stack:'',ver:ver(),ua:navigator.userAgent.slice(0,180),page:window.IS_PLAY?'play-app':'web',uid:FBX.user.uid,role:'',created:Date.now()}).catch(()=>{})}catch(e){}};
   function rep(msg,src,line,col,stack){try{msg=String(msg||'');if(!msg||noise.test(msg)||noise.test(String(src||''))||noise.test(String(stack||'')))return;
     if(typeof FB==='undefined'||!FB.db||typeof FBX==='undefined'||!FBX.user)return;const key=(msg+'|'+src+'|'+line).slice(0,240);if(seen.has(key)||n>=6)return;seen.add(key);n++;
     let role='';try{role=isT()?'teacher':(P?'student':'')}catch(e){}
@@ -15885,7 +15887,7 @@ function folBind(root,list,after){root.querySelectorAll('[data-follow]').forEach
   try{await folDo(f,on);if(on){try{sfx.ok()}catch(_){}toast('team',`Kamu mengikuti ${f.name}.`)}b.outerHTML=folBtn(f,b.classList.contains('sm'));folBind(root,list,after);after&&after()}catch(err){b.disabled=false;toast('lock',fbErr(err))}})}
 const shareIcon='<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M12 3 V15 M7 8 L12 3 L17 8 M5 13 V19 C5 20 6 21 7 21 H17 C18 21 19 20 19 19 V13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const qrIcon='<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><path d="M14 14h3v3h-3zM18 18h3v3h-3zM18 14h3M14 18v3" stroke-linecap="round"/></svg>';
-let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=298';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
+let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=299';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
 function qrMatrix(text){const Q=window.QRCodeLib,q=new Q(-1,Q.ECL.M);q.addData(text);q.make();const n=q.getModuleCount(),m=[];for(let r=0;r<n;r++){m.push([]);for(let c=0;c<n;c++)m[r].push(q.isDark(r,c))}return m}
 function qrSvgOf(m){const n=m.length;let d='';for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(m[r][c])d+=`M${c} ${r}h1.02v1.02h-1.02z`;
   return `<svg viewBox="-2 -2 ${n+4} ${n+4}" class="pcqr" shape-rendering="crispEdges" aria-label="Kode QR profil"><rect x="-2" y="-2" width="${n+4}" height="${n+4}" fill="#fff"/><path d="${d}" fill="#1C1E3D"/></svg>`}
@@ -16059,7 +16061,7 @@ function notifEnable(){const st=notifState();
   if(st==='denied'){openModal(`<div style="text-align:center"><span style="font-size:48px">🔕</span><h3>Notifikasi diblokir</h3></div><p>Izinkan lagi lewat pengaturan HP:</p>
     <ol style="margin:0 0 8px;padding-left:20px;line-height:1.7"><li>Ketuk ikon <b>gembok</b> atau <b>⋮</b> di Chrome, lalu <b>Setelan situs</b> (<i>Site settings</i>).</li><li>Pilih <b>Notifikasi</b>, lalu <b>Izinkan</b>.</li><li>Kalau JELAS sudah dipasang di layar utama: tahan ikon JELAS → <b>Info aplikasi</b> → <b>Notifikasi</b> → nyalakan.</li><li>Buka lagi JELAS.</li></ol>
     <div class="acts"><button class="primary" id="mNo">Mengerti</button></div>`);$('#mNo').onclick=closeModal;return}
-  try{Notification.requestPermission().then(r=>{if(r==='granted'){fbPushRegister();toast('check','Notifikasi menyala!')}else if(r==='denied')notifEnable();notifBanner()})}catch(e){}}
+  try{Notification.requestPermission().then(r=>{if(window.IS_PLAY)setTimeout(()=>window.jelasDiag&&jelasDiag('notif request='+r+' perm-after='+Notification.permission),1500);if(r==='granted'){fbPushRegister();toast('check','Notifikasi menyala!')}else if(r==='denied')notifEnable();notifBanner()})}catch(e){}}
 function notifGate(){if(isT()||!P||!FBX.user||notifOff()||document.body.classList.contains('playing'))return;const st=notifState();if(st==='granted'||st==='unsupported'){notifBanner();return}
   notifBanner();if(sessionStorage.getItem('jk_ngate')||!$('#modal').hidden)return;try{sessionStorage.setItem('jk_ngate','1')}catch(e){}
   openModal(`<div style="text-align:center"><div class="mascot" data-mascot data-mood="happy" style="width:100px;margin:0 auto"></div><h3>Nyalakan notifikasi, yuk!</h3><p>Supaya kamu tidak ketinggalan <b>tugas dari guru</b> dan <b>tantangan dari teman</b>.</p></div><div class="acts"><button class="ghost" id="mNo">Nanti</button><button class="primary" id="mYes">Nyalakan</button></div>`);hydrate($('#mbox'));
@@ -16092,10 +16094,10 @@ try{const c=new URLSearchParams(location.search).get('tantang');if(c)sessionStor
 /* SDK notifikasi baru dimuat saat dibutuhkan, supaya pembukaan pertama lebih ringan */
 function fbMsgLoad(){if(typeof firebase==='undefined')return Promise.resolve();if(firebase.messaging)return Promise.resolve();if(window._fbMsgP)return window._fbMsgP;
   window._fbMsgP=new Promise((res,rej)=>{const sc=document.createElement('script');sc.src='https://www.gstatic.com/firebasejs/10.12.2/firebase-messaging-compat.js';sc.onload=()=>res();sc.onerror=()=>{window._fbMsgP=null;sc.remove();rej(new Error('messaging'))};document.head.appendChild(sc)});return window._fbMsgP}
-async function fbPushRegister(){try{if(notifOff())return;await fbMsgLoad().catch(()=>{});if(!FB.cfg.vapidKey||!firebase.messaging||!('serviceWorker' in navigator)||!('Notification' in window)||Notification.permission!=='granted'||!FBX.user||isT())return;
+async function fbPushRegister(){try{if(notifOff())return;await fbMsgLoad().catch(()=>{});if(window.IS_PLAY&&window.jelasDiag)jelasDiag('push start perm='+(window.Notification&&Notification.permission)+' sw='+('serviceWorker' in navigator)+' msg='+!!(window.firebase&&firebase.messaging));if(!FB.cfg.vapidKey||!firebase.messaging||!('serviceWorker' in navigator)||!('Notification' in window)||Notification.permission!=='granted'||!FBX.user||isT())return;
   const reg=await navigator.serviceWorker.ready;const tok=await firebase.messaging().getToken({vapidKey:FB.cfg.vapidKey,serviceWorkerRegistration:reg});
   if(!tok)return;FBX.pushTok=tok;const have=(FBX.me&&FBX.me.push)||[];if(have.includes(tok))return;
-  await FB.db.doc('users/'+FBX.user.uid).set({push:firebase.firestore.FieldValue.arrayUnion(tok)},{merge:true})}catch(e){console.warn('push',e)}}
+  await FB.db.doc('users/'+FBX.user.uid).set({push:firebase.firestore.FieldValue.arrayUnion(tok)},{merge:true});if(window.IS_PLAY&&window.jelasDiag)jelasDiag('push token ok')}catch(e){console.warn('push',e);if(window.IS_PLAY&&window.jelasDiag)jelasDiag('push error: '+(e&&(e.code||e.message)||e))}}
 async function fbPushUnregister(){try{if(FBX.pushTok&&FBX.user)await FB.db.doc('users/'+FBX.user.uid).set({push:firebase.firestore.FieldValue.arrayRemove(FBX.pushTok)},{merge:true})}catch(e){}}
 window.fbPushRegister=fbPushRegister;
 async function fbPushOff(){try{await fbMsgLoad().catch(()=>{});let tok=FBX.pushTok;if(!tok&&FB.cfg.vapidKey&&firebase.messaging&&'serviceWorker' in navigator&&Notification.permission==='granted'){const reg=await navigator.serviceWorker.ready;tok=await firebase.messaging().getToken({vapidKey:FB.cfg.vapidKey,serviceWorkerRegistration:reg})}
