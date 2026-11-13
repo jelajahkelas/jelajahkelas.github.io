@@ -1851,6 +1851,7 @@ body.wzon{overflow:hidden}
 .upgt span:last-child{display:flex;flex-direction:column;min-width:0}.upgt b{font-family:var(--display);font-size:19px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.upgt small{color:var(--muted);font-size:13px}.upgtier{width:30px;height:34px;display:inline-flex}
 .upgbd{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.upgbd .bdit{display:block}.upgbd .bdart{width:100%;display:block}
 @media (min-width:700px){.upg{background:rgba(20,22,40,.45)}.upgin{margin:24px auto;min-height:0;border-radius:24px;overflow:hidden}}
+#vProfile .sect{color:var(--muted);font-family:var(--display);font-weight:800;letter-spacing:.06em;font-size:15px;text-transform:uppercase}
 .fqseg{display:flex;overflow:hidden}.fqseg i{position:static!important;flex:none;border-radius:0!important}.fqseg i.fqo{background:#C2410C!important}.fqseg span{position:absolute;inset:0;display:grid;place-items:center}.fqsub{display:block;color:var(--muted);margin:4px 0 10px;font-size:14px;line-height:1.4}
 .fqrow{display:flex;align-items:center;gap:10px;font-family:var(--display);font-weight:800;font-size:17px}.fqrow i{width:14px;height:14px;border-radius:50%;flex:none}.fqrow span{margin-left:auto;color:var(--muted)}
 .fqbtns{display:grid;grid-template-columns:1fr 1fr;gap:10px}.fqbtns button{display:flex;align-items:center;justify-content:center;gap:8px;font-size:16px}
@@ -4139,7 +4140,7 @@ html[data-theme=malam] .plstick{background:#0a0f1e}
 <div class="syncpill" id="syncPill" hidden></div>
 <div class="toast" id="toast" hidden></div>
 
-<script src="av.js?v=325"></script>
+<script src="av.js?v=326"></script>
 <script>
 /* ---------- visual assets ---------- */
 const INK='#1B1E3D';
@@ -13438,7 +13439,7 @@ function renderProfile(){const t=tierOf(P);
   $('#avEdit').onclick=openAvatarEditor;$('#petEdit').onclick=openPets;$('#setOpen').onclick=openSettings;
   $('#pName').onchange=e=>{const v=e.target.value.trim();if(v){P.name=v;save();renderProfile()}};
   $('#profileTop').querySelectorAll('.avcolors button').forEach(b=>b.onclick=()=>{P.color=b.dataset.c;save();renderProfile()});
-  $('#pStats').innerHTML=[[`<span style="color:#FF8A00;width:34px">${ICONS.flame}</span>`,Math.max(P.bestStreak||0,shownStreak()),'Rekor runtunan'],[ico('bolt'),P.xp,'Total XP'],[`<i>${shield(t[2])}</i>`,t[0],'Liga sekarang'],[ico('check'),unitsDone(P),'Unit selesai']].map(x=>`<div class="ps">${x[0]}<span><b>${x[1]}</b><small>${x[2]}</small></span></div>`).join('');
+  $('#pStats').innerHTML=[[`<span style="color:#FF8A00;width:30px;display:inline-flex">${ICONS.flame}</span>`,Math.max(P.bestStreak||0,shownStreak())+' hari','Rekor runtunan'],[ico('bolt'),P.xp+' XP','Total XP'],[`<i class="upgtier">${shield(t[2])}</i>`,t[0],'Liga sekarang'],[ico('check'),unitsDone(P),'Unit selesai']].map(x=>`<div class="upgt">${x[0]}<span><b>${x[1]}</b><small>${x[2]}</small></span></div>`).join('');
   {const got=BADGES.map(b=>({b,l:blevel(b)})).sort((x,y)=>y.l-x.l||BADGES.indexOf(x.b)-BADGES.indexOf(y.b)).slice(0,4);
    $('#badgeList').innerHTML=got.map(({b,l})=>`<button class="bdit ${l?'':'none'}" data-bd="${b.id}">${bdArt(b,l)}</button>`).join('');
    $('#badgeList').querySelectorAll('[data-bd]').forEach(x=>x.onclick=()=>bdDetail(BADGES.find(b=>b.id===x.dataset.bd)));const bh=$('#bdHead');if(bh)bh.onclick=bdPage}
@@ -16000,7 +16001,7 @@ function folBind(root,list,after){root.querySelectorAll('[data-follow]').forEach
   try{await folDo(f,on);if(on){try{sfx.ok()}catch(_){}toast('team',`Kamu mengikuti ${f.name}.`)}b.outerHTML=folBtn(f,b.classList.contains('sm'));folBind(root,list,after);after&&after()}catch(err){b.disabled=false;toast('lock',fbErr(err))}})}
 const shareIcon='<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M12 3 V15 M7 8 L12 3 L17 8 M5 13 V19 C5 20 6 21 7 21 H17 C18 21 19 20 19 19 V13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const qrIcon='<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><path d="M14 14h3v3h-3zM18 18h3v3h-3zM18 14h3M14 18v3" stroke-linecap="round"/></svg>';
-let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=325';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
+let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=326';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
 function qrMatrix(text){const Q=window.QRCodeLib,q=new Q(-1,Q.ECL.M);q.addData(text);q.make();const n=q.getModuleCount(),m=[];for(let r=0;r<n;r++){m.push([]);for(let c=0;c<n;c++)m[r].push(q.isDark(r,c))}return m}
 function qrSvgOf(m){const n=m.length;let d='';for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(m[r][c])d+=`M${c} ${r}h1.02v1.02h-1.02z`;
   return `<svg viewBox="-2 -2 ${n+4} ${n+4}" class="pcqr" shape-rendering="crispEdges" aria-label="Kode QR profil"><rect x="-2" y="-2" width="${n+4}" height="${n+4}" fill="#fff"/><path d="${d}" fill="#1C1E3D"/></svg>`}
