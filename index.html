@@ -4156,7 +4156,7 @@ html[data-theme=malam] .plstick{background:#0a0f1e}
 <div class="syncpill" id="syncPill" hidden></div>
 <div class="toast" id="toast" hidden></div>
 
-<script src="av.js?v=341"></script>
+<script src="av.js?v=342"></script>
 <script>
 /* ---------- visual assets ---------- */
 const INK='#1B1E3D';
@@ -10126,7 +10126,7 @@ function renderModes(){
   $('#fitNote').innerHTML=`<b>Kenapa game ini?</b> ${reb?'Format Rebutan memakai Kuis Klasik supaya semua tim bisa berebut menjawab.':fit.note+(ids.length>fit.games.length?' Game paling cocok ada di urutan atas, tetapi semua game lain juga bisa dimainkan.':'')}`;
   const duoRand=PLAY==='group'&&GROUP.format==='terbagi'&&ids.filter(x=>x!=='kuis'&&MODES[x]).length>1;
   $('#modes').innerHTML=(duoRand?`<button class="mode moderand" data-m="acak" style="--mc:#9B6BFF"><span class="mi" style="font-size:30px">🎲</span><span class="mn">Acak semua game</span><span class="md">Setiap soal memakai game yang berbeda, dipilih acak</span><span class="why">Paling seru untuk main berdua</span><span class="play">Main ▶</span></button>`:'')+ids.map(id=>{const m=MODE_LIST.find(x=>x.id===id);return `<button class="mode" data-m="${m.id}" style="--mc:${MCOL[m.id]}">${last===m.id?'<span class="last">Terakhir dimainkan</span>':''}<span class="mi">${m.icon}</span><span class="mn">${m.name}</span><span class="md">${m.desc}</span><span class="why">${WHY[m.id]}</span><span class="play">Main ▶</span></button>`}).join('')+(reb?'':`<button class="mode" data-m="adv" style="--mc:#3D8BFF"><span class="mi">${ADV_ICON}</span><span class="mn">Petualangan Berdua</span><span class="md">Saling bantu lewati rintangan, jawab soal batu ajaib</span><span class="why">Game kerja sama untuk 2 pemain</span><span class="play">Main ▶</span></button>`);
-  $('#modes').querySelectorAll('.mode').forEach(b=>b.onclick=()=>{if(b.dataset.m==='adv'){const cid=String((L||{}).id||((CLS()||{}).id)||''),m=cid.match(/(\d+)/),g=/^tk/.test(cid)?0:m?+m[1]:3;tone([660,990],.06);location.href='petualangan/?local=1&g='+g;return}if(b.dataset.m==='acak'){window.DUEL_RAND=ids.filter(x=>x!=='kuis'&&x!=='urut'&&MODES[x]);MODE=pick(window.DUEL_RAND);tone([660,990],.06);launch();return}window.DUEL_RAND=null;MODE=b.dataset.m;store.set('mode',MODE);const l=store.get('last',{});l[L.id+'/'+S.id]=MODE;store.set('last',l);tone([660,990],.06);launch()});
+  $('#modes').querySelectorAll('.mode').forEach(b=>b.onclick=()=>{if(b.dataset.m==='adv'){const cid=String((L||{}).id||((CLS()||{}).id)||''),m=cid.match(/(\d+)/),g=/^tk/.test(cid)?0:m?+m[1]:3;tone([660,990],.06);location.href='petualangan/?sx='+((P&&P.gender)||'')+'&local=1&g='+g;return}if(b.dataset.m==='acak'){window.DUEL_RAND=ids.filter(x=>x!=='kuis'&&x!=='urut'&&MODES[x]);MODE=pick(window.DUEL_RAND);tone([660,990],.06);launch();return}window.DUEL_RAND=null;MODE=b.dataset.m;store.set('mode',MODE);const l=store.get('last',{});l[L.id+'/'+S.id]=MODE;store.set('last',l);tone([660,990],.06);launch()});
   $('#modeNote').hidden=!reb;$('#modeNote').textContent='Ingin memakai game lain? Pilih format Bergiliran atau Layar terbagi di halaman awal.';
 }
 function selectSubject(sid){
@@ -15764,7 +15764,7 @@ function roomFinish(o){const uid=FBX.user.uid,acc=ROOM.acc||{correct:0,done:0,st
   FB.db.doc('rooms/'+o.room).update({['players.'+uid]:Object.assign({},(ROOM.doc&&ROOM.doc.players[uid])||roomMe(),{score,c:ok,i:total,done:true,t})}).catch(e=>toast('lock','Nilai tantangan belum terkirim: '+fbErr(e)))}
 
 /* ---------- PROFIL TEMAN: kunjungi profil orang lain + perbandingan statistik ---------- */
-function myPub(){ensureDay(P);const s=P.stats||{};return {name:P.name,user:(FBX.me||{}).username||'',av:P.avatar||null,pet:P.pet||'uli',cls:P.cls,xp:P.xp||0,wxp:(P.week&&P.week.xp)||0,week:(P.week&&P.week.id)||'',
+function myPub(){ensureDay(P);const s=P.stats||{};return {gender:P.gender||null,name:P.name,user:(FBX.me||{}).username||'',av:P.avatar||null,pet:P.pet||'uli',cls:P.cls,xp:P.xp||0,wxp:(P.week&&P.week.xp)||0,week:(P.week&&P.week.id)||'',
   streak:shownStreak(P),best:P.bestStreak||0,lessons:s.lessons||0,perfect:s.perfect||0,units:unitsDone(P),matches:s.matches||0,correct:s.correct||0,
   badges:BADGES.reduce((t,b)=>t+blevel(b,P),0),bl:BADGES.map(b=>blevel(b,P)),tier:Math.max(0,TIERS.indexOf(tierOf(P))),nfo:(FOL.following||[]).length,nfr:(FOL.followers||[]).length,pro:(()=>{try{return !!isPro()}catch(e){return false}})(),created:P.created||0,lastDay:P.lastDay||'',xpd:xpLast7(P)}}
 function xpLast7(p){const t=dayNum(dayKey()),d=p.xpd||{},o={};Object.keys(d).forEach(k=>{if(t-dayNum(k)<7)o[k]=d[k]});const tk=dayKey();if(o[tk]==null&&p.today&&p.today.day===tk&&p.today.xp)o[tk]=p.today.xp;return o}
@@ -15888,7 +15888,7 @@ async function ajakInvite(f,btn){if(AJAK.mode==='adv'&&(AJAK.max||8)<=2){if(btn)
   catch(e){if(btn){btn.disabled=false;btn.textContent='UNDANG'}toast('lock',fbErr(e))}}
 async function ajakShare(){if(AJAK.mode==='adv'&&(AJAK.max||8)<=2){const A='ABCDEFGHJKLMNPQRSTUVWXYZ',code=[...Array(4)].map(()=>A[Math.floor(Math.random()*A.length)]).join('');
     const link=`${location.origin}${location.pathname}?tantang=P:${code}`,text=`Ayo main Petualangan Berdua bersamaku di JELAS! Kita harus kerja sama sampai bendera.`;
-    const go=()=>{location.href=`petualangan/?host=${code}&link=1&g=${advGrade()}`};
+    const go=()=>{location.href=`petualangan/?sx=${(P&&P.gender)||''}&host=${code}&link=1&g=${advGrade()}`};
     if(navigator.share){try{await navigator.share({title:'Petualangan Berdua · JELAS',text,url:link});go();return}catch(e){if(e&&e.name==='AbortError')return}}
     try{await navigator.clipboard.writeText(text+'\n'+link);toast('check','Tautan disalin. Kirim ke temanmu, lalu tunggu di game.')}catch(e){prompt('Salin tautan ini:',link)}setTimeout(go,900);return}
   try{const code=await ajakEnsureRoom();const d=ROOM.doc||{};const link=`${location.origin}${location.pathname}?tantang=${code}`;
@@ -16034,7 +16034,7 @@ function folBind(root,list,after){root.querySelectorAll('[data-follow]').forEach
   try{await folDo(f,on);if(on){try{sfx.ok()}catch(_){}toast('team',`Kamu mengikuti ${f.name}.`)}b.outerHTML=folBtn(f,b.classList.contains('sm'));folBind(root,list,after);after&&after()}catch(err){b.disabled=false;toast('lock',fbErr(err))}})}
 const shareIcon='<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M12 3 V15 M7 8 L12 3 L17 8 M5 13 V19 C5 20 6 21 7 21 H17 C18 21 19 20 19 19 V13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const qrIcon='<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><path d="M14 14h3v3h-3zM18 18h3v3h-3zM18 14h3M14 18v3" stroke-linecap="round"/></svg>';
-let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=341';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
+let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=342';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
 function qrMatrix(text){const Q=window.QRCodeLib,q=new Q(-1,Q.ECL.M);q.addData(text);q.make();const n=q.getModuleCount(),m=[];for(let r=0;r<n;r++){m.push([]);for(let c=0;c<n;c++)m[r].push(q.isDark(r,c))}return m}
 function qrSvgOf(m){const n=m.length;let d='';for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(m[r][c])d+=`M${c} ${r}h1.02v1.02h-1.02z`;
   return `<svg viewBox="-2 -2 ${n+4} ${n+4}" class="pcqr" shape-rendering="crispEdges" aria-label="Kode QR profil"><rect x="-2" y="-2" width="${n+4}" height="${n+4}" fill="#fff"/><path d="${d}" fill="#1C1E3D"/></svg>`}
@@ -16168,7 +16168,7 @@ function invWait(id,f){AJAK.wait={id,f,exp:Date.now()+INV_TTL};let el=$('#invWai
   $('#iwCancel').onclick=()=>{FB.db.doc('invites/'+id).delete().catch(()=>{});AJAK.sent[f.uid]=false;invWaitClose();toast('check','Tantangan dibatalkan.');const b=document.querySelector(`.ajinv[data-uid="${CSS.escape(f.uid)}"]`);if(b){b.disabled=false;b.textContent='UNDANG';b.classList.remove('sent')}}}
 function invWaitClose(){const el=$('#invWait');if(el)el.hidden=true;document.body.classList.remove('iw-on');AJAK.wait=null}
 function invWaitEnd(id,st){const w=AJAK.wait;if(!w||w.id!==id)return;const f=w.f;invWaitClose();
-  if(st==='accepted'&&AJAK.adv&&AJAK.adv[id]){location.href=`petualangan/?host=${AJAK.adv[id]}&g=${advGrade()}`;return}
+  if(st==='accepted'&&AJAK.adv&&AJAK.adv[id]){location.href=`petualangan/?sx=${(P&&P.gender)||''}&host=${AJAK.adv[id]}&g=${advGrade()}`;return}
   if(st==='accepted'){const a=$('#ajak');if(a)a.hidden=true;ROOM.bg=false;const r=$('#room');if(r&&ROOM.code){r.hidden=false;roomRender()}return}
   if(st==='expired'){FB.db.doc('invites/'+id).delete().catch(()=>{});AJAK.sent[f.uid]=false;const b=document.querySelector(`.ajinv[data-uid="${CSS.escape(f.uid)}"]`);if(b){b.disabled=false;b.textContent='UNDANG';b.classList.remove('sent')}
     openModal(`<div style="text-align:center"><div style="width:96px;margin:0 auto">${avSpan({uid:f.uid,name:f.name,avatar:f.av||null}).replace('class="avatar','class="avatar big')}</div><h3>Waktu habis</h3><p>${esc(f.name)} belum menjawab dalam 2 menit.</p></div><div class="acts"><button class="ghost" id="mNo">Tutup</button><button class="primary" id="mYes">Tantang lagi</button></div>`);
@@ -16184,7 +16184,7 @@ function fbListenInvites(){if(AJAK.unsubInv||!FBX.user||isT())return;AJAK.first=
       if(x.status==='accepted')toast('team',`${x.toName||'Temanmu'} menerima tantangan!`)})},()=>{});FBX.unsub.push(()=>{try{un2()}catch(e){}});AJAK.unsubInv=un;FBX.unsub.push(()=>{try{un()}catch(e){}AJAK.unsubInv=null;AJAK.inv=[];document.body.classList.remove('has-invite')})}
 function inviteSeen(id){try{const a=JSON.parse(sessionStorage.getItem('jk_inv_seen')||'[]');return a.includes(id)}catch(e){return false}}
 function inviteMark(id){try{const a=JSON.parse(sessionStorage.getItem('jk_inv_seen')||'[]');a.push(id);sessionStorage.setItem('jk_inv_seen',JSON.stringify(a.slice(-50)))}catch(e){}}
-function inviteAnswer(x,ok){inviteMark(x.id);if(ok&&x.created&&Date.now()-x.created>INV_TTL){AJAK.inv=AJAK.inv.filter(i=>i.id!==x.id);if(curTab==='team')inviteBox();toast('lock','Tantangan sudah berakhir (lebih dari 2 menit).');return}FB.db.doc('invites/'+x.id).update({status:ok?'accepted':'declined',toName:P.name,toAv:P.avatar||null}).then(()=>notifyServer('answer',x.id)).catch(()=>{});AJAK.inv=AJAK.inv.filter(i=>i.id!==x.id);if(curTab==='team')inviteBox();if(ok&&(x.kind==='adv'||/^P:/.test(x.code||''))){closeModal();toast('team','Membuka Petualangan Berdua…');setTimeout(()=>{location.href='petualangan/?r='+encodeURIComponent(String(x.code).replace(/^P:/,''))},500);return}if(ok)roomJoin(x.code);else toast('check','Tantangan ditolak.')}
+function inviteAnswer(x,ok){inviteMark(x.id);if(ok&&x.created&&Date.now()-x.created>INV_TTL){AJAK.inv=AJAK.inv.filter(i=>i.id!==x.id);if(curTab==='team')inviteBox();toast('lock','Tantangan sudah berakhir (lebih dari 2 menit).');return}FB.db.doc('invites/'+x.id).update({status:ok?'accepted':'declined',toName:P.name,toAv:P.avatar||null}).then(()=>notifyServer('answer',x.id)).catch(()=>{});AJAK.inv=AJAK.inv.filter(i=>i.id!==x.id);if(curTab==='team')inviteBox();if(ok&&(x.kind==='adv'||/^P:/.test(x.code||''))){closeModal();toast('team','Membuka Petualangan Berdua…');setTimeout(()=>{location.href='petualangan/?sx='+((P&&P.gender)||'')+'&r='+encodeURIComponent(String(x.code).replace(/^P:/,''))},500);return}if(ok)roomJoin(x.code);else toast('check','Tantangan ditolak.')}
 function inviteAlert(x){inviteMark(x.id);
   const unfocused=!document.hidden&&!document.hasFocus();
   if(document.hidden||unfocused){try{if(!notifOff()&&'Notification' in window&&Notification.permission==='granted'&&navigator.serviceWorker)navigator.serviceWorker.ready.then(r=>r.showNotification(`${x.fromName} menantangmu tanding${x.subjName?' '+x.subjName:''}!`,{body:'Kamu punya 2 menit untuk menerima tantangan',icon:'icons/duel.png',badge:'icons/badge-72.png',tag:'inv-'+x.id,renotify:true,requireInteraction:true,vibrate:[200,100,200],data:{inv:x.id,code:x.code,type:'invite',exp:(x.created||Date.now())+INV_TTL},actions:[{action:'accept',title:'Terima'},{action:'decline',title:'Tolak'}]}))}catch(e){}
@@ -16285,7 +16285,7 @@ go=function(tab){_goR(tab);if(!ROOM.code)return;
   if(ROOM.pendingShow&&!document.body.classList.contains('playing')){ROOM.pendingShow=false;$('#room').hidden=false;if(ROOM.doc)roomRender()}};
 window.fbCheckRoomLink=function(){try{const tg=new URLSearchParams(location.search).get('tugas');if(tg&&FBX.user&&P&&!isT()){history.replaceState(history.state,'',location.pathname);setTimeout(()=>fbOpenTask(tg),1500);return}}catch(e){}let c=null,act=null,inv=null;try{const q=new URLSearchParams(location.search);act=q.get('act');inv=q.get('inv');c=q.get('tantang')||sessionStorage.getItem('jk_tantang')}catch(e){}
   if(inv&&act&&FBX.user&&P&&!isT()){try{history.replaceState(history.state,'',location.pathname)}catch(e){}try{sessionStorage.removeItem('jk_tantang')}catch(e){}setTimeout(()=>inviteAnswer({id:inv,code:c},act!=='decline'),600);return}
-  if(!c)return;try{sessionStorage.removeItem('jk_tantang')}catch(e){}if(/^P:/.test(c)){if(!(FBX.user&&P)){try{sessionStorage.setItem('jk_tantang',c)}catch(e){}return}if(isT())return;location.href='petualangan/?r='+encodeURIComponent(c.slice(2));return}if(FBX.user&&P&&!isT())setTimeout(()=>roomJoin(c),600)};
+  if(!c)return;try{sessionStorage.removeItem('jk_tantang')}catch(e){}if(/^P:/.test(c)){if(!(FBX.user&&P)){try{sessionStorage.setItem('jk_tantang',c)}catch(e){}return}if(isT())return;location.href='petualangan/?sx='+((P&&P.gender)||'')+'&r='+encodeURIComponent(c.slice(2));return}if(FBX.user&&P&&!isT())setTimeout(()=>roomJoin(c),600)};
 try{const c=new URLSearchParams(location.search).get('tantang');if(c)sessionStorage.setItem('jk_tantang',c)}catch(e){}
 
 /* ---------- notifikasi gelembung (Firebase Cloud Messaging) ---------- */
@@ -17349,7 +17349,7 @@ function phPick(id){
   if(id==='online'&&!phOnline()){toast('lock','Masuk ke akun JELAS dulu untuk main online.');return}
   if(id==='on2'||id==='onN'){window.AJAK.max=id==='on2'?2:8;window.ajakWizard&&ajakWizard();return}
   if(id==='off2'){duoWizard();return}
-  if(id==='adv'){const cid=String((CLS()||{}).id||''),m=cid.match(/(\d+)/),g=/^tk/.test(cid)?0:m?+m[1]:3;location.href='petualangan/?g='+g;return}
+  if(id==='adv'){const cid=String((CLS()||{}).id||''),m=cid.match(/(\d+)/),g=/^tk/.test(cid)?0:m?+m[1]:3;location.href='petualangan/?sx='+((P&&P.gender)||'')+'&g='+g;return}
   phGo(id)}
 function playHub(){const v=$('#vTeam');if(!v)return;let hub=$('#phub');if(!hub){(v.querySelector('.pagehead')||v.firstElementChild).insertAdjacentHTML('afterend','<div class="phub" id="phub"></div>');hub=$('#phub')}
   if(!PH_SCREENS[PNAV])PNAV='root';const sc=PH_SCREENS[PNAV];
