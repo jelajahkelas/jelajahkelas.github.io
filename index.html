@@ -33,6 +33,14 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@700;800&display=swap">
+<script>/* jam server: hitungan hari, nyawa & misi mengikuti waktu sebenarnya, bukan jam HP */
+(function(){var _D=Date,off=0;try{off=+localStorage.getItem('jk_clk')||0}catch(e){}
+function apply(o){off=Math.abs(o)>3e5?o:0;window.CLOCK_OFF=off}apply(off);
+function D(){var a=arguments;if(!(this instanceof D))return new _D(_D.now()+off).toString();if(a.length===0)return new _D(_D.now()+off);return new (Function.prototype.bind.apply(_D,[null].concat([].slice.call(a))))()}
+D.prototype=_D.prototype;D.now=function(){return _D.now()+off};D.UTC=_D.UTC;D.parse=_D.parse;
+try{Object.defineProperty(D,Symbol.hasInstance,{value:function(x){return x instanceof _D}})}catch(e){}window.Date=D;
+function sync(){var t0=_D.now();fetch('/robots.txt?clk='+t0,{method:'HEAD',cache:'no-store'}).then(function(r){var h=r.headers.get('date');if(!h)return;var srv=_D.parse(h)+500,rt=(_D.now()-t0)/2,o=srv+rt-_D.now();apply(o);try{localStorage.setItem('jk_clk',String(off))}catch(e){}}).catch(function(){})}
+sync();addEventListener('visibilitychange',function(){if(document.visibilityState==='visible')sync()})})();</script>
 <script>window.IS_PLAY=(function(){try{if(/^android-app:\/\/io\.github\.jelajahkelas\.twa/.test(document.referrer))sessionStorage.setItem('jelas-play','1');return sessionStorage.getItem('jelas-play')==='1'}catch(e){return false}})();
 /* dibuka dari notifikasi saat aplikasi tertutup: Chrome membukanya di tab browser. Kalau HP ini punya aplikasi JELAS, pindahkan ke aplikasinya. */
 (function(){try{if(window.IS_PLAY){localStorage.setItem('jk_hasapp','1');return}
@@ -4104,7 +4112,7 @@ html[data-theme=malam] .plstick{background:#0a0f1e}
 <div class="syncpill" id="syncPill" hidden></div>
 <div class="toast" id="toast" hidden></div>
 
-<script src="av.js?v=316"></script>
+<script src="av.js?v=317"></script>
 <script>
 /* ---------- visual assets ---------- */
 const INK='#1B1E3D';
@@ -12235,7 +12243,7 @@ function tickHearts(){if(!P)return;if(P.hearts>=5){P.heartsAt=null;return}if(!P.
 function shownStreak(p){p=p||P;if(!p.lastDay)return 0;const gap=dayNum(dayKey())-dayNum(p.lastDay);if(gap<=1)return p.streak;if(gap-1<=(+p.freeze||0))return p.streak;return 0}
 function boostLeft(){const b=P&&P.xpBoost;return b&&b.until>Date.now()?Math.ceil((b.until-Date.now())/60000):0}
 function boostAdd(min){const now=Date.now();P.xpBoost={until:Math.max(now,(P.xpBoost&&P.xpBoost.until)||0)+min*60000,x:2};try{renderTop()}catch(e){}}
-function addXp(xp){if(boostLeft())xp*=2;P.xp+=xp;P.week.xp+=xp;P.today.xp+=xp;const t=dayKey();let up=false;P.xpd=P.xpd||{};P.xpd[t]=(P.xpd[t]||0)+xp;Object.keys(P.xpd).forEach(k=>{if(dayNum(t)-dayNum(k)>13)delete P.xpd[k]});
+function addXp(xp){if(boostLeft())xp*=2;try{clearTimeout(addXp._fq);addXp._fq=setTimeout(()=>window.fqSync&&window.fqSync(),1500)}catch(e){}P.xp+=xp;P.week.xp+=xp;P.today.xp+=xp;const t=dayKey();let up=false;P.xpd=P.xpd||{};P.xpd[t]=(P.xpd[t]||0)+xp;Object.keys(P.xpd).forEach(k=>{if(dayNum(t)-dayNum(k)>13)delete P.xpd[k]});
   if(P.lastDay!==t){const gap=P.lastDay?dayNum(t)-dayNum(P.lastDay):99;if(gap===1)P.streak++;else if(gap>=2&&gap-1<=(+P.freeze||0)){const miss=gap-1;P.freeze-=miss;P.streak++;const fd=[];for(let i=miss;i>=1;i--)fd.push(dayKey(new Date(Date.now()-i*864e5)));P.frz=[...(P.frz||[]).slice(-60),...fd]}else P.streak=1;P.lastDay=t;P.hist=[...(P.hist||[]).slice(-800),t];P.days=[...P.days.filter(d=>dayNum(t)-dayNum(d)<14),t];up=true}
   P.bestStreak=Math.max(P.bestStreak||0,P.streak);return up}
 
@@ -15066,7 +15074,7 @@ function ncItems(){const out=[],me=FBX.user&&FBX.user.uid,today=dayKey();
   if(me&&window.FS&&FS.list)FS.list.forEach(x=>{const ou=x.m.find(u=>u!==me),o=((x.info||{})[ou])||{name:'Temanmu'};
     if(x.from!==me)out.push({id:'fsi:'+x.id,ic:'🔥',tx:`<b>${esc(o.name)}</b> memilihmu sebagai teman runtunan`,sub:'Belajar setiap hari bersama untuk menjaga api tetap menyala',t:x.created||0,btn:'Lihat',fn:()=>openStreak('fr')});
     const nv=+(x['nudge_'+ou]||0);if(nv)out.push({id:'fsn:'+x.id+':'+nv,ic:(FQ_ST[+x['nudgeS_'+ou]||0]||{}).e||'👋',tx:`<b>${esc(o.name)}</b> mencolekmu di Runtunan Teman: “${esc((FQ_ST[+x['nudgeS_'+ou]||0]||FQ_ST[0]).t)}”`,t:nv,btn:'Belajar',fn:()=>go('learn'),hot:dayKey(new Date(nv))===today})});
-  if(me&&typeof FQ!=='undefined'&&FQ.list)FQ.list.forEach(d=>{const o=d.members.find(x=>x!==me),nm=(d.names||{})[o]||'Temanmu';if(d['n_'+o]!=null&&d.created&&!(d.names||{})._mine)out.push({id:'fqi:'+d.id,ic:'🤝',tx:`Misi Teman minggu ini bersama <b>${esc(nm)}</b>`,sub:`Selesaikan ${d.goal||FQ.goal} level bersama`,t:d.created,btn:'Misi',fn:()=>go('quest')})});
+  if(me&&typeof FQ!=='undefined'&&FQ.list)FQ.list.forEach(d=>{const o=d.members.find(x=>x!==me),nm=(d.names||{})[o]||'Temanmu';if(d['n_'+o]!=null&&d.created&&!(d.names||{})._mine)out.push({id:'fqi:'+d.id,ic:'🤝',tx:`Misi Teman minggu ini bersama <b>${esc(nm)}</b>`,sub:fqTitle(d),t:d.created,btn:'Misi',fn:()=>go('quest')})});
   if(LIC.announce)out.push({id:'ann:'+qKey(LIC.announce),ic:'📢',tx:`<b>Pengumuman:</b> ${esc(LIC.announce)}`,t:0});
   NC.get('nlog',[]).forEach(x=>out.push({id:x.id,ic:x.ic,tx:esc(x.tx),t:x.t,btn:x.go?'Buka':'',fn:x.go?()=>go(x.go):null}));
   return out.sort((a,b)=>(!!b.hot-!!a.hot)||(b.t-a.t))}
@@ -15843,7 +15851,7 @@ function openAjak(){if(!P)return;ajakInit();AJAK.sent={};
   $('#ajShare').onclick=ajakShare;$('#ajGo').onclick=()=>ajakSearch($('#ajQ').value);{let t=null;$('#ajQ').oninput=()=>{clearTimeout(t);t=setTimeout(()=>ajakSearch($('#ajQ').value),350)}}$('#ajQ').onkeydown=e=>{if(e.key==='Enter')ajakSearch($('#ajQ').value)};
   ajakFoot();ajakLoadFriends()}
 /* ---------- misi teman (mingguan, berdua) ---------- */
-const FQ={list:null,goal:20,gift:PRICE.boost,giftMin:15,reward:50};const fqToday=t=>!!t&&dayKey(new Date(+t))===dayKey();window.FQ=FQ;
+const FQ={list:null,goal:250,gift:PRICE.boost,giftMin:15,reward:50};const fqToday=t=>!!t&&dayKey(new Date(+t))===dayKey();window.FQ=FQ;
 const FQ_ST=[{e:'💪',t:'Yuk, selesaikan sebaik mungkin!'},{e:'😾',t:'Jangan sampai keluar cakar, nih!'},{e:'🙌',t:'Tos, sahabat!'},{e:'',m:'sad',t:'Tolong jangan buat aku menangis!'}];
 const fqStk=i=>{const x=FQ_ST[i]||FQ_ST[0];return x.m?`<span class="fqstk"><span class="mascot" data-mascot data-mood="${x.m}"></span></span>`:`<span class="fqstk">${x.e}</span>`};
 function fqSheet(html,bind){let el=$('#fqSheet');if(!el){document.body.insertAdjacentHTML('beforeend','<div class="fqsheet" id="fqSheet" hidden></div>');el=$('#fqSheet')}
@@ -15852,7 +15860,9 @@ function fqSheet(html,bind){let el=$('#fqSheet');if(!el){document.body.insertAdj
 const fqPotion=`<svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="13" cy="14" r="5" fill="#B9A6E8" stroke="#1C1E3D" stroke-width="2"/><circle cx="20" cy="24" r="3" fill="#D8CCF5" stroke="#1C1E3D" stroke-width="2"/><rect x="27" y="6" width="12" height="7" rx="2" fill="#C98A4B" stroke="#1C1E3D" stroke-width="2"/><path d="M29 13v12L15 50a6 6 0 0 0 5 9h26a6 6 0 0 0 5-9L37 25V13z" fill="#F4EEFF" stroke="#1C1E3D" stroke-width="2.4" stroke-linejoin="round"/><path d="M19 42h28l4 8a4 4 0 0 1-3.5 6h-29a4 4 0 0 1-3.5-6z" fill="#A970F0"/><circle cx="28" cy="49" r="2.4" fill="#D9BFFF"/><circle cx="37" cy="46" r="1.6" fill="#D9BFFF"/></svg>`;
 window.FQ_ST=FQ_ST;window.fqStk=fqStk;window.fqSheet=(...a)=>fqSheet(...a);
 const fqWeekLeft=()=>{const d=(new Date().getDay()+6)%7;return 7-d};
-const fqMine=()=>(P.fqw&&P.fqw.wk===weekKey())?P.fqw.n:0;
+const fqXp=d=>!d||d.unit==='xp';
+const fqMine=d=>fqXp(d)?((P.week&&P.week.id===weekKey())?(+P.week.xp||0):0):((P.fqw&&P.fqw.wk===weekKey())?P.fqw.n:0);
+const fqU=d=>fqXp(d)?'XP':'level';const fqTitle=d=>fqXp(d)?`Kumpulkan ${+d.goal||FQ.goal} XP bersama`:`Selesaikan ${+d.goal||20} level bersama`;window.fqTitle=fqTitle;
 const fqPrevWeek=()=>{const d=new Date(weekKey()+'T12:00:00');d.setDate(d.getDate()-7);return dayKey(d)};
 async function fqLoad(){const me=FBX.user.uid,wk=weekKey(),col=FB.db.collection('fq');
   const q=await col.where('members','array-contains',me).where('week','==',wk).get();
@@ -15863,9 +15873,9 @@ async function fqLoad(){const me=FBX.user.uid,wk=weekKey(),col=FB.db.collection(
   FQ.prev=null;try{const pq=await col.where('members','array-contains',me).where('week','==',fqPrevWeek()).get();
     const pd=pq.docs.map(d=>Object.assign({id:d.id},d.data())).find(d=>{const o=d.members.find(x=>x!==me);return !d['claim_'+me]&&(+d['n_'+me]||0)+(+d['n_'+o]||0)>=(+d.goal||FQ.goal)});FQ.prev=pd||null}catch(e){}
   return FQ.list}
-window.fqSync=async function(){try{if(!FBX.user||isT()||!P)return;if(!FQ.list)await fqLoad();const me=FBX.user.uid,n=fqMine();
+window.fqSync=async function(){try{if(!FBX.user||isT()||!P)return;if(!FQ.list)await fqLoad();const me=FBX.user.uid;
   /* aturan Duolingo: level setelah target tercapai tidak dihitung lagi */
-  for(const d of FQ.list){const ref=FB.db.doc('fq/'+d.id);
+  for(const d of FQ.list){const ref=FB.db.doc('fq/'+d.id),n=fqMine(d);
     await FB.db.runTransaction(async tr=>{const sn=await tr.get(ref);if(!sn.exists)return;const x=sn.data(),o=x.members.find(u=>u!==me),cur=+x['n_'+me]||0,g=+x.goal||FQ.goal;
       const v=Math.max(cur,Math.min(n,g-(+x['n_'+o]||0)));Object.assign(d,x);if(v!==cur){tr.update(ref,{['n_'+me]:v});d['n_'+me]=v}})}}catch(e){console.warn('fq',e)}};
 async function fqCreate(f){const me=FBX.user.uid,wk=weekKey(),id=`${wk}_${[me,f.uid].sort().join('_')}`;
@@ -15873,7 +15883,7 @@ async function fqCreate(f){const me=FBX.user.uid,wk=weekKey(),id=`${wk}_${[me,f.
   if(l1.exists){await fqLoad();return 'mine'}
   if(l2.exists)return 'taken';
   const m=[me,f.uid],b=FB.db.batch(),t=Date.now();
-  b.set(FB.db.doc('fq/'+id),{members:m,week:wk,goal:FQ.goal,names:{[me]:P.name,[f.uid]:f.name},avs:{[me]:P.avatar||null,[f.uid]:f.av||null},['n_'+me]:fqMine(),created:t});
+  b.set(FB.db.doc('fq/'+id),{members:m,week:wk,goal:FQ.goal,unit:'xp',names:{[me]:P.name,[f.uid]:f.name},avs:{[me]:P.avatar||null,[f.uid]:f.av||null},['n_'+me]:fqMine(null),created:t});
   b.set(FB.db.doc(`fql/${wk}_${me}`),{week:wk,u:me,m,q:id,at:t});b.set(FB.db.doc(`fql/${wk}_${f.uid}`),{week:wk,u:f.uid,m,q:id,at:t});
   try{await b.commit()}catch(e){await fqLoad();if(FQ.list.length)return 'mine';return 'taken'}
   notifyServer('nudge',id);await fqLoad();await window.fqSync();return 'ok'}
@@ -15883,7 +15893,7 @@ window.renderFQ=async function(box){if(!box)return;if(!FBX.user||isT()||!P){box.
   const me=FBX.user.uid;setTimeout(()=>{delete box.dataset.fresh},0);
   const pv=FQ.prev,pvo=pv?pv.members.find(x=>x!==me):null,prevHtml=pv?`<div class="card fqcard" data-fqprev="${esc(pv.id)}"><div class="fqbody"><b>Misi minggu lalu bersama ${esc((pv.names||{})[pvo]||'temanmu')} selesai!</b><button class="primary press" id="fqPrevClaim">Buka peti +${FQ.reward}</button></div></div>`:'';
   const bindPrev=()=>{const pb=$('#fqPrevClaim');if(pb)pb.onclick=async()=>{pb.disabled=true;try{await FB.db.doc('fq/'+pv.id).update({['claim_'+me]:true});FQ.prev=null;P.gems+=FQ.reward;save();renderTop();sfx.win();toast('trophy',`Misi teman selesai! +${FQ.reward} permata.`);window.renderFQ(box)}catch(e){pb.disabled=false;toast('lock',fbErr(e))}}};
-  if(!FQ.list.length){box.innerHTML=head+prevHtml+`<div class="card fqcard"><div class="fqart"><span class="fqav">${avatarSVG(P.avatar||null,{nobg:true})}</span><span class="fqav">${silhouetteSVG()}</span></div><div class="fqbody"><b>Pilih satu teman untuk misi minggu ini</b><small class="fqsub">Kalian berdua mengumpulkan ${FQ.goal} level bersama sebelum Minggu berakhir. Hadiah peti untuk kalian berdua.</small><div class="fqpick" id="fqPick"><p class="note">Memuat teman…</p></div></div></div>`;hydrate(box);bindPrev();
+  if(!FQ.list.length){box.innerHTML=head+prevHtml+`<div class="card fqcard"><div class="fqart"><span class="fqav">${avatarSVG(P.avatar||null,{nobg:true})}</span><span class="fqav">${silhouetteSVG()}</span></div><div class="fqbody"><b>Pilih satu teman untuk misi minggu ini</b><small class="fqsub">Kalian berdua mengumpulkan ${FQ.goal} XP bersama sebelum Minggu berakhir. Hadiah peti untuk kalian berdua.</small><div class="fqpick" id="fqPick"><p class="note">Memuat teman…</p></div></div></div>`;hydrate(box);bindPrev();
     const list=(await friendsData()).slice(0,12);const pk=$('#fqPick');if(!pk)return;const wk=weekKey();
     const taken=new Set();await Promise.all(list.map(async f=>{try{if((await FB.db.doc(`fql/${wk}_${f.uid}`).get()).exists)taken.add(f.uid)}catch(e){}}));
     list.sort((a,b)=>taken.has(a.uid)-taken.has(b.uid));
@@ -15893,8 +15903,8 @@ window.renderFQ=async function(box){if(!box)return;if(!FBX.user||isT()||!P){box.
     const nudged=fqToday(d['nudge_'+me]),gifted=fqToday(d['gift_'+me]),gotGift=(+d['gift_'+o]||0)>(+d['giftGot_'+me]||0),poke=(+d['nudge_'+o]||0)>((P.fqSeen||{})[d.id]||0);
     return `<div class="card fqcard" data-fqid="${esc(d.id)}"><div class="fqart"><span class="fqav">${avatarSVG(P.avatar||null,{nobg:true})}</span><span class="fqav">${avatarSVG(((d.avs||{})[o])||null,{nobg:true})}</span></div>
      <div class="fqbody">${poke?`<div class="fqnote">${fqStk(+d['nudgeS_'+o]||0)}<span class="grow"><b>${esc(nm)}</b> mencolekmu: “${esc((FQ_ST[+d['nudgeS_'+o]||0]||FQ_ST[0]).t)}”</span></div>`:''}${gotGift?`<div class="fqnote">🎁 <span class="grow">${esc(nm)} mengirim <b>XP 2× ${FQ.giftMin} menit</b></span><button class="primary press" data-fqa="got">Pakai</button></div>`:''}
-      <b>Selesaikan ${g} level bersama</b><div class="fqprog"><div class="qbar fqseg"><i style="width:${a/g*100}%"></i><i class="fqo" style="width:${b/g*100}%"></i><span>${tot} / ${g}</span></div><span class="fqchest"><i data-icon="${done?'chestOpen':'chest'}"></i></span></div>
-      <div class="fqrow"><i style="background:#FF9600"></i>Kamu<span>${a} level</span></div><div class="fqrow"><i style="background:#C2410C"></i>${esc(nm)}<span>${b} level</span></div>
+      <b>${fqTitle(d)}</b><div class="fqprog"><div class="qbar fqseg"><i style="width:${a/g*100}%"></i><i class="fqo" style="width:${b/g*100}%"></i><span>${tot} / ${g}</span></div><span class="fqchest"><i data-icon="${done?'chestOpen':'chest'}"></i></span></div>
+      <div class="fqrow"><i style="background:#FF9600"></i>Kamu<span>${a} ${fqU(d)}</span></div><div class="fqrow"><i style="background:#C2410C"></i>${esc(nm)}<span>${b} ${fqU(d)}</span></div>
       ${done&&!d['claim_'+me]?`<button class="primary press" data-fqa="claim">Buka peti +${FQ.reward}</button>`:''}
       <div class="fqbtns"><button class="ghost press" data-fqa="nudge" ${nudged?'disabled':''}><span class="fqbi">👋</span>COLEK</button><button class="ghost press" data-fqa="gift" ${gifted?'disabled':''}><span class="fqbi">🎁</span>HADIAH</button></div>${nudged||gifted?'<p class="fqhint">Bisa dikirim lagi besok.</p>':''}</div></div>`}).join('');
   hydrate(box);bindPrev();
@@ -15931,7 +15941,7 @@ function folBind(root,list,after){root.querySelectorAll('[data-follow]').forEach
   try{await folDo(f,on);if(on){try{sfx.ok()}catch(_){}toast('team',`Kamu mengikuti ${f.name}.`)}b.outerHTML=folBtn(f,b.classList.contains('sm'));folBind(root,list,after);after&&after()}catch(err){b.disabled=false;toast('lock',fbErr(err))}})}
 const shareIcon='<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M12 3 V15 M7 8 L12 3 L17 8 M5 13 V19 C5 20 6 21 7 21 H17 C18 21 19 20 19 19 V13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const qrIcon='<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><path d="M14 14h3v3h-3zM18 18h3v3h-3zM18 14h3M14 18v3" stroke-linecap="round"/></svg>';
-let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=316';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
+let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=317';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
 function qrMatrix(text){const Q=window.QRCodeLib,q=new Q(-1,Q.ECL.M);q.addData(text);q.make();const n=q.getModuleCount(),m=[];for(let r=0;r<n;r++){m.push([]);for(let c=0;c<n;c++)m[r].push(q.isDark(r,c))}return m}
 function qrSvgOf(m){const n=m.length;let d='';for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(m[r][c])d+=`M${c} ${r}h1.02v1.02h-1.02z`;
   return `<svg viewBox="-2 -2 ${n+4} ${n+4}" class="pcqr" shape-rendering="crispEdges" aria-label="Kode QR profil"><rect x="-2" y="-2" width="${n+4}" height="${n+4}" fill="#fff"/><path d="${d}" fill="#1C1E3D"/></svg>`}
