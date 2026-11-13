@@ -9,6 +9,10 @@
 <style>
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;height:100%;background:#1b1d3a;color:#fff;font-family:ui-monospace,"Courier New",monospace;overflow:hidden;touch-action:none;user-select:none;-webkit-user-select:none}
+#stage{position:fixed;left:0;top:0;width:100vw;height:100vh;overflow:hidden}
+/* seperti Petualangan Blok: HP tegak → tampilan game otomatis diputar 90°, arahnya mengikuti kemiringan HP */
+body.rot #stage{width:var(--rw);height:var(--rh);top:var(--rw);left:0;transform-origin:0 0;transform:rotate(-90deg)}
+body.rot.rotR #stage{top:0;left:var(--rh);transform:rotate(90deg)}
 #wrap{position:fixed;inset:0;display:grid;place-items:center}
 canvas{image-rendering:pixelated;image-rendering:crisp-edges;display:block}
 .px{font-weight:900;letter-spacing:.06em;text-transform:uppercase}
@@ -46,15 +50,15 @@ canvas{image-rendering:pixelated;image-rendering:crisp-edges;display:block}
 #top[hidden]{display:none}#top button.off{opacity:.5;text-decoration:line-through}#top button.live{background:#3fa34d}#top button{width:40px;height:40px;font:900 16px ui-monospace,monospace;color:#fff;background:rgba(43,33,64,.6);border:3px solid rgba(255,255,255,.7);cursor:pointer}
 body.direct #onCode,body.direct #bShare{display:none!important}
 #rot{position:fixed;inset:0;z-index:9;background:#1b1d3a;display:none;place-items:center;text-align:center;padding:30px}
-@media (orientation:portrait) and (max-width:700px){body.playing #rot{display:grid}}
+
 </style>
 </head>
 <body>
+<div id="stage">
 <div id="wrap"><canvas id="cv"></canvas></div>
 <div id="top" hidden><button id="bMic" aria-label="Mikrofon" hidden>🎤</button><button id="bSpk" aria-label="Suara teman" hidden>🔊</button><button id="bSound" aria-label="Musik">♪</button><button id="bPause" aria-label="Jeda">II</button></div>
 <div class="pad l" id="padL" hidden><span class="tag">PEMAIN 1</span><button data-p="0" data-k="l">◀</button><button data-p="0" data-k="r">▶</button><button data-p="0" data-k="j">▲</button></div>
 <div class="pad r" id="padR" hidden><span class="tag">PEMAIN 2</span><button data-p="1" data-k="l">◀</button><button data-p="1" data-k="r">▶</button><button data-p="1" data-k="j">▲</button></div>
-<div id="rot"><div class="px"><p style="font-size:40px;margin:0">⟳</p><p>Putar HP ke posisi mendatar untuk bermain.</p></div></div>
 
 <div class="panel" id="pStart"><div class="box">
   <h1 class="px">Petualangan Berdua</h1>
@@ -89,6 +93,7 @@ body.direct #onCode,body.direct #bShare{display:none!important}
   <button class="btn" id="bAgain">Main lagi</button><button class="btn b3" id="bExit2">Kembali ke JELAS</button>
 </div></div>
 
+</div>
 <script src="../config.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
@@ -307,14 +312,19 @@ document.querySelectorAll('.pad button').forEach(b=>{const set=v=>{if(!P.length)
 const touch=matchMedia('(pointer:coarse)').matches;
 
 /* ====== ukuran layar ====== */
-function fit(){const w=innerWidth,h=innerHeight;let s=h/VH;VW=Math.round(w/s);if(VW<256){VW=256;s=w/VW}VW=Math.min(VW,560);cv.width=VW;cv.height=VH;cv.style.width=Math.floor(VW*s)+'px';cv.style.height=Math.floor(VH*s)+'px'}
+const ROT={motion:false,ios:/iPad|iPhone|iPod/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1)};
+function orient(){const on=touch&&innerHeight>innerWidth;document.body.classList.toggle('rot',on);const r=document.documentElement.style;r.setProperty('--rw',innerHeight+'px');r.setProperty('--rh',innerWidth+'px');if(on&&!ROT.motion&&!ROT.dflt){ROT.dflt=true;document.body.classList.add('rotR')}return on}
+function tilt(left){document.body.classList.toggle('rotR',!!left)}
+addEventListener('devicemotion',e=>{const a=e.accelerationIncludingGravity;if(!a||a.x==null)return;ROT.motion=true;const x=ROT.ios?-a.x:a.x;if(x>5.5)tilt(true);else if(x<-5.5)tilt(false)});
+addEventListener('deviceorientation',e=>{if(ROT.motion)return;const g=e.gamma;if(g==null)return;if(g<-35)tilt(true);else if(g>35)tilt(false)});
+addEventListener('pointerdown',()=>{if(ROT.asked)return;ROT.asked=true;try{if(typeof DeviceMotionEvent!=='undefined'&&DeviceMotionEvent.requestPermission)DeviceMotionEvent.requestPermission().catch(()=>{})}catch(e){}},{once:false});
+function fit(){const rot=orient();const w=rot?innerHeight:innerWidth,h=rot?innerWidth:innerHeight;let s=h/VH;VW=Math.round(w/s);if(VW<256){VW=256;s=w/VW}VW=Math.min(VW,560);cv.width=VW;cv.height=VH;cv.style.width=Math.floor(VW*s)+'px';cv.style.height=Math.floor(VH*s)+'px'}
 addEventListener('resize',fit);fit();
 
 /* ====== putaran utama ====== */
 let last=0,acc=0;function loop(ts){requestAnimationFrame(loop);const dt=Math.min(.05,(ts-last)/1000||0);last=ts;
   if(running&&!paused&&!quizOpen&&!window.__duoManual){acc+=dt;elapsed+=dt;while(acc>=1/60){step(1/60);acc-=1/60}}draw()}
 function start(){reset();running=true;paused=false;quizOpen=false;['pStart','pWin','pPause','pQuiz','pOnline'].forEach(i=>$(i).hidden=true);$('top').hidden=false;$('padL').hidden=$('padR').hidden=!touch;padMode();document.body.classList.add('playing');ac();music(true);
-  try{if(touch&&screen.orientation&&screen.orientation.lock)screen.orientation.lock('landscape').catch(()=>{})}catch(e){}
   try{if(touch&&document.documentElement.requestFullscreen&&!document.fullscreenElement)document.documentElement.requestFullscreen().catch(()=>{})}catch(e){}}
 function togglePause(){paused=!paused;$('pPause').hidden=!paused;if(!paused)P.forEach(p=>p.inp={l:0,r:0,j:0})}
 const exit=()=>{try{netClose()}catch(e){}try{if(document.fullscreenElement)document.exitFullscreen()}catch(e){}location.href='../'};
