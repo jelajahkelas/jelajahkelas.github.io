@@ -25,6 +25,13 @@ canvas{image-rendering:pixelated;image-rendering:crisp-edges;display:block}
 .opts .btn{margin:0;font-size:20px;background:#f7c548;color:#2b2140}
 .qtxt{font-size:26px;font-weight:900;margin:8px 0 14px}
 .keys{font-size:12px;opacity:.85;line-height:1.7;margin-top:10px}
+.frlist{max-height:46vh;overflow:auto;text-align:left;margin:4px 0 6px;border:3px solid #2b2140;background:#fff}
+.frrow{display:flex;align-items:center;gap:10px;padding:8px 10px;border-bottom:2px dashed #d9cfe8}.frrow:last-child{border-bottom:0}
+.frav{width:34px;height:34px;flex:none;display:grid;place-items:center;font:900 16px ui-monospace,monospace;color:#fff;border:3px solid #2b2140;background:#4b7bec}
+.frrow .nm{flex:1;min-width:0;display:flex;flex-direction:column}.frrow b{font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.frrow small{font-size:11px;color:#6b5b84}.frrow small.on{color:#2e7d3a;font-weight:900}
+.frrow .btn{width:auto;margin:0;padding:8px 10px;font-size:12px}
+.codebox{margin-top:10px;text-align:left}.codebox summary{cursor:pointer;font-weight:900;font-size:13px;color:#4b3f6b;padding:6px 0}
+.box{max-height:calc(100vh - 32px);overflow:auto}
 .heroes{display:flex;justify-content:center;gap:28px;margin:6px 0 4px}
 .heroes canvas{width:48px;height:60px}
 /* kontrol sentuh */
@@ -58,9 +65,11 @@ canvas{image-rendering:pixelated;image-rendering:crisp-edges;display:block}
 </div></div>
 <div class="panel" id="pOnline" hidden><div class="box">
   <h2 class="px">Main online</h2>
-  <div id="onMenu"><p>Satu orang membuat ruang, temannya bergabung dengan kode. Kalian bermain dari HP masing-masing.</p>
-    <button class="btn" id="bHost">Buat ruang</button>
-    <div style="display:flex;gap:8px;margin-top:10px"><input id="inCode" maxlength="4" placeholder="KODE" autocomplete="off" autocapitalize="characters" style="flex:1;min-width:0;font:900 22px ui-monospace,monospace;letter-spacing:.3em;text-align:center;text-transform:uppercase;border:4px solid #2b2140;padding:8px;background:#fff"><button class="btn b2" id="bJoin" style="width:auto;margin:0;padding:0 16px">Gabung</button></div>
+  <div id="onMenu"><p id="onMsg">Pilih teman untuk ditantang. Mereka akan mendapat undangan dan tinggal menekan Terima.</p>
+    <div id="frList" class="frlist"><p class="keys">Memuat teman…</p></div>
+    <details class="codebox"><summary>Main dengan kode ruang</summary>
+    <button class="btn" id="bHost">Buat ruang &amp; bagikan kode</button>
+    <div style="display:flex;gap:8px;margin-top:10px"><input id="inCode" maxlength="4" placeholder="KODE" autocomplete="off" autocapitalize="characters" style="flex:1;min-width:0;font:900 22px ui-monospace,monospace;letter-spacing:.3em;text-align:center;text-transform:uppercase;border:4px solid #2b2140;padding:8px;background:#fff"><button class="btn b2" id="bJoin" style="width:auto;margin:0;padding:0 16px">Gabung</button></div></details>
     <button class="btn b3" id="bOnBack">Kembali</button></div>
   <div id="onWait" hidden><p id="onTxt">Menyiapkan ruang…</p><div class="qtxt" id="onCode" style="letter-spacing:.3em;font-size:40px"></div>
     <button class="btn b2" id="bShare" hidden>Bagikan kode</button><button class="btn b3" id="bOnCancel">Batal</button></div>
@@ -345,20 +354,20 @@ function onReady(name){if(!bothOpen())return;NET.on=true;if(NET.unsub){NET.unsub
   // ruang sudah terpakai: hapus dokumennya
   if(ME===0&&NET.code)try{fb().db.doc('duo/'+NET.code).delete().catch(()=>{})}catch(e){}}
 function netLost(t){if(!NET.on&&!NET.pc)return;netClose();running=false;music(false);$('pPause').hidden=true;$('pQuiz').hidden=true;$('pWin').hidden=true;
-  $('pOnline').hidden=false;$('onMenu').hidden=false;$('onWait').hidden=true;const p=document.querySelector('#onMenu p');if(p)p.textContent=t}
+  $('pOnline').hidden=false;$('onMenu').hidden=false;$('onWait').hidden=true;$('onMsg').textContent=t;loadFriends()}
 function netClose(){try{netEv({t:'bye'})}catch(e){}micOff(true);NET.peerMic=false;$('bMic').hidden=$('bSpk').hidden=true;NET.on=false;clearInterval(NET.sendT);if(NET.unsub){NET.unsub();NET.unsub=null}try{NET.dc&&NET.dc.close();NET.de&&NET.de.close();NET.pc&&NET.pc.close()}catch(e){}NET.pc=NET.dc=NET.de=null;
   if(ME===0&&NET.code&&FBI)try{FBI.db.doc('duo/'+NET.code).delete().catch(()=>{})}catch(e){}NET.code='';ME=-1}
 const ABC='ABCDEFGHJKLMNPQRSTUVWXYZ';const mkCode=()=>[...Array(4)].map(()=>ABC[Math.floor(Math.random()*ABC.length)]).join('');
-async function host(){const u=await me();if(!u){needLogin();return}NET.myUid=u.uid;showWait('Menyiapkan ruang…','');const name=await myName(u);
+async function host(o={}){const u=await me();if(!u){needLogin();return false}NET.myUid=u.uid;showWait(o.quiet?'Mengirim tantangan…':'Menyiapkan ruang…','');const name=await myName(u);
   ME=0;const pc=new RTCPeerConnection({iceServers:await iceServers()});NET.pc=pc;netSetup(pc);
   try{pc.addTransceiver('audio',{direction:'sendrecv'})}catch(e){}NET.dc=pc.createDataChannel('s',{ordered:false,maxRetransmits:0});NET.de=pc.createDataChannel('e');[NET.dc,NET.de].forEach(d=>{wireDC(d);d.onopen=()=>onReady(name)});
   await pc.setLocalDescription(await pc.createOffer());await gatherDone(pc);
   let code='';for(let i=0;i<5;i++){code=mkCode();try{const ref=fb().db.doc('duo/'+code);const ex=await ref.get();if(ex.exists&&Date.now()-(ex.data().at||0)<36e5)continue;
       await ref.set({host:u.uid,hostName:name,g:GRADE,offer:pc.localDescription.sdp,at:Date.now()});break}catch(e){code=''}}
-  if(!code){netLost('Ruang belum bisa dibuat. Periksa internetmu lalu coba lagi.');return}
-  NET.code=code;showWait('Bagikan kode ini ke temanmu. Menunggu temanmu bergabung…',code);
+  if(!code){netLost('Ruang belum bisa dibuat. Periksa internetmu lalu coba lagi.');return false}
+  NET.code=code;if(!o.quiet)showWait('Bagikan kode ini ke temanmu. Menunggu temanmu bergabung…',code);
   NET.unsub=fb().db.doc('duo/'+code).onSnapshot(async sn=>{const d=sn.data();if(!d||!d.answer||pc.remoteDescription)return;NET.peer=d.guestName||'Teman';NET.peerUid=d.guest||'';$('onTxt').textContent=`${NET.peer} bergabung! Menyambungkan…`;
-    try{await pc.setRemoteDescription({type:'answer',sdp:d.answer})}catch(e){netLost('Gagal menyambung. Coba buat ruang baru.')}})}
+    try{await pc.setRemoteDescription({type:'answer',sdp:d.answer})}catch(e){netLost('Gagal menyambung. Coba buat ruang baru.')}});return true}
 async function join(code){code=String(code||'').trim().toUpperCase();if(!/^[A-Z]{4}$/.test(code)){$('inCode').focus();return}const u=await me();if(!u){needLogin();return}
   showWait('Mencari ruang…','');let d=null;try{const sn=await fb().db.doc('duo/'+code).get();if(sn.exists)d=sn.data()}catch(e){}
   if(!d||Date.now()-(d.at||0)>36e5){netLost('Ruang dengan kode itu tidak ditemukan. Periksa lagi kodenya.');return}
@@ -370,11 +379,33 @@ async function join(code){code=String(code||'').trim().toUpperCase();if(!/^[A-Z]
   await pc.setRemoteDescription({type:'offer',sdp:d.offer});try{pc.getTransceivers().forEach(t=>{if(t.receiver&&t.receiver.track&&t.receiver.track.kind==='audio')t.direction='sendrecv'})}catch(e){}await pc.setLocalDescription(await pc.createAnswer());await gatherDone(pc);
   try{await fb().db.doc('duo/'+code).update({guest:u.uid,guestName:name,answer:pc.localDescription.sdp})}catch(e){netLost('Gagal bergabung. Coba lagi.');return}
   NET.code='';showWait(`Menyambung ke ${NET.peer}…`,'');setTimeout(()=>{if(!NET.on&&NET.pc===pc)netLost('Belum bisa tersambung. Coba sambungkan kedua HP ke Wi-Fi yang sama, lalu ulangi.')},20000)}
+const AVC=['#3d8bfd','#ff9636','#3fa34d','#e2483d','#9b6bff','#14b8a6'];
+async function loadFriends(){const box=$('frList');const u=await me();if(!u){box.innerHTML='<p class="keys">Masuk ke akun JELAS dulu untuk menantang teman.</p>';return}
+  const f=fb(),map=new Map(),add=(uid,name,sub)=>{if(!uid||uid===u.uid)return;const o=map.get(uid)||{uid,name:name||'Teman',sub};if(name)o.name=name;map.set(uid,o)};
+  try{const [a,b]=await Promise.all([f.db.collection('fol').where('from','==',u.uid).get(),f.db.collection('fol').where('to','==',u.uid).get()]);
+    a.docs.forEach(d=>{const x=d.data();add(x.to,x.toName,'Kamu ikuti')});b.docs.forEach(d=>{const x=d.data();add(x.from,x.fromName,'Mengikutimu')})}catch(e){}
+  try{const me_=await f.db.doc('users/'+u.uid).get();const cid=me_.exists&&me_.data().classId;if(cid){const q=await f.db.collection('classes/'+cid+'/board').get();q.docs.forEach(d=>add(d.id,d.data().name,'Teman sekelas'))}}catch(e){}
+  const list=[...map.values()].slice(0,30);
+  await Promise.all(list.map(async x=>{try{const d=await f.db.doc('pub/'+x.uid).get();if(d.exists){const p=d.data();x.on=!!p.on&&Date.now()-(p.seen||0)<120000;x.seen=p.seen||0;if(p.name)x.name=p.name}}catch(e){}}));
+  list.sort((a,b)=>(b.on-a.on)||((b.seen||0)-(a.seen||0)));
+  if(!list.length){box.innerHTML='<p class="keys" style="padding:10px">Belum ada teman. Ikuti teman atau gabung kelas di JELAS dulu, atau pakai kode ruang di bawah.</p>';return}
+  box.innerHTML=list.map((x,i)=>`<div class="frrow"><span class="frav" style="background:${AVC[i%AVC.length]}">${esc((x.name||'?')[0].toUpperCase())}</span><span class="nm"><b>${esc(x.name)}</b><small class="${x.on?'on':''}">${x.on?'● Sedang online':esc(x.sub)}</small></span><button class="btn" data-inv="${esc(x.uid)}">Tantang</button></div>`).join('');
+  box.querySelectorAll('[data-inv]').forEach(b=>b.onclick=()=>{const x=list.find(y=>y.uid===b.dataset.inv);inviteFriend(x).catch(e=>netLost('Undangan belum terkirim: '+(e&&e.message||e)))})}
+const esc=t=>String(t??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+let INV=null;
+async function inviteFriend(x){const ok=await host({quiet:true});if(!ok)return;const u=await me(),f=fb();const name=await myName(u);
+  const id=x.uid+'_P'+NET.code+'_'+Date.now().toString(36);
+  await f.db.doc('invites/'+id).set({to:x.uid,from:u.uid,fromName:name,code:'P:'+NET.code,kind:'adv',subjName:'Petualangan Berdua',title:'Game kerja sama',created:Date.now()});
+  INV={id,x,t:Date.now()};showWait(`Menunggu ${x.name} menerima tantangan…`,'');$('onCode').textContent='2:00';
+  try{const tok=await u.getIdToken();fetch((window.FB_CONFIG||{}).pushUrl,{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+tok},body:JSON.stringify({type:'invite',id})}).catch(()=>{})}catch(e){}
+  const un=f.db.doc('invites/'+id).onSnapshot(sn=>{const d=sn.data();if(!d||!INV||INV.id!==id)return;if(d.status==='declined'){un();invEnd();netLost(`${x.name} menolak tantanganmu. Coba ajak teman lain.`)}if(d.status==='accepted'){$('onTxt').textContent=`${x.name} menerima! Menyambungkan…`}},()=>{});
+  INV.un=un;INV.tick=setInterval(()=>{if(!INV)return;const left=Math.max(0,120-Math.floor((Date.now()-INV.t)/1000));if(NET.on){invEnd();return}$('onCode').textContent=`${Math.floor(left/60)}:${String(left%60).padStart(2,'0')}`;if(!left){const nm=x.name;invEnd(true);netLost(`${nm} belum menjawab dalam 2 menit. Coba lagi nanti.`)}},500)}
+function invEnd(del){if(!INV)return;clearInterval(INV.tick);try{INV.un&&INV.un()}catch(e){}if(del){try{fb().db.doc('invites/'+INV.id).delete().catch(()=>{})}catch(e){}}INV=null}
 function showWait(t,code){$('pOnline').hidden=false;$('onMenu').hidden=true;$('onWait').hidden=false;$('onTxt').textContent=t;$('onCode').textContent=code||'';$('bShare').hidden=!code}
 function needLogin(){netLost('Masuk ke akun JELAS dulu, lalu buka game ini lagi dari menu Bermain.')}
-$('bOnline').onclick=()=>{$('pStart').hidden=true;$('pOnline').hidden=false;$('onMenu').hidden=false;$('onWait').hidden=true;const p=document.querySelector('#onMenu p');if(p)p.textContent='Satu orang membuat ruang, temannya bergabung dengan kode. Kalian bermain dari HP masing-masing.';ac()};
-$('bOnBack').onclick=()=>{netClose();$('pOnline').hidden=true;$('pStart').hidden=false};
-$('bOnCancel').onclick=()=>{netClose();$('onMenu').hidden=false;$('onWait').hidden=true};
+$('bOnline').onclick=()=>{$('pStart').hidden=true;$('pOnline').hidden=false;$('onMenu').hidden=false;$('onWait').hidden=true;$('onMsg').textContent='Pilih teman untuk ditantang. Mereka akan mendapat undangan dan tinggal menekan Terima.';ac();loadFriends()};
+$('bOnBack').onclick=()=>{invEnd(true);netClose();$('pOnline').hidden=true;$('pStart').hidden=false};
+$('bOnCancel').onclick=()=>{invEnd(true);netClose();$('onMenu').hidden=false;$('onWait').hidden=true};
 $('bHost').onclick=()=>host().catch(e=>netLost('Ruang belum bisa dibuat: '+(e&&e.message||e)));
 $('bJoin').onclick=()=>join($('inCode').value).catch(e=>netLost('Gagal bergabung: '+(e&&e.message||e)));
 $('inCode').addEventListener('keydown',e=>{if(e.key==='Enter')$('bJoin').click()});
@@ -414,7 +445,7 @@ async function micOn(){let blocked=false;try{blocked=localStorage.getItem('jk_vo
   await tr.sender.replaceTrack(VOICE.stream.getAudioTracks()[0]);VOICE.on=true;netEv({t:'mic',on:true});micUI();$('rAudio').play().catch(()=>{})}
 $('bMic').onclick=()=>{if(!NET.on)return;if(VOICE.on){vPanel('Mikrofon',`<p>Mikrofonmu sedang menyala.</p><button class="btn" id="mOff">Matikan mikrofon</button><button class="btn b2" id="mBlock">Matikan obrolan suara (orang tua)</button><button class="btn b3" id="mBack">Kembali</button>`,()=>{$('mOff').onclick=()=>{micOff();vClose()};$('mBlock').onclick=()=>{micOff();try{localStorage.setItem('jk_voice_block','1');localStorage.removeItem('jk_voice_gate')}catch(e){}vClose()};$('mBack').onclick=vClose});return}micOn()};
 $('bSpk').onclick=()=>{const a=$('rAudio');a.muted=!a.muted;if(!a.muted)a.play().catch(()=>{});micUI()};
-{const r=Q.get('r');if(r){$('pStart').hidden=true;$('inCode').value=r.toUpperCase();setTimeout(()=>join(r).catch(()=>{}),300)}}
+{const r=(Q.get('r')||'').replace(/^P:/i,'');if(r){$('pStart').hidden=true;$('inCode').value=r.toUpperCase();setTimeout(()=>join(r).catch(()=>{}),300)}else if(Q.get('online')){setTimeout(()=>$('bOnline').click(),200)}}
 reset();requestAnimationFrame(loop);
 window.__duo={get P(){return P},get doors(){return doors},get bridge(){return bridge},get won(){return won},start,step:(n=1)=>{for(let i=0;i<n;i++)step(1/60)},answer:()=>{const b=[...document.querySelectorAll('#qOpts .btn')];return b}};
 })();
