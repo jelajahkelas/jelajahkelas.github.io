@@ -1859,6 +1859,11 @@ html body:not(.teacher) #vDone .done .tiles{gap:14px;max-width:460px;margin:6px 
 html body:not(.teacher) #vDone .done .acts{margin-top:auto;padding-top:32px;max-width:460px}
 html body:not(.teacher) #vDone .done>:first-child{margin-top:auto}
 @media (min-width:1000px){html body:not(.teacher) #vDone .done{min-height:calc(100vh - 80px)}html body:not(.teacher) #vDone .done .acts{margin-top:28px;padding-top:0;margin-bottom:auto}}
+.advcard{display:flex;align-items:center;gap:14px;padding:14px 16px;text-decoration:none;color:inherit;background:linear-gradient(180deg,#7ec8f5 0 58%,#3fa34d 58% 66%,#8a5a3b 66%)!important;border:3px solid #2b2140!important;box-shadow:0 4px 0 #2b2140!important;border-radius:6px!important;image-rendering:pixelated}
+.advcard .grow{flex:1 1 auto;display:flex;flex-direction:column;gap:2px;min-width:0;background:rgba(255,248,231,.92);border:2px solid #2b2140;padding:8px 10px}
+.advcard small{font:900 11px ui-monospace,monospace;letter-spacing:.08em;color:#e2483d}.advcard b{font:900 17px ui-monospace,monospace;letter-spacing:.03em;color:#2b2140;text-transform:uppercase}.advcard .grow>span{font-size:13px;color:#4a3f5c;line-height:1.35}
+.advart{position:relative;width:52px;height:56px;flex:none}.advart i{position:absolute;bottom:4px;width:20px;height:26px;background:#3d8bfd;box-shadow:inset 0 8px 0 #f2c39b,inset 0 3px 0 #2564c4,0 0 0 2px #2b2140}.advart .a1{left:2px}.advart .a2{right:2px;background:#ff9636;box-shadow:inset 0 8px 0 #f2c39b,inset 0 3px 0 #d9661c,0 0 0 2px #2b2140;bottom:10px}
+.advgo{flex:none;font:900 14px ui-monospace,monospace;letter-spacing:.06em;color:#fff;background:#3fa34d;border:3px solid #2b2140;box-shadow:inset -3px -3px 0 rgba(0,0,0,.25);padding:10px 12px}
 .fqseg{display:flex;overflow:hidden}.fqseg i{position:static!important;flex:none;border-radius:0!important}.fqseg i.fqo{background:#C2410C!important}.fqseg span{position:absolute;inset:0;display:grid;place-items:center}.fqsub{display:block;color:var(--muted);margin:4px 0 10px;font-size:14px;line-height:1.4}
 .fqrow{display:flex;align-items:center;gap:10px;font-family:var(--display);font-weight:800;font-size:17px}.fqrow i{width:14px;height:14px;border-radius:50%;flex:none}.fqrow span{margin-left:auto;color:var(--muted)}
 .fqbtns{display:grid;grid-template-columns:1fr 1fr;gap:10px}.fqbtns button{display:flex;align-items:center;justify-content:center;gap:8px;font-size:16px}
@@ -4148,7 +4153,7 @@ html[data-theme=malam] .plstick{background:#0a0f1e}
 <div class="syncpill" id="syncPill" hidden></div>
 <div class="toast" id="toast" hidden></div>
 
-<script src="av.js?v=332"></script>
+<script src="av.js?v=333"></script>
 <script>
 /* ---------- visual assets ---------- */
 const INK='#1B1E3D';
@@ -16013,7 +16018,7 @@ function folBind(root,list,after){root.querySelectorAll('[data-follow]').forEach
   try{await folDo(f,on);if(on){try{sfx.ok()}catch(_){}toast('team',`Kamu mengikuti ${f.name}.`)}b.outerHTML=folBtn(f,b.classList.contains('sm'));folBind(root,list,after);after&&after()}catch(err){b.disabled=false;toast('lock',fbErr(err))}})}
 const shareIcon='<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M12 3 V15 M7 8 L12 3 L17 8 M5 13 V19 C5 20 6 21 7 21 H17 C18 21 19 20 19 19 V13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const qrIcon='<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><path d="M14 14h3v3h-3zM18 18h3v3h-3zM18 14h3M14 18v3" stroke-linecap="round"/></svg>';
-let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=332';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
+let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=333';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
 function qrMatrix(text){const Q=window.QRCodeLib,q=new Q(-1,Q.ECL.M);q.addData(text);q.make();const n=q.getModuleCount(),m=[];for(let r=0;r<n;r++){m.push([]);for(let c=0;c<n;c++)m[r].push(q.isDark(r,c))}return m}
 function qrSvgOf(m){const n=m.length;let d='';for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(m[r][c])d+=`M${c} ${r}h1.02v1.02h-1.02z`;
   return `<svg viewBox="-2 -2 ${n+4} ${n+4}" class="pcqr" shape-rendering="crispEdges" aria-label="Kode QR profil"><rect x="-2" y="-2" width="${n+4}" height="${n+4}" fill="#fff"/><path d="${d}" fill="#1C1E3D"/></svg>`}
@@ -16090,6 +16095,9 @@ async function friendsData(){const me=FBX.user.uid,m=FBX.me||{};const map=new Ma
   return [...map.values()].filter(f=>f.name)}
 window.friendsData=friendsData;
 /* main berdua offline di satu HP (layar terbagi) */
+/* Petualangan Berdua: game kerja sama bergaya piksel (halaman terpisah) */
+function advCardHTML(){const cid=String((CLS()||{}).id||''),m=cid.match(/(\d+)/),g=/^tk/.test(cid)?0:m?+m[1]:3;
+  return `<a class="card advcard press" id="advCard" href="petualangan/?g=${g}"><span class="advart" aria-hidden="true"><i class="a1"></i><i class="a2"></i></span><span class="grow"><small>BARU · KERJA SAMA</small><b>Petualangan Berdua</b><span>Game piksel jadul: saling bantu melewati rintangan dan jawab soal batu ajaib.</span></span><span class="advgo">MAIN</span></a>`}
 function duoCard(){const v=$('#vTeam');if(!v||!P)return;let el=$('#duoCard');const rc=v.querySelector('.roomcard');
   if(!el){(rc||v.querySelector('.pagehead')).insertAdjacentHTML('afterend','<div class="card duocard" id="duoCard"></div>');el=$('#duoCard')}
   const c=CLS();const n1=GROUP.duo1||P.name,n2=GROUP.duo2||'Teman';const per=clamp(+GROUP.per||5,1,30);
@@ -17309,9 +17317,10 @@ const PH_ICON={
  duo:'<svg viewBox="0 0 48 48"><circle cx="15" cy="20" r="8" fill="#FFC23D" stroke="#1B1E3D" stroke-width="3"/><circle cx="33" cy="20" r="8" fill="#1CB0F6" stroke="#1B1E3D" stroke-width="3"/><text x="24" y="44" text-anchor="middle" font-family="Baloo 2,sans-serif" font-weight="800" font-size="13" fill="#E5283B">VS</text></svg>',
  many:'<svg viewBox="0 0 48 48"><circle cx="12" cy="18" r="6" fill="#FF8FC0" stroke="#1B1E3D" stroke-width="2.6"/><circle cx="36" cy="18" r="6" fill="#58CC02" stroke="#1B1E3D" stroke-width="2.6"/><circle cx="24" cy="14" r="7" fill="#1CB0F6" stroke="#1B1E3D" stroke-width="2.6"/><path d="M8 42 c0-9 7-15 16-15 s16 6 16 15z" fill="#FFC23D" stroke="#1B1E3D" stroke-width="2.6" stroke-linejoin="round"/></svg>',
  split:'<svg viewBox="0 0 48 48"><rect x="10" y="4" width="28" height="40" rx="6" fill="#fff" stroke="#1B1E3D" stroke-width="3"/><path d="M10 24 H38" stroke="#1B1E3D" stroke-width="3" stroke-dasharray="3 3"/><circle cx="24" cy="14" r="4" fill="#1CB0F6"/><circle cx="24" cy="34" r="4" fill="#FF9600"/></svg>',
+ adv:'<svg viewBox="0 0 48 48" shape-rendering="crispEdges"><rect x="2" y="34" width="44" height="12" fill="#8a5a3b"/><rect x="2" y="32" width="44" height="4" fill="#3fa34d"/><rect x="8" y="14" width="12" height="18" fill="#3d8bfd"/><rect x="8" y="10" width="12" height="4" fill="#2564c4"/><rect x="10" y="16" width="8" height="5" fill="#f2c39b"/><rect x="28" y="10" width="12" height="18" fill="#ff9636"/><rect x="28" y="6" width="12" height="4" fill="#d9661c"/><rect x="30" y="12" width="8" height="5" fill="#f2c39b"/><rect x="26" y="28" width="16" height="4" fill="#8d8fa8"/><path d="M6 6h4v4H6zM40 36h4v4h-4z" fill="#f7c548"/></svg>',
  teams:'<svg viewBox="0 0 48 48"><rect x="4" y="8" width="40" height="26" rx="4" fill="#3D8BFF" stroke="#1B1E3D" stroke-width="3"/><path d="M18 42 H30 M24 34 V42" stroke="#1B1E3D" stroke-width="3" stroke-linecap="round"/><circle cx="16" cy="21" r="4" fill="#FFC23D"/><circle cx="32" cy="21" r="4" fill="#FF8FC0"/></svg>'};
 const PH_SCREENS={
- root:{t:'Bermain',back:null,opts:[{id:'bareng',ic:'bareng',t:'Main bareng',d:'Bertanding dengan teman, online atau di satu HP.'},{id:'sendiri',ic:'sendiri',t:'Main sendiri',d:'Pilih pelajaran dan game, lalu mainkan sendiri.'}]},
+ root:{t:'Bermain',back:null,opts:[{id:'bareng',ic:'bareng',t:'Main bareng',d:'Bertanding dengan teman, online atau di satu HP.'},{id:'sendiri',ic:'sendiri',t:'Main sendiri',d:'Pilih pelajaran dan game, lalu mainkan sendiri.'},{id:'adv',ic:'adv',t:'Petualangan Berdua',d:'BARU! Game piksel jadul: saling bantu melewati rintangan dan jawab soal.'}]},
  bareng:{t:'Main bareng',back:'root',opts:[{id:'online',ic:'online',t:'Online',d:'Tantang teman dari HP masing-masing.'},{id:'offline',ic:'offline',t:'Offline',d:'Tanpa internet, di satu HP atau satu layar.'}]},
  online:{t:'Main online',back:'bareng',opts:[{id:'on2',ic:'duo',t:'Main berdua',d:'Tantang satu teman.'},{id:'onN',ic:'many',t:'Beberapa orang',d:'Sampai 8 pemain dalam satu ruang.'}]},
  offline:{t:'Main offline',back:'bareng',opts:[{id:'off2',ic:'split',t:'Main berdua',d:'Satu HP dibagi dua layar.'},{id:'teams',ic:'teams',t:'Beberapa tim',d:'Bergantian atau rebutan di satu layar, cocok untuk kelas.'}]},
@@ -17323,6 +17332,7 @@ function phPick(id){
   if(id==='online'&&!phOnline()){toast('lock','Masuk ke akun JELAS dulu untuk main online.');return}
   if(id==='on2'||id==='onN'){window.AJAK.max=id==='on2'?2:8;window.ajakWizard&&ajakWizard();return}
   if(id==='off2'){duoWizard();return}
+  if(id==='adv'){const cid=String((CLS()||{}).id||''),m=cid.match(/(\d+)/),g=/^tk/.test(cid)?0:m?+m[1]:3;location.href='petualangan/?g='+g;return}
   phGo(id)}
 function playHub(){const v=$('#vTeam');if(!v)return;let hub=$('#phub');if(!hub){(v.querySelector('.pagehead')||v.firstElementChild).insertAdjacentHTML('afterend','<div class="phub" id="phub"></div>');hub=$('#phub')}
   if(!PH_SCREENS[PNAV])PNAV='root';const sc=PH_SCREENS[PNAV];
@@ -17364,6 +17374,7 @@ function plRoot(){const on=typeof phOnline==='function'&&phOnline();const s=P.st
    <div class="plcards">${card('sendiri','Sendiri','<div class="mascot" data-mascot data-mood="happy"></div>')}${card('teman','Teman',friendArt)}${card('lain','Pemain Lain',otherArt)}</div>
    <button class="primary press plgo" id="plGo" data-lbl="${lbl}">${lbl}</button>
    <div class="plmore"><button class="plchip" data-ph="offline">Satu HP (offline)</button><button class="plchip" data-ph="onN">Ruang 8 pemain</button></div></div>
+   ${advCardHTML()}
    <h3 class="sect">Riwayat pertandingan</h3>
    ${hist.length?`<div class="plhist">${hist.slice(0,15).map((h,i)=>`<div class="plrow">${avSpan({uid:h.uid,name:h.name,avatar:h.av})}<span class="grow"><b>${esc(h.name)}</b><small class="r-${h.res}">${h.res==='menang'?'✓ Menang':h.res==='kalah'?'✕ Kalah':'= Seri'} · ${h.my}–${h.their} · ${plAgo(h.at)}</small></span>${on&&h.uid?`<button class="linkbtn pltan" data-pt="${i}">TANTANG</button>`:''}</div>`).join('')}</div>`:`<p class="note plempty">Belum ada pertandingan. Tantang teman atau pemain lain untuk mulai!</p>`}`}
 function plBind(hub){hub.querySelectorAll('[data-pl]').forEach(b=>b.onclick=()=>{PLSEL=b.dataset.pl;playHub()});
