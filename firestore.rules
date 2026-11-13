@@ -192,6 +192,15 @@ service cloud.firestore {
       allow delete: if false;
     }
 
+    // Kunci misi teman: satu pasangan per murid per minggu (id = minggu_uid). Tidak bisa diubah/dihapus.
+    match /fql/{id} {
+      allow read: if signedIn();
+      allow create: if signedIn() && request.resource.data.m is list && request.resource.data.m.size() == 2
+        && request.auth.uid in request.resource.data.m && request.resource.data.u in request.resource.data.m
+        && id == request.resource.data.week + '_' + request.resource.data.u;
+      allow update, delete: if false;
+    }
+
     // Teman: A mengikuti B. Hanya A yang boleh membuat; A atau B boleh menghapus.
     // Runtunan Teman: dokumen bersama dua murid, id = uidKecil_uidBesar.
     match /fs/{id} {
