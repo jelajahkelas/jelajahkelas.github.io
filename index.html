@@ -1339,7 +1339,7 @@ body[data-tab="trun"] .main.wrap{max-width:1200px;margin:0 auto;padding-left:max
 .ajhead{margin:0 calc(-1*max(16px,env(safe-area-inset-left,0px)));background:#22C38E;padding:calc(10px + env(safe-area-inset-top,0px)) 16px 0;border-bottom:2px solid var(--line)}
 .ajbar{display:flex;align-items:center;gap:8px}.ajbar h2{flex:1;text-align:center;color:var(--ink);text-shadow:none}
 .ajvs{display:flex;justify-content:center;align-items:flex-end;gap:4px;height:clamp(150px,34vw,200px);overflow:hidden}
-.ajme,.ajyou{width:clamp(130px,30vw,180px);height:100%}.ajme svg,.ajyou svg{width:100%;height:100%;display:block}
+.ajme,.ajyou{width:clamp(130px,30vw,180px);height:auto;margin-bottom:-8px}.ajme svg,.ajyou svg{width:100%;height:auto;display:block;overflow:visible}.ajyou{width:clamp(120px,28vw,168px);margin-bottom:-2px}
 .ajv{align-self:center;font-family:var(--title);font-size:30px;color:var(--ink);text-shadow:none;margin-bottom:30px}
 .ajmat{display:flex;gap:8px;flex-wrap:wrap}.ajmat select{flex:1 1 220px;min-width:0;font:inherit;font-weight:700;padding:10px;border:2px solid var(--line);border-radius:14px;background:var(--card)}
 .ajopt{display:flex;align-items:center;gap:14px;background:var(--card);border:2px solid var(--line);border-radius:20px;box-shadow:0 4px 0 var(--line2);padding:12px 14px;text-align:left;font-size:18px;color:var(--ink)}
@@ -4148,7 +4148,7 @@ html[data-theme=malam] .plstick{background:#0a0f1e}
 <div class="syncpill" id="syncPill" hidden></div>
 <div class="toast" id="toast" hidden></div>
 
-<script src="av.js?v=330"></script>
+<script src="av.js?v=331"></script>
 <script>
 /* ---------- visual assets ---------- */
 const INK='#1B1E3D';
@@ -15834,7 +15834,7 @@ function bindStepper(id,cb){const el=$('#'+id);if(!el)return;const inp=el.queryS
     b.onclick=step;b.onpointerdown=()=>{t=setTimeout(()=>{iv=setInterval(step,90)},450)};['pointerup','pointerleave','pointercancel'].forEach(e=>b.addEventListener(e,()=>{clearTimeout(t);clearInterval(iv)}))});
   inp.onchange=()=>set(inp.value);inp.onblur=()=>set(inp.value)}
 const AJAK={ui:null,n:5,mode:'acak',sent:{},found:null,inv:[],unsubInv:null};window.AJAK=AJAK;
-function silhouetteSVG(){return `<svg viewBox="0 0 120 120" aria-hidden="true"><path d="M14 121 C16 97 36 87 60 87 C84 87 104 97 106 121Z" fill="#0E8F63"/><rect x="52" y="70" width="16" height="20" fill="#0E8F63"/><circle cx="60" cy="52" r="29" fill="#0E8F63"/><circle cx="33" cy="54" r="7" fill="#0E8F63"/><circle cx="87" cy="54" r="7" fill="#0E8F63"/><ellipse cx="50" cy="50" rx="7" ry="9" fill="#fff"/><ellipse cx="70" cy="50" rx="7" ry="9" fill="#fff"/><circle cx="52" cy="52" r="4" fill="${AVK}"/><circle cx="72" cy="52" r="4" fill="${AVK}"/><path d="M55 66 Q60 70 66 65" stroke="${AVK}" stroke-width="3" fill="none" stroke-linecap="round"/></svg>`}
+function silhouetteSVG(){return `<svg viewBox="0 0 120 120" aria-hidden="true"><path d="M14 121 C16 97 36 87 60 87 C84 87 104 97 106 121Z" fill="#0E8F63"/><rect x="52" y="70" width="16" height="20" fill="#0E8F63"/><circle cx="60" cy="52" r="29" fill="#0E8F63"/><circle cx="33" cy="54" r="7" fill="#0E8F63"/><circle cx="87" cy="54" r="7" fill="#0E8F63"/></svg>`}
 /* Kata kunci pencarian: awalan setiap kata dari nama dan nama pengguna (cari "far" menemukan "Muhammad Farid"). */
 function searchKw(name,user){const set=new Set();const words=(String(name||'')+' '+String(user||'')).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').split(/[^a-z0-9]+/).filter(Boolean);
   if(user)words.push(String(user).toLowerCase());words.forEach(w=>{for(let i=1;i<=Math.min(w.length,16);i++)set.add(w.slice(0,i))});return [...set].slice(0,90)}
@@ -16013,7 +16013,7 @@ function folBind(root,list,after){root.querySelectorAll('[data-follow]').forEach
   try{await folDo(f,on);if(on){try{sfx.ok()}catch(_){}toast('team',`Kamu mengikuti ${f.name}.`)}b.outerHTML=folBtn(f,b.classList.contains('sm'));folBind(root,list,after);after&&after()}catch(err){b.disabled=false;toast('lock',fbErr(err))}})}
 const shareIcon='<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M12 3 V15 M7 8 L12 3 L17 8 M5 13 V19 C5 20 6 21 7 21 H17 C18 21 19 20 19 19 V13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const qrIcon='<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><path d="M14 14h3v3h-3zM18 18h3v3h-3zM18 14h3M14 18v3" stroke-linecap="round"/></svg>';
-let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=330';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
+let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=331';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
 function qrMatrix(text){const Q=window.QRCodeLib,q=new Q(-1,Q.ECL.M);q.addData(text);q.make();const n=q.getModuleCount(),m=[];for(let r=0;r<n;r++){m.push([]);for(let c=0;c<n;c++)m[r].push(q.isDark(r,c))}return m}
 function qrSvgOf(m){const n=m.length;let d='';for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(m[r][c])d+=`M${c} ${r}h1.02v1.02h-1.02z`;
   return `<svg viewBox="-2 -2 ${n+4} ${n+4}" class="pcqr" shape-rendering="crispEdges" aria-label="Kode QR profil"><rect x="-2" y="-2" width="${n+4}" height="${n+4}" fill="#fff"/><path d="${d}" fill="#1C1E3D"/></svg>`}
