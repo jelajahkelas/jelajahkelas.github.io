@@ -3495,6 +3495,7 @@ html[data-theme=malam] .adme{color:var(--ink)}
 .adsw input[type=checkbox]:checked{background:#8B5CF6!important}.adsw input[type=checkbox]:checked::after{transform:translateX(20px)}
 #adminPanel .adrowh{border-top:1px solid var(--line,#EEE);padding-top:14px;margin-top:6px;align-items:center}
 #adminPanel .ttable td.adact{text-align:right;white-space:nowrap}
+.playbadge{display:inline-flex;align-items:center;gap:10px;margin:14px auto 0;padding:8px 18px 8px 14px;border-radius:12px;background:#111;color:#fff!important;text-decoration:none;box-shadow:0 3px 0 #000}.playbadge span{display:flex;flex-direction:column;line-height:1.05;text-align:left}.playbadge small{font-size:10px;letter-spacing:.04em;text-transform:uppercase;opacity:.85}.playbadge b{font-size:17px}
 .aduprof{position:relative}
 .aduban{position:absolute;left:-20px;right:-20px;top:-20px;height:70px;background:linear-gradient(120deg,#8B5CF6,#C084FC 60%,#F0ABFC);border-radius:20px 20px 0 0;z-index:0}
 .aduprof .aduhd{position:relative;z-index:1;align-items:flex-start;padding-top:4px}
@@ -12217,6 +12218,8 @@ function newProfile(o){return {id:'p'+Date.now().toString(36)+R(100,999),name:o.
   xp:0,gems:50,hearts:5,heartsAt:null,streak:0,bestStreak:0,lastDay:null,days:[],freeze:0,goal:o.goal||20,
   today:{day:dayKey(),xp:0,lessons:0,perfect:0,correct:0,games:0,best:0},week:{id:weekKey(),xp:0},prog:{},mmv:1,cmig:Object.fromEntries(Object.keys(typeof CUR_OLDU!=='undefined'?CUR_OLDU:{}).map(k=>[k,1])),
   stats:{lessons:0,perfect:0,tests:0,games:[],matches:0,correct:0,chests:0},quests:null,owned:{cap:['ink'],body:['purple']},outfit:{cap:'ink',body:'purple'},unlimited:false,seenBadges:{},gender:o.gender||null,avatar:avDefaultFor(o.gender),avOwned:[],pet:'uli',pets:['uli']}}
+function playBadge(){try{if(window.IS_PLAY||!(window.FB_CONFIG&&FB_CONFIG.playLive))return'';}catch(e){return''}
+  return `<a class="playbadge" href="https://play.google.com/store/apps/details?id=io.github.jelajahkelas.twa" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="#34A853" d="M4 2.5l10.2 10.1L4 22.6c-.4-.2-.6-.6-.6-1.1V3.6c0-.5.2-.9.6-1.1z"/><path fill="#FBBC04" d="M17.6 9.2l3 1.7c.9.5.9 1.8 0 2.3l-3 1.7-3.4-2.3z"/><path fill="#EA4335" d="M14.2 12.6L4 22.6c.3.2.8.2 1.2 0l12.4-7.1z"/><path fill="#4285F4" d="M4 2.5c.4-.2.9-.2 1.2 0l12.4 7.1-3.4 3z"/></svg><span><small>Unduh di</small><b>Google Play</b></span></a>`}
 function gdAv(g){try{return avNorm({v:2,hair:g==='P'?'straight01':'shortFlat',hc:'h1',eyes:'happy',mouth:'smile',cc:'c2',bg:g==='P'?'b4':'b2'})}catch(e){return avNorm({})}}
 function avDefaultFor(g){const a=Object.assign({},AV_DEFAULT,{shirt:pick(['merah','biru','hijau','kuning']),bg:pick(['b1','b2','b3','b4'])});if(g==='P'){a.hair=pick(['panjang','hijab','kuncir','kepang']);a.hc=a.hair==='hijab'?pick(['h5','h6','h10','h11']):'h1';a.eyes=pick(['bulat','lentik']);a.brow='lengkung'}else if(g==='L'){a.hair=pick(['pendek','jabrik','poni']);a.brow='tebal'}return a}
 function save(){if(P){P.upd=Date.now();const i=APP.profiles.findIndex(x=>x.id===P.id);if(i>=0)APP.profiles[i]=P;else APP.profiles.push(P);APP.cur=P.id}if(APP.teacher&&document.body.classList.contains('teacher'))APP.teacher.upd=Date.now();store.set('app',APP);if(typeof queueSync==='function')queueSync()}
@@ -15124,7 +15127,7 @@ showWelcome=function(){applyTheme(null,null);const el=$('#auth');el.hidden=false
   const jc=window.jrPendingCode&&jrPendingCode();
   el.innerHTML=`<div class="onbin dwel"><div class="dmid"><div class="mascot dmas big" data-mascot data-mood="happy"></div><h1 class="dlogo">jelas</h1><p class="dtag">Belajar seru sambil main. Gratis selamanya.</p>
    ${jc?'<div class="wlinv">🏫 <b>Kamu diundang bergabung ke kelas.</b><br>Daftar atau masuk dulu. Kamu otomatis terdaftar setelah gurumu menyetujui.</div>':''}</div>
-   <div class="dbtns"><button class="primary press dbig" id="wStart">AYO MULAI</button><button class="ghost press dbig dalt" id="wLogin">AKU SUDAH PUNYA AKUN</button><button class="dlink sm" id="wTeacher">Saya guru, daftarkan kelas</button></div></div>`;
+   <div class="dbtns"><button class="primary press dbig" id="wStart">AYO MULAI</button><button class="ghost press dbig dalt" id="wLogin">AKU SUDAH PUNYA AKUN</button><button class="dlink sm" id="wTeacher">Saya guru, daftarkan kelas</button>${playBadge()}</div></div>`;
   hydrate(el);$('#wStart').onclick=()=>{tone([660,880],.06);onbIntro(0)};$('#wLogin').onclick=()=>showLogin();$('#wTeacher').onclick=()=>{closeAuth();teacherSetup()}};
 function onbIntro(i){const el=$('#auth');el.hidden=false;
   const say=[['Hai! Aku <b>Uli</b>!','happy'],['Hanya <b>6 pertanyaan singkat</b> sebelum kita mulai pelajaran pertamamu!','idle']][i];

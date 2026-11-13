@@ -15,5 +15,7 @@ window.FB_CONFIG = {
   /* kunci notifikasi web (Setelan proyek → Cloud Messaging → Web Push certificates) */
   vapidKey: "BCWfN24rrbajJ8Eb58XEXL6-kHZNpJsiDhZjar5wwTiqmmRkqYsHRlswdYmhWRscsLdd2CEetNlU4Jeg0og7EZA",
   /* alamat pengirim notifikasi di Cloudflare Workers */
-  pushUrl: "https://jelas-notif.faridalpen.workers.dev"
+  pushUrl: "https://jelas-notif.faridalpen.workers.dev",
+  /* ubah ke true setelah JELAS terbit untuk umum di Google Play: tombol "Unduh di Google Play" muncul di halaman depan */
+  playLive: false
 };
