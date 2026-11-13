@@ -4098,7 +4098,7 @@ html[data-theme=malam] .plstick{background:#0a0f1e}
 <div class="syncpill" id="syncPill" hidden></div>
 <div class="toast" id="toast" hidden></div>
 
-<script src="av.js?v=313"></script>
+<script src="av.js?v=314"></script>
 <script>
 /* ---------- visual assets ---------- */
 const INK='#1B1E3D';
@@ -15858,7 +15858,10 @@ async function fqLoad(){const me=FBX.user.uid,wk=weekKey(),col=FB.db.collection(
     const pd=pq.docs.map(d=>Object.assign({id:d.id},d.data())).find(d=>{const o=d.members.find(x=>x!==me);return !d['claim_'+me]&&(+d['n_'+me]||0)+(+d['n_'+o]||0)>=(+d.goal||FQ.goal)});FQ.prev=pd||null}catch(e){}
   return FQ.list}
 window.fqSync=async function(){try{if(!FBX.user||isT()||!P)return;if(!FQ.list)await fqLoad();const me=FBX.user.uid,n=fqMine();
-  for(const d of FQ.list){if((+d['n_'+me]||0)!==n){await FB.db.doc('fq/'+d.id).update({['n_'+me]:n});d['n_'+me]=n}}}catch(e){console.warn('fq',e)}};
+  /* aturan Duolingo: level setelah target tercapai tidak dihitung lagi */
+  for(const d of FQ.list){const ref=FB.db.doc('fq/'+d.id);
+    await FB.db.runTransaction(async tr=>{const sn=await tr.get(ref);if(!sn.exists)return;const x=sn.data(),o=x.members.find(u=>u!==me),cur=+x['n_'+me]||0,g=+x.goal||FQ.goal;
+      const v=Math.max(cur,Math.min(n,g-(+x['n_'+o]||0)));Object.assign(d,x);if(v!==cur){tr.update(ref,{['n_'+me]:v});d['n_'+me]=v}})}}catch(e){console.warn('fq',e)}};
 async function fqCreate(f){const me=FBX.user.uid,wk=weekKey(),id=`${wk}_${[me,f.uid].sort().join('_')}`;
   const [l1,l2]=await Promise.all([FB.db.doc(`fql/${wk}_${me}`).get(),FB.db.doc(`fql/${wk}_${f.uid}`).get()]);
   if(l1.exists){await fqLoad();return 'mine'}
@@ -15880,11 +15883,11 @@ window.renderFQ=async function(box){if(!box)return;if(!FBX.user||isT()||!P){box.
     list.sort((a,b)=>taken.has(a.uid)-taken.has(b.uid));
     pk.innerHTML=list.length?list.slice(0,8).map(f=>`<div class="ajrow">${avSpan({name:f.name,avatar:f.av})}<span class="grow"><b>${esc(f.name)}</b><small>${taken.has(f.uid)?'Sudah punya pasangan minggu ini':esc(f.sub)}</small></span><button class="ajinv" data-fq="${esc(f.uid)}" ${taken.has(f.uid)?'disabled':''}>${taken.has(f.uid)?'PENUH':'PILIH'}</button></div>`).join(''):`<p class="note" style="margin:0">Belum ada teman. Gabung kelas lewat Profil atau ajak teman bertanding dulu.</p>`;
     pk.querySelectorAll('[data-fq]').forEach(b=>b.onclick=async()=>{b.disabled=true;b.textContent='…';try{const r=await fqCreate(list.find(x=>x.uid===b.dataset.fq));if(r==='taken'){b.textContent='PENUH';toast('team','Temanmu sudah punya pasangan misi minggu ini. Pilih teman lain, ya.');return}if(r==='ok')sfx.win();window.renderFQ(box)}catch(e){b.disabled=false;b.textContent='PILIH';toast('lock',fbErr(e))}});return}
-  box.innerHTML=head+prevHtml+FQ.list.map(d=>{const o=d.members.find(x=>x!==me)||me,nm=(d.names||{})[o]||'Teman',a=+d['n_'+me]||0,b=+d['n_'+o]||0,g=+d.goal||FQ.goal,tot=Math.min(g,a+b),done=a+b>=g;
+  box.innerHTML=head+prevHtml+FQ.list.map(d=>{const o=d.members.find(x=>x!==me)||me,nm=(d.names||{})[o]||'Teman',g=+d.goal||FQ.goal;let a=+d['n_'+me]||0,b=+d['n_'+o]||0;if(a+b>g){const k=Math.round(a*g/(a+b));a=k;b=g-k}const tot=Math.min(g,a+b),done=a+b>=g;
     const nudged=fqToday(d['nudge_'+me]),gifted=fqToday(d['gift_'+me]),gotGift=(+d['gift_'+o]||0)>(+d['giftGot_'+me]||0),poke=(+d['nudge_'+o]||0)>((P.fqSeen||{})[d.id]||0);
     return `<div class="card fqcard" data-fqid="${esc(d.id)}"><div class="fqart"><span class="fqav">${avatarSVG(P.avatar||null,{nobg:true})}</span><span class="fqav">${avatarSVG(((d.avs||{})[o])||null,{nobg:true})}</span></div>
      <div class="fqbody">${poke?`<div class="fqnote">${fqStk(+d['nudgeS_'+o]||0)}<span class="grow"><b>${esc(nm)}</b> mencolekmu: “${esc((FQ_ST[+d['nudgeS_'+o]||0]||FQ_ST[0]).t)}”</span></div>`:''}${gotGift?`<div class="fqnote">🎁 <span class="grow">${esc(nm)} mengirim <b>XP 2× ${FQ.giftMin} menit</b></span><button class="primary press" data-fqa="got">Pakai</button></div>`:''}
-      <b>Selesaikan ${g} level bersama</b><div class="fqprog"><div class="qbar fqseg"><i style="width:${a/Math.max(g,a+b)*100}%"></i><i class="fqo" style="width:${b/Math.max(g,a+b)*100}%"></i><span>${tot} / ${g}</span></div><span class="fqchest"><i data-icon="${done?'chestOpen':'chest'}"></i></span></div>
+      <b>Selesaikan ${g} level bersama</b><div class="fqprog"><div class="qbar fqseg"><i style="width:${a/g*100}%"></i><i class="fqo" style="width:${b/g*100}%"></i><span>${tot} / ${g}</span></div><span class="fqchest"><i data-icon="${done?'chestOpen':'chest'}"></i></span></div>
       <div class="fqrow"><i style="background:#FF9600"></i>Kamu<span>${a} level</span></div><div class="fqrow"><i style="background:#C2410C"></i>${esc(nm)}<span>${b} level</span></div>
       ${done&&!d['claim_'+me]?`<button class="primary press" data-fqa="claim">Buka peti +${FQ.reward}</button>`:''}
       <div class="fqbtns"><button class="ghost press" data-fqa="nudge" ${nudged?'disabled':''}><span class="fqbi">👋</span>COLEK</button><button class="ghost press" data-fqa="gift" ${gifted?'disabled':''}><span class="fqbi">🎁</span>HADIAH</button></div>${nudged||gifted?'<p class="fqhint">Bisa dikirim lagi besok.</p>':''}</div></div>`}).join('');
@@ -15922,7 +15925,7 @@ function folBind(root,list,after){root.querySelectorAll('[data-follow]').forEach
   try{await folDo(f,on);if(on){try{sfx.ok()}catch(_){}toast('team',`Kamu mengikuti ${f.name}.`)}b.outerHTML=folBtn(f,b.classList.contains('sm'));folBind(root,list,after);after&&after()}catch(err){b.disabled=false;toast('lock',fbErr(err))}})}
 const shareIcon='<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M12 3 V15 M7 8 L12 3 L17 8 M5 13 V19 C5 20 6 21 7 21 H17 C18 21 19 20 19 19 V13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const qrIcon='<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><path d="M14 14h3v3h-3zM18 18h3v3h-3zM18 14h3M14 18v3" stroke-linecap="round"/></svg>';
-let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=313';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
+let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=314';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
 function qrMatrix(text){const Q=window.QRCodeLib,q=new Q(-1,Q.ECL.M);q.addData(text);q.make();const n=q.getModuleCount(),m=[];for(let r=0;r<n;r++){m.push([]);for(let c=0;c<n;c++)m[r].push(q.isDark(r,c))}return m}
 function qrSvgOf(m){const n=m.length;let d='';for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(m[r][c])d+=`M${c} ${r}h1.02v1.02h-1.02z`;
   return `<svg viewBox="-2 -2 ${n+4} ${n+4}" class="pcqr" shape-rendering="crispEdges" aria-label="Kode QR profil"><rect x="-2" y="-2" width="${n+4}" height="${n+4}" fill="#fff"/><path d="${d}" fill="#1C1E3D"/></svg>`}
