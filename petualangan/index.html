@@ -441,10 +441,20 @@ function fb(){if(FBI)return FBI;if(!FBOK())return null;try{if(!firebase.apps.len
 function me(){return new Promise(res=>{const f=fb();if(!f)return res(null);const u=f.auth.currentUser;if(u)return res(u);const off=f.auth.onAuthStateChanged(x=>{off();res(x)});setTimeout(()=>res(f.auth.currentUser),4000)})}
 async function myName(u){try{const d=await fb().db.doc('pub/'+u.uid).get();if(d.exists){const x=d.data();if(!SX.me&&(x.gender==='L'||x.gender==='P'))SX.me=x.gender;if(x.name)return x.name}}catch(e){}return 'Teman'}
 async function iceServers(){const base=[{urls:['stun:stun.l.google.com:19302','stun:stun1.l.google.com:19302']}];
-  try{const url=(window.FB_CONFIG||{}).pushUrl;if(!url)return base;const ctl=new AbortController();setTimeout(()=>ctl.abort(),2500);const r=await fetch(url+'/turn',{signal:ctl.signal});if(r.ok){const j=await r.json();if(j&&j.iceServers)return base.concat(j.iceServers)}}catch(e){}return base}
-function gatherDone(pc){return new Promise(res=>{if(pc.iceGatheringState==='complete')return res();const t=setTimeout(res,3500);pc.addEventListener('icegatheringstatechange',()=>{if(pc.iceGatheringState==='complete'){clearTimeout(t);res()}})})}
+  try{const c=JSON.parse(sessionStorage.getItem('jk_ice')||'null');if(c&&Date.now()-c.t<30*60e3&&c.s.length){NET.iceN=c.s.length;return base.concat(c.s)}}catch(e){}
+  const url=(window.FB_CONFIG||{}).pushUrl;if(!url)return base;
+  for(let k=0;k<2;k++){try{const ctl=new AbortController();const tm=setTimeout(()=>ctl.abort(),7000);const r=await fetch(url+'/turn',{signal:ctl.signal,cache:'no-store'});clearTimeout(tm);
+    if(r.ok){const j=await r.json();if(j&&Array.isArray(j.iceServers)&&j.iceServers.length){NET.iceN=j.iceServers.length;try{sessionStorage.setItem('jk_ice',JSON.stringify({t:Date.now(),s:j.iceServers}))}catch(e){}return base.concat(j.iceServers)}}}catch(e){NET.iceErr=String(e&&e.name||e)}}
+  NET.iceN=0;return base}
+/* tunggu kandidat sambungan: selesai, atau sudah ada jalur relay (TURN) + jeda singkat, maksimal 10 detik */
+function gatherDone(pc){return new Promise(res=>{let done=false;const fin=()=>{if(done)return;done=true;res()};if(pc.iceGatheringState==='complete')return fin();
+  pc.__types=pc.__types||{};pc.addEventListener('icecandidate',e=>{if(e.candidate){const t=e.candidate.type||((e.candidate.candidate||'').match(/ typ (\w+)/)||[])[1]||'?';pc.__types[t]=(pc.__types[t]||0)+1;if(t==='relay')setTimeout(fin,1500)}});
+  pc.addEventListener('icegatheringstatechange',()=>{if(pc.iceGatheringState==='complete')fin()});setTimeout(fin,10000)})}
+function sdpTypes(sdp){const o={};(String(sdp||'').match(/ typ (\w+)/g)||[]).forEach(x=>{const t=x.slice(5);o[t]=(o[t]||0)+1});return o}
+function netDiag(why){try{const f=fb(),u=f&&f.auth.currentUser;if(!u)return;const pc=NET.pc;const d={why,role:ME,iceN:NET.iceN,iceErr:NET.iceErr||'',loc:pc?sdpTypes(pc.localDescription&&pc.localDescription.sdp):{},rem:pc?sdpTypes(pc.remoteDescription&&pc.remoteDescription.sdp):{},st:pc?pc.connectionState+'/'+pc.iceConnectionState:'-'};
+  f.db.collection('errors').add({msg:('DIAG adv '+JSON.stringify(d)).slice(0,300),page:'adv',uid:u.uid,ua:navigator.userAgent.slice(0,200),created:Date.now()}).catch(()=>{})}catch(e){}}
 function wireDC(dc){dc.onmessage=e=>{try{netRx(JSON.parse(e.data))}catch(_){}};dc.onclose=()=>{if(NET.on&&running)netLost('Sambungan dengan temanmu terputus.')}}
-function netSetup(pc){pc.ontrack=e=>{const a=$('rAudio');a.srcObject=(e.streams&&e.streams[0])||new MediaStream([e.track]);a.play().catch(()=>{})};pc.onconnectionstatechange=()=>{const st=pc.connectionState;if(st==='failed')netLost('Sambungan gagal. Coba sambungkan kedua HP ke Wi-Fi yang sama, lalu ulangi.');
+function netSetup(pc){pc.__types={};pc.ontrack=e=>{const a=$('rAudio');a.srcObject=(e.streams&&e.streams[0])||new MediaStream([e.track]);a.play().catch(()=>{})};pc.onconnectionstatechange=()=>{const st=pc.connectionState;if(st==='failed'){netDiag('failed');netLost('Sambungan gagal. Coba lagi beberapa saat, atau sambungkan kedua HP ke Wi-Fi yang sama.')}
     if(st==='disconnected')setTimeout(()=>{if(pc.connectionState==='disconnected')netLost('Sambungan dengan temanmu terputus.')},6000)}}
 function bothOpen(){return NET.dc&&NET.de&&NET.dc.readyState==='open'&&NET.de.readyState==='open'}
 function onReady(name){if(!bothOpen())return;NET.on=true;if(NET.unsub){NET.unsub();NET.unsub=null}
@@ -477,7 +487,7 @@ async function join(code,o={}){code=String(code||'').trim().toUpperCase();if(!/^
   pc.ondatachannel=e=>{const ch=e.channel;if(ch.label==='s')NET.dc=ch;else NET.de=ch;wireDC(ch);ch.onopen=()=>onReady(name);if(ch.readyState==='open')onReady(name)};
   await pc.setRemoteDescription({type:'offer',sdp:d.offer});try{pc.getTransceivers().forEach(t=>{if(t.receiver&&t.receiver.track&&t.receiver.track.kind==='audio')t.direction='sendrecv'})}catch(e){}await pc.setLocalDescription(await pc.createAnswer());await gatherDone(pc);
   try{await fb().db.doc('duo/'+code).update({guest:u.uid,guestName:name,answer:pc.localDescription.sdp})}catch(e){netLost('Gagal bergabung. Coba lagi.');return}
-  NET.code='';showWait(`Menyambung ke ${NET.peer}…`,'');setTimeout(()=>{if(!NET.on&&NET.pc===pc)netLost('Belum bisa tersambung. Coba sambungkan kedua HP ke Wi-Fi yang sama, lalu ulangi.')},20000)}
+  NET.code='';showWait(`Menyambung ke ${NET.peer}…`,'');setTimeout(()=>{if(!NET.on&&NET.pc===pc){netDiag('timeout');netLost('Belum bisa tersambung. Coba sambungkan kedua HP ke Wi-Fi yang sama, lalu ulangi.')}},30000)}
 const AVC=['#3d8bfd','#ff9636','#3fa34d','#e2483d','#9b6bff','#14b8a6'];
 async function loadFriends(){const box=$('frList');const u=await me();if(!u){box.innerHTML='<p class="keys">Masuk ke akun JELAS dulu untuk menantang teman.</p>';return}
   const f=fb(),map=new Map(),add=(uid,name,sub)=>{if(!uid||uid===u.uid)return;const o=map.get(uid)||{uid,name:name||'Teman',sub};if(name)o.name=name;map.set(uid,o)};
