@@ -70,3 +70,16 @@ jobs:
           export CLOUDFLARE_API_TOKEN="${TOK:-$RAW}"
           printf '%s' "$TKID" | tr -d '[:space:]' | npx --yes wrangler@3 secret put TURN_KEY_ID || echo "TURN_KEY_ID gagal dikirim."
           printf '%s' "$TKTOK" | tr -d '[:space:]' | npx --yes wrangler@3 secret put TURN_KEY_TOKEN || echo "TURN_KEY_TOKEN gagal dikirim."
+      - name: Kirim kredensial TURN Metered ke server
+        working-directory: notif
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID || 'cdc1583c52c69fc53e4556bd554d49cb' }}
+          MTU: ${{ secrets.METERED_TURN_USER }}
+          MTP: ${{ secrets.METERED_TURN_PASS }}
+        run: |
+          if [ -z "$MTU" ] || [ -z "$MTP" ] || [ -z "$CLOUDFLARE_API_TOKEN" ]; then echo "Kredensial Metered belum diisi, langkah ini dilewati."; exit 0; fi
+          RAW="$CLOUDFLARE_API_TOKEN"; TOK="$(printf '%s' "$RAW" | sed 's/CLOUDFLARE_API_TOKEN//g' | grep -oE '[A-Za-z0-9_-]{30,}' | grep -vE '^[0-9a-f]{32}$' | head -1)"
+          export CLOUDFLARE_API_TOKEN="${TOK:-$RAW}"
+          printf '%s' "$MTU" | tr -d '[:space:]' | npx --yes wrangler@3 secret put METERED_TURN_USER || echo "METERED_TURN_USER gagal dikirim."
+          printf '%s' "$MTP" | tr -d '[:space:]' | npx --yes wrangler@3 secret put METERED_TURN_PASS || echo "METERED_TURN_PASS gagal dikirim."
