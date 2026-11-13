@@ -1279,7 +1279,6 @@ body[data-world="sma"] .doodle{color:color-mix(in srgb,var(--subj,#ffffff) 40%,r
  body.teacher .side .tbadge{margin:0 6px 6px}
  .sfoot{padding:8px 10px;gap:4px}.sfoot .keys{display:none}
  .sfoot .who .avatar{width:34px;height:34px;font-size:15px}
- .rail{position:static}
  .stats{top:8px}
 }
 /* ---- avatar ---- */
@@ -1830,6 +1829,7 @@ body.wzon{overflow:hidden}
 .tour{text-align:center;padding:6px 4px 0}.touric{width:104px;height:104px;margin:4px auto 16px;border-radius:32px;background:color-mix(in srgb,var(--c) 18%,transparent);display:grid;place-items:center}.touric svg{width:64px;height:64px}
 .tour h3{font-family:var(--display);font-size:24px;margin:0 0 8px}.tour p{color:var(--muted);line-height:1.5;margin:0 0 18px;min-height:72px}
 .tourdots{display:flex;justify-content:center;gap:8px;margin:0 0 18px}.tourdots i{width:9px;height:9px;border-radius:50%;background:var(--line)}.tourdots i.on{background:#1CB0F6;width:24px;border-radius:6px}
+@media (min-width:1000px){html body .rail{position:sticky!important;top:var(--railTop,170px)!important;max-height:calc(100vh - var(--railTop,170px));overflow-y:auto;scrollbar-width:none;padding:0 4px 14px;margin:0 -4px}html body .rail::-webkit-scrollbar{display:none}}
 .fqseg{display:flex;overflow:hidden}.fqseg i{position:static!important;flex:none;border-radius:0!important}.fqseg i.fqo{background:#C2410C!important}.fqseg span{position:absolute;inset:0;display:grid;place-items:center}.fqsub{display:block;color:var(--muted);margin:4px 0 10px;font-size:14px;line-height:1.4}
 .fqrow{display:flex;align-items:center;gap:10px;font-family:var(--display);font-weight:800;font-size:17px}.fqrow i{width:14px;height:14px;border-radius:50%;flex:none}.fqrow span{margin-left:auto;color:var(--muted)}
 .fqbtns{display:grid;grid-template-columns:1fr 1fr;gap:10px}.fqbtns button{display:flex;align-items:center;justify-content:center;gap:8px;font-size:16px}
@@ -4118,7 +4118,7 @@ html[data-theme=malam] .plstick{background:#0a0f1e}
 <div class="syncpill" id="syncPill" hidden></div>
 <div class="toast" id="toast" hidden></div>
 
-<script src="av.js?v=318"></script>
+<script src="av.js?v=319"></script>
 <script>
 /* ---------- visual assets ---------- */
 const INK='#1B1E3D';
@@ -12330,8 +12330,10 @@ const shield0=c=>`<svg viewBox="0 0 48 48"><path d="M24 4 L41 10 V22 C41 33 33 4
 const SUBJ_SHORT={mtk:'MTK',bindo:'B.IND',eng:'B.ING',ipa:'IPA',ipas:'IPAS',ips:'IPS',fisika:'FIS',kimia:'KIM',biologi:'BIO',kimbio:'KIM-BIO',ekonomi:'EKO',geografi:'GEO',sejarah:'SEJ',sosiologi:'SOS',informatika:'INF',tkj:'TKJ',kka:'KKA',pai:'PAI',pancasila:'PPKN',pjok:'PJOK',seni:'SBDP',umum:'UMUM',diri:'AKU',hitung:'123',huruf:'ABC',warna:'WARNA',sains:'ALAM'};
 function subjShort(s){return SUBJ_SHORT[s.id]||(s.name.length<=6?s.name:s.name.split(' ')[0].slice(0,5)).toUpperCase()}
 function subjGlyphFit(){try{const s=SUBJ(),g=$('#subjGlyph'),n=$('#subjName');if(!g||!n)return;const narrow=getComputedStyle(n).display==='none';g.textContent=narrow?subjShort(s):s.glyph;g.classList.toggle('sgshort',narrow);$('#subjBtn').setAttribute('aria-label','Mata pelajaran: '+s.name)}catch(e){}}
-addEventListener('resize',()=>{clearTimeout(subjGlyphFit._t);subjGlyphFit._t=setTimeout(subjGlyphFit,150)});
-function renderTop(){if(!P)return;try{window.ncBadge&&ncBadge()}catch(e){}{const bp=$('#boostPill');if(bp){const m=boostLeft();bp.hidden=!m;const bn=$('#boostN');if(bn)bn.textContent=m?` ${m}m`:''}}const s=SUBJ();applyTheme(P.cls,s.id);const sb=$('#subjBtn');sb.style.setProperty('--uc',s.color);$('#subjName').textContent=s.name;subjGlyphFit();
+function railTop(){try{const sb=$('#statsBar');if(!sb||!sb.offsetHeight)return;const t=parseFloat(getComputedStyle(sb).top)||8;document.documentElement.style.setProperty('--railTop',(t+sb.offsetHeight+16)+'px')}catch(e){}}
+addEventListener('load',railTop);setTimeout(railTop,1500);
+addEventListener('resize',()=>{railTop();clearTimeout(subjGlyphFit._t);subjGlyphFit._t=setTimeout(subjGlyphFit,150)});
+function renderTop(){if(!P)return;try{window.ncBadge&&ncBadge()}catch(e){}{const bp=$('#boostPill');if(bp){const m=boostLeft();bp.hidden=!m;const bn=$('#boostN');if(bn)bn.textContent=m?` ${m}m`:''}}const s=SUBJ();applyTheme(P.cls,s.id);const sb=$('#subjBtn');sb.style.setProperty('--uc',s.color);$('#subjName').textContent=s.name;subjGlyphFit();railTop();
   $('#clsName').textContent=CLS().name;const st=shownStreak();$('#streakN').textContent=st;$('#streakBtn').classList.toggle('off',P.lastDay!==dayKey());
   $('#gemN').textContent=P.gems;$('#heartN').textContent=HUNL()?'∞':P.hearts;renderRail()}
 function closePop(){$('#pop').hidden=true;document.querySelectorAll('.nrow.popopen').forEach(r=>{r.classList.remove('popopen');const p=r.querySelector('.npop');if(p)p.remove()})}
@@ -15951,7 +15953,7 @@ function folBind(root,list,after){root.querySelectorAll('[data-follow]').forEach
   try{await folDo(f,on);if(on){try{sfx.ok()}catch(_){}toast('team',`Kamu mengikuti ${f.name}.`)}b.outerHTML=folBtn(f,b.classList.contains('sm'));folBind(root,list,after);after&&after()}catch(err){b.disabled=false;toast('lock',fbErr(err))}})}
 const shareIcon='<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M12 3 V15 M7 8 L12 3 L17 8 M5 13 V19 C5 20 6 21 7 21 H17 C18 21 19 20 19 19 V13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const qrIcon='<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><path d="M14 14h3v3h-3zM18 18h3v3h-3zM18 14h3M14 18v3" stroke-linecap="round"/></svg>';
-let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=318';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
+let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=319';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
 function qrMatrix(text){const Q=window.QRCodeLib,q=new Q(-1,Q.ECL.M);q.addData(text);q.make();const n=q.getModuleCount(),m=[];for(let r=0;r<n;r++){m.push([]);for(let c=0;c<n;c++)m[r].push(q.isDark(r,c))}return m}
 function qrSvgOf(m){const n=m.length;let d='';for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(m[r][c])d+=`M${c} ${r}h1.02v1.02h-1.02z`;
   return `<svg viewBox="-2 -2 ${n+4} ${n+4}" class="pcqr" shape-rendering="crispEdges" aria-label="Kode QR profil"><rect x="-2" y="-2" width="${n+4}" height="${n+4}" fill="#fff"/><path d="${d}" fill="#1C1E3D"/></svg>`}
