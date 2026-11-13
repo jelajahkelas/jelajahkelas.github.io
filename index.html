@@ -1824,6 +1824,12 @@ body.wzon{overflow:hidden}
 .frzask h3{font-family:var(--display);font-size:22px;line-height:1.3;margin:0 0 20px}.frzask h3 span{color:#1CB0F6}
 .frzbuy{background:#1CB0F6!important;box-shadow:0 4px 0 #1899D6!important;width:100%;display:flex;align-items:center;justify-content:center;gap:8px}.frzgem{width:20px;height:20px;display:inline-flex}.frzgem svg{width:100%;height:100%}
 .frzno{background:none;border:0;color:#1CB0F6;font-family:var(--display);font-weight:800;font-size:15px;letter-spacing:.04em;margin-top:14px;padding:8px;cursor:pointer}
+.stats .subjpick .sg.sgshort{font-family:var(--display)!important;font-weight:800!important;letter-spacing:.02em;padding:0 10px!important}
+.repic{position:relative;width:84px;height:96px;margin:4px auto 16px;filter:grayscale(1);opacity:.75}.repic svg{width:100%;height:100%}.repic b{position:absolute;left:0;right:0;bottom:8px;font-family:var(--display);font-size:22px;color:#fff;text-shadow:0 2px 0 rgba(0,0,0,.35)}
+.frzask h3 .rep{color:#FF9600}.repsub{color:var(--muted);margin:-8px 0 22px!important;line-height:1.45}.frzbuy:disabled{background:#C9CED6!important;box-shadow:none!important}
+.tour{text-align:center;padding:6px 4px 0}.touric{width:104px;height:104px;margin:4px auto 16px;border-radius:32px;background:color-mix(in srgb,var(--c) 18%,transparent);display:grid;place-items:center}.touric svg{width:64px;height:64px}
+.tour h3{font-family:var(--display);font-size:24px;margin:0 0 8px}.tour p{color:var(--muted);line-height:1.5;margin:0 0 18px;min-height:72px}
+.tourdots{display:flex;justify-content:center;gap:8px;margin:0 0 18px}.tourdots i{width:9px;height:9px;border-radius:50%;background:var(--line)}.tourdots i.on{background:#1CB0F6;width:24px;border-radius:6px}
 .fqseg{display:flex;overflow:hidden}.fqseg i{position:static!important;flex:none;border-radius:0!important}.fqseg i.fqo{background:#C2410C!important}.fqseg span{position:absolute;inset:0;display:grid;place-items:center}.fqsub{display:block;color:var(--muted);margin:4px 0 10px;font-size:14px;line-height:1.4}
 .fqrow{display:flex;align-items:center;gap:10px;font-family:var(--display);font-weight:800;font-size:17px}.fqrow i{width:14px;height:14px;border-radius:50%;flex:none}.fqrow span{margin-left:auto;color:var(--muted)}
 .fqbtns{display:grid;grid-template-columns:1fr 1fr;gap:10px}.fqbtns button{display:flex;align-items:center;justify-content:center;gap:8px;font-size:16px}
@@ -4112,7 +4118,7 @@ html[data-theme=malam] .plstick{background:#0a0f1e}
 <div class="syncpill" id="syncPill" hidden></div>
 <div class="toast" id="toast" hidden></div>
 
-<script src="av.js?v=317"></script>
+<script src="av.js?v=318"></script>
 <script>
 /* ---------- visual assets ---------- */
 const INK='#1B1E3D';
@@ -11951,7 +11957,7 @@ const PETS=[
  ['elang','Elang Jawa','Jawa',100],['rangkong','Rangkong Badak','Kalimantan',100],['kasuari','Kasuari','Papua',100],['merak','Merak Hijau','Jawa',120],['cenderawasih','Cenderawasih','Papua',150]];
 /* Harga dibuat ringan supaya murid tidak malas mengumpulkan permata. */
 const cheap=p=>p?Math.max(5,Math.round(p*.4/5)*5):0;
-const PRICE={heart:20,freeze:30,boost:15};
+const PRICE={heart:20,freeze:30,boost:15,repair:80};
 CAPS.forEach(x=>x[3]=cheap(x[3]));BODIES.forEach(x=>x[3]=cheap(x[3]));PETS.forEach(x=>x[3]=cheap(x[3]));
 const petOf=id=>PETS.find(x=>x[0]===id)||PETS[0];
 /* nama panggilan setiap teman belajar */
@@ -12244,7 +12250,7 @@ function shownStreak(p){p=p||P;if(!p.lastDay)return 0;const gap=dayNum(dayKey())
 function boostLeft(){const b=P&&P.xpBoost;return b&&b.until>Date.now()?Math.ceil((b.until-Date.now())/60000):0}
 function boostAdd(min){const now=Date.now();P.xpBoost={until:Math.max(now,(P.xpBoost&&P.xpBoost.until)||0)+min*60000,x:2};try{renderTop()}catch(e){}}
 function addXp(xp){if(boostLeft())xp*=2;try{clearTimeout(addXp._fq);addXp._fq=setTimeout(()=>window.fqSync&&window.fqSync(),1500)}catch(e){}P.xp+=xp;P.week.xp+=xp;P.today.xp+=xp;const t=dayKey();let up=false;P.xpd=P.xpd||{};P.xpd[t]=(P.xpd[t]||0)+xp;Object.keys(P.xpd).forEach(k=>{if(dayNum(t)-dayNum(k)>13)delete P.xpd[k]});
-  if(P.lastDay!==t){const gap=P.lastDay?dayNum(t)-dayNum(P.lastDay):99;if(gap===1)P.streak++;else if(gap>=2&&gap-1<=(+P.freeze||0)){const miss=gap-1;P.freeze-=miss;P.streak++;const fd=[];for(let i=miss;i>=1;i--)fd.push(dayKey(new Date(Date.now()-i*864e5)));P.frz=[...(P.frz||[]).slice(-60),...fd]}else P.streak=1;P.lastDay=t;P.hist=[...(P.hist||[]).slice(-800),t];P.days=[...P.days.filter(d=>dayNum(t)-dayNum(d)<14),t];up=true}
+  if(P.lastDay!==t){const gap=P.lastDay?dayNum(t)-dayNum(P.lastDay):99;if(gap===1)P.streak++;else if(gap>=2&&gap-1<=(+P.freeze||0)){const miss=gap-1;P.freeze-=miss;P.streak++;const fd=[];for(let i=miss;i>=1;i--)fd.push(dayKey(new Date(Date.now()-i*864e5)));P.frz=[...(P.frz||[]).slice(-60),...fd]}else{if(P.streak>=3&&P.lastDay&&gap<=4)P.brk={n:P.streak,day:t,from:P.lastDay};P.streak=1}P.lastDay=t;P.hist=[...(P.hist||[]).slice(-800),t];P.days=[...P.days.filter(d=>dayNum(t)-dayNum(d)<14),t];up=true}
   P.bestStreak=Math.max(P.bestStreak||0,P.streak);return up}
 
 /* ---------- course helpers ---------- */
@@ -12321,7 +12327,11 @@ const shield=c=>{const ti=TIERS.findIndex(x=>x[2]===c);if(ti>=0&&window.lgBadge)
 const shield0=c=>`<svg viewBox="0 0 48 48"><path d="M24 4 L41 10 V22 C41 33 33 40 24 44 C15 40 7 33 7 22 V10Z" fill="${c}" stroke="${K}" stroke-width="3" stroke-linejoin="round"/><path d="M24 14 l3 6.5 7 .8 -5.2 4.8 1.4 7 -6.2-3.5 -6.2 3.5 1.4-7 -5.2-4.8 7-.8z" fill="#fff" stroke="${K}" stroke-width="2" stroke-linejoin="round"/></svg>`;
 
 /* ---------- top bar & popovers ---------- */
-function renderTop(){if(!P)return;try{window.ncBadge&&ncBadge()}catch(e){}{const bp=$('#boostPill');if(bp){const m=boostLeft();bp.hidden=!m;const bn=$('#boostN');if(bn)bn.textContent=m?` ${m}m`:''}}const s=SUBJ();applyTheme(P.cls,s.id);const sb=$('#subjBtn');sb.style.setProperty('--uc',s.color);$('#subjGlyph').textContent=s.glyph;$('#subjName').textContent=s.name;
+const SUBJ_SHORT={mtk:'MTK',bindo:'B.IND',eng:'B.ING',ipa:'IPA',ipas:'IPAS',ips:'IPS',fisika:'FIS',kimia:'KIM',biologi:'BIO',kimbio:'KIM-BIO',ekonomi:'EKO',geografi:'GEO',sejarah:'SEJ',sosiologi:'SOS',informatika:'INF',tkj:'TKJ',kka:'KKA',pai:'PAI',pancasila:'PPKN',pjok:'PJOK',seni:'SBDP',umum:'UMUM',diri:'AKU',hitung:'123',huruf:'ABC',warna:'WARNA',sains:'ALAM'};
+function subjShort(s){return SUBJ_SHORT[s.id]||(s.name.length<=6?s.name:s.name.split(' ')[0].slice(0,5)).toUpperCase()}
+function subjGlyphFit(){try{const s=SUBJ(),g=$('#subjGlyph'),n=$('#subjName');if(!g||!n)return;const narrow=getComputedStyle(n).display==='none';g.textContent=narrow?subjShort(s):s.glyph;g.classList.toggle('sgshort',narrow);$('#subjBtn').setAttribute('aria-label','Mata pelajaran: '+s.name)}catch(e){}}
+addEventListener('resize',()=>{clearTimeout(subjGlyphFit._t);subjGlyphFit._t=setTimeout(subjGlyphFit,150)});
+function renderTop(){if(!P)return;try{window.ncBadge&&ncBadge()}catch(e){}{const bp=$('#boostPill');if(bp){const m=boostLeft();bp.hidden=!m;const bn=$('#boostN');if(bn)bn.textContent=m?` ${m}m`:''}}const s=SUBJ();applyTheme(P.cls,s.id);const sb=$('#subjBtn');sb.style.setProperty('--uc',s.color);$('#subjName').textContent=s.name;subjGlyphFit();
   $('#clsName').textContent=CLS().name;const st=shownStreak();$('#streakN').textContent=st;$('#streakBtn').classList.toggle('off',P.lastDay!==dayKey());
   $('#gemN').textContent=P.gems;$('#heartN').textContent=HUNL()?'∞':P.hearts;renderRail()}
 function closePop(){$('#pop').hidden=true;document.querySelectorAll('.nrow.popopen').forEach(r=>{r.classList.remove('popopen');const p=r.querySelector('.npop');if(p)p.remove()})}
@@ -12485,7 +12495,7 @@ function openHearts(){openModal(`<h3>Nyawamu habis</h3><div class="mascot" data-
 /* ---------- navigation ---------- */
 let curTab='learn';let TABSTK=[],TABBACK=false;
 const TAB_VIEW={learn:'vLearn',team:'vTeam',league:'vLeague',quest:'vQuest',shop:'vShop',profile:'vProfile'};
-function go(tab){if(tab==='learn'&&curTab==='play')setTimeout(()=>window.freezeAsk&&freezeAsk(),900);setTimeout(()=>{try{applyTV()}catch(e){}},0);if(!TABBACK&&tab!==curTab&&curTab!=='play'&&tab!=='play'){TABSTK=TABSTK.filter(x=>x!==curTab&&x!==tab);TABSTK.push(curTab);if(TABSTK.length>15)TABSTK.shift()}curTab=tab;if(tab!=='play')gameFSOff();closePop();document.body.dataset.tab=tab;{const was=document.body.classList.contains('evtv');document.body.classList.toggle('evtv',tab==='trun'||(tab==='play'&&was));if(was!==document.body.classList.contains('evtv'))applyTV()}setTimeout(()=>{try{renderSideFoot()}catch(e){}},0);if(document.body.classList.contains('teacher')&&T())applyTheme(T().cls,null);document.querySelectorAll('.nav').forEach(n=>n.setAttribute('aria-current',n.dataset.tab===tab?'page':'false'));
+function go(tab){if(tab==='learn'&&curTab==='play')setTimeout(()=>{if(window.tourAsk&&tourAsk())return;if(window.repairAsk&&!repairAsk())window.freezeAsk&&freezeAsk()},900);setTimeout(()=>{try{applyTV()}catch(e){}},0);if(!TABBACK&&tab!==curTab&&curTab!=='play'&&tab!=='play'){TABSTK=TABSTK.filter(x=>x!==curTab&&x!==tab);TABSTK.push(curTab);if(TABSTK.length>15)TABSTK.shift()}curTab=tab;if(tab!=='play')gameFSOff();closePop();document.body.dataset.tab=tab;{const was=document.body.classList.contains('evtv');document.body.classList.toggle('evtv',tab==='trun'||(tab==='play'&&was));if(was!==document.body.classList.contains('evtv'))applyTV()}setTimeout(()=>{try{renderSideFoot()}catch(e){}},0);if(document.body.classList.contains('teacher')&&T())applyTheme(T().cls,null);document.querySelectorAll('.nav').forEach(n=>n.setAttribute('aria-current',n.dataset.tab===tab?'page':'false'));
   if(tab==='learn')renderPath();if(tab==='team')renderTeam();if(tab==='league')renderLeague();if(tab==='quest')renderQuests();if(tab==='shop')renderShop();if(tab==='profile')renderProfile();if(TEACH_R[tab])TEACH_R[tab]();
   show(TAB_VIEW[tab]);renderTop();$('#practiceFab')&&($('#practiceFab').hidden=tab!=='learn');if(tab==='learn')setTimeout(scrollToCurrent,60)}
 
@@ -13429,7 +13439,7 @@ function renderRail(){if(!P)return;ensureQuests();const t=tierOf(P);const list=[
 
 /* ---------- onboarding (guided first steps) ---------- */
 /* ---------- boot ---------- */
-function afterLogin(){ensureDay();tickHearts();ensureQuests();save();rerenderMascots();renderTop();go('learn');TABSTK=[];bukaShortcut();setTimeout(()=>{const c=COURSE.find(x=>x.id===P.cls);if(c&&c.hidden)gradeMigrate();else askGender()},900)}
+function afterLogin(){ensureDay();tickHearts();ensureQuests();save();rerenderMascots();renderTop();go('learn');TABSTK=[];bukaShortcut();setTimeout(()=>{const c=COURSE.find(x=>x.id===P.cls);if(c&&c.hidden)gradeMigrate();else askGender()},900);setTimeout(()=>window.tourAsk&&tourAsk(),2600)}
 function askGender(){if(!P||P.gender||document.body.classList.contains('teacher'))return;const o={gender:null};
   openModal(`<div style="text-align:center"><h3>Kamu laki-laki atau perempuan?</h3><p class="note" style="margin:0 0 6px"></p></div><div class="onbg">${[['L','Laki-laki'],['P','Perempuan']].map(([g,n])=>`<button class="onbgb" data-gd="${g}" aria-pressed="false"><span>${avatarSVG(gdAv(g))}</span><b>${n}</b></button>`).join('')}</div>`);
   $('#mbox').querySelectorAll('[data-gd]').forEach(b=>b.onclick=()=>{P.gender=b.dataset.gd;const a=avNorm(P.avatar);const bad=Object.keys(AV_G).some(c=>!avFor(c,a[c],P.gender));if(bad){const d=avDefaultFor(P.gender);['hair','hc','brow','eyes','acc','adat','dunia'].forEach(c=>{if(!avFor(c,a[c],P.gender)||c==='hair'||c==='hc')a[c]=d[c]});P.avatar=a;P.color=avBgColor(a)}save();closeModal();renderTop();if(curTab==='profile')renderProfile();toast('check','Tersimpan. Terima kasih!')})}
@@ -14508,7 +14518,7 @@ async function fbEnterStudent(u,me){if(me&&me.disabled){adBlocked();return}let p
   if(!p)p=newProfile({name:me.name||'Murid',cls:me.cls||'sd2',goal:20});
   p.user=me.username;p.pass=me.pin;
   p.unlimited=false;APP={profiles:[p],cur:p.id,sessions:[],deleted:[],bank:[]};normalizeApp();P=APP.profiles[0];store.set('app',APP);
-  setSession({role:'student',id:P.id,uid:u.uid});fbApplyPlan();busy(false);document.body.classList.remove('teacher');document.body.classList.add('fb-student');fbHideAuth();afterLogin();fbListenStudent();setTimeout(fqNotice,3000);setTimeout(folNotice,4000);setTimeout(()=>window.fsNotice&&fsNotice(),6000);FBX.tasksAt=0;window.fbCheckRoomLink&&fbCheckRoomLink();fbListenInvites&&fbListenInvites();fbHandleSync&&fbHandleSync();setTimeout(()=>window.fbPushRegister&&fbPushRegister(),2500);fbLoadTasks().then(()=>{if(curTab==='learn')fbTaskBanner();setTimeout(()=>{taskNag();setTimeout(notifGate,400);setTimeout(freezeAsk,2500)},1200)})}
+  setSession({role:'student',id:P.id,uid:u.uid});fbApplyPlan();busy(false);document.body.classList.remove('teacher');document.body.classList.add('fb-student');fbHideAuth();afterLogin();fbListenStudent();setTimeout(fqNotice,3000);setTimeout(folNotice,4000);setTimeout(()=>window.fsNotice&&fsNotice(),6000);FBX.tasksAt=0;window.fbCheckRoomLink&&fbCheckRoomLink();fbListenInvites&&fbListenInvites();fbHandleSync&&fbHandleSync();setTimeout(()=>window.fbPushRegister&&fbPushRegister(),2500);fbLoadTasks().then(()=>{if(curTab==='learn')fbTaskBanner();setTimeout(()=>{taskNag();if(tourAsk())return;setTimeout(notifGate,400);setTimeout(()=>{if(!repairAsk())freezeAsk()},2500)},1200)})}
 function fbListenStudent(){const u=FBX.user;if(!u)return;try{jrListenStudent();setTimeout(jrUseLink,1500)}catch(e){console.warn(e)}
   FBX.unsub.push(FB.db.doc('users/'+u.uid).onSnapshot(s=>{if(!s.exists||s.metadata.hasPendingWrites)return;const d=s.data();FBX.me=d;if(d.disabled){adBlocked();return}
     if(document.body.classList.contains('playing')||document.body.classList.contains('lessonmode')||!P)return;
@@ -15941,7 +15951,7 @@ function folBind(root,list,after){root.querySelectorAll('[data-follow]').forEach
   try{await folDo(f,on);if(on){try{sfx.ok()}catch(_){}toast('team',`Kamu mengikuti ${f.name}.`)}b.outerHTML=folBtn(f,b.classList.contains('sm'));folBind(root,list,after);after&&after()}catch(err){b.disabled=false;toast('lock',fbErr(err))}})}
 const shareIcon='<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M12 3 V15 M7 8 L12 3 L17 8 M5 13 V19 C5 20 6 21 7 21 H17 C18 21 19 20 19 19 V13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const qrIcon='<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><path d="M14 14h3v3h-3zM18 18h3v3h-3zM18 14h3M14 18v3" stroke-linecap="round"/></svg>';
-let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=317';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
+let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=318';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
 function qrMatrix(text){const Q=window.QRCodeLib,q=new Q(-1,Q.ECL.M);q.addData(text);q.make();const n=q.getModuleCount(),m=[];for(let r=0;r<n;r++){m.push([]);for(let c=0;c<n;c++)m[r].push(q.isDark(r,c))}return m}
 function qrSvgOf(m){const n=m.length;let d='';for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(m[r][c])d+=`M${c} ${r}h1.02v1.02h-1.02z`;
   return `<svg viewBox="-2 -2 ${n+4} ${n+4}" class="pcqr" shape-rendering="crispEdges" aria-label="Kode QR profil"><rect x="-2" y="-2" width="${n+4}" height="${n+4}" fill="#fff"/><path d="${d}" fill="#1C1E3D"/></svg>`}
@@ -16116,6 +16126,38 @@ function notifEnable(){const st=notifState();
     <ol style="margin:0 0 8px;padding-left:20px;line-height:1.7"><li>Ketuk ikon <b>gembok</b> atau <b>⋮</b> di Chrome, lalu <b>Setelan situs</b> (<i>Site settings</i>).</li><li>Pilih <b>Notifikasi</b>, lalu <b>Izinkan</b>.</li><li>Kalau JELAS sudah dipasang di layar utama: tahan ikon JELAS → <b>Info aplikasi</b> → <b>Notifikasi</b> → nyalakan.</li><li>Buka lagi JELAS.</li></ol>
     <div class="acts"><button class="primary" id="mNo">Mengerti</button></div>`);$('#mNo').onclick=closeModal;return}
   try{Notification.requestPermission().then(r=>{if(window.IS_PLAY)setTimeout(()=>window.jelasDiag&&jelasDiag('notif request='+r+' perm-after='+Notification.permission),1500);if(r==='granted'){fbPushRegister();toast('check','Notifikasi menyala!')}else if(r==='denied')notifEnable();notifBanner()})}catch(e){}}
+/* panduan singkat untuk murid baru */
+const TOUR=[{ic:'bolt',c:'#FFC23D',t:'Kumpulkan XP',d:'Setiap level yang kamu selesaikan memberi XP. Makin banyak XP, makin tinggi peringkatmu di Liga minggu ini.'},
+ {ic:'flame',c:'#FF9600',t:'Jaga runtunan',d:'Belajar minimal satu level setiap hari agar api runtunanmu terus menyala. Pelindung api menjagamu kalau lupa sehari.'},
+ {ic:'heartbig',c:'#FF4B4B',t:'Hati-hati dengan nyawa',d:'Jawaban salah mengurangi nyawa. Nyawa terisi lagi seiring waktu, atau lewat Latihan.'},
+ {ic:'quest',c:'#1CB0F6',t:'Selesaikan misi',d:'Misi harian memberi permata. Ajak teman untuk Misi Teman mingguan dan buka peti bersama!'}];
+function tourAsk(){try{if(isT()||!P||P.tour||document.body.classList.contains('playing')||!$('#modal').hidden||curTab!=='learn')return false;
+  if((+P.xp||0)>150){P.tour=1;save();return false}P.tour=1;save();let i=0;
+  const draw=()=>{const x=TOUR[i],last=i===TOUR.length-1;$('#mbox').innerHTML=`<div class="tour"><div class="touric" style="--c:${x.c}">${ico(x.ic)}</div><h3>${x.t}</h3><p>${x.d}</p>
+    <div class="tourdots">${TOUR.map((_,k)=>`<i class="${k===i?'on':''}"></i>`).join('')}</div>
+    <button class="primary press" id="tourGo" style="width:100%">${last?'AYO MULAI!':'LANJUT'}</button>${last?'':'<button class="frzno" id="tourSkip">LEWATI</button>'}</div>`;hydrate($('#mbox'));
+    $('#tourGo').onclick=()=>{if(last){closeModal();return}i++;draw();try{tone([620],.03)}catch(e){}};const sk=$('#tourSkip');if(sk)sk.onclick=closeModal};
+  openModal('');draw();return true}catch(e){return false}}
+window.tourAsk=tourAsk;
+/* perbaiki runtunan yang putus (seperti Duolingo) */
+function repairInfo(){if(!P||!P.lastDay)return null;const t=dayKey(),gap=dayNum(t)-dayNum(P.lastDay);
+  if(shownStreak()===0&&P.streak>=3&&gap>=2&&gap<=4)return {n:P.streak,kind:'a',from:P.lastDay};
+  const b=P.brk;if(b&&b.n>=3&&dayNum(t)-dayNum(b.day)<=1&&!b.done)return {n:b.n,kind:'b',from:b.from,day:b.day};return null}
+function repairDo(r){const t=dayKey(),fd=[];const end=r.kind==='a'?dayNum(t):dayNum(r.day);
+  for(let i=dayNum(r.from)+1;i<end;i++)fd.push(dayKey(new Date(Date.now()-(dayNum(t)-i)*864e5)));
+  P.frz=[...(P.frz||[]).slice(-60),...fd];
+  if(r.kind==='a')P.lastDay=dayKey(new Date(Date.now()-864e5));else{P.streak=r.n+P.streak;P.brk.done=true}
+  P.bestStreak=Math.max(P.bestStreak||0,shownStreak());save();renderTop()}
+function repairAsk(force){try{if(isT()||!P||document.body.classList.contains('playing')||!$('#modal').hidden||curTab!=='learn')return false;
+  const r=repairInfo();if(!r)return false;const today=dayKey();if(!force&&localStorage.getItem('jk_rep_d')===today)return false;localStorage.setItem('jk_rep_d',today);
+  const cost=PRICE.repair,ok=P.gems>=cost;
+  openModal(`<div class="frzask"><div class="repic">${ico('flame')}</div>
+    <h3>Runtunan <span class="rep">${r.n}</span> harimu putus!</h3><p class="repsub">Pulihkan sekarang sebelum hilang selamanya. Hari yang terlewat akan dijaga seperti memakai pelindung api.</p>
+    <button class="primary press frzbuy" id="repBuy" ${ok?'':'disabled'}>${ok?`PULIHKAN: <span class="frzgem">${ICONS.gem}</span> ${cost}`:`PERMATAMU KURANG ${cost-P.gems}`}</button>
+    <button class="frzno" id="repNo">TIDAK, TERIMA KASIH</button></div>`);
+  $('#repNo').onclick=()=>{closeModal();if(r.kind==='b'){P.brk.done=true;save()}};
+  $('#repBuy').onclick=()=>{if(P.gems<cost)return;P.gems-=cost;repairDo(r);try{sfx.win()}catch(e){}closeModal();toast('flame',`Runtunan ${shownStreak()} hari kembali!`)};return true}catch(e){return false}}
+window.repairAsk=repairAsk;
 /* isi ulang pelindung api (seperti Duolingo) */
 function freezeAsk(force){try{if(isT()||!P||document.body.classList.contains('playing')||!$('#modal').hidden||curTab!=='learn')return;
   const st=shownStreak(),miss=2-(+P.freeze||0);if(st<3||miss<=0)return;
