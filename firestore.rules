@@ -100,6 +100,11 @@ service cloud.firestore {
       }
 
       // Peringkat XP mingguan sekelas.
+      // Pengaturan kelas yang boleh dibaca murid (mis. obrolan suara Petualangan Berdua). Hanya guru pemilik yang menulis.
+      match /cfg/{doc} {
+        allow read: if signedIn() && (ownsCls(cid) || memberOf(cid));
+        allow write: if ownsCls(cid);
+      }
       match /board/{uid} {
         allow read: if signedIn() && (ownsCls(cid) || memberOf(cid));
         allow create, update: if signedIn() && request.auth.uid == uid && memberOf(cid);
@@ -190,6 +195,18 @@ service cloud.firestore {
         && request.resource.data.members == resource.data.members
         && changedKeys().hasOnly(['n_' + request.auth.uid, 'nudge_' + request.auth.uid, 'nudgeS_' + request.auth.uid, 'gift_' + request.auth.uid, 'giftGot_' + request.auth.uid, 'claim_' + request.auth.uid]);
       allow delete: if false;
+    }
+
+    // Petualangan Berdua: dokumen sementara untuk mempertemukan dua HP (WebRTC). Id = kode ruang 4 huruf.
+    match /duo/{code} {
+      allow read: if signedIn();
+      allow create: if signedIn() && request.resource.data.host == request.auth.uid && code.matches('^[A-Z]{4}$');
+      allow update: if signedIn() && (
+        resource.data.host == request.auth.uid
+        || (!('guest' in resource.data) && request.resource.data.guest == request.auth.uid
+            && request.resource.data.host == resource.data.host && request.resource.data.offer == resource.data.offer)
+        || (('guest' in resource.data) && resource.data.guest == request.auth.uid && request.resource.data.guest == request.auth.uid));
+      allow delete: if signedIn() && resource.data.host == request.auth.uid;
     }
 
     // Kunci misi teman: satu pasangan per murid per minggu (id = minggu_uid). Tidak bisa diubah/dihapus.

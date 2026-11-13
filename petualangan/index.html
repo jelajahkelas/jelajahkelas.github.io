@@ -36,14 +36,14 @@ canvas{image-rendering:pixelated;image-rendering:crisp-edges;display:block}
 .pad .tag{position:absolute;top:-20px;left:0;font:900 11px ui-monospace,monospace;letter-spacing:.08em;color:#fff;text-shadow:1px 1px 0 #000}
 .pad.l .tag{color:#7fc8ff}.pad.r .tag{color:#ffb15c}
 #top{position:fixed;top:calc(8px + env(safe-area-inset-top,0px));right:10px;z-index:4;display:flex;gap:8px}
-#top[hidden]{display:none}#top button{width:40px;height:40px;font:900 16px ui-monospace,monospace;color:#fff;background:rgba(43,33,64,.6);border:3px solid rgba(255,255,255,.7);cursor:pointer}
+#top[hidden]{display:none}#top button.off{opacity:.5;text-decoration:line-through}#top button.live{background:#3fa34d}#top button{width:40px;height:40px;font:900 16px ui-monospace,monospace;color:#fff;background:rgba(43,33,64,.6);border:3px solid rgba(255,255,255,.7);cursor:pointer}
 #rot{position:fixed;inset:0;z-index:9;background:#1b1d3a;display:none;place-items:center;text-align:center;padding:30px}
 @media (orientation:portrait) and (max-width:700px){body.playing #rot{display:grid}}
 </style>
 </head>
 <body>
 <div id="wrap"><canvas id="cv"></canvas></div>
-<div id="top" hidden><button id="bSound" aria-label="Suara">♪</button><button id="bPause" aria-label="Jeda">II</button></div>
+<div id="top" hidden><button id="bMic" aria-label="Mikrofon" hidden>🎤</button><button id="bSpk" aria-label="Suara teman" hidden>🔊</button><button id="bSound" aria-label="Musik">♪</button><button id="bPause" aria-label="Jeda">II</button></div>
 <div class="pad l" id="padL" hidden><span class="tag">PEMAIN 1</span><button data-p="0" data-k="l">◀</button><button data-p="0" data-k="r">▶</button><button data-p="0" data-k="j">▲</button></div>
 <div class="pad r" id="padR" hidden><span class="tag">PEMAIN 2</span><button data-p="1" data-k="l">◀</button><button data-p="1" data-k="r">▶</button><button data-p="1" data-k="j">▲</button></div>
 <div id="rot"><div class="px"><p style="font-size:40px;margin:0">⟳</p><p>Putar HP ke posisi mendatar untuk bermain.</p></div></div>
@@ -53,9 +53,20 @@ canvas{image-rendering:pixelated;image-rendering:crisp-edges;display:block}
   <div class="heroes"><canvas id="h1" width="12" height="15"></canvas><canvas id="h2" width="12" height="15"></canvas></div>
   <p>Kalian berdua harus saling membantu: naik ke kepala teman, injak tombol untuk membuka pintu, dan jawab soal batu ajaib untuk membuat jembatan. Sampai di bendera <b>bersama-sama</b>!</p>
   <button class="btn" id="bLocal">Main berdua di perangkat ini</button>
-  <button class="btn b3" id="bOnline" disabled>Main online · segera hadir</button>
+  <button class="btn b2" id="bOnline">Main online dengan teman</button>
   <div class="keys">Pemain 1: A D untuk jalan, W untuk lompat<br>Pemain 2: ◀ ▶ untuk jalan, ▲ untuk lompat<br>Di HP: tombol kiri untuk pemain 1, kanan untuk pemain 2</div>
 </div></div>
+<div class="panel" id="pOnline" hidden><div class="box">
+  <h2 class="px">Main online</h2>
+  <div id="onMenu"><p>Satu orang membuat ruang, temannya bergabung dengan kode. Kalian bermain dari HP masing-masing.</p>
+    <button class="btn" id="bHost">Buat ruang</button>
+    <div style="display:flex;gap:8px;margin-top:10px"><input id="inCode" maxlength="4" placeholder="KODE" autocomplete="off" autocapitalize="characters" style="flex:1;min-width:0;font:900 22px ui-monospace,monospace;letter-spacing:.3em;text-align:center;text-transform:uppercase;border:4px solid #2b2140;padding:8px;background:#fff"><button class="btn b2" id="bJoin" style="width:auto;margin:0;padding:0 16px">Gabung</button></div>
+    <button class="btn b3" id="bOnBack">Kembali</button></div>
+  <div id="onWait" hidden><p id="onTxt">Menyiapkan ruang…</p><div class="qtxt" id="onCode" style="letter-spacing:.3em;font-size:40px"></div>
+    <button class="btn b2" id="bShare" hidden>Bagikan kode</button><button class="btn b3" id="bOnCancel">Batal</button></div>
+</div></div>
+<div class="panel" id="pVoice" hidden><div class="box"><h2 class="px" id="vTitle">Obrolan suara</h2><div id="vBody"></div></div></div>
+<audio id="rAudio" autoplay playsinline></audio>
 <div class="panel" id="pQuiz" hidden><div class="box">
   <h2 class="px">Batu Ajaib</h2><p id="qHint">Jawab benar untuk memunculkan jembatan!</p>
   <div class="qtxt" id="qTxt"></div><div class="opts" id="qOpts"></div><button class="btn b3" id="qLater">Nanti saja</button>
@@ -68,6 +79,10 @@ canvas{image-rendering:pixelated;image-rendering:crisp-edges;display:block}
   <button class="btn" id="bAgain">Main lagi</button><button class="btn b3" id="bExit2">Kembali ke JELAS</button>
 </div></div>
 
+<script src="../config.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 <script>
 (()=>{
 'use strict';
@@ -76,7 +91,7 @@ const T=16,VH=224,GRAV=900,JUMP=275,SPD=78,PW=10,PH=14;
 const cv=document.getElementById('cv'),cx=cv.getContext('2d');
 let VW=320,scale=2;
 const $=id=>document.getElementById(id);
-const Q=new URLSearchParams(location.search);const GRADE=Math.max(0,Math.min(12,+(Q.get('g')||3)));
+const Q=new URLSearchParams(location.search);const GRADE0=Math.max(0,Math.min(12,+(Q.get('g')||3)));const GRADE=GRADE0;
 
 /* ====== peta level (karya asli) ======
    # tanah  = papan  A pintu batu (dibuka tombol a)  C gerbang (dibuka tombol c)
@@ -154,7 +169,7 @@ function reset(){coins=0;bridge=false;won=false;doors={A:false,C:false};parts=[]
     if(c==='Q')level.q={x,y};if(c==='F')level.flag={x,y};if(c==='k')level.cps.push(x*T)}
   const sp=k=>{for(let y=0;y<MH;y++)for(let x=0;x<MW;x++)if(MAP[y][x]===k)return {x:x*T+3,y:(y+1)*T-PH}};
   P=[0,1].map(i=>Object.assign(sp(String(i+1)),{i,vx:0,vy:0,ground:false,face:1,anim:0,on:null,inp:{l:0,r:0,j:0},jq:0,coy:0,dead:0}));
-  checkpoint={x:P[0].x,y:P[0].y};cam.x=0;say('Bantu temanmu naik! Berdiri di dekat tembok, temanmu melompat ke kepalamu.',5)}
+  if(NET.on){P[1-ME].remote=true;P[1-ME].net={x:P[1-ME].x,y:P[1-ME].y}}checkpoint={x:P[ME<0?0:ME].x,y:P[ME<0?0:ME].y};cam.x=0;say('Bantu temanmu naik! Berdiri di dekat tembok, temanmu melompat ke kepalamu.',5)}
 function say(t,s=3){msg={t,until:performance.now()+s*1000}}
 
 /* ====== tabrakan ubin ====== */
@@ -165,7 +180,7 @@ function overlapsTile(p,ch){const x0=Math.floor(p.x/T),x1=Math.floor((p.x+PW-1)/
 
 /* ====== fisika per pemain ====== */
 let qCool=0;function step(dt){if(qCool>0)qCool-=dt;
-  for(const p of P){if(p.dead>0){p.dead-=dt;if(p.dead<=0)respawn(p);continue}
+  for(const p of P){if(p.remote){netLerp(p,dt);continue}if(p.dead>0){p.dead-=dt;if(p.dead<=0)respawn(p);continue}
     const want=(p.inp.r?1:0)-(p.inp.l?1:0);p.vx=want*SPD;if(want)p.face=want;
     if(p.inp.j&&!p.jHeld){p.jq=.12}p.jHeld=p.inp.j;if(p.jq>0)p.jq-=dt;
     p.coy=p.ground?.1:Math.max(0,p.coy-dt);
@@ -188,14 +203,14 @@ let qCool=0;function step(dt){if(qCool>0)qCool-=dt;
     // bahaya: duri / jatuh
     if((overlapsTile({x:p.x+2,y:p.y+6},'^')&&!bridge)||p.y>MH*T){kill(p)}
     // koin
-    for(const c of level.coins)if(!c.got&&Math.abs(p.x+PW/2-c.x)<10&&Math.abs(p.y+PH/2-c.y)<11){c.got=true;coins++;SFX.coin();burst(c.x,c.y,'#f7c548',8)}
+    for(const c of level.coins)if(!c.got&&Math.abs(p.x+PW/2-c.x)<10&&Math.abs(p.y+PH/2-c.y)<11){c.got=true;coins++;SFX.coin();burst(c.x,c.y,'#f7c548',8);netEv({t:'coin',i:level.coins.indexOf(c)})}
     // titik simpan
     for(const k of level.cps)if(p.ground&&p.x>=k&&k>checkpoint.x)checkpoint={x:k,y:p.y}
     // batu soal
     if(level.q&&!bridge&&!quizOpen&&qCool<=0&&Math.abs(p.x+PW/2-(level.q.x*T+8))<16&&Math.abs(p.y-(level.q.y*T))<20)openQuiz();
   }
   // dorong pemain yang di atas bila tumpang tindih (mis. teman di bawah melompat)
-  {const [a,b]=P;if(!a.dead&&!b.dead&&a.x+PW>b.x+1&&a.x<b.x+PW-1&&a.y+PH>b.y&&a.y<b.y+PH){const top=a.y<b.y?a:b,bot=top===a?b:a;const ny=bot.y-PH;if(top.y+PH-bot.y<7&&!hitSolid(top.x,ny,PW,PH)){top.y=ny;top.vy=Math.min(top.vy,bot.vy);top.ground=bot.vy>=0;if(top.ground)top.on=bot}}}
+  {const [a,b]=P;if(!a.dead&&!b.dead&&!(NET.on&&(a.y<b.y?a:b).remote)&&a.x+PW>b.x+1&&a.x<b.x+PW-1&&a.y+PH>b.y&&a.y<b.y+PH){const top=a.y<b.y?a:b,bot=top===a?b:a;const ny=bot.y-PH;if(top.y+PH-bot.y<7&&!hitSolid(top.x,ny,PW,PH)){top.y=ny;top.vy=Math.min(top.vy,bot.vy);top.ground=bot.vy>=0;if(top.ground)top.on=bot}}}
   P.forEach(p=>{p.lastDx=(p.x-(p.px??p.x));p.px=p.x});
   // tombol & pintu
   const was={...doors};const on={A:false,C:false};
@@ -204,7 +219,7 @@ let qCool=0;function step(dt){if(qCool>0)qCool-=dt;
   // kamera: tengah kedua pemain
   const mid=(P[0].x+P[1].x)/2+PW/2;cam.x=Math.max(0,Math.min(MW*T-VW,mid-VW/2));
   // menang
-  if(!won&&level.flag){const fx=level.flag.x*T;if(P.every(p=>!p.dead&&Math.abs(p.x+PW/2-fx-8)<34&&p.ground))win()}
+  if(!won&&level.flag&&!(NET.on&&ME!==0)){const fx=level.flag.x*T;if(P.every(p=>!p.dead&&Math.abs(p.x+PW/2-fx-8)<34&&p.ground))win()}
   // partikel
   parts=parts.filter(q=>(q.t-=dt)>0);parts.forEach(q=>{q.x+=q.vx*dt;q.y+=q.vy*dt;q.vy+=300*dt})}
 function kill(p){if(p.dead>0)return;p.dead=.8;SFX.hurt();burst(p.x+5,p.y+7,'#fff8e7',12)}
@@ -214,7 +229,7 @@ function respawn(p){const o=P[1-p.i];const base=o.dead>0?checkpoint.x:Math.max(c
 function burst(x,y,col,n){for(let i=0;i<n;i++)parts.push({x,y,vx:(Math.random()-.5)*120,vy:-Math.random()*140,t:.5+Math.random()*.3,col})}
 
 /* ====== soal ====== */
-function makeQ(){const r=n=>Math.floor(Math.random()*n);let a,b,q,ans;
+function makeQ(){const r=n=>Math.floor(Math.random()*n);let a,b,q,ans;const GRADE=GRADE_ON!=null?GRADE_ON:GRADE0;
   if(GRADE<=1){a=1+r(9);b=1+r(9);q=`${a} + ${b} = ?`;ans=a+b}
   else if(GRADE<=3){a=2+r(8);b=2+r(8);q=`${a} × ${b} = ?`;ans=a*b}
   else if(GRADE<=6){b=2+r(8);ans=2+r(10);a=b*ans;q=`${a} : ${b} = ?`}
@@ -222,11 +237,11 @@ function makeQ(){const r=n=>Math.floor(Math.random()*n);let a,b,q,ans;
   const set=new Set([ans]);while(set.size<3){const d=ans+(r(2)?1:-1)*(1+r(4));if(d>=0)set.add(d)}
   return {q,ans,opts:[...set].sort(()=>Math.random()-.5)}}
 function openQuiz(){quizOpen=true;const it=makeQ();$('qTxt').textContent=it.q;$('qHint').textContent='Jawab benar untuk memunculkan jembatan!';
-  const box=$('qOpts');box.innerHTML='';it.opts.forEach(v=>{const b=document.createElement('button');b.className='btn';b.textContent=v;b.onclick=()=>{if(v===it.ans){SFX.ok();bridge=true;quizOpen=false;$('pQuiz').hidden=true;burst((level.q.x+5)*T,(level.q.y)*T,'#7be07f',24);say('Jembatan muncul! Seberangi bersama.',3)}else{SFX.bad();$('qHint').textContent='Belum tepat, coba soal lain.';setTimeout(()=>{if(quizOpen){$('pQuiz').hidden=true;quizOpen=false;openQuiz()}},700)}};box.appendChild(b)});
+  const box=$('qOpts');box.innerHTML='';it.opts.forEach(v=>{const b=document.createElement('button');b.className='btn';b.textContent=v;b.onclick=()=>{if(v===it.ans){SFX.ok();bridge=true;netEv({t:'bridge'});quizOpen=false;$('pQuiz').hidden=true;burst((level.q.x+5)*T,(level.q.y)*T,'#7be07f',24);say('Jembatan muncul! Seberangi bersama.',3)}else{SFX.bad();$('qHint').textContent='Belum tepat, coba soal lain.';setTimeout(()=>{if(quizOpen){$('pQuiz').hidden=true;quizOpen=false;openQuiz()}},700)}};box.appendChild(b)});
   $('pQuiz').hidden=false;Object.values(P).forEach(p=>p.inp={l:0,r:0,j:0})}
 
 /* ====== menang ====== */
-function win(){won=true;running=false;music(false);SFX.win();const s=Math.round(elapsed);
+function win(){if(won&&!running)return;won=true;netEv({t:'win'});running=false;music(false);SFX.win();const s=Math.round(elapsed);
   $('wTxt').innerHTML=`Koin: <b>${coins}/${coinTot}</b> · Waktu: <b>${Math.floor(s/60)}:${String(s%60).padStart(2,'0')}</b><br>Kerja sama kalian hebat!`;
   try{const k='jk_duo_best';const prev=JSON.parse(localStorage.getItem(k)||'{}');localStorage.setItem(k,JSON.stringify({coins:Math.max(prev.coins||0,coins),t:prev.t?Math.min(prev.t,s):s}))}catch(e){}
   setTimeout(()=>{$('pWin').hidden=false},700)}
@@ -259,7 +274,8 @@ function draw(){cx.imageSmoothingEnabled=false;drawBG();const ox=Math.round(cam.
   for(const p of P){if(p.dead>0&&Math.floor(now/80)%2)continue;const s=SPR[p.i];let img=!p.ground?s.jump:(p.vx&&Math.floor(p.anim)%2?s.walk:s.idle);if(p.face<0)img=flipped(img);
     cx.drawImage(img,Math.round(p.x-1-ox),Math.round(p.y-1));
     // penanda nomor pemain
-    cx.fillStyle=SKIN[p.i].m;cx.fillRect(Math.round(p.x+3-ox),Math.round(p.y-7),4,3)}
+    cx.fillStyle=SKIN[p.i].m;cx.fillRect(Math.round(p.x+3-ox),Math.round(p.y-7),4,3);
+    if(NET.on){const nm=(p.i===ME?'KAMU':(NET.peer||'TEMAN')).slice(0,10).toUpperCase();cx.font='bold 7px ui-monospace,monospace';cx.textAlign='center';cx.fillStyle='rgba(43,33,64,.7)';const w=cx.measureText(nm).width+4;cx.fillRect(Math.round(p.x+5-ox-w/2),Math.round(p.y-17),w,9);cx.fillStyle='#fff8e7';cx.fillText(nm,Math.round(p.x+5-ox),Math.round(p.y-10));cx.textAlign='left';if(p.i===ME?VOICE.on:NET.peerMic){const mx=Math.round(p.x+5-ox+w/2+2),my=Math.round(p.y-16);cx.fillStyle='#3fa34d';cx.fillRect(mx,my,7,7);cx.fillStyle='#fff';cx.fillRect(mx+2,my+1,3,3);cx.fillRect(mx+3,my+4,1,2)}}}
   for(const q of parts){cx.fillStyle=q.col;cx.fillRect(Math.round(q.x-ox),Math.round(q.y),2,2)}
   // HUD
   cx.fillStyle='rgba(43,33,64,.65)';cx.fillRect(4,4,66,13);cx.fillStyle='#f7c548';cx.fillRect(8,7,5,7);ptext(`${coins}/${coinTot}`,16,8,'#fff8e7');
@@ -274,9 +290,9 @@ function drawMsg(t){cx.font='bold 8px ui-monospace,monospace';const words=t.spli
 
 /* ====== kontrol ====== */
 const KEYS={KeyA:[0,'l'],KeyD:[0,'r'],KeyW:[0,'j'],Space:[0,'j'],ArrowLeft:[1,'l'],ArrowRight:[1,'r'],ArrowUp:[1,'j'],ShiftRight:[1,'j']};
-addEventListener('keydown',e=>{if(e.key==='Escape'||e.key==='p'){if(running)togglePause();return}const k=KEYS[e.code];if(!k||!running)return;e.preventDefault();P[k[0]].inp[k[1]]=1});
-addEventListener('keyup',e=>{const k=KEYS[e.code];if(!k||!P.length)return;P[k[0]].inp[k[1]]=0});
-document.querySelectorAll('.pad button').forEach(b=>{const set=v=>{if(!P.length)return;P[+b.dataset.p].inp[b.dataset.k]=v;b.classList.toggle('on',!!v)};
+addEventListener('keydown',e=>{if(e.key==='Escape'||e.key==='p'){if(running)togglePause();return}const k=KEYS[e.code];if(!k||!running)return;e.preventDefault();P[ME>=0?ME:k[0]].inp[k[1]]=1});
+addEventListener('keyup',e=>{const k=KEYS[e.code];if(!k||!P.length)return;P[ME>=0?ME:k[0]].inp[k[1]]=0});
+document.querySelectorAll('.pad button').forEach(b=>{const set=v=>{if(!P.length)return;P[ME>=0?ME:+b.dataset.p].inp[b.dataset.k]=v;b.classList.toggle('on',!!v)};
   b.addEventListener('pointerdown',e=>{e.preventDefault();b.setPointerCapture(e.pointerId);set(1);ac()});['pointerup','pointercancel','lostpointercapture'].forEach(ev=>b.addEventListener(ev,()=>set(0)))});
 const touch=matchMedia('(pointer:coarse)').matches;
 
@@ -287,13 +303,118 @@ addEventListener('resize',fit);fit();
 /* ====== putaran utama ====== */
 let last=0,acc=0;function loop(ts){requestAnimationFrame(loop);const dt=Math.min(.05,(ts-last)/1000||0);last=ts;
   if(running&&!paused&&!quizOpen&&!window.__duoManual){acc+=dt;elapsed+=dt;while(acc>=1/60){step(1/60);acc-=1/60}}draw()}
-function start(){reset();running=true;paused=false;quizOpen=false;['pStart','pWin','pPause','pQuiz'].forEach(i=>$(i).hidden=true);$('top').hidden=false;$('padL').hidden=$('padR').hidden=!touch;document.body.classList.add('playing');ac();music(true);
+function start(){reset();running=true;paused=false;quizOpen=false;['pStart','pWin','pPause','pQuiz','pOnline'].forEach(i=>$(i).hidden=true);$('top').hidden=false;$('padL').hidden=$('padR').hidden=!touch;padMode();document.body.classList.add('playing');ac();music(true);
   try{if(touch&&screen.orientation&&screen.orientation.lock)screen.orientation.lock('landscape').catch(()=>{})}catch(e){}
   try{if(touch&&document.documentElement.requestFullscreen&&!document.fullscreenElement)document.documentElement.requestFullscreen().catch(()=>{})}catch(e){}}
 function togglePause(){paused=!paused;$('pPause').hidden=!paused;if(!paused)P.forEach(p=>p.inp={l:0,r:0,j:0})}
-const exit=()=>{try{if(document.fullscreenElement)document.exitFullscreen()}catch(e){}location.href='../'};
-$('qLater').onclick=()=>{quizOpen=false;qCool=2.5;$('pQuiz').hidden=true};$('bLocal').onclick=start;$('bAgain').onclick=start;$('bResume').onclick=togglePause;$('bRestart').onclick=()=>{togglePause();start()};$('bExit').onclick=exit;$('bExit2').onclick=exit;
+const exit=()=>{try{netClose()}catch(e){}try{if(document.fullscreenElement)document.exitFullscreen()}catch(e){}location.href='../'};
+$('qLater').onclick=()=>{quizOpen=false;qCool=2.5;$('pQuiz').hidden=true};$('bLocal').onclick=()=>{ME=-1;NET.on=false;start()};$('bAgain').onclick=()=>{netEv({t:'restart'});start()};$('bResume').onclick=togglePause;$('bRestart').onclick=()=>{togglePause();netEv({t:'restart'});start()};$('bExit').onclick=exit;$('bExit2').onclick=exit;
 $('bPause').onclick=togglePause;$('bSound').onclick=()=>{soundOn=!soundOn;$('bSound').style.opacity=soundOn?1:.45;music(soundOn&&running)};
+/* ====== main online (WebRTC langsung antar-HP, Firebase hanya untuk mempertemukan) ====== */
+var ME=-1;const NET={on:false,pc:null,dc:null,de:null,peer:'',code:'',unsub:null,sendT:null,role:null,lastRx:0};
+function netLerp(p,dt){const n=p.net;if(!n)return;const k=Math.min(1,dt*14);const ox=p.x;p.x+=(n.x-p.x)*k;p.y+=(n.y-p.y)*k;if(Math.abs(n.x-p.x)>48||Math.abs(n.y-p.y)>48){p.x=n.x;p.y=n.y}
+  p.vx=n.vx||0;p.vy=n.vy||0;p.face=n.f||1;p.ground=!!n.g;p.dead=n.d?1:0;p.anim=n.a||0}
+function netEv(m){if(!NET.on||!NET.de||NET.de.readyState!=='open')return;try{NET.de.send(JSON.stringify(m))}catch(e){}}
+function netRx(m){NET.lastRx=performance.now();
+  if(m.t==='s'){const p=P[1-ME];if(p)p.net=m;return}
+  if(m.t==='coin'){const c=level.coins[m.i];if(c&&!c.got){c.got=true;coins++;SFX.coin();burst(c.x,c.y,'#f7c548',8)}return}
+  if(m.t==='bridge'){if(!bridge){bridge=true;SFX.ok();if(quizOpen){quizOpen=false;$('pQuiz').hidden=true}say('Temanmu menjawab benar! Jembatan muncul.',3)}return}
+  if(m.t==='win'){if(!won)win();return}
+  if(m.t==='restart'){start();return}
+  if(m.t==='start'){if(m.g!=null)GRADE_ON=m.g;NET.peer=m.name||NET.peer;NET.peerUid=m.uid||NET.peerUid;start();return}
+  if(m.t==='hi'){NET.peer=m.name||NET.peer;NET.peerUid=m.uid||NET.peerUid;return}
+  if(m.t==='mic'){NET.peerMic=!!m.on;return}
+  if(m.t==='bye'){netLost('Temanmu keluar dari permainan.')}}
+let GRADE_ON=null;
+function padMode(){const on=NET.on&&touch;document.querySelectorAll('.pad .tag').forEach((t,i)=>t.textContent=on?(i?'LOMPAT':'JALAN'):(i?'PEMAIN 2':'PEMAIN 1'));
+  document.querySelectorAll('#padL [data-k="j"],#padR [data-k="l"],#padR [data-k="r"]').forEach(b=>b.style.display=on?'none':'')}
+const FBOK=()=>!!(window.firebase&&window.FB_CONFIG);let FBI=null;
+function fb(){if(FBI)return FBI;if(!FBOK())return null;try{if(!firebase.apps.length)firebase.initializeApp(window.FB_CONFIG)}catch(e){}FBI={auth:firebase.auth(),db:firebase.firestore()};return FBI}
+function me(){return new Promise(res=>{const f=fb();if(!f)return res(null);const u=f.auth.currentUser;if(u)return res(u);const off=f.auth.onAuthStateChanged(x=>{off();res(x)});setTimeout(()=>res(f.auth.currentUser),4000)})}
+async function myName(u){try{const d=await fb().db.doc('pub/'+u.uid).get();if(d.exists&&d.data().name)return d.data().name}catch(e){}return 'Teman'}
+async function iceServers(){const base=[{urls:['stun:stun.l.google.com:19302','stun:stun1.l.google.com:19302']}];
+  try{const url=(window.FB_CONFIG||{}).pushUrl;if(!url)return base;const ctl=new AbortController();setTimeout(()=>ctl.abort(),2500);const r=await fetch(url+'/turn',{signal:ctl.signal});if(r.ok){const j=await r.json();if(j&&j.iceServers)return base.concat(j.iceServers)}}catch(e){}return base}
+function gatherDone(pc){return new Promise(res=>{if(pc.iceGatheringState==='complete')return res();const t=setTimeout(res,3500);pc.addEventListener('icegatheringstatechange',()=>{if(pc.iceGatheringState==='complete'){clearTimeout(t);res()}})})}
+function wireDC(dc){dc.onmessage=e=>{try{netRx(JSON.parse(e.data))}catch(_){}};dc.onclose=()=>{if(NET.on&&running)netLost('Sambungan dengan temanmu terputus.')}}
+function netSetup(pc){pc.ontrack=e=>{const a=$('rAudio');a.srcObject=(e.streams&&e.streams[0])||new MediaStream([e.track]);a.play().catch(()=>{})};pc.onconnectionstatechange=()=>{const st=pc.connectionState;if(st==='failed')netLost('Sambungan gagal. Coba sambungkan kedua HP ke Wi-Fi yang sama, lalu ulangi.');
+    if(st==='disconnected')setTimeout(()=>{if(pc.connectionState==='disconnected')netLost('Sambungan dengan temanmu terputus.')},6000)}}
+function bothOpen(){return NET.dc&&NET.de&&NET.dc.readyState==='open'&&NET.de.readyState==='open'}
+function onReady(name){if(!bothOpen())return;NET.on=true;if(NET.unsub){NET.unsub();NET.unsub=null}
+  clearInterval(NET.sendT);NET.sendT=setInterval(()=>{if(!running||ME<0)return;const p=P[ME];if(!p||NET.dc.readyState!=='open')return;try{NET.dc.send(JSON.stringify({t:'s',x:+p.x.toFixed(1),y:+p.y.toFixed(1),vx:p.vx|0,vy:p.vy|0,f:p.face,g:p.ground?1:0,d:p.dead>0?1:0,a:+(p.anim||0).toFixed(1)}))}catch(e){}},50);
+  if(ME===0){netEv({t:'start',g:GRADE,name,uid:NET.myUid});start()}else netEv({t:'hi',name,uid:NET.myUid});$('bMic').hidden=$('bSpk').hidden=false;micUI();
+  // ruang sudah terpakai: hapus dokumennya
+  if(ME===0&&NET.code)try{fb().db.doc('duo/'+NET.code).delete().catch(()=>{})}catch(e){}}
+function netLost(t){if(!NET.on&&!NET.pc)return;netClose();running=false;music(false);$('pPause').hidden=true;$('pQuiz').hidden=true;$('pWin').hidden=true;
+  $('pOnline').hidden=false;$('onMenu').hidden=false;$('onWait').hidden=true;const p=document.querySelector('#onMenu p');if(p)p.textContent=t}
+function netClose(){try{netEv({t:'bye'})}catch(e){}micOff(true);NET.peerMic=false;$('bMic').hidden=$('bSpk').hidden=true;NET.on=false;clearInterval(NET.sendT);if(NET.unsub){NET.unsub();NET.unsub=null}try{NET.dc&&NET.dc.close();NET.de&&NET.de.close();NET.pc&&NET.pc.close()}catch(e){}NET.pc=NET.dc=NET.de=null;
+  if(ME===0&&NET.code&&FBI)try{FBI.db.doc('duo/'+NET.code).delete().catch(()=>{})}catch(e){}NET.code='';ME=-1}
+const ABC='ABCDEFGHJKLMNPQRSTUVWXYZ';const mkCode=()=>[...Array(4)].map(()=>ABC[Math.floor(Math.random()*ABC.length)]).join('');
+async function host(){const u=await me();if(!u){needLogin();return}NET.myUid=u.uid;showWait('Menyiapkan ruang…','');const name=await myName(u);
+  ME=0;const pc=new RTCPeerConnection({iceServers:await iceServers()});NET.pc=pc;netSetup(pc);
+  try{pc.addTransceiver('audio',{direction:'sendrecv'})}catch(e){}NET.dc=pc.createDataChannel('s',{ordered:false,maxRetransmits:0});NET.de=pc.createDataChannel('e');[NET.dc,NET.de].forEach(d=>{wireDC(d);d.onopen=()=>onReady(name)});
+  await pc.setLocalDescription(await pc.createOffer());await gatherDone(pc);
+  let code='';for(let i=0;i<5;i++){code=mkCode();try{const ref=fb().db.doc('duo/'+code);const ex=await ref.get();if(ex.exists&&Date.now()-(ex.data().at||0)<36e5)continue;
+      await ref.set({host:u.uid,hostName:name,g:GRADE,offer:pc.localDescription.sdp,at:Date.now()});break}catch(e){code=''}}
+  if(!code){netLost('Ruang belum bisa dibuat. Periksa internetmu lalu coba lagi.');return}
+  NET.code=code;showWait('Bagikan kode ini ke temanmu. Menunggu temanmu bergabung…',code);
+  NET.unsub=fb().db.doc('duo/'+code).onSnapshot(async sn=>{const d=sn.data();if(!d||!d.answer||pc.remoteDescription)return;NET.peer=d.guestName||'Teman';NET.peerUid=d.guest||'';$('onTxt').textContent=`${NET.peer} bergabung! Menyambungkan…`;
+    try{await pc.setRemoteDescription({type:'answer',sdp:d.answer})}catch(e){netLost('Gagal menyambung. Coba buat ruang baru.')}})}
+async function join(code){code=String(code||'').trim().toUpperCase();if(!/^[A-Z]{4}$/.test(code)){$('inCode').focus();return}const u=await me();if(!u){needLogin();return}
+  showWait('Mencari ruang…','');let d=null;try{const sn=await fb().db.doc('duo/'+code).get();if(sn.exists)d=sn.data()}catch(e){}
+  if(!d||Date.now()-(d.at||0)>36e5){netLost('Ruang dengan kode itu tidak ditemukan. Periksa lagi kodenya.');return}
+  NET.myUid=u.uid;NET.peerUid=d.host;if(d.host===u.uid){netLost('Ini ruang buatanmu sendiri. Minta temanmu yang bergabung.');return}
+  if(d.guest&&d.guest!==u.uid){netLost('Ruang ini sudah penuh.');return}
+  const name=await myName(u);ME=1;NET.peer=d.hostName||'Teman';if(d.g!=null)GRADE_ON=d.g;
+  const pc=new RTCPeerConnection({iceServers:await iceServers()});NET.pc=pc;netSetup(pc);
+  pc.ondatachannel=e=>{const ch=e.channel;if(ch.label==='s')NET.dc=ch;else NET.de=ch;wireDC(ch);ch.onopen=()=>onReady(name);if(ch.readyState==='open')onReady(name)};
+  await pc.setRemoteDescription({type:'offer',sdp:d.offer});try{pc.getTransceivers().forEach(t=>{if(t.receiver&&t.receiver.track&&t.receiver.track.kind==='audio')t.direction='sendrecv'})}catch(e){}await pc.setLocalDescription(await pc.createAnswer());await gatherDone(pc);
+  try{await fb().db.doc('duo/'+code).update({guest:u.uid,guestName:name,answer:pc.localDescription.sdp})}catch(e){netLost('Gagal bergabung. Coba lagi.');return}
+  NET.code='';showWait(`Menyambung ke ${NET.peer}…`,'');setTimeout(()=>{if(!NET.on&&NET.pc===pc)netLost('Belum bisa tersambung. Coba sambungkan kedua HP ke Wi-Fi yang sama, lalu ulangi.')},20000)}
+function showWait(t,code){$('pOnline').hidden=false;$('onMenu').hidden=true;$('onWait').hidden=false;$('onTxt').textContent=t;$('onCode').textContent=code||'';$('bShare').hidden=!code}
+function needLogin(){netLost('Masuk ke akun JELAS dulu, lalu buka game ini lagi dari menu Bermain.')}
+$('bOnline').onclick=()=>{$('pStart').hidden=true;$('pOnline').hidden=false;$('onMenu').hidden=false;$('onWait').hidden=true;const p=document.querySelector('#onMenu p');if(p)p.textContent='Satu orang membuat ruang, temannya bergabung dengan kode. Kalian bermain dari HP masing-masing.';ac()};
+$('bOnBack').onclick=()=>{netClose();$('pOnline').hidden=true;$('pStart').hidden=false};
+$('bOnCancel').onclick=()=>{netClose();$('onMenu').hidden=false;$('onWait').hidden=true};
+$('bHost').onclick=()=>host().catch(e=>netLost('Ruang belum bisa dibuat: '+(e&&e.message||e)));
+$('bJoin').onclick=()=>join($('inCode').value).catch(e=>netLost('Gagal bergabung: '+(e&&e.message||e)));
+$('inCode').addEventListener('keydown',e=>{if(e.key==='Enter')$('bJoin').click()});
+$('bShare').onclick=async()=>{const url=location.origin+location.pathname+'?r='+NET.code;const txt=`Ayo main Petualangan Berdua di JELAS! Kode ruang: ${NET.code}\n${url}`;try{if(navigator.share){await navigator.share({text:txt});return}}catch(e){return}try{await navigator.clipboard.writeText(txt);$('onTxt').textContent='Tautan disalin. Kirim ke temanmu, lalu tunggu di sini.'}catch(e){}};
+addEventListener('pagehide',()=>{try{netClose()}catch(e){}});
+/* ====== obrolan suara (aman untuk anak) ======
+   - hanya dengan teman yang saling mengikuti atau teman sekelas
+   - dinyalakan orang dewasa (gerbang orang tua) & bisa dimatikan guru per kelas
+   - pengingat keamanan sebelum bicara; suara tidak direkam/disimpan, mengalir langsung antar-HP */
+const VOICE={on:false,stream:null};
+function micUI(){const b=$('bMic');b.classList.toggle('live',VOICE.on);b.classList.toggle('off',!VOICE.on);b.title=VOICE.on?'Matikan mikrofon':'Nyalakan mikrofon';
+  const s=$('bSpk');s.classList.toggle('off',$('rAudio').muted);s.title=$('rAudio').muted?'Dengarkan teman':'Bisukan teman'}
+function micOff(silent){VOICE.on=false;try{const t=NET.pc&&NET.pc.getTransceivers().find(x=>x.sender&&(x.receiver&&x.receiver.track&&x.receiver.track.kind==='audio'));t&&t.sender.replaceTrack(null)}catch(e){}
+  if(VOICE.stream){VOICE.stream.getTracks().forEach(t=>t.stop());VOICE.stream=null}if(!silent)netEv({t:'mic',on:false});micUI()}
+async function voiceAllowed(){const f=fb();if(!f||!NET.myUid||!NET.peerUid)return {ok:false,why:'Obrolan suara hanya tersedia saat main online dengan akun JELAS.'};
+  const me_=NET.myUid,pe=NET.peerUid;let mutual=false,mate=false,teacherOff=false;
+  try{const [a,b]=await Promise.all([f.db.doc(`fol/${me_}_${pe}`).get(),f.db.doc(`fol/${pe}_${me_}`).get()]);mutual=a.exists&&b.exists}catch(e){}
+  try{const u=await f.db.doc('users/'+me_).get();const cid=u.exists&&u.data().classId;if(cid){try{const c=await f.db.doc(`classes/${cid}/cfg/main`).get();teacherOff=c.exists&&c.data().voice===false}catch(e){}
+      try{mate=(await f.db.doc(`classes/${cid}/board/${pe}`).get()).exists}catch(e){}}}catch(e){}
+  if(teacherOff)return {ok:false,why:'Gurumu menonaktifkan obrolan suara untuk kelasmu.'};
+  if(!mutual&&!mate)return {ok:false,why:`Obrolan suara hanya bisa dengan teman yang <b>saling mengikuti</b> atau <b>teman sekelas</b>. Ikuti ${NET.peer||'temanmu'} dan minta dia mengikutimu balik di JELAS.`};
+  return {ok:true}}
+function vPanel(title,html,bind){$('vTitle').textContent=title;$('vBody').innerHTML=html;$('pVoice').hidden=false;bind&&bind()}
+const vClose=()=>{$('pVoice').hidden=true};
+function parentGate(){return new Promise(res=>{let ok=false;try{ok=localStorage.getItem('jk_voice_gate')==='1'}catch(e){}if(ok)return res(true);
+  const a=11+Math.floor(Math.random()*8),b=3+Math.floor(Math.random()*6);
+  vPanel('Untuk orang tua / guru',`<p>Obrolan suara memungkinkan anak berbicara dengan temannya saat bermain. Minta orang dewasa menjawab soal ini untuk menyalakannya.</p><div class="qtxt">${a} × ${b} = ?</div><input id="pgIn" inputmode="numeric" style="width:100%;font:900 24px ui-monospace,monospace;text-align:center;border:4px solid #2b2140;padding:8px"><button class="btn" id="pgOk">Izinkan</button><button class="btn b3" id="pgNo">Batal</button><p class="keys">Izin bisa dicabut kapan saja lewat tombol mikrofon → Matikan obrolan suara.</p>`,()=>{
+    $('pgOk').onclick=()=>{if(+$('pgIn').value===a*b){try{localStorage.setItem('jk_voice_gate','1')}catch(e){}vClose();res(true)}else{$('pgIn').value='';$('pgIn').placeholder='Jawaban belum tepat';SFX.bad()}};$('pgNo').onclick=()=>{vClose();res(false)}})})}
+function safety(){return new Promise(res=>{vPanel('Bicara dengan aman',`<p style="text-align:left">✔ Bicara sopan dan saling menyemangati.<br>✔ Jangan sebutkan alamat rumah, nomor HP, sekolah, atau kata sandi.<br>✔ Kalau ada yang membuatmu tidak nyaman, matikan suara dan beri tahu orang tua atau guru.<br>✔ Suara tidak direkam dan tidak disimpan.</p><button class="btn" id="sfOk">Saya mengerti</button><button class="btn b3" id="sfNo">Nanti saja</button>`,()=>{$('sfOk').onclick=()=>{vClose();res(true)};$('sfNo').onclick=()=>{vClose();res(false)}})})}
+async function micOn(){let blocked=false;try{blocked=localStorage.getItem('jk_voice_block')==='1'}catch(e){}
+  const al=await voiceAllowed();if(!al.ok){vPanel('Obrolan suara',`<p>${al.why}</p><button class="btn" id="vOk">Oke</button>`,()=>{$('vOk').onclick=vClose});return}
+  if(blocked){try{localStorage.removeItem('jk_voice_gate')}catch(e){}}
+  if(!(await parentGate()))return;try{localStorage.removeItem('jk_voice_block')}catch(e){}
+  if(!(await safety()))return;
+  try{VOICE.stream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true}})}catch(e){vPanel('Mikrofon belum diizinkan',`<p>Izinkan JELAS memakai mikrofon di pengaturan HP atau browser, lalu coba lagi.</p><button class="btn" id="vOk">Oke</button>`,()=>{$('vOk').onclick=vClose});return}
+  const tr=NET.pc&&NET.pc.getTransceivers().find(x=>x.receiver&&x.receiver.track&&x.receiver.track.kind==='audio');if(!tr){micOff(true);return}
+  await tr.sender.replaceTrack(VOICE.stream.getAudioTracks()[0]);VOICE.on=true;netEv({t:'mic',on:true});micUI();$('rAudio').play().catch(()=>{})}
+$('bMic').onclick=()=>{if(!NET.on)return;if(VOICE.on){vPanel('Mikrofon',`<p>Mikrofonmu sedang menyala.</p><button class="btn" id="mOff">Matikan mikrofon</button><button class="btn b2" id="mBlock">Matikan obrolan suara (orang tua)</button><button class="btn b3" id="mBack">Kembali</button>`,()=>{$('mOff').onclick=()=>{micOff();vClose()};$('mBlock').onclick=()=>{micOff();try{localStorage.setItem('jk_voice_block','1');localStorage.removeItem('jk_voice_gate')}catch(e){}vClose()};$('mBack').onclick=vClose});return}micOn()};
+$('bSpk').onclick=()=>{const a=$('rAudio');a.muted=!a.muted;if(!a.muted)a.play().catch(()=>{});micUI()};
+{const r=Q.get('r');if(r){$('pStart').hidden=true;$('inCode').value=r.toUpperCase();setTimeout(()=>join(r).catch(()=>{}),300)}}
 reset();requestAnimationFrame(loop);
 window.__duo={get P(){return P},get doors(){return doors},get bridge(){return bridge},get won(){return won},start,step:(n=1)=>{for(let i=0;i<n;i++)step(1/60)},answer:()=>{const b=[...document.querySelectorAll('#qOpts .btn')];return b}};
 })();
