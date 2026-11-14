@@ -254,18 +254,19 @@ function ptext(s,X,Y,col,sz=1){cx.fillStyle=col;let x=X;for(const ch of s){const
 /* ====== suara chiptune ====== */
 let AC=null,soundOn=true;function ac(){if(!AC){try{AC=new (window.AudioContext||window.webkitAudioContext)()}catch(e){}}return AC}
 function beep(f,d=.08,type='square',vol=.05,slide=0){if(!soundOn)return;const a=ac();if(!a)return;const o=a.createOscillator(),g=a.createGain();o.type=type;o.frequency.setValueAtTime(f,a.currentTime);if(slide)o.frequency.linearRampToValueAtTime(f+slide,a.currentTime+d);g.gain.setValueAtTime(vol,a.currentTime);g.gain.exponentialRampToValueAtTime(.0001,a.currentTime+d);o.connect(g);g.connect(a.destination);o.start();o.stop(a.currentTime+d+.02)}
-const SFX={jump:()=>beep(440,.12,'square',.04,320),coin:()=>{beep(988,.06);setTimeout(()=>beep(1319,.12),60)},click:()=>beep(220,.06,'square',.05),door:()=>beep(160,.25,'triangle',.08,-60),ok:()=>[523,659,784,1047].forEach((f,i)=>setTimeout(()=>beep(f,.1),i*80)),bad:()=>beep(196,.25,'sawtooth',.05,-80),hurt:()=>beep(330,.2,'square',.05,-250),jump2:()=>beep(660,.1,'square',.04,420),pipe:()=>[392,330,262,196].forEach((f,i)=>setTimeout(()=>beep(f,.1,'square',.05),i*90)),win:()=>[523,523,784,784,880,1047].forEach((f,i)=>setTimeout(()=>beep(f,.14,'square',.05),i*120))};
+const SFX={jump:()=>beep(440,.12,'square',.04,320),coin:()=>{beep(988,.06);setTimeout(()=>beep(1319,.12),60)},click:()=>beep(220,.06,'square',.05),door:()=>beep(160,.25,'triangle',.08,-60),ok:()=>[523,659,784,1047].forEach((f,i)=>setTimeout(()=>beep(f,.1),i*80)),bad:()=>beep(196,.25,'sawtooth',.05,-80),hurt:()=>beep(330,.2,'square',.05,-250),jump2:()=>beep(660,.1,'square',.04,420),pop:()=>{beep(880,.06,'square',.05,400);setTimeout(()=>beep(1320,.08),60)},pipe:()=>[392,330,262,196].forEach((f,i)=>setTimeout(()=>beep(f,.1,'square',.05),i*90)),win:()=>[523,523,784,784,880,1047].forEach((f,i)=>setTimeout(()=>beep(f,.14,'square',.05),i*120))};
 let musT=null;const MEL=[523,0,659,0,784,659,523,0,587,0,698,0,880,698,587,0,523,0,659,784,1047,0,880,784,698,659,587,523,587,0,0,0],BASS=[131,131,165,165,196,196,165,165,147,147,175,175,220,220,175,175];
 function music(on){clearInterval(musT);musT=null;if(!on||!soundOn)return;let i=0;musT=setInterval(()=>{if(paused||!running)return;const m=MEL[i%MEL.length];if(m)beep(m,.11,'square',.018);if(i%2===0)beep(BASS[(i/2)%BASS.length],.2,'triangle',.03);i++},150)}
 
 /* ====== status permainan ====== */
 const JUMP2=240,ROPE=72;
+let LIVES=5,failed=false,MODE='win';
 let MAP=[],DID=[],MW=0,MH=14,LV=0,LD=null,SEED=1,levelT=0;
 let P=[],level,cam={x:0,y:0},running=false,paused=false,quizOpen=false,t0=0,elapsed=0,coins=0,coinTot=0,checkpoint={x:3*T,y:9*T},doors={},latched={},timers={},blueOn=false,laserOff=false,qDone=[],parts=[],msg=null,won=false,movers=[],rocks=[],pipeT=0,emerge=0,totCoins=0,PRE='';
 const QB='xyz',ROLE=['Lincah','Kuat'];
 const rockAuth=()=>!NET.on||RM[ME]===1;const isL=p=>RM[p.i]===0,isK=p=>RM[p.i]===1;
-function loadLevel(n,seed){LV=Math.max(0,Math.min(LVCFG.length-1,n|0));SEED=seed||newSeed();LD=genLevel(LV,SEED);MAP=LD.g;DID=LD.did;MW=LD.W;MH=LD.H}
-function reset(){coins=0;won=false;doors={};latched={};timers={};blueOn=false;laserOff=false;parts=[];elapsed=0;levelT=0;pipeT=0;emerge=.8;
+function loadLevel(n,seed){LV=Math.max(0,Math.min(LVCFG.length-1,n|0));if(LV===0)LIVES=5;SEED=seed||newSeed();LD=genLevel(LV,SEED);MAP=LD.g;DID=LD.did;MW=LD.W;MH=LD.H}
+function reset(){coins=0;won=false;failed=false;doors={};latched={};timers={};blueOn=false;laserOff=false;parts=[];elapsed=0;levelT=0;pipeT=0;emerge=.8;
   level={coins:LD.coins.map(([x,y])=>({x:x*T+8,y:y*T+8,got:false})),plates:LD.plates.map(p=>({...p,on:false,lit:0})),qs:[],cps:LD.cps.map(x=>x*T),zones:LD.zones.map(z=>({...z,done:false}))};coinTot=level.coins.length;
   for(let y=0;y<MH;y++)for(let x=0;x<MW;x++)if(MAP[y][x]==='Q')level.qs.push({x,y});
   level.qs.sort((a,b)=>a.x-b.x);qDone=level.qs.map(()=>false);
@@ -298,7 +299,7 @@ function rockReset(r){r.x=r.hx;r.y=r.hy;r.vy=0}
 let qCool=0;function step(dt){if(qCool>0)qCool-=dt;levelT+=dt;moverUpdate(dt);
   if(emerge>0){emerge-=dt;P.forEach(p=>{if(p.remote)netLerp(p,dt)});return}
   if(pipeT>0){pipeT-=dt;P.forEach(p=>{p.vx=0;p.y+=22*dt});if(pipeT<=0)pipeDone();return}
-  for(const p of P){if(p.remote){netLerp(p,dt);continue}if(p.dead>0){p.dead-=dt;if(p.dead<=0)respawn(p);continue}
+  for(const p of P){if(p.remote){netLerp(p,dt);continue}if(p.dead>0){if(p.bub){bubStep(p,dt);continue}p.dead-=dt;if(p.dead<=0)afterDeath(p);continue}
     if(solidP(p.x,p.y,PW,PH)){let k=0;while(k++<40&&solidP(p.x,p.y,PW,PH))p.y-=1;if(solidP(p.x,p.y,PW,PH)){p.y+=40;respawn(p)}}
     const want=(p.inp.r?1:0)-(p.inp.l?1:0);p.vx=want*(p.push?SPD*.65:SPD);if(want)p.face=want;
     if(p.inp.j&&!p.jHeld){p.jq=.12}p.jHeld=p.inp.j;if(p.jq>0)p.jq-=dt;
@@ -331,10 +332,11 @@ let qCool=0;function step(dt){if(qCool>0)qCool-=dt;levelT+=dt;moverUpdate(dt);
     p.anim+=dt*(p.vx?10:0);
     if(overlapsTile({x:p.x+2,y:p.y+6},'^')||p.y>MH*T+8)kill(p);
     if(!laserOff&&isL(p)&&overlapsTile(p,'L')){kill(p);say('Si Lincah tersengat laser! Biarkan Si Kuat yang mematikan sakelarnya.',3)}
-    for(const c of level.coins)if(!c.got&&Math.abs(p.x+PW/2-c.x)<10&&Math.abs(p.y+PH/2-c.y)<11){c.got=true;coins++;SFX.coin();burst(c.x,c.y,'#f7c548',8);netEv({t:'coin',i:level.coins.indexOf(c)})}
+    for(const c of level.coins)if(!c.got&&Math.abs(p.x+PW/2-c.x)<10&&Math.abs(p.y+PH/2-c.y)<11){c.got=true;coins++;coinLife();SFX.coin();burst(c.x,c.y,'#f7c548',8);netEv({t:'coin',i:level.coins.indexOf(c)})}
     if(!quizOpen&&qCool<=0)level.qs.forEach((q,i)=>{if(!qDone[i]&&Math.abs(p.x+PW/2-(q.x*T+8))<16&&Math.abs(p.y-(q.y*T))<20)openQuiz(i)});
   }
   {const [a,b]=P;if(!a.dead&&!b.dead&&!(NET.on&&(a.y<b.y?a:b).remote)&&a.x+PW>b.x+1&&a.x<b.x+PW-1&&a.y+PH>b.y&&a.y<b.y+PH){const top=a.y<b.y?a:b,bot=top===a?b:a;const ny=bot.y-PH;if(top.y+PH-bot.y<7&&!solidP(top.x,ny,PW,PH)){top.y=ny;top.vy=Math.min(top.vy,bot.vy);top.on=bot;top.ground=!!(bot.ground&&bot.vy>=0)}}}
+  if(!failed&&!won&&P.length===2&&P.every(p=>p.dead>0)){levelFail('Kalian berdua jatuh bersamaan.')}
   P.forEach(p=>{p.lastDx=(p.x-(p.px??p.x));p.px=p.x});
   // batu (dihitung oleh pemilik Si Kuat)
   if(rockAuth())for(const r of rocks){r.vy=Math.min(r.vy+GRAV*dt,420);const ny=r.y+r.vy*dt;if(!hitSolid(r.x,ny,16,16)&&!rockAt(r.x,ny,16,16,r))r.y=ny;else{const dir=Math.sign(r.vy)||1;let n=0;while(n++<20&&!hitSolid(r.x,r.y+dir,16,16)&&!rockAt(r.x,r.y+dir,16,16,r))r.y+=dir;r.vy=0}if(r.y>MH*T)rockReset(r)}
@@ -363,9 +365,21 @@ let qCool=0;function step(dt){if(qCool>0)qCool-=dt;levelT+=dt;moverUpdate(dt);
   // finis: masuk pipa bersama
   if(!won&&pipeT<=0&&(!NET.on||ME===0)){const X=LD.pipe*T,Y=8*T;if(P.every(p=>!p.dead&&p.x+PW>X+1&&p.x<X+2*T-1&&p.y+PH<=Y+2&&(p.ground||p.on))){netEv({t:'pipe'});enterPipe()}}
   parts=parts.filter(q=>(q.t-=dt)>0);parts.forEach(q=>{q.x+=q.vx*dt;q.y+=q.vy*dt;q.vy+=300*dt})}
-function enterPipe(){if(pipeT>0)return;pipeT=1;SFX.pipe();P.forEach(p=>{p.inp={l:0,r:0,j:0};p.vx=0;p.vy=0;p.dead=0})}
+function enterPipe(){if(pipeT>0)return;pipeT=1;SFX.pipe();P.forEach(p=>{p.inp={l:0,r:0,j:0};p.vx=0;p.vy=0;p.dead=0;p.bub=false})}
 function pipeDone(){totCoins+=coins;if(NET.on&&ME!==0)return;if(LV>=LVCFG.length-1){netEv({t:'win'});win()}else{PRE=`Level ${LV+1} selesai! `;goLevel(LV+1)}}
-function kill(p){if(p.dead>0)return;p.dead=.8;p.onM=null;p.on=null;SFX.hurt();burst(p.x+5,p.y+7,'#fff8e7',12)}
+function kill(p){if(p.dead>0||failed||won)return;p.dead=.8;p.bub=false;p.onM=null;p.on=null;SFX.hurt();burst(p.x+5,p.y+7,'#fff8e7',12);loseLife();netEv({t:'die'})}
+function loseLife(){LIVES=Math.max(0,LIVES-1);if(LIVES<=0)setTimeout(()=>{if(!failed&&!won&&running)levelFail('Nyawa tim habis.')},700)}
+function coinLife(){if(coins>0&&coins%10===0){LIVES++;say('10 koin terkumpul: nyawa tim bertambah 1!',2.5)}}
+/* gelembung: pemain yang jatuh melayang menuju temannya dan bisa diselamatkan dengan disentuh */
+function afterDeath(p){const o=P[1-p.i];if(failed)return;if(o&&!(o.dead>0)){p.bub=true;p.dead=99;p.bt=0;p.vx=0;p.vy=0;p.on=p.onM=null;p.y=Math.min(p.y,8*T);
+    say(NET.on?(p.i===ME?'Kamu di dalam gelembung. Tunggu temanmu menyentuhmu!':''):`Si ${ROLE[RM[p.i]]} di dalam gelembung! Si ${ROLE[RM[o.i]]}, lompat dan sentuh gelembungnya untuk menyelamatkan.`,3.5)}}
+function bubStep(p,dt){const o=P[1-p.i];p.bt=(p.bt||0)+dt;if(!o||o.dead>0)return;const tx=o.x,ty=o.y-24+Math.sin(p.bt*3)*4,dx=tx-p.x,dy=ty-p.y,d=Math.hypot(dx,dy),sp=Math.min(d,(d>120?160:70)*dt);
+  if(d>0){p.x+=dx/d*sp;p.y+=dy/d*sp}p.face=dx<0?-1:1;
+  if(Math.hypot(p.x-o.x,p.y-o.y)<18||p.bt>14)bubPop(p,o)}
+function bubPop(p,o){p.bub=false;p.dead=0;p.vy=-150;p.vx=0;p.dj=true;p.bt=0;if(solidP(p.x,p.y,PW,PH)){p.x=o.x;p.y=o.y-PH-1;if(solidP(p.x,p.y,PW,PH))p.y=o.y}SFX.pop();burst(p.x+5,p.y+7,'#9cd0ff',14)}
+function levelFail(why){if(failed||won)return;failed=true;netEv({t:'fail',why});running=false;music(false);SFX.hurt();MODE='fail';
+  $('wTitle').textContent='Level gagal';$('wTxt').innerHTML=`${esc(why)} Ayo coba lagi dan saling bantu!<br>Nyawa tim: <b>${Math.max(LIVES,3)}</b>`;
+  $('bNext').textContent='Ulangi level ini';$('bAgain').style.display='none';setTimeout(()=>{$('pWin').hidden=false},600)}
 function respawn(p){p.x=checkpoint.x+3+p.i*12;p.vx=0;p.vy=0;p.dj=true;p.y=2*T;let g=false;for(let y=2*T;y<12*T;y+=2){if(solidP(p.x,y+1,PW,PH)){p.y=y;g=true;break}}if(!g){p.y=9*T-PH}let n=0;while(n++<14&&solidP(p.x,p.y,PW,PH))p.y-=T}
 function burst(x,y,col,n){for(let i=0;i<n;i++)parts.push({x,y,vx:(Math.random()-.5)*120,vy:-Math.random()*140,t:.5+Math.random()*.3,col})}
 
@@ -382,10 +396,10 @@ function openQuiz(qi){quizOpen=true;const it=makeQ();$('qTxt').textContent=it.q;
   $('pQuiz').hidden=false;Object.values(P).forEach(p=>{if(!p.remote)p.inp={l:0,r:0,j:0}})}
 
 /* ====== tamat & lanjut level ====== */
-function win(){if(won)return;won=true;running=false;music(false);SFX.win();
+function win(){if(won)return;won=true;MODE='win';running=false;music(false);SFX.win();
   $('wTitle').textContent='Semua level selesai!';
   $('wTxt').innerHTML=`Kalian menamatkan ${LVCFG.length} level Petualangan Berdua. Kerja sama yang hebat!<br>Total koin: <b>${totCoins}</b>`;
-  $('bNext').textContent='Main lagi dari Level 1';$('bAgain').hidden=true;
+  $('bNext').textContent='Main lagi dari Level 1';$('bAgain').style.display='none';
   setTimeout(()=>{$('pWin').hidden=false},500)}
 function goLevel(n,silent){const s=newSeed();if(!silent)netEv({t:'level',n,seed:s});loadLevel(n,s);start(true)}
 
@@ -458,7 +472,8 @@ function draw(){cx.imageSmoothingEnabled=false;drawBG();const ox=Math.round(cam.
     cx.strokeStyle=d>ROPE-2?'#e2483d':'#8a5a3b';cx.lineWidth=2;cx.beginPath();cx.moveTo(xa,ya);cx.quadraticCurveTo((xa+xb)/2,(ya+yb)/2+sag,xb,yb);cx.stroke()}
   // pemain (muncul dari / masuk ke pipa)
   const clip=emerge>0||pipeT>0;if(clip){cx.save();cx.beginPath();cx.rect(0,0,VW,8*T);cx.clip()}const eo=emerge>0?Math.round(emerge/.8*18):0;
-  for(const p of P){if(p.dead>0&&Math.floor(now/80)%2)continue;const s=sprFor(p.i);let img=!p.ground?s.jump:(p.vx&&Math.floor(p.anim)%2?s.walk:s.idle);if(p.face<0)img=flipped(img);
+  for(const p of P){if(p.bub){const bx=Math.round(p.x+5-ox),by=Math.round(p.y+7);cx.fillStyle='rgba(156,208,255,.35)';cx.beginPath();cx.arc(bx,by,13,0,Math.PI*2);cx.fill();cx.strokeStyle='#e8f6ff';cx.lineWidth=1.5;cx.stroke();cx.fillStyle='#fff';cx.fillRect(bx-7,by-8,3,2)}
+    else if(p.dead>0&&Math.floor(now/80)%2)continue;const s=sprFor(p.i);let img=!p.ground?s.jump:(p.vx&&Math.floor(p.anim)%2?s.walk:s.idle);if(p.face<0)img=flipped(img);
     cx.drawImage(img,Math.round(p.x-1-ox),Math.round(p.y-1+eo));
     cx.fillStyle=SKIN[RM[p.i]].m;cx.fillRect(Math.round(p.x+3-ox),Math.round(p.y-7+eo),4,3)}
   if(clip)cx.restore();
@@ -467,7 +482,7 @@ function draw(){cx.imageSmoothingEnabled=false;drawBG();const ox=Math.round(cam.
 function drawQ(X,Y,now,done){cx.fillStyle='#5f6180';cx.fillRect(X+1,Y+2,14,14);cx.fillStyle=done?'#7be07f':'#9b6bff';cx.fillRect(X+2,Y+3,12,12);cx.fillStyle='#fff8e7';const b=done?0:Math.floor(now/300)%2;
   const q=["0110","1001","0010","0100","0000","0100"];if(done){cx.fillRect(X+5,Y+9,2,2);cx.fillRect(X+7,Y+11,2,2);cx.fillRect(X+9,Y+7,2,4)}else q.forEach((r,i)=>[...r].forEach((v,j)=>{if(v==='1')cx.fillRect(X+4+j*2,Y+3+i*2-b,2,2)}))}
 /* HUD & label nama ditulis dengan HTML supaya tajam & mudah dibaca */
-function hud(ox){const s=Math.floor(elapsed);const h=$('hud');if(h){const t=`<b>LEVEL ${LV+1}</b><span>● ${coins}/${coinTot}</span><span>${Math.floor(s/60)}:${String(s%60).padStart(2,'0')}</span>`;if(h._t!==t){h.innerHTML=t;h._t=t}}
+function hud(ox){const s=Math.floor(elapsed);const h=$('hud');if(h){const t=`<b>LEVEL ${LV+1}</b><span>♥ ${LIVES}</span><span>● ${coins}/${coinTot}</span><span>${Math.floor(s/60)}:${String(s%60).padStart(2,'0')}</span>`;if(h._t!==t){h.innerHTML=t;h._t=t}}
   const sc=cv.clientWidth/VW;P.forEach(p=>{const el=$('nm'+p.i);if(!el)return;const show=running&&!(p.dead>0)&&!(emerge>0);el.hidden=!show;if(!show)return;
     const nm=NET.on?(p.i===ME?'Kamu':(NET.peer||'Teman'))+' · '+ROLE[RM[p.i]]:'Si '+ROLE[RM[p.i]];const mic=NET.on&&(p.i===ME?VOICE.on:NET.peerMic)?' 🎤':'';const tx=nm+mic;if(el._t!==tx){el.textContent=tx;el._t=tx}
     const o=P[1-p.i],near=o&&Math.abs(o.x-p.x)<46&&Math.abs(o.y-p.y)<22,lift=near&&p.i===1?15:0;el.style.transform=`translate(${Math.round(cv.offsetLeft+(p.x+5-ox)*sc)}px,${Math.round(cv.offsetTop+(p.y-9-lift+(emerge>0?0:0))*sc)}px) translate(-50%,-100%)`})}
@@ -497,22 +512,24 @@ function start(){if(!MAP.length)loadLevel(0);reset();running=true;paused=false;q
   try{if(touch&&document.documentElement.requestFullscreen&&!document.fullscreenElement)document.documentElement.requestFullscreen().catch(()=>{})}catch(e){}}
 function togglePause(){paused=!paused;$('pPause').hidden=!paused;if(!paused)P.forEach(p=>p.inp={l:0,r:0,j:0})}
 const exit=()=>{try{netClose()}catch(e){}try{if(document.fullscreenElement)document.exitFullscreen()}catch(e){}location.href='../'};
-$('qLater').onclick=()=>{quizOpen=false;qCool=2.5;$('pQuiz').hidden=true};$('bLocal').onclick=()=>{ME=-1;NET.on=false;$('pStart').hidden=true;pickShow(false)};$('bAgain').onclick=()=>{netEv({t:'restart'});start()};$('bNext').onclick=()=>{totCoins=0;goLevel(0)};$('bResume').onclick=togglePause;$('bRestart').onclick=()=>{togglePause();netEv({t:'restart'});start()};$('bExit').onclick=exit;$('bExit2').onclick=exit;
+$('qLater').onclick=()=>{quizOpen=false;qCool=2.5;$('pQuiz').hidden=true};$('bLocal').onclick=()=>{ME=-1;NET.on=false;$('pStart').hidden=true;pickShow(false)};$('bAgain').onclick=()=>{netEv({t:'restart'});start()};$('bNext').onclick=()=>{if(MODE==='fail'){LIVES=Math.max(LIVES,3);netEv({t:'restart',lives:LIVES});start();return}totCoins=0;goLevel(0)};$('bResume').onclick=togglePause;$('bRestart').onclick=()=>{togglePause();netEv({t:'restart'});start()};$('bExit').onclick=exit;$('bExit2').onclick=exit;
 $('bPause').onclick=togglePause;$('bSound').onclick=()=>{soundOn=!soundOn;$('bSound').style.opacity=soundOn?1:.45;music(soundOn&&running)};
 /* ====== main online (WebRTC langsung antar-HP, Firebase hanya untuk mempertemukan) ====== */
 var ME=-1;const NET={on:false,pc:null,dc:null,de:null,peer:'',code:'',unsub:null,sendT:null,role:null,lastRx:0};
 function netLerp(p,dt){const n=p.net;if(!n)return;const k=Math.min(1,dt*14);const ox=p.x;p.x+=(n.x-p.x)*k;p.y+=(n.y-p.y)*k;if(Math.abs(n.x-p.x)>48||Math.abs(n.y-p.y)>48){p.x=n.x;p.y=n.y}
-  {const me=P[1-p.i];if(n.o&&me&&!me.dead&&!n.d){p.x=me.x+(n.ox||0);p.y=me.y-PH}}p.vx=n.vx||0;p.vy=n.vy||0;p.face=n.f||1;p.ground=!!n.g;p.dead=n.d?1:0;p.anim=n.a||0}
+  {const me=P[1-p.i];if(n.o&&me&&!me.dead&&!n.d){p.x=me.x+(n.ox||0);p.y=me.y-PH}}p.vx=n.vx||0;p.vy=n.vy||0;p.face=n.f||1;p.ground=!!n.g;{const wb=p.bub;p.bub=!!n.bu;if(p.bub&&!wb)say('Temanmu di dalam gelembung! Lompat dan sentuh gelembungnya untuk menyelamatkan.',3.5)}p.dead=n.d?(p.bub?99:1):0;p.anim=n.a||0}
 function netEv(m){if(!NET.on||!NET.de||NET.de.readyState!=='open')return;try{NET.de.send(JSON.stringify(m))}catch(e){}}
 function netRx(m){NET.lastRx=performance.now();
   if(m.t==='s'){const p=P[1-ME];if(p)p.net=m;if(m.b&&RM[ME]!==1)m.b.forEach((b,i)=>{if(rocks[i]){rocks[i].x=b[0];rocks[i].y=b[1]}});if(ME===1&&m.lt!=null&&Math.abs(levelT-m.lt)>.12)levelT=m.lt+.04;return}
-  if(m.t==='coin'){const c=level.coins[m.i];if(c&&!c.got){c.got=true;coins++;SFX.coin();burst(c.x,c.y,'#f7c548',8)}return}
+  if(m.t==='coin'){const c=level.coins[m.i];if(c&&!c.got){c.got=true;coins++;coinLife();SFX.coin();burst(c.x,c.y,'#f7c548',8)}return}
   if(m.t==='bridge'){const i=m.i|0;if(!qDone[i]){qDone[i]=true;SFX.ok();if(quizOpen){quizOpen=false;$('pQuiz').hidden=true}say('Temanmu menjawab benar! Jembatan muncul.',3)}return}
   if(m.t==='latch'){if(m.k==='L')laserOff=true;else latched[m.k]=true;return}
   if(m.t==='pipe'){enterPipe();return}
   if(m.t==='level'){if(m.n>0)PRE=`Level ${m.n} selesai! `;else totCoins=0;loadLevel(m.n|0,m.seed);start();return}
   if(m.t==='win'){win();return}
-  if(m.t==='restart'){start();return}
+  if(m.t==='restart'){if(m.lives!=null)LIVES=m.lives;start();return}
+  if(m.t==='die'){loseLife();return}
+  if(m.t==='fail'){levelFail(m.why||'');return}
   if(m.t==='pick'){if(ME===0)decide(1-(m.r|0));return}
   if(m.t==='start'){if(Array.isArray(m.rm))RM=[m.rm[0]|0,m.rm[1]|0];$('pPick').hidden=true;if(m.sx)SX.peer=m.sx;if(m.g!=null)GRADE_ON=m.g;if(m.n!=null){totCoins=0;loadLevel(m.n|0,m.seed)}NET.peer=m.name||NET.peer;NET.peerUid=m.uid||NET.peerUid;start();return}
   if(m.t==='hi'){if(m.sx)SX.peer=m.sx;NET.peer=m.name||NET.peer;NET.peerUid=m.uid||NET.peerUid;return}
@@ -543,7 +560,7 @@ function netSetup(pc){pc.__types={};pc.ontrack=e=>{const a=$('rAudio');a.srcObje
     if(st==='disconnected')setTimeout(()=>{if(pc.connectionState==='disconnected')netLost('Sambungan dengan temanmu terputus.')},6000)}}
 function bothOpen(){return NET.dc&&NET.de&&NET.dc.readyState==='open'&&NET.de.readyState==='open'}
 function onReady(name){if(!bothOpen())return;NET.on=true;if(NET.unsub){NET.unsub();NET.unsub=null}
-  clearInterval(NET.sendT);NET.sendT=setInterval(()=>{if(!running||ME<0)return;const p=P[ME];if(!p||NET.dc.readyState!=='open')return;try{NET.dc.send(JSON.stringify({t:'s',x:+p.x.toFixed(1),y:+p.y.toFixed(1),vx:p.vx|0,vy:p.vy|0,f:p.face,g:p.ground?1:0,o:p.on?1:0,ox:p.on?+(p.x-p.on.x).toFixed(1):0,d:p.dead>0?1:0,a:+(p.anim||0).toFixed(1),lt:ME===0?+levelT.toFixed(2):undefined,b:RM[ME]===1&&rocks.length?rocks.map(r=>[Math.round(r.x),Math.round(r.y)]):undefined}))}catch(e){}},50);
+  clearInterval(NET.sendT);NET.sendT=setInterval(()=>{if(!running||ME<0)return;const p=P[ME];if(!p||NET.dc.readyState!=='open')return;try{NET.dc.send(JSON.stringify({t:'s',x:+p.x.toFixed(1),y:+p.y.toFixed(1),vx:p.vx|0,vy:p.vy|0,f:p.face,g:p.ground?1:0,o:p.on?1:0,ox:p.on?+(p.x-p.on.x).toFixed(1):0,d:p.dead>0?1:0,bu:p.bub?1:0,a:+(p.anim||0).toFixed(1),lt:ME===0?+levelT.toFixed(2):undefined,b:RM[ME]===1&&rocks.length?rocks.map(r=>[Math.round(r.x),Math.round(r.y)]):undefined}))}catch(e){}},50);
   NET.myName=name;PICK.done=false;if(ME===1)netEv({t:'hi',name,uid:NET.myUid,sx:SX.me});pickShow(true);$('bMic').hidden=$('bSpk').hidden=false;micUI();
   // ruang sudah terpakai: hapus dokumennya
   if(ME===0&&NET.code)try{fb().db.doc('duo/'+NET.code).delete().catch(()=>{})}catch(e){}}
@@ -655,7 +672,7 @@ document.querySelectorAll('#pPick .pk').forEach(b=>b.onclick=()=>{const r=+b.dat
   if(!PICK.online){RM=r===0?[0,1]:[1,0];$('pPick').hidden=true;totCoins=0;loadLevel(0);heroPrev();start();return}
   if(PICK.done)return;b.classList.add('sel');document.querySelectorAll('#pPick .pk').forEach(x=>x.disabled=true);
   if(ME===0)decide(r);else{netEv({t:'pick',r});$('pkMsg').textContent='Pilihan terkirim. Memulai permainan…'}});
-window.__duo={pickShow,get RM(){return RM},snap:x=>{cam.x=x;draw();return cv.toDataURL()},VW:()=>VW,get LD(){return LD},get rocks(){return rocks},get laserOff(){return laserOff},get pipeT(){return pipeT},get emerge(){return emerge},get latched(){return latched},get level(){return level},enterPipe,get P(){return P},get doors(){return doors},get qDone(){return qDone},get won(){return won},get LV(){return LV},get movers(){return movers},get blueOn(){return blueOn},get checkpoint(){return checkpoint},start,loadLevel,goLevel,step:(n=1)=>{for(let i=0;i<n;i++)step(1/60)},MAP:()=>MAP};
+window.__duo={get LIVES(){return LIVES},get failed(){return failed},kill:i=>kill(P[i]),get RM(){return RM},snap:x=>{cam.x=x;draw();return cv.toDataURL()},VW:()=>VW,get LD(){return LD},get rocks(){return rocks},get laserOff(){return laserOff},get pipeT(){return pipeT},get emerge(){return emerge},get latched(){return latched},get level(){return level},enterPipe,get P(){return P},get doors(){return doors},get qDone(){return qDone},get won(){return won},get LV(){return LV},get movers(){return movers},get blueOn(){return blueOn},get checkpoint(){return checkpoint},start,loadLevel,goLevel,step:(n=1)=>{for(let i=0;i<n;i++)step(1/60)},MAP:()=>MAP};
 })();
 </script>
 </body>
