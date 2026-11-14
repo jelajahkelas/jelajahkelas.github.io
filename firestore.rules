@@ -61,7 +61,14 @@ service cloud.firestore {
             && (!changedKeys().hasAny(['teacherUid', 'classId']) || validJoin(uid)))
         || (signedIn() && resource.data.teacherUid == request.auth.uid
             && changedKeys().hasOnly(['classId', 'teacherUid', 'joinCode'])
-            && request.resource.data.teacherUid == null);
+            && request.resource.data.teacherUid == null)
+        // Guru boleh mengirim ajakan menyalakan notifikasi ke muridnya (hanya kolom nreq).
+        || (signedIn() && resource.data.teacherUid == request.auth.uid
+            && changedKeys().hasOnly(['nreq'])
+            && request.resource.data.nreq.keys().hasOnly(['at', 'by'])
+            && request.resource.data.nreq.at is number
+            && request.resource.data.nreq.by is string
+            && request.resource.data.nreq.by.size() <= 60);
       allow delete: if signedIn() && (request.auth.uid == uid || isAdmin());
     }
 
