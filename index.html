@@ -6,7 +6,7 @@
 <link rel="canonical" href="https://jelajahkelas.github.io/">
 <meta name="robots" content="index,follow,max-image-preview:large">
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebApplication", "name": "JELAS (Jelajah Kelas)", "alternateName": ["JELAS", "Jelajah Kelas"], "url": "https://jelajahkelas.github.io/", "applicationCategory": "EducationalApplication", "operatingSystem": "Android, iOS, Windows, macOS, ChromeOS", "inLanguage": "id", "isAccessibleForFree": true, "offers": {"@type": "Offer", "price": 0, "priceCurrency": "IDR"}, "description": "Aplikasi belajar Kurikulum Merdeka berbentuk game untuk TK sampai SMA/SMK, lengkap dengan mode guru.", "image": "https://jelajahkelas.github.io/icons/og.png?v=2"}</script>
-<meta name="description" content="JELAS (Jelajah Kelas): aplikasi belajar gratis Kurikulum Merdeka untuk TK, SD, SMP, dan SMA/SMK. Pelajaran singkat dan 20+ game edukatif, plus mode guru untuk kelas, absensi, dan evaluasi di TV.">
+<meta name="description" content="JELAS (Jelajah Kelas): aplikasi belajar gratis Kurikulum Merdeka untuk TK, SD, SMP, dan SMA/SMK. Pelajaran singkat dan 16 game edukatif, plus mode guru untuk kelas, absensi, dan evaluasi di TV.">
 <meta name="theme-color" content="#3D8BFF">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="JELAS">
@@ -4156,7 +4156,7 @@ html[data-theme=malam] .plstick{background:#0a0f1e}
 <div class="syncpill" id="syncPill" hidden></div>
 <div class="toast" id="toast" hidden></div>
 
-<script src="av.js?v=358"></script>
+<script src="av.js?v=359"></script>
 <script>
 /* ---------- visual assets ---------- */
 const INK='#1B1E3D';
@@ -10044,7 +10044,7 @@ const MODE_LIST=[
   icon:'<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M4 14h40M4 34h40"/><path d="M4 24h6M16 24h6M28 24h6" stroke-width="2"/><path d="M34 16l10 8-10 8"/></svg>'},
  {id:'balon',hidden:1,name:'Tangkap Balon',desc:'Geser keranjang, tangkap balon benar',help:'Seret jari/mouse atau tekan ← → untuk menggeser keranjang. Tangkap balon dengan jawaban benar dan hindari balon yang salah. Jangan biarkan balon benar lewat!',
   icon:'<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="24" cy="14" rx="10" ry="11"/><path d="M24 25l-2 8"/><path d="M11 34h26l-4 10H15z"/></svg>'},
- {id:'tikus',name:'Pukul Tikus',desc:'Pukul tikus pembawa jawaban benar',help:'Tikus muncul dari lubang membawa papan jawaban. Ketuk tikus dengan jawaban benar secepatnya. Keyboard: tekan angka pada papan.',
+ {id:'tikus',hidden:1,name:'Pukul Tikus',desc:'Pukul tikus pembawa jawaban benar',help:'Tikus muncul dari lubang membawa papan jawaban. Ketuk tikus dengan jawaban benar secepatnya. Keyboard: tekan angka pada papan.',
   icon:'<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M5 42h38"/><path d="M13 42c0-12 5-19 11-19s11 7 11 19"/><circle cx="20" cy="31" r="1.6" fill="currentColor"/><circle cx="28" cy="31" r="1.6" fill="currentColor"/><path d="M30 4l12 12M36 10l-8 8"/></svg>'},
  {id:'balap',name:'Balap Mobil',desc:'Setir mobil ke garis finis yang benar',help:'Ketuk jalur atau tekan ← → untuk menyetir. Tahan jari/mouse (atau tombol ↑) untuk nitro. Masuki garis finis dengan jawaban benar dan ambil koin di jalan.',
   icon:'<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><rect x="15" y="6" width="18" height="36" rx="6"/><path d="M19 15h10M19 33h10"/><path d="M9 11v8M39 11v8M9 29v8M39 29v8"/></svg>'},
@@ -10054,13 +10054,13 @@ const MODE_LIST=[
   icon:'<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><ellipse cx="24" cy="34" rx="19" ry="9"/><circle cx="17" cy="15" r="5"/><circle cx="31" cy="15" r="5"/><path d="M15 25c5 4 13 4 18 0"/></svg>'},
  {id:'ular',name:'Cacing Lapar',desc:'Kendalikan cacing memakan bola jawaban',help:'Tangan kiri: sentuh dan geser di sisi kiri layar untuk mengarahkan cacing. Tangan kanan: tahan tombol NOS untuk ngebut. Di laptop: cacing mengikuti mouse, klik atau Spasi untuk ngebut. Makan bola berhuruf jawaban yang benar!',
   icon:'<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 38h15a6 6 0 0 0 0-12h-8a6 6 0 0 1 0-12h22"/><circle cx="40" cy="14" r="4" fill="currentColor"/></svg>'},
- {id:'penalti',name:'Tendang Penalti',desc:'Tendang bola ke sudut gawang yang benar',help:'Geser jari dari bola ke arah sudut gawang, atau ketuk langsung kotak jawaban di gawang. Keyboard: tekan angka pada kotak. Kiper akan mencoba menghalangi!',
+ {id:'penalti',hidden:1,name:'Tendang Penalti',desc:'Tendang bola ke sudut gawang yang benar',help:'Geser jari dari bola ke arah sudut gawang, atau ketuk langsung kotak jawaban di gawang. Keyboard: tekan angka pada kotak. Kiper akan mencoba menghalangi!',
   icon:'<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round"><path d="M4 30V8h40v22"/><path d="M4 19h40M24 8v22" stroke-width="2"/><circle cx="24" cy="39" r="6"/></svg>'},
  {id:'basket',name:'Lempar Basket',desc:'Lempar bola ke ring yang benar',help:'Ketuk papan jawaban atau geser jari dari bola ke arah ring untuk melempar. Keyboard: tekan angka pada papan. Ringnya bergerak pelan, jadi bidik baik-baik!',
   icon:'<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><rect x="10" y="4" width="28" height="16" rx="2"/><path d="M15 24h18M17 24l3 10M31 24l-3 10"/><circle cx="24" cy="40" r="5"/></svg>'},
  {id:'buah',name:'Potong Buah',desc:'Sayat buah yang membawa jawaban benar',help:'Buah melompat dari bawah membawa jawaban. Sayat (geser jari) melewati buah yang benar, atau ketuk buahnya. Keyboard: tekan angka pada kartu. Hati-hati, jangan sampai salah sayat!',
   icon:'<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><circle cx="20" cy="28" r="13"/><path d="M20 15c0-5 3-8 7-9"/><path d="M8 42L44 8" stroke-width="2.5"/></svg>'},
- {id:'labirin',name:'Kejar Labirin',desc:'Lari di labirin ke pojok jawaban, hindari hantu',help:'Geser jari ke atas, bawah, kiri, atau kanan untuk berbelok. Keyboard: tombol panah atau W A S D. Lari ke pojok berhuruf jawaban yang benar sebelum hantu menangkapmu!',
+ {id:'labirin',hidden:1,name:'Kejar Labirin',desc:'Lari di labirin ke pojok jawaban, hindari hantu',help:'Geser jari ke atas, bawah, kiri, atau kanan untuk berbelok. Keyboard: tombol panah atau W A S D. Lari ke pojok berhuruf jawaban yang benar sebelum hantu menangkapmu!',
   icon:'<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><rect x="5" y="5" width="38" height="38" rx="3"/><path d="M5 17h14M29 5v14M17 29h14v14M37 23v10"/><circle cx="12" cy="36" r="3" fill="currentColor"/></svg>'},
  {id:'memori',name:'Kartu Memori',desc:'Ingat kartunya, ikuti saat diacak',help:'Kartu jawaban terbuka sebentar. Ingat posisi jawaban yang benar, lalu kartu ditutup dan diacak. Ikuti terus, lalu ketuk kartu yang benar. Keyboard: tekan angka kartu.',
   icon:'<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round"><rect x="5" y="9" width="16" height="22" rx="3"/><rect x="27" y="17" width="16" height="22" rx="3"/><path d="M13 17v2M13 23v0" stroke-linecap="round"/></svg>'},
@@ -10073,7 +10073,7 @@ const MODE_LIST=[
  {id:'urut',name:'Urutkan',desc:'Ketuk berurutan dari yang pertama',help:'Susun urutan yang benar, misalnya urutan planet, gerakan wudu, peristiwa sejarah, atau bilangan. Ketuk kartu satu per satu dari yang pertama. Salah 2 kali, jawaban dianggap salah.',
   icon:'<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M18 10h24M18 24h24M18 38h24"/><path d="M6 8l3-2v8M5 22c2-3 6-2 6 1s-6 5-6 7h6M5 34h5l-3 4c3 0 4 2 3 4s-4 2-5 0"/></svg>'},
  {id:'zona',name:'Zona Jawaban',desc:'Lari ke zona jawaban yang benar',help:'Ketuk atau geser layar untuk menggerakkan avatarmu ke zona jawaban yang benar, lalu berdiri sebentar di sana. Ambil bintang agar lebih cepat, hindari lumpur. Jawaban benar menaikkan kendaraanmu! Keyboard: panah atau angka 1–4.',icon:'<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="12" rx="3"/><rect x="28" y="4" width="16" height="12" rx="3"/><rect x="4" y="32" width="16" height="12" rx="3"/><rect x="28" y="32" width="16" height="12" rx="3"/><circle cx="24" cy="24" r="4"/></svg>'},
- {id:'pacu',name:'Pacu Jalur',desc:'Jawab benar, perahumu melaju',help:'Setiap jawaban benar membuat perahu jalurmu mendayung lebih jauh, jawaban salah atau waktu habis membuatnya mundur sedikit. Kalahkan perahu lawan sampai garis finis! Ketuk tombol jawaban atau tekan angka 1–4.',
+ {id:'pacu',hidden:1,name:'Pacu Jalur',desc:'Jawab benar, perahumu melaju',help:'Setiap jawaban benar membuat perahu jalurmu mendayung lebih jauh, jawaban salah atau waktu habis membuatnya mundur sedikit. Kalahkan perahu lawan sampai garis finis! Ketuk tombol jawaban atau tekan angka 1–4.',
   icon:'<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 28h40l-6 8H10z"/><path d="M14 28l-4-10M24 28l-4-10M34 28l-4-10"/><path d="M4 42c4-3 8-3 12 0s8 3 12 0 8-3 12 0"/></svg>'},
  {id:'layang',hidden:1,name:'Main Layangan',desc:'Terbangkan layangan ke awan jawaban',help:'Geser jari ke kiri dan kanan untuk mengarahkan layangan ke awan dengan jawaban benar. Hindari layangan ungu yang bisa menyenggolmu! Keyboard: panah kiri dan kanan.',
   icon:'<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round"><path d="M24 4l14 16-14 16-14-16z"/><path d="M24 36c-2 4 2 6 0 10" stroke-linecap="round"/></svg>'},
@@ -10082,13 +10082,13 @@ const MODE_LIST=[
 /* which games suit which subject: short numeric answers suit fast action games,
    word answers suit games with readable cards, long phrases suit games with wide labels or an A–D list */
 const FIT={
- num:{games:['lompat','zona','tembak','balap','tikus','penalti','basket','buah','memori','benarsalah','kelompok','urut','pacu','kuis'],note:'Jawabannya berupa angka pendek, jadi cocok untuk game cepat yang melatih ketangkasan berhitung.'},
- unit:{games:['lompat','zona','tembak','balap','lari','pancing','penalti','basket','memori','benarsalah','kelompok','urut','pacu','kuis'],note:'Jawabannya angka dengan satuan (cm, menit, N, J), jadi dipilih game yang kartunya cukup lebar.'},
- word:{games:['lompat','zona','pancing','katak','lari','tikus','penalti','buah','labirin','memori','benarsalah','susun','kelompok','urut','pacu','kuis'],note:'Jawabannya berupa kata, jadi dipilih game yang memberi waktu membaca sebelum memilih.'},
- phrase:{games:['lompat','zona','ular','lari','katak','pancing','penalti','labirin','memori','benarsalah','susun','kelompok','urut','pacu','kuis'],note:'Jawabannya berupa istilah atau frasa, jadi dipilih game dengan kartu jawaban lebar.'},
- long:{games:['ular','zona','lari','katak','labirin','benarsalah','kelompok','urut','pacu','kuis'],note:'Jawabannya berupa kalimat atau nama panjang, jadi dipilih game yang menampilkan jawaban dengan jelas dan tidak terburu-buru.'},
- kid:{games:['katak','basket','penalti','memori','pancing','urut','kuis'],note:'Untuk anak TK dipilih game yang cukup diketuk atau digeser, dengan gerakan pelan.'},
- kidSlow:{games:['katak','basket','penalti','memori','kuis'],note:'Untuk anak TK dipilih game yang pelan dan cukup diketuk.'},
+ num:{games:['lompat','zona','tembak','balap','basket','buah','memori','benarsalah','kelompok','urut','kuis'],note:'Jawabannya berupa angka pendek, jadi cocok untuk game cepat yang melatih ketangkasan berhitung.'},
+ unit:{games:['lompat','zona','tembak','balap','lari','pancing','basket','memori','benarsalah','kelompok','urut','kuis'],note:'Jawabannya angka dengan satuan (cm, menit, N, J), jadi dipilih game yang kartunya cukup lebar.'},
+ word:{games:['lompat','zona','pancing','katak','lari','buah','memori','benarsalah','susun','kelompok','urut','kuis'],note:'Jawabannya berupa kata, jadi dipilih game yang memberi waktu membaca sebelum memilih.'},
+ phrase:{games:['lompat','zona','ular','lari','katak','pancing','memori','benarsalah','susun','kelompok','urut','kuis'],note:'Jawabannya berupa istilah atau frasa, jadi dipilih game dengan kartu jawaban lebar.'},
+ long:{games:['ular','zona','lari','katak','benarsalah','kelompok','urut','kuis'],note:'Jawabannya berupa kalimat atau nama panjang, jadi dipilih game yang menampilkan jawaban dengan jelas dan tidak terburu-buru.'},
+ kid:{games:['katak','basket','memori','pancing','urut','kuis'],note:'Untuk anak TK dipilih game yang cukup diketuk atau digeser, dengan gerakan pelan.'},
+ kidSlow:{games:['katak','basket','memori','kuis'],note:'Untuk anak TK dipilih game yang pelan dan cukup diketuk.'},
  picture:{games:['kuis'],note:'Jawabannya berupa gambar, jadi dimainkan sebagai kuis bergambar dengan tombol besar.'}};
 /* Semua game boleh dipilih di semua kelas. Game yang paling cocok tetap di urutan atas. Kuis bergambar (jawaban berupa gambar) hanya bisa dimainkan sebagai kuis. */
 const allGames=f=>{f=f||FIT.long;if(f===FIT.picture)return f.games;const rest=MODE_LIST.filter(m=>!m.hidden).map(m=>m.id).filter(id=>!f.games.includes(id)&&id!=='kuis');const g=f.games.filter(x=>x!=='kuis').concat(rest);return g.concat(['kuis'])};
@@ -12299,7 +12299,7 @@ const progKey=(c,s)=>`${c||CLS().id}/${s||SUBJ().id}`;
 function progOf(c,s){const k=progKey(c,s);return P.prog[k]||(P.prog[k]={done:0})}
 const totalNodes=s=>s.units.length*NODES.length;
 const lvOf=()=>LEVELS.find(l=>l.id===CLS().lv);
-const TK_GAMES=['penalti','kuis'];
+const TK_GAMES=['basket','kuis'];
 function gameFor(subj,ui){const u=subj.units[ui];const f=FIT[u.fit||subj.fit];let isTk=false;try{isTk=CLS().lv==='tk'}catch(e){}if(isTk&&f!==FIT.picture)return TK_GAMES[ui%TK_GAMES.length];const list=f.games.filter(g=>g!=='kuis'&&g!=='urut');return list.length?list[ui%list.length]:'kuis'}
 const UNIT_SHADES=[0,-.16,-.3,.1,-.08,-.22];
 const unitColor=ui=>{const c=(typeof P!=='undefined'&&P&&P.cls)?SUBJ().color:null;return c?shade(c,UNIT_SHADES[ui%UNIT_SHADES.length]):UNIT_COLORS[ui%UNIT_COLORS.length]};
@@ -16041,7 +16041,7 @@ function folBind(root,list,after){root.querySelectorAll('[data-follow]').forEach
   try{await folDo(f,on);if(on){try{sfx.ok()}catch(_){}toast('team',`Kamu mengikuti ${f.name}.`)}b.outerHTML=folBtn(f,b.classList.contains('sm'));folBind(root,list,after);after&&after()}catch(err){b.disabled=false;toast('lock',fbErr(err))}})}
 const shareIcon='<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M12 3 V15 M7 8 L12 3 L17 8 M5 13 V19 C5 20 6 21 7 21 H17 C18 21 19 20 19 19 V13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const qrIcon='<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><path d="M14 14h3v3h-3zM18 18h3v3h-3zM18 14h3M14 18v3" stroke-linecap="round"/></svg>';
-let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=358';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
+let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=359';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
 function qrMatrix(text){const Q=window.QRCodeLib,q=new Q(-1,Q.ECL.M);q.addData(text);q.make();const n=q.getModuleCount(),m=[];for(let r=0;r<n;r++){m.push([]);for(let c=0;c<n;c++)m[r].push(q.isDark(r,c))}return m}
 function qrSvgOf(m){const n=m.length;let d='';for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(m[r][c])d+=`M${c} ${r}h1.02v1.02h-1.02z`;
   return `<svg viewBox="-2 -2 ${n+4} ${n+4}" class="pcqr" shape-rendering="crispEdges" aria-label="Kode QR profil"><rect x="-2" y="-2" width="${n+4}" height="${n+4}" fill="#fff"/><path d="${d}" fill="#1C1E3D"/></svg>`}
