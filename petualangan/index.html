@@ -384,7 +384,7 @@ function rockReset(r){r.x=r.hx;r.y=r.hy;r.vy=0}
 /* ====== fisika per pemain ====== */
 let qCool=0;function step(dt){if(qCool>0)qCool-=dt;levelT+=dt;moverUpdate(dt);
   if(emerge>0){emerge-=dt;P.forEach(p=>{if(p.remote)netLerp(p,dt)});return}
-  if(pipeT>0){pipeT-=dt;P.forEach(p=>{p.vx=0});if(pipeT<=0)pipeDone();return}
+  if(pipeT>0){pipeT-=dt;const gx=LD.gate*T+11;P.forEach((p,i)=>{const tx=gx+(i?4:-4);p.vx=(tx-p.x)*4;p.x+=p.vx*dt;p.face=Math.sign(tx-p.x)||p.face;p.anim+=dt*8;p.ground=true});if(pipeT<=0)pipeDone();return}
   for(const p of P){if(p.remote){netLerp(p,dt);continue}if(p.dead>0){if(p.bub){bubStep(p,dt);continue}p.dead-=dt;if(p.dead<=0)afterDeath(p);continue}
     if(solidP(p.x,p.y,PW,PH)){let k=0;while(k++<40&&solidP(p.x,p.y,PW,PH))p.y-=1;if(solidP(p.x,p.y,PW,PH)){p.y+=40;respawn(p)}}
     const want=(p.inp.r?1:0)-(p.inp.l?1:0);p.vx=want*(p.push?SPD*.65:SPD);if(want)p.face=want;
@@ -450,7 +450,8 @@ let qCool=0;function step(dt){if(qCool>0)qCool-=dt;levelT+=dt;moverUpdate(dt);
   const mid=(P[0].x+P[1].x)/2+PW/2;cam.x=Math.max(0,Math.min(MW*T-VW,mid-VW/2));
   // finis: masuk pipa bersama
   fxStep(dt);
-  if(!won&&pipeT<=0&&hostAuth()&&keysGot>=keysNeed()){const X=LD.gate*T;if(P.every(p=>!(p.dead>0)&&p.x+PW>X+2&&p.x<X+30&&p.y>8*T-4)){netEv({t:'pipe'});enterPipe()}}
+  {const X=LD.gate*T;if(keysGot<keysNeed()&&P.some(p=>!(p.dead>0)&&Math.abs(p.x+5-(X+16))<26&&p.y>8*T-4)&&performance.now()-GATE.lastNag>2500){GATE.lastNag=performance.now();GATE.rattle=performance.now();SFX.bad();say(`Gerbang terkunci! Butuh ${keysNeed()} kunci, kurang ${keysNeed()-keysGot}.`,2.5)}}
+  if(!won&&pipeT<=0&&hostAuth()&&keysGot>=keysNeed()&&GATE.unlockAt&&performance.now()-GATE.unlockAt>keysNeed()*250+500){const X=LD.gate*T;if(P.every(p=>!(p.dead>0)&&p.x+PW>X+2&&p.x<X+30&&p.y>8*T-4)){netEv({t:'pipe'});enterPipe()}}
   parts=parts.filter(q=>(q.t-=dt)>0);parts.forEach(q=>{q.x+=q.vx*dt;q.y+=q.vy*dt;if(!q.ng)q.vy+=300*dt;else{q.vx*=.9;q.vy*=.9}});FX.txt=FX.txt.filter(t=>(t.t-=dt)>0);FX.txt.forEach(t=>t.y-=22*dt)}
 /* ====== penjahat, bos, senjata, kunci & gerbang ====== */
 const WEAP=[{n:'Ketapel Batu',c:'#c9b8e8',c2:'#5f6180'},{n:'Pistol Gelembung',c:'#9cd0ff',c2:'#3d8bfd'},{n:'Lentera Cahaya',c:'#fff3b0',c2:'#f7c548'},{n:'Bumerang Angin',c:'#c8ffe0',c2:'#3fa34d'},{n:'Tongkat Pelangi',c:'#ff9cc2',c2:'#9b6bff'}];
@@ -463,7 +464,7 @@ const ENC=['#9b4fd0','#3fa34d','#9b6bff','#e2483d','#2b2140'];
 let enemies=[],boss=null,shots=[],keysGot=0,boxes=[],keyItems=[];
 const ovl=(a,aw,ah,b,bw,bh)=>a.x<b.x+bw&&a.x+aw>b.x&&a.y<b.y+bh&&a.y+ah>b.y;
 const hostAuth=()=>!NET.on||ME===0;
-function fxReset(){enemies=(LD.enemies||[]).map(e=>({...e,dead:false,t:Math.random()*2}));
+function fxReset(){GATE.unlockAt=0;GATE.rattle=0;GATE.closeDust=false;enemies=(LD.enemies||[]).map(e=>({...e,dead:false,t:Math.random()*2}));
   boss=LD.boss?{...LD.boss,hp:LD.boss.hp,max:LD.boss.hp,dead:false,inv:0,t:0,vy:0,dir:-1,seen:false,atk:2.2,tele:0,mode:'',mt:0,angry:false}:null;
   shots=[];bshots=[];keysGot=0;boxes=(LD.boxes||[]).map(b=>({...b,taken:false}));keyItems=(LD.keys||[]).map(k=>({x:k.x*T+8,y:k.y*T+8,got:false,vy:0,fall:false}))}
 function fire(p){if(!p.weapon){if(!p.wHint){p.wHint=true;say('Kamu belum punya senjata. Ambil di Kotak Misteri dengan menjawab soal.',3)}return}if(p.cool>0)return;
@@ -522,7 +523,7 @@ function fxStep(dt){
     keyItems.forEach((k,i)=>{if(!k.got&&!k.fall&&Math.abs(p.x+5-k.x)<11&&Math.abs(p.y+7-k.y)<12){k.got=true;keysGot++;p.emo=1;SFX.key();burst(k.x,k.y,'#f7c548',12);netEv({t:'key',i});keyMsg()}});
     if(!quizOpen&&qCool<=0&&!p.weapon)boxes.forEach((b,i)=>{if(!b.taken&&Math.abs(p.x+5-(b.x*T+8))<13&&Math.abs(p.y+7-(b.y*T+8))<16)openQuiz({box:i,p})})}}
 function keysNeed(){return (LD.keys||[]).length+(LD.boss?1:0)}
-function keyMsg(){const n=keysNeed();if(keysGot>=n)say('Semua kunci terkumpul! Gerbang terbuka. Masuk bersama.',3.5);else say(`Kunci ${keysGot}/${n} terkumpul.`,2)}
+function keyMsg(){const n=keysNeed();if(keysGot>=n)say('Semua kunci terkumpul! Kunci-kunci masuk ke gembok dan gerbang terbuka. Masuk bersama!',3.5);else say(`Kunci ${keysGot}/${n} terkumpul.`,2)}
 function drawFX(ox,now){
   // kotak misteri
   for(const b of boxes){const X=b.x*T-ox,Y=b.y*T;if(X<-16||X>VW+16)continue;cx.fillStyle='#2b2140';cx.fillRect(X,Y,16,16);cx.fillStyle=b.taken?'#9a8fb0':'#f7c548';cx.fillRect(X+1,Y+1,14,14);cx.fillStyle=b.taken?'#c9cbe0':'#fff3b0';cx.fillRect(X+1,Y+1,14,2);cx.fillStyle=b.taken?'#5f6180':'#d9661c';cx.fillRect(X+1,Y+13,14,2);
@@ -649,11 +650,23 @@ function speech(X,Y,txt){cx.font='bold 8px system-ui,-apple-system,Segoe UI,Robo
   cx.fillStyle='#2b2140';cx.textAlign='left';cx.fillText(txt,x0+4,y0+8)}
 const BTALK={intro:['Grrr! Kalian tidak boleh lewat!','Hahaha! Siapa berani melawanku?','Gerbang ini milikku!','Kalian berdua? Hah, mudah!','Akulah penguasa istana!'],
   hit:['Aduh!','Awas kalian!','Itu tidak sakit!','Grr!','Hei!'],atk:['Rasakan ini!','Hiyaaa!','Terima ini!','Awas!'],angry:'Aku marah sekarang!!',die:'Tidaaak...!'};
-function drawGate(X,open,start){cx.fillStyle='#2b2140';cx.fillRect(X-2,7*T-6,36,54);cx.fillStyle='#8d8fa8';cx.fillRect(X,7*T-4,32,52);cx.fillStyle='#b4b6cc';cx.fillRect(X,7*T-4,32,2);
-  if(open||start){cx.fillStyle='#1b1d3a';cx.fillRect(X+5,7*T+2,22,46);cx.fillStyle='rgba(255,243,176,.25)';cx.fillRect(X+5,7*T+2,22,46)}
-  else{cx.fillStyle='#8a5a3b';cx.fillRect(X+5,7*T+2,22,46);cx.fillStyle='#6b4a26';cx.fillRect(X+15,7*T+2,2,46);cx.fillStyle='#f7c548';cx.fillRect(X+13,7*T+20,6,7);cx.fillStyle='#2b2140';cx.fillRect(X+15,7*T+22,2,3)}}
+const GATE={unlockAt:0,rattle:0,lastNag:0,closeDust:false};
+/* gerbang: o = 0 tertutup .. 1 terbuka penuh; locks: jumlah kunci & yang sudah terpasang */
+function drawGate(X,o,start,now,locks,pop){const Y=7*T-6;
+  cx.fillStyle='#2b2140';cx.fillRect(X-4,Y-6,40,60);cx.fillStyle='#8d8fa8';cx.fillRect(X-3,Y-5,38,58);cx.fillStyle='#b4b6cc';cx.fillRect(X-3,Y-5,38,2);cx.fillStyle='#6f7192';for(let k=0;k<4;k++)cx.fillRect(X-3,Y+6+k*12,38,1);
+  cx.fillStyle='#5f6180';cx.fillRect(X+2,Y+3,28,47);
+  // ruang di dalam (gelap / bercahaya saat terbuka)
+  cx.fillStyle='#1b1d3a';cx.fillRect(X+4,Y+6,24,44);if(o>0){const gl=cx.createLinearGradient(0,Y+6,0,Y+50);gl.addColorStop(0,`rgba(255,243,176,${.15+.45*o})`);gl.addColorStop(1,`rgba(255,214,120,${.05+.25*o})`);cx.fillStyle=gl;cx.fillRect(X+4,Y+6,24,44);
+    if(!start&&o>=1){for(let k=0;k<3;k++){const t=(now/600+k/3)%1;cx.fillStyle=`rgba(255,248,200,${1-t})`;cx.fillRect(X+8+k*7,Math.round(Y+46-t*36),2,2)}}}
+  // dua daun pintu bergeser
+  const sh=Math.round(o*12),ww=12-sh;if(ww>0)[[X+4,0],[X+16+sh,1]].forEach(([xs,r])=>{cx.fillStyle='#8a5a3b';cx.fillRect(xs,Y+6,ww,44);cx.fillStyle='#6b4a26';cx.fillRect(r?xs:xs+ww-1,Y+6,1,44);cx.fillStyle='#a87444';for(let k=0;k<4;k++)cx.fillRect(xs+1,Y+10+k*10,Math.max(0,ww-2),1);if(ww>5){cx.fillStyle='#f7c548';cx.fillRect(r?xs+2:xs+ww-4,Y+28,2,3)}});
+  // gembok & lubang kunci di atas pintu
+  if(locks){const n=locks.n,g=locks.got;for(let k=0;k<n;k++){const lx=X+16-(n*9)/2+k*9+1,ly=Y-3,full=k<g,pk=pop!=null?Math.max(0,Math.min(1,(pop-k*.25)/.25)):(full?1:0);
+      cx.fillStyle='#2b2140';cx.fillRect(lx-1,ly-1,9,9);cx.fillStyle=full?'#f7c548':'#3a3355';cx.fillRect(lx,ly,7,7);
+      if(full){cx.fillStyle='#fff3b0';cx.fillRect(lx+1,ly+1,2,2);if(pk<1){cx.fillStyle=`rgba(255,255,255,${1-pk})`;cx.fillRect(lx-2,ly-2,11,11)}}else{cx.fillStyle='#9a8fb0';cx.fillRect(lx+3,ly+2,1,3);cx.fillRect(lx+2,ly+2,3,1)}}}
+  if(start){cx.fillStyle='#2b2140';cx.fillRect(X+10,Y-4,12,6);cx.fillStyle='#7be07f';cx.fillRect(X+11,Y-3,10,4)}}
 
-function enterPipe(){if(pipeT>0)return;pipeT=1;SFX.pipe();P.forEach(p=>{p.inp={l:0,r:0,j:0};p.vx=0;p.vy=0;p.dead=0;p.bub=false})}
+function enterPipe(){if(pipeT>0)return;pipeT=1.1;SFX.pipe();P.forEach(p=>{p.inp={l:0,r:0,j:0};p.vx=0;p.vy=0;p.dead=0;p.bub=false})}
 function pipeDone(){totCoins+=coins;if(NET.on&&ME!==0)return;if(LV>=LVCFG.length-1){netEv({t:'win'});win()}else{PRE=`Level ${LV+1} selesai! `;goLevel(LV+1)}}
 function kill(p){if(p.dead>0||failed||won)return;p.dead=.8;p.bub=false;p.onM=null;p.on=null;SFX.hurt();burst(p.x+5,p.y+7,'#fff8e7',12);sparks(p.x+5,p.y+7,'#e2483d',10,150,.3,2);shake(3,.25);loseLife();netEv({t:'die'})}
 function loseLife(){LIVES=Math.max(0,LIVES-1);if(LIVES<=0)setTimeout(()=>{if(!failed&&!won&&running)levelFail('Nyawa tim habis.')},700)}
@@ -786,9 +799,15 @@ function draw(){cx.imageSmoothingEnabled=false;drawBG();cx.save();if(FX.sh>0){co
     cx.strokeStyle=d>ROPE-2?'#e2483d':'#8a5a3b';cx.lineWidth=2;cx.beginPath();cx.moveTo(xa,ya);cx.quadraticCurveTo((xa+xb)/2,(ya+yb)/2+sag,xb,yb);cx.stroke()}
   for(const k of level.cps){const X=Math.round(k+6-ox);if(X<-20||X>VW+20)continue;const on=k<=checkpoint.x,wv=Math.floor(now/220)%2;cx.fillStyle='#2b2140';cx.fillRect(X-1,7*T-4,4,3*T+4);cx.fillStyle='#c9cbe0';cx.fillRect(X,7*T-3,2,3*T+3);
     cx.fillStyle='#2b2140';cx.fillRect(X+2,7*T-3+(on?0:14),13,10);cx.fillStyle=on?'#3fa34d':'#9a8fb0';cx.fillRect(X+2,7*T-2+(on?0:14)+wv,12,8-wv);cx.fillStyle=on?'#7be07f':'#c9cbe0';cx.fillRect(X+3,7*T-1+(on?0:14)+wv,4,2);cx.fillStyle='#f7c548';cx.fillRect(X-1,7*T-6,4,3)}
-  drawGate(LD.start*T-ox-6,true,true);drawGate(LD.gate*T-ox,keysGot>=keysNeed(),false);drawFX(ox,now);
+  {const so=levelT<1.1?1:Math.max(0,1-(levelT-1.1)/.3);if(levelT>1.4&&!GATE.closeDust){GATE.closeDust=true;SFX.stomp();for(let k=0;k<6;k++)parts.push({x:LD.start*T+10+k*3,y:10*T-1,vx:(k-2.5)*18,vy:-12,t:.35,col:'#e8dcc8',ng:1,sz:2})}
+   drawGate(LD.start*T-ox-6,so,true,now,null,null);
+   const need=keysNeed(),full=keysGot>=need;if(full&&!GATE.unlockAt){GATE.unlockAt=now;for(let k=0;k<need;k++)setTimeout(()=>beep(660+k*220,.08),k*250);setTimeout(()=>{SFX.door();shake(2,.2)},need*250+50)}const ua=GATE.unlockAt?(now-GATE.unlockAt)/1000:0;
+   let go=full?Math.max(0,Math.min(1,(ua-need*.25)/.5)):0;if(pipeT>0)go=Math.max(0,Math.min(go,(pipeT-.05)/.35));
+   const rt=now-GATE.rattle<300?Math.round(Math.sin(now/25)*2):0,GX=LD.gate*T-ox+rt;drawGate(GX,go,false,now,{n:need,got:keysGot},full?ua:null);
+   if(go>=1&&pipeT<=0){const by=Math.round(7*T-22+Math.sin(now/180)*3);cx.fillStyle='#2b2140';cx.fillRect(GX+8,by-1,16,9);cx.fillStyle='#7be07f';cx.fillRect(GX+9,by,14,7);cx.fillStyle='#2b2140';cx.fillRect(GX+13,by+2,6,1);cx.fillRect(GX+14,by+3,4,1);cx.fillRect(GX+15,by+4,2,1)}}
+  drawFX(ox,now);
   // pemain (muncul dari pintu / masuk gerbang)
-  const clip=emerge>0||pipeT>0;if(clip){cx.save();cx.globalAlpha=Math.max(0,Math.min(1,emerge>0?1-emerge/.8:pipeT))}const eo=0;
+  const clip=emerge>0||pipeT>0;if(clip){cx.save();cx.globalAlpha=Math.max(0,Math.min(1,emerge>0?1-emerge/.8:pipeT/.7))}const eo=0;
   for(const p of P){if(p.bub){const bx=Math.round(p.x+5-ox),by=Math.round(p.y+7);cx.fillStyle='rgba(156,208,255,.35)';cx.beginPath();cx.arc(bx,by,13,0,Math.PI*2);cx.fill();cx.strokeStyle='#e8f6ff';cx.lineWidth=1.5;cx.stroke();cx.fillStyle='#fff';cx.fillRect(bx-7,by-8,3,2)}
     else if(p.dead>0&&Math.floor(now/80)%2)continue;drawHero(p,ox,now,eo);
   }
