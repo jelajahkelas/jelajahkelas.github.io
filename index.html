@@ -1768,6 +1768,14 @@ body.sporting #practiceFab,body.sporting .jumpcur{display:none!important}
 .wzhead p{margin:6px 0 0;font-size:16px;color:var(--ink2)}
 .wzbody{display:flex;flex-direction:column;gap:12px}
 .wzopts{display:flex;flex-direction:column;gap:10px}
+.hzsec{display:flex;flex-direction:column;gap:8px;margin-bottom:10px}
+.hzsec h4{margin:0;font-family:var(--display);font-weight:800;font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.hzrow{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x proximity;padding:4px 20px 12px;margin:0 -20px;scrollbar-width:none;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain;-webkit-mask-image:linear-gradient(90deg,transparent 0,#000 18px,#000 calc(100% - 28px),transparent);mask-image:linear-gradient(90deg,transparent 0,#000 18px,#000 calc(100% - 28px),transparent)}
+.hzrow::-webkit-scrollbar{display:none}
+.hzc{flex:0 0 auto;scroll-snap-align:center;max-width:220px;min-height:56px;font-size:16px;padding:8px 14px}
+.hzc .sg{min-width:38px;height:38px;border-radius:12px;font-size:14px}
+.hzc .wzol{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;line-height:1.2}
+.hzc small{font-size:12.5px}
 .wzopts.wzgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr))}
 .wzopt{width:100%;cursor:pointer;min-height:58px}.wzopt .wzol{flex:1;min-width:0}
 .wzopts.wzgrid .wzopt{justify-content:center;text-align:center}
@@ -4173,7 +4181,7 @@ html[data-theme=malam] .plstick{background:#0a0f1e}
 <div class="syncpill" id="syncPill" hidden></div>
 <div class="toast" id="toast" hidden></div>
 
-<script src="av.js?v=364"></script>
+<script src="av.js?v=365"></script>
 <script>
 /* ---------- visual assets ---------- */
 const INK='#1B1E3D';
@@ -14296,7 +14304,7 @@ function wizard(o){let el=$('#wz');if(!el){document.body.insertAdjacentHTML('bef
   const close=()=>{el.hidden=true;document.body.classList.remove('wzon');if(o.onClose)o.onClose()};
   const render=i=>{const L=live(),pos=L.indexOf(i),n=L.length,sp=o.steps[i],last=pos===n-1;
     el.innerHTML=`<div class="onbin wzin"><div class="onbbar"><button class="back" id="wzBack" aria-label="Kembali">←</button><span class="lbar"><i style="width:${(pos+1)/n*100}%"></i></span><button class="back" id="wzX" aria-label="Tutup">✕</button></div>
-      <div class="wzhead"><small>${esc(o.title||'')} · Langkah ${pos+1} dari ${n}</small><h2>${sp.t}</h2>${sp.sub?`<p>${sp.sub}</p>`:''}</div>
+      <div class="wzhead"><small>${esc(o.title||'')}${n>1?` · Langkah ${pos+1} dari ${n}`:''}</small><h2>${sp.t}</h2>${sp.sub?`<p>${sp.sub}</p>`:''}</div>
       <div class="wzbody">${sp.html(st)}</div>
       ${last&&o.summary?`<div class="wzsum">${o.summary(st)}</div>`:''}
       <p class="wzerr" id="wzErr" role="alert"></p>
@@ -14314,14 +14322,29 @@ function wizard(o){let el=$('#wz');if(!el){document.body.insertAdjacentHTML('bef
   el.onkeydown=e=>{if(e.key==='Escape')close();if(e.key==='Enter'&&e.target.tagName==='INPUT'){e.preventDefault();$('#wzNext').click()}};
   el.hidden=false;document.body.classList.add('wzon');render(live()[o.start||0])}
 
+/* ---------- satu layar: baris pilihan yang digeser kiri/kanan ---------- */
+function hzRow(k,label,items,cur,multi){const on=x=>multi?multi(x.v):String(x.v)===String(cur);
+  return `<section class="hzsec"><h4>${label}</h4><div class="hzrow" data-hk="${k}" role="listbox" aria-label="${esc(label)}">${items.map(x=>`<button class="onbopt hzc press" data-hk="${k}" data-hv="${esc(String(x.v))}" aria-pressed="${on(x)}" ${x.c?`style="--wc:${x.c}"`:''}>${x.g!=null?`<span class="sg" style="background:${x.c||'#9B6BFF'}">${x.g}</span>`:''}<span class="wzol">${esc(x.l)}${x.s?`<small>${esc(x.s)}</small>`:''}</span></button>`).join('')}</div></section>`}
+/* body(s) -> html berisi hzRow; pick(s,k,v) -> true bila baris lain ikut berubah */
+function hzBind(el,s,body,pick,sum){const box=el.querySelector('#hz');if(!box)return;
+  const center=(row,smooth)=>{const b=row.querySelector('[aria-pressed="true"]');if(!b)return;const x=b.offsetLeft-(row.clientWidth-b.offsetWidth)/2;row.scrollTo({left:Math.max(0,x),behavior:smooth?'smooth':'auto'})};
+  const wire=()=>{box.querySelectorAll('.hzrow').forEach(r=>{r.onwheel=e=>{if(Math.abs(e.deltaY)>Math.abs(e.deltaX)&&r.scrollWidth>r.clientWidth){r.scrollLeft+=e.deltaY;e.preventDefault()}}});
+    box.querySelectorAll('.hzc').forEach(b=>b.onclick=()=>{const k=b.dataset.hk;pick(s,k,b.dataset.hv);try{tone([620],.03)}catch(e){}
+      const keep={};box.querySelectorAll('.hzrow').forEach(r=>keep[r.dataset.hk]=r.scrollLeft);
+      box.innerHTML=body(s);const ks=Object.keys(keep),ci=ks.indexOf(k);box.querySelectorAll('.hzrow').forEach(r=>{const j=ks.indexOf(r.dataset.hk);if(j>=0&&j<=ci)r.scrollLeft=keep[r.dataset.hk];else center(r)});
+      const er=$('#wzErr');if(er)er.textContent='';const sm=el.querySelector('.wzsum');if(sm&&sum)sm.innerHTML=sum(s);hydrate(box);wire()})};
+  requestAnimationFrame(()=>box.querySelectorAll('.hzrow').forEach(r=>center(r)));wire()}
+
 /* ---------- main berdua di satu HP: bertahap ---------- */
 function duoWizard(){const c=CLS();const st={n1:GROUP.duo1||P.name,n2:GROUP.duo2||'Teman',sid:null,per:clamp(+GROUP.per||5,1,30)};
+  const duoHz=s=>hzRow('sid','Pelajaran',c.subjects.map(x=>({v:x.id,l:x.name,g:x.glyph,c:x.color})),s.sid)+hzRow('per','Jumlah soal per pemain',[3,5,10,15].map(n=>({v:n,l:n+' soal',s:n<=3?'Kilat':n<=5?'Biasa':n<=10?'Seru':'Panjang'})),s.per);
+  const duoSum=s=>{const sb=c.subjects.find(x=>x.id===s.sid);return `<b>${esc(s.n1)}</b> vs <b>${esc(s.n2)}</b> · ${sb?esc(sb.name):'<i>pilih pelajaran</i>'} · ${s.per} soal`};
   wizard({title:'Main berdua',state:st,steps:[
     {t:'Siapa yang main?',sub:'Duduk berhadapan, ya!',auto:false,html:s=>`<div class="wzduo"><label><i style="background:#1CB0F6"></i><span>Pemain 1</span><input id="wzN1" maxlength="16" value="${esc(s.n1)}"></label><span class="duovs">VS</span><label><i style="background:#FF9600"></i><span>Pemain 2</span><input id="wzN2" maxlength="16" value="${esc(s.n2)}"></label></div>`,
      bind:(el,s)=>{$('#wzN1').oninput=e=>s.n1=e.target.value;$('#wzN2').oninput=e=>s.n2=e.target.value},ok:s=>s.n1.trim()&&s.n2.trim()?true:'Tulis nama kedua pemain.'},
-    {t:'Mau belajar apa?',html:s=>wzOpts(c.subjects.map(x=>({v:x.id,l:x.name,g:x.glyph,c:x.color})),s.sid),pick:(s,v)=>s.sid=v,ok:s=>s.sid?true:'Pilih pelajaran dulu.'},
-    {t:'Berapa soal per pemain?',html:s=>wzOpts([3,5,10,15].map(n=>({v:n,l:n+' soal',s:n<=3?'Kilat':n<=5?'Biasa':n<=10?'Seru':'Panjang'})),s.per,true),pick:(s,v)=>s.per=+v,auto:false}],
-   summary:s=>{const sb=c.subjects.find(x=>x.id===s.sid);return `<b>${esc(s.n1)}</b> vs <b>${esc(s.n2)}</b> · ${esc(sb?sb.name:'')} · ${s.per} soal`},
+    {t:'Atur permainan',sub:'Geser kiri–kanan untuk melihat pilihan lain.',auto:false,html:s=>`<div id="hz">${duoHz(s)}</div>`,
+     bind:(el,s)=>hzBind(el,s,duoHz,(s,k,v)=>{if(k==='sid')s.sid=v;else s.per=+v},duoSum),ok:s=>s.sid?true:'Pilih pelajaran dulu.'}],
+   summary:s=>duoSum(s),
    finish:{label:GPRE?'Mulai main →':'Pilih game →',run:(s,b,close)=>{const sb=c.subjects.find(x=>x.id===s.sid);GROUP.duo1=s.n1.trim();GROUP.duo2=s.n2.trim();GROUP.format='terbagi';GROUP.per=s.per;GROUP.names=[GROUP.duo1,GROUP.duo2].concat((GROUP.names||[]).slice(2));store.set('group',GROUP);
      PLAY='group';L=lvOf();setLvColor(L);document.documentElement.style.setProperty('--lvc',sb.color);S={id:sb.id,name:sb.name,fit:sb.fit,make:()=>shuffle(sb.units.flatMap(u=>unitQs(u,3)))};close();openGames()}}})}
 
@@ -15936,18 +15959,20 @@ function ajakSummary(){const c=COURSE.find(x=>x.id===AJAK.cls),sb=c&&AJAK.sid!==
 function ajakWizard(){if(!P)return;ajakInit();const st={cls:AJAK.cls,sid:AJAK.sid,ui:AJAK.ui==null?'acak':String(AJAK.ui),mode:AJAK.mode||'acak',n:AJAK.n||5};
   const C=s=>COURSE.find(x=>x.id===s.cls),SB=s=>{const c=C(s);return c&&s.sid!=='acak'?c.subjects.find(x=>x.id===s.sid):null};
   const gamesFor=s=>{const o={cls:AJAK.cls,sid:AJAK.sid,ui:AJAK.ui};Object.assign(AJAK,{cls:s.cls,sid:s.sid,ui:s.ui});const g=ajakGames();Object.assign(AJAK,o);return g};
+  const ajSum=s=>{const o=Object.assign({},AJAK);Object.assign(AJAK,{cls:s.cls,sid:s.sid,ui:s.ui,mode:s.mode,n:s.n});const r=ajakSummary().map(esc).join(' · ');Object.assign(AJAK,{cls:o.cls,sid:o.sid,ui:o.ui,mode:o.mode,n:o.n});return r};
+  const ajSel=s=>s.mode==='acak'?[]:String(s.mode).split(',');
+  const ajHz=s=>{const c=C(s),sb=SB(s);let h=hzRow('cls','Kelas',[{v:'acak',l:'Kelas acak',g:'🎲',c:'#9B6BFF'}].concat(COURSE_VIS().map(x=>({v:x.id,l:x.full,g:x.name.replace('Kelas ',''),c:LEVEL_COL[x.lv]}))),s.cls);
+    if(c)h+=hzRow('sid','Pelajaran',[{v:'acak',l:'Pelajaran acak',g:'🎲',c:'#9B6BFF'}].concat(c.subjects.map(x=>({v:x.id,l:x.name,g:x.glyph,c:x.color}))),s.sid);
+    if(sb)h+=hzRow('ui','Materi',[{v:'acak',l:'Semua materi'}].concat(sb.units.map((u,i)=>({v:String(i),l:`Unit ${i+1}: ${u.t}`}))),s.ui);
+    if(!AJAK.lockMode){const gs=gamesFor(s);let sel=ajSel(s).filter(g=>gs.includes(g)||(g==='adv'&&AJAK.max===2));s.mode=sel.length?sel.join(','):'acak';
+      h+=hzRow('mode','Game (boleh lebih dari satu)',[{v:'acak',l:'Acak semua',g:'🎲',c:'#9B6BFF'}].concat(gs.map(g=>({v:g,l:gameName(g),c:MCOL[g]}))).concat(AJAK.max===2?[{v:'adv',l:gameName('adv'),c:MCOL.adv}]:[]),null,x=>x.v==='acak'?!sel.length:sel.includes(x.v))}
+    if(s.mode!=='adv')h+=hzRow('n','Jumlah soal',[...new Set([3,5,10,15,20,30,50,+s.n])].sort((x,y)=>x-y).map(n=>({v:n,l:n+' soal'})),s.n);return h};
+  const ajPick=(s,k,v)=>{if(k==='cls'){if(s.cls!==v){s.cls=v;s.sid='acak';s.ui='acak'}}else if(k==='sid'){if(s.sid!==v){s.sid=v;s.ui='acak'}}else if(k==='ui')s.ui=v;else if(k==='n')s.n=+v;
+    else if(k==='mode'){let sel=ajSel(s);if(v==='acak')sel=[];else if(v==='adv')sel=sel.includes('adv')?[]:['adv'];else{sel=sel.filter(x=>x!=='adv');sel=sel.includes(v)?sel.filter(x=>x!==v):sel.concat(v)}s.mode=sel.length?sel.join(','):'acak'}};
   wizard({title:AJAK.max===2?'Main berdua online':'Main beberapa orang',state:st,steps:[
-    {t:'Soal kelas berapa?',html:s=>wzOpts([{v:'acak',l:'Kelas acak',g:'🎲',c:'#9B6BFF',s:'Soal dari semua jenjang'}].concat(COURSE_VIS().map(c=>({v:c.id,l:c.full,g:c.name.replace('Kelas ',''),c:LEVEL_COL[c.lv]}))),s.cls),pick:(s,v)=>{if(s.cls!==v){s.cls=v;s.sid='acak';s.ui='acak'}}},
-    {t:'Pelajaran apa?',skip:s=>!C(s),html:s=>{const c=C(s);return wzOpts([{v:'acak',l:'Pelajaran acak',g:'🎲',c:'#9B6BFF'}].concat(c.subjects.map(x=>({v:x.id,l:x.name,g:x.glyph,c:x.color}))),s.sid)},pick:(s,v)=>{if(s.sid!==v){s.sid=v;s.ui='acak'}}},
-    {t:'Materi yang mana?',skip:s=>!SB(s),html:s=>{const sb=SB(s);return wzOpts([{v:'acak',l:'Semua materi',s:'Soal acak dari semua unit'}].concat(sb.units.map((u,i)=>({v:String(i),l:`Unit ${i+1}: ${u.t}`,s:u.d||''}))),s.ui)},pick:(s,v)=>s.ui=v},
-    {t:'Main game apa?',sub:'Boleh pilih beberapa game sekaligus.',auto:false,skip:s=>!!AJAK.lockMode,html:s=>{const gs=gamesFor(s);const sel=s.mode==='acak'?[]:String(s.mode).split(',').filter(g=>gs.includes(g)||(g==='adv'&&AJAK.max===2));s.mode=sel.length?sel.join(','):'acak';
-      return `<div class="ajgames wzgames">${[['acak','🎲 Acak semua game']].concat(gs.map(g=>[g,gameName(g)])).concat(AJAK.max===2?[['adv',gameName('adv')]]:[]).map(([id,nm])=>`<button class="ajg" data-wv="${id}" aria-pressed="${id==='acak'?!sel.length:sel.includes(id)}" ${id!=='acak'?`style="--mc:${MCOL[id]||'#9B6BFF'}"`:''}>${id!=='acak'?'<i class="ajck" aria-hidden="true">✓</i>':''}${esc(nm)}</button>`).join('')}</div><p class="note wzgn" id="wzGn">${sel.length?sel.length+' game dipilih':'Semua game diacak'}</p>`},
-     bind:(el,s)=>{el.querySelectorAll('.wzgames [data-wv]').forEach(b=>b.onclick=()=>{const v=b.dataset.wv;let sel=s.mode==='acak'?[]:String(s.mode).split(',');
-       if(v==='acak')sel=[];else if(v==='adv')sel=sel.includes('adv')?[]:['adv'];else{sel=sel.filter(x=>x!=='adv');sel=sel.includes(v)?sel.filter(x=>x!==v):sel.concat(v)}s.mode=sel.length?sel.join(','):'acak';try{tone([620],.03)}catch(e){}
-       el.querySelectorAll('.wzgames [data-wv]').forEach(x=>x.setAttribute('aria-pressed',x.dataset.wv==='acak'?!sel.length:sel.includes(x.dataset.wv)));const n=$('#wzGn');if(n)n.textContent=sel.length?sel.length+' game dipilih':'Semua game diacak'})},pick:(s,v)=>{}},
-    {t:'Berapa soal?',sub:'1 sampai 50 soal.',auto:false,skip:s=>s.mode==='adv',html:s=>`<div class="wzn">${stepperHTML('wzN',s.n,1,50)}</div>${wzOpts([3,5,10,15,20].map(n=>({v:n,l:n+' soal'})),s.n,true)}`,
-     bind:(el,s,re)=>bindStepper('wzN',v=>{s.n=v;el.querySelectorAll('[data-wv]').forEach(x=>x.setAttribute('aria-pressed',+x.dataset.wv===v))}),pick:(s,v)=>{s.n=+v;const i=$('#wzN');if(i)i.value=v}}],
-   summary:s=>{const o=Object.assign({},AJAK);Object.assign(AJAK,{cls:s.cls,sid:s.sid,ui:s.ui,mode:s.mode,n:s.n});const r=ajakSummary().map(esc).join(' · ');Object.assign(AJAK,{cls:o.cls,sid:o.sid,ui:o.ui,mode:o.mode,n:o.n});return r},
+    {t:'Atur permainan',sub:'Geser kiri–kanan untuk melihat pilihan lain.',auto:false,html:s=>`<div id="hz">${ajHz(s)}</div>`,
+     bind:(el,s)=>hzBind(el,s,ajHz,ajPick,ajSum)}],
+   summary:s=>ajSum(s),
    finish:{label:'Lanjut ajak teman →',run:(s,b,close)=>{const before=JSON.stringify([AJAK.cls,AJAK.sid,String(AJAK.ui),AJAK.mode,AJAK.n]);Object.assign(AJAK,{cls:s.cls,sid:s.sid,ui:s.ui,mode:s.mode,n:s.n});
      if(before!==JSON.stringify([AJAK.cls,AJAK.sid,String(AJAK.ui),AJAK.mode,AJAK.n])&&ROOM.code&&ROOM.doc&&ROOM.doc.status==='lobby'&&ROOM.doc.host===FBX.user.uid&&Object.keys(ROOM.doc.players).length<2)roomClose(true);close();openAjak()}}})}
 function openAjak(){if(!P)return;ajakInit();AJAK.sent={};
@@ -16059,7 +16084,7 @@ function folBind(root,list,after){root.querySelectorAll('[data-follow]').forEach
   try{await folDo(f,on);if(on){try{sfx.ok()}catch(_){}toast('team',`Kamu mengikuti ${f.name}.`)}b.outerHTML=folBtn(f,b.classList.contains('sm'));folBind(root,list,after);after&&after()}catch(err){b.disabled=false;toast('lock',fbErr(err))}})}
 const shareIcon='<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M12 3 V15 M7 8 L12 3 L17 8 M5 13 V19 C5 20 6 21 7 21 H17 C18 21 19 20 19 19 V13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const qrIcon='<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><path d="M14 14h3v3h-3zM18 18h3v3h-3zM18 14h3M14 18v3" stroke-linecap="round"/></svg>';
-let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=364';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
+let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=365';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
 function qrMatrix(text){const Q=window.QRCodeLib,q=new Q(-1,Q.ECL.M);q.addData(text);q.make();const n=q.getModuleCount(),m=[];for(let r=0;r<n;r++){m.push([]);for(let c=0;c<n;c++)m[r].push(q.isDark(r,c))}return m}
 function qrSvgOf(m){const n=m.length;let d='';for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(m[r][c])d+=`M${c} ${r}h1.02v1.02h-1.02z`;
   return `<svg viewBox="-2 -2 ${n+4} ${n+4}" class="pcqr" shape-rendering="crispEdges" aria-label="Kode QR profil"><rect x="-2" y="-2" width="${n+4}" height="${n+4}" fill="#fff"/><path d="${d}" fill="#1C1E3D"/></svg>`}
