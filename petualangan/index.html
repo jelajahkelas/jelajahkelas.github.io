@@ -140,7 +140,7 @@ const TIPS={
  raft:'Naiki rakit, lalu lompat ke seberang.',
  lift:'Naik lift ke atas tebing.',
  twin:'Gerbang emas butuh DUA tombol diinjak bersamaan. Si Lincah bisa naik ke tombol atas.',
- sync:'Sakelar kembar! Injak keduanya pada detik yang SAMA. Hitung bersama: 1, 2, 3!',
+ sync:'Sakelar kembar! Kalian berdua harus menginjak kedua sakelar ungu pada waktu yang sama. Hitung bersama: 1, 2, 3!',
  blue:'Tombol biru memunculkan jembatan, tapi dinding merah hilang hanya saat tombol diinjak. Gantian ya!',
  timer:'Pintu jam hanya terbuka sebentar setelah tombol dilepas. Lari!',
  lantern:'Gelap! Pijakan hanya terlihat di dekat lentera Si Lincah. Si Lincah jalan duluan, Si Kuat mengikuti.',
@@ -349,7 +349,7 @@ let qCool=0;function step(dt){if(qCool>0)qCool-=dt;levelT+=dt;moverUpdate(dt);
     if((pl.kind==='n'||pl.kind==='heavy')&&pl.on)cnt[pl.id]=(cnt[pl.id]||0)+1}
   blueOn=blue;if(blueOn!==wasB)SFX.door();
   for(const d of LD.doors){const k=d.id,r=LD.rules[k]||{},was=!!doors[k];let open;
-    if(r.sync){if(!latched[k]&&(!NET.on||ME===0)&&level.plates.filter(p=>p.id===k).every(p=>p.lit>0)){latched[k]=true;netEv({t:'latch',k});say('Berbarengan! Gerbang terbuka.',2.5)}open=!!latched[k]}
+    if(r.sync){if(!latched[k]&&(!NET.on||ME===0)&&level.plates.filter(p=>p.id===k).every(p=>p.lit>0||p.on)){latched[k]=true;netEv({t:'latch',k});say('Berbarengan! Gerbang terbuka.',2.5)}open=!!latched[k]}
     else{open=(cnt[k]||0)>=(r.need||1);
       if(r.latch){if(open&&!latched[k]){latched[k]=true;netEv({t:'latch',k});say('Gerbang terbuka untuk selamanya!',2.5)}open=open||!!latched[k]}
       if(r.timer){if(open)timers[k]=r.timer;else if(timers[k]>0){timers[k]-=dt;open=true}}}
