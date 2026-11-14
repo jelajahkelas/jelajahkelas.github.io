@@ -176,7 +176,7 @@ function genLevel(n,seed){const C=LVCFG[n],R=rng(seed),ri=(a,b)=>a+Math.floor(R(
   const pool=C.pool.slice(),seq=[];if(C.first){const f=C.first[ri(0,C.first.length-1)];seq.push(f);pool.splice(pool.indexOf(f),1)}
   while(seq.length<C.n&&pool.length)seq.push(pool.splice(ri(0,pool.length-1),1)[0]);
   let x=8;coin(6,8);L.seq=seq;L.enemies=[];L.boxes=[];L.keys=[];const half=Math.floor(seq.length/2);
-  seq.forEach((k,i)=>{L.cps.push(x);L.zones.push({x,t:TIPS[k]});x=M[k](x)+ri(1,2);
+  seq.forEach((k,i)=>{L.zones.push({x,t:TIPS[k]});x=M[k](x)+ri(1,2);
     // tempat istirahat: kotak misteri, kunci, penjahat
     const r0=x;L.cps.push(r0);
     if(i<2){L.boxes.push({x:r0+3,y:9});if(i===0)L.zones.push({x:r0,t:`Kotak Misteri! Jawab soalnya untuk mendapat senjata. Kotak pertama berisi ${WEAP[n].n} (jarak jauh), kotak kedua ${MELEE[n].n} (jarak dekat). Satu kotak hanya untuk satu orang.`})}
@@ -445,7 +445,7 @@ let qCool=0;function step(dt){if(qCool>0)qCool-=dt;levelT+=dt;moverUpdate(dt);
     if(!open&&was&&P.some(p=>!p.dead&&inDoor(p,k)))open=true;
     doors[k]=open;if(open!==was)SFX.door()}
   // titik simpan maju hanya kalau kalian berdua sudah melewatinya
-  for(const k of level.cps)if(k>checkpoint.x&&P.every(p=>!p.dead&&p.x>=k)){const g=P.find(p=>p.ground&&!p.onM&&!p.on);if(g)checkpoint={x:k,y:g.y}}
+  for(const k of level.cps)if(k>checkpoint.x&&P.every(p=>!(p.dead>0)&&p.x>=k)){const g=P.find(p=>p.ground&&!p.onM&&!p.on);if(g){checkpoint={x:k,y:g.y};SFX.key();sparks(k+8,8*T,'#7be07f',14,140,.4,2);ring(k+8,8*T+4,'#7be07f',16);say('Bendera titik simpan! Kalau gagal, kalian lanjut dari sini.',2.5)}}
   if(elapsed>3.5)for(const z of level.zones)if(!z.done&&P.some(p=>p.x>=z.x*T-24)){z.done=true;say(z.t,6);break}
   const mid=(P[0].x+P[1].x)/2+PW/2;cam.x=Math.max(0,Math.min(MW*T-VW,mid-VW/2));
   // finis: masuk pipa bersama
@@ -576,9 +576,14 @@ function bubStep(p,dt){const o=P[1-p.i];p.bt=(p.bt||0)+dt;if(!o||o.dead>0)return
   if(d>0){p.x+=dx/d*sp;p.y+=dy/d*sp}p.face=dx<0?-1:1;
   if(Math.hypot(p.x-o.x,p.y-o.y)<18||p.bt>14)bubPop(p,o)}
 function bubPop(p,o){p.bub=false;p.dead=0;p.vy=-150;p.vx=0;p.dj=true;p.bt=0;if(solidP(p.x,p.y,PW,PH)){p.x=o.x;p.y=o.y-PH-1;if(solidP(p.x,p.y,PW,PH))p.y=o.y}SFX.pop();burst(p.x+5,p.y+7,'#9cd0ff',14)}
+/* lanjut dari bendera: kunci, senjata, jembatan & pintu yang sudah terbuka tetap tersimpan; bos kembali penuh */
+function retryCP(){failed=false;won=false;running=true;paused=false;quizOpen=false;['pWin','pPause','pQuiz'].forEach(i=>$(i).hidden=true);
+  P.forEach((p,i)=>{p.dead=0;p.bub=false;p.vx=0;p.vy=0;p.on=p.onM=null;p.inp={l:0,r:0,j:0,f:0};p.x=checkpoint.x+3+i*14;p.y=checkpoint.y;let n=0;while(n++<20&&solidP(p.x,p.y,PW,PH))p.y-=4;if(p.remote&&p.net){p.net.x=p.x;p.net.y=p.y;p.net.d=0;p.net.bu=0}});
+  if(boss&&!boss.dead){Object.assign(boss,{hp:boss.max,x:LD.boss.x,y:LD.boss.y,vy:0,seen:false,mode:'',tele:0,atk:2.2,angry:false,inv:0})}
+  bshots=[];shots=[];emerge=.5;music(true);say('Lanjut dari bendera! Kunci dan senjata kalian tetap tersimpan.',3)}
 function levelFail(why){if(failed||won)return;failed=true;netEv({t:'fail',why});running=false;music(false);SFX.hurt();MODE='fail';
   $('wTitle').textContent='Level gagal';$('wTxt').innerHTML=`${esc(why)} Ayo coba lagi dan saling bantu!<br>Nyawa tim: <b>${Math.max(LIVES,3)}</b>`;
-  $('bNext').textContent='Ulangi level ini';$('bAgain').style.display='none';setTimeout(()=>{$('pWin').hidden=false},600)}
+  $('bNext').textContent=checkpoint.x>LD.start*T+8?'Lanjut dari bendera':'Ulangi level ini';$('bAgain').style.display='none';setTimeout(()=>{$('pWin').hidden=false},600)}
 function respawn(p){p.x=checkpoint.x+3+p.i*12;p.vx=0;p.vy=0;p.dj=true;p.y=2*T;let g=false;for(let y=2*T;y<12*T;y+=2){if(solidP(p.x,y+1,PW,PH)){p.y=y;g=true;break}}if(!g){p.y=9*T-PH}let n=0;while(n++<14&&solidP(p.x,p.y,PW,PH))p.y-=T}
 function burst(x,y,col,n){for(let i=0;i<n;i++)parts.push({x,y,vx:(Math.random()-.5)*120,vy:-Math.random()*140,t:.5+Math.random()*.3,col})}
 /* efek: getar layar, kilat, jeda singkat saat pukulan kena, percikan, angka kerusakan */
@@ -690,6 +695,8 @@ function draw(){cx.imageSmoothingEnabled=false;drawBG();cx.save();if(FX.sh>0){co
   // tali
   if(LD.tether&&P.length===2&&!(P[0].dead>0)&&!(P[1].dead>0)){const a=P[0],b=P[1],xa=a.x+5-ox,ya=a.y+8,xb=b.x+5-ox,yb=b.y+8,d=Math.hypot(xb-xa,yb-ya),sag=Math.max(0,ROPE-d)*.6;
     cx.strokeStyle=d>ROPE-2?'#e2483d':'#8a5a3b';cx.lineWidth=2;cx.beginPath();cx.moveTo(xa,ya);cx.quadraticCurveTo((xa+xb)/2,(ya+yb)/2+sag,xb,yb);cx.stroke()}
+  for(const k of level.cps){const X=Math.round(k+6-ox);if(X<-20||X>VW+20)continue;const on=k<=checkpoint.x,wv=Math.floor(now/220)%2;cx.fillStyle='#2b2140';cx.fillRect(X-1,7*T-4,4,3*T+4);cx.fillStyle='#c9cbe0';cx.fillRect(X,7*T-3,2,3*T+3);
+    cx.fillStyle='#2b2140';cx.fillRect(X+2,7*T-3+(on?0:14),13,10);cx.fillStyle=on?'#3fa34d':'#9a8fb0';cx.fillRect(X+2,7*T-2+(on?0:14)+wv,12,8-wv);cx.fillStyle=on?'#7be07f':'#c9cbe0';cx.fillRect(X+3,7*T-1+(on?0:14)+wv,4,2);cx.fillStyle='#f7c548';cx.fillRect(X-1,7*T-6,4,3)}
   drawGate(LD.start*T-ox-6,true,true);drawGate(LD.gate*T-ox,keysGot>=keysNeed(),false);drawFX(ox,now);
   // pemain (muncul dari pintu / masuk gerbang)
   const clip=emerge>0||pipeT>0;if(clip){cx.save();cx.globalAlpha=Math.max(0,Math.min(1,emerge>0?1-emerge/.8:pipeT))}const eo=0;
@@ -735,7 +742,7 @@ function start(){if(!MAP.length)loadLevel(0);reset();running=true;paused=false;q
   try{if(touch&&document.documentElement.requestFullscreen&&!document.fullscreenElement)document.documentElement.requestFullscreen().catch(()=>{})}catch(e){}}
 function togglePause(){paused=!paused;$('pPause').hidden=!paused;if(!paused)P.forEach(p=>p.inp={l:0,r:0,j:0})}
 const exit=()=>{try{netClose()}catch(e){}try{if(document.fullscreenElement)document.exitFullscreen()}catch(e){}location.href='../'};
-$('qLater').onclick=()=>{quizOpen=false;qCool=2.5;$('pQuiz').hidden=true};$('bLocal').onclick=()=>{ME=-1;NET.on=false;$('pStart').hidden=true;pickShow(false)};$('bAgain').onclick=()=>{netEv({t:'restart'});start()};$('bNext').onclick=()=>{if(MODE==='fail'){LIVES=Math.max(LIVES,3);netEv({t:'restart',lives:LIVES});start();return}totCoins=0;goLevel(0)};$('bResume').onclick=togglePause;$('bRestart').onclick=()=>{togglePause();netEv({t:'restart'});start()};$('bExit').onclick=exit;$('bExit2').onclick=exit;
+$('qLater').onclick=()=>{quizOpen=false;qCool=2.5;$('pQuiz').hidden=true};$('bLocal').onclick=()=>{ME=-1;NET.on=false;$('pStart').hidden=true;pickShow(false)};$('bAgain').onclick=()=>{netEv({t:'restart'});start()};$('bNext').onclick=()=>{if(MODE==='fail'){LIVES=Math.max(LIVES,3);netEv({t:'retry',lives:LIVES,cx:checkpoint.x,cy:checkpoint.y});retryCP();return}totCoins=0;goLevel(0)};$('bResume').onclick=togglePause;$('bRestart').onclick=()=>{togglePause();netEv({t:'restart'});start()};$('bExit').onclick=exit;$('bExit2').onclick=exit;
 $('bPause').onclick=togglePause;$('bSound').onclick=()=>{soundOn=!soundOn;$('bSound').style.opacity=soundOn?1:.45;music(soundOn&&running)};
 /* ====== main online (WebRTC langsung antar-HP, Firebase hanya untuk mempertemukan) ====== */
 var ME=-1;const NET={on:false,pc:null,dc:null,de:null,peer:'',code:'',unsub:null,sendT:null,role:null,lastRx:0};
@@ -760,6 +767,7 @@ function netRx(m){NET.lastRx=performance.now();
   if(m.t==='win'){win();return}
   if(m.t==='restart'){if(m.lives!=null)LIVES=m.lives;start();return}
   if(m.t==='die'){loseLife();return}
+  if(m.t==='retry'){LIVES=m.lives??LIVES;if(m.cx!=null)checkpoint={x:m.cx,y:m.cy};retryCP();return}
   if(m.t==='fail'){levelFail(m.why||'');return}
   if(m.t==='pick'){if(ME===0)decide(1-(m.r|0));return}
   if(m.t==='start'){if(Array.isArray(m.qb)&&m.qb.length){QBANK=m.qb;QBAG=[];QSUBJ=m.qn||''}if(Array.isArray(m.rm))RM=[m.rm[0]|0,m.rm[1]|0];$('pPick').hidden=true;if(m.sx)SX.peer=m.sx;if(m.g!=null)GRADE_ON=m.g;if(m.n!=null){totCoins=0;loadLevel(m.n|0,m.seed)}NET.peer=m.name||NET.peer;NET.peerUid=m.uid||NET.peerUid;start();return}
