@@ -179,14 +179,14 @@ function genLevel(n,seed){const C=LVCFG[n],R=rng(seed),ri=(a,b)=>a+Math.floor(R(
   seq.forEach((k,i)=>{L.cps.push(x);L.zones.push({x,t:TIPS[k]});x=M[k](x)+ri(1,2);
     // tempat istirahat: kotak misteri, kunci, penjahat
     const r0=x;L.cps.push(r0);
-    if(i<2){L.boxes.push({x:r0+3,y:9});if(i===0)L.zones.push({x:r0,t:`Kotak Misteri! Jawab soalnya untuk mendapat senjata ${WEAP[n].n}. Satu kotak hanya untuk satu orang. Temanmu mengambil di kotak berikutnya.`})}
+    if(i<2){L.boxes.push({x:r0+3,y:9});if(i===0)L.zones.push({x:r0,t:`Kotak Misteri! Jawab soalnya untuk mendapat senjata. Kotak pertama berisi ${WEAP[n].n} (jarak jauh), kotak kedua ${MELEE[n].n} (jarak dekat). Satu kotak hanya untuk satu orang.`})}
     else{L.enemies.push({x0:(r0+1)*T,x1:(r0+6)*T-12,x:(r0+3)*T,y:10*T-12,dir:R()<.5?-1:1,sp:22+n*5});if(i===2)L.zones.push({x:r0,t:'Awas penjahat! Injak kepalanya atau tembak dengan senjatamu.'})}
     if(i===half||i===seq.length-1){L.keys.push({x:r0+5,y:7});if(i===half)L.zones.push({x:r0+2,t:'Kunci gerbang! Kumpulkan semua kunci untuk membuka gerbang di akhir level.'})}
     coin(r0+1,8);x=r0+8});
   // arena bos, lalu gerbang
-  const a0=x;L.cps.push(a0);L.zones.push({x:a0,t:`Bos ${BOSS[n].n}! Tembak dengan senjata dari Kotak Misteri (tombol ✦). Kalahkan bos untuk mendapat kunci terakhir.`});
+  const a0=x;L.cps.push(a0);L.zones.push({x:a0,t:`Bos ${BOSS[n].n}! Bos bisa menyerang: saat ia berkedip, bersiaplah menghindar! Serang dengan senjata dari Kotak Misteri (tombol ✦). Kalahkan bos untuk mendapat kunci terakhir.`});
   rect('=',a0+5,a0+6,7,7);rect('=',a0+13,a0+14,7,7);
-  L.boss={x:(a0+12)*T,y:BOSS[n].fly?60:10*T-28,ax0:a0*T,ax1:(a0+20)*T,hp:6+n*2};
+  L.boss={x:(a0+12)*T,y:BOSS[n].fly?60:10*T-28,ax0:a0*T,ax1:(a0+20)*T,hp:10+n*2};
   x=a0+21;L.gate=x;const end=x+5;rect('#',end,end+1,0,13);L.W=end+2;
   for(const r of g)r.length=L.W;for(const r of did)r.length=L.W;
   return L}
@@ -264,7 +264,7 @@ function ptext(s,X,Y,col,sz=1){cx.fillStyle=col;let x=X;for(const ch of s){const
 /* ====== suara chiptune ====== */
 let AC=null,soundOn=true;function ac(){if(!AC){try{AC=new (window.AudioContext||window.webkitAudioContext)()}catch(e){}}return AC}
 function beep(f,d=.08,type='square',vol=.05,slide=0){if(!soundOn)return;const a=ac();if(!a)return;const o=a.createOscillator(),g=a.createGain();o.type=type;o.frequency.setValueAtTime(f,a.currentTime);if(slide)o.frequency.linearRampToValueAtTime(f+slide,a.currentTime+d);g.gain.setValueAtTime(vol,a.currentTime);g.gain.exponentialRampToValueAtTime(.0001,a.currentTime+d);o.connect(g);g.connect(a.destination);o.start();o.stop(a.currentTime+d+.02)}
-const SFX={jump:()=>beep(440,.12,'square',.04,320),coin:()=>{beep(988,.06);setTimeout(()=>beep(1319,.12),60)},click:()=>beep(220,.06,'square',.05),door:()=>beep(160,.25,'triangle',.08,-60),ok:()=>[523,659,784,1047].forEach((f,i)=>setTimeout(()=>beep(f,.1),i*80)),bad:()=>beep(196,.25,'sawtooth',.05,-80),hurt:()=>beep(330,.2,'square',.05,-250),jump2:()=>beep(660,.1,'square',.04,420),shoot:()=>beep(700,.06,'square',.03,-300),stomp:()=>beep(200,.1,'square',.05,-120),key:()=>[784,988,1319].forEach((f,i)=>setTimeout(()=>beep(f,.08),i*70)),pop:()=>{beep(880,.06,'square',.05,400);setTimeout(()=>beep(1320,.08),60)},pipe:()=>[392,330,262,196].forEach((f,i)=>setTimeout(()=>beep(f,.1,'square',.05),i*90)),win:()=>[523,523,784,784,880,1047].forEach((f,i)=>setTimeout(()=>beep(f,.14,'square',.05),i*120))};
+const SFX={jump:()=>beep(440,.12,'square',.04,320),coin:()=>{beep(988,.06);setTimeout(()=>beep(1319,.12),60)},click:()=>beep(220,.06,'square',.05),door:()=>beep(160,.25,'triangle',.08,-60),ok:()=>[523,659,784,1047].forEach((f,i)=>setTimeout(()=>beep(f,.1),i*80)),bad:()=>beep(196,.25,'sawtooth',.05,-80),hurt:()=>beep(330,.2,'square',.05,-250),jump2:()=>beep(660,.1,'square',.04,420),swing:()=>beep(300,.08,'triangle',.05,250),shoot:()=>beep(700,.06,'square',.03,-300),stomp:()=>beep(200,.1,'square',.05,-120),key:()=>[784,988,1319].forEach((f,i)=>setTimeout(()=>beep(f,.08),i*70)),pop:()=>{beep(880,.06,'square',.05,400);setTimeout(()=>beep(1320,.08),60)},pipe:()=>[392,330,262,196].forEach((f,i)=>setTimeout(()=>beep(f,.1,'square',.05),i*90)),win:()=>[523,523,784,784,880,1047].forEach((f,i)=>setTimeout(()=>beep(f,.14,'square',.05),i*120))};
 let musT=null;const MEL=[523,0,659,0,784,659,523,0,587,0,698,0,880,698,587,0,523,0,659,784,1047,0,880,784,698,659,587,523,587,0,0,0],BASS=[131,131,165,165,196,196,165,165,147,147,175,175,220,220,175,175];
 function music(on){clearInterval(musT);musT=null;if(!on||!soundOn)return;let i=0;musT=setInterval(()=>{if(paused||!running)return;const m=MEL[i%MEL.length];if(m)beep(m,.11,'square',.018);if(i%2===0)beep(BASS[(i/2)%BASS.length],.2,'triangle',.03);i++},150)}
 
@@ -378,33 +378,58 @@ let qCool=0;function step(dt){if(qCool>0)qCool-=dt;levelT+=dt;moverUpdate(dt);
   parts=parts.filter(q=>(q.t-=dt)>0);parts.forEach(q=>{q.x+=q.vx*dt;q.y+=q.vy*dt;q.vy+=300*dt})}
 /* ====== penjahat, bos, senjata, kunci & gerbang ====== */
 const WEAP=[{n:'Ketapel Batu',c:'#c9b8e8',c2:'#5f6180'},{n:'Pistol Gelembung',c:'#9cd0ff',c2:'#3d8bfd'},{n:'Lentera Cahaya',c:'#fff3b0',c2:'#f7c548'},{n:'Bumerang Angin',c:'#c8ffe0',c2:'#3fa34d'},{n:'Tongkat Pelangi',c:'#ff9cc2',c2:'#9b6bff'}];
+const MELEE=[{n:'Pedang Kayu',c:'#d9a866',c2:'#6b4a26'},{n:'Palu Batu',c:'#b4b6cc',c2:'#5f6180'},{n:'Tongkat Kristal',c:'#7fe3ff',c2:'#3d8bfd'},{n:'Pedang Angin',c:'#c8ffe0',c2:'#2e7d3a'},{n:'Pedang Pelangi',c:'#ffd0f0',c2:'#e2483d'}];
+const wName=(i)=>i===1?MELEE[LV].n:WEAP[LV].n;
+const BATK=[['wave','orb'],['charge','orb'],['drop','orb'],['spread','drop'],['wave','spread','charge','minion']];
+let bshots=[];
 const BOSS=[{n:'Jamur Raksasa',c:'#e2483d',c2:'#fff8e7',fly:0},{n:'Kepiting Baja',c:'#ff9636',c2:'#8f1f17',fly:0},{n:'Kelelawar Bayangan',c:'#6b5b84',c2:'#c9a0ff',fly:1},{n:'Burung Badai',c:'#5fe0d0',c2:'#2b6f8a',fly:1},{n:'Raja Bayangan',c:'#2b2140',c2:'#f7c548',fly:0}];
 const ENC=['#7b4fd0','#3fa34d','#9b6bff','#e2483d','#2b2140'];
 let enemies=[],boss=null,shots=[],keysGot=0,boxes=[],keyItems=[];
 const ovl=(a,aw,ah,b,bw,bh)=>a.x<b.x+bw&&a.x+aw>b.x&&a.y<b.y+bh&&a.y+ah>b.y;
 const hostAuth=()=>!NET.on||ME===0;
 function fxReset(){enemies=(LD.enemies||[]).map(e=>({...e,dead:false,t:Math.random()*2}));
-  boss=LD.boss?{...LD.boss,hp:LD.boss.hp,max:LD.boss.hp,dead:false,inv:0,t:0,vy:0,dir:-1,seen:false}:null;
-  shots=[];keysGot=0;boxes=(LD.boxes||[]).map(b=>({...b,taken:false}));keyItems=(LD.keys||[]).map(k=>({x:k.x*T+8,y:k.y*T+8,got:false,vy:0,fall:false}))}
-function fire(p){if(!p.weapon){if(!p.wHint){p.wHint=true;say('Kamu belum punya senjata. Ambil di Kotak Misteri dengan menjawab soal.',3)}return}if(p.cool>0)return;p.cool=.35;
+  boss=LD.boss?{...LD.boss,hp:LD.boss.hp,max:LD.boss.hp,dead:false,inv:0,t:0,vy:0,dir:-1,seen:false,atk:2.2,tele:0,mode:'',mt:0,angry:false}:null;
+  shots=[];bshots=[];keysGot=0;boxes=(LD.boxes||[]).map(b=>({...b,taken:false}));keyItems=(LD.keys||[]).map(k=>({x:k.x*T+8,y:k.y*T+8,got:false,vy:0,fall:false}))}
+function fire(p){if(!p.weapon){if(!p.wHint){p.wHint=true;say('Kamu belum punya senjata. Ambil di Kotak Misteri dengan menjawab soal.',3)}return}if(p.cool>0)return;
+  if(p.weapon==='m'){p.cool=.4;p.swing=.18;SFX.swing();if(NET.on)netEv({t:'sw',i:p.i});
+    const hb={x:p.face>0?p.x+PW-2:p.x-22,y:p.y-8};
+    for(const e of enemies)if(!e.dead&&ovl(hb,24,PH+10,e,12,12)){e.dead=true;SFX.stomp();burst(e.x+6,e.y+6,ENC[LV],10);netEv({t:'stomp',i:enemies.indexOf(e)})}
+    bshots.forEach(b=>{if(b.k!=='wave'&&ovl(hb,24,PH+10,{x:b.x-5,y:b.y-5},10,10)){b.t=99;burst(b.x,b.y,'#ffffff',6)}});
+    if(boss&&!boss.dead&&ovl(hb,24,PH+10,boss,28,28)){if(hostAuth())bossHit(2);else netEv({t:'bhit',d:2});burst(hb.x+12,p.y+4,'#ffffff',8)}return}
+  p.cool=.35;
   let vx=p.face*230,vy=0;if(boss&&!boss.dead){const bx=boss.x+14,by=boss.y+14,dx=bx-(p.x+5);if(Math.sign(dx)===p.face&&Math.abs(dx)<220){vy=Math.max(-160,Math.min(160,(by-(p.y+6))/Math.abs(dx)*230))}}
   const s={x:p.x+5+p.face*6,y:p.y+6,vx,vy,t:0,real:hostAuth(),w:LV};shots.push(s);SFX.shoot();if(NET.on)netEv({t:'shot',x:Math.round(s.x),y:Math.round(s.y),vx:Math.round(vx),vy:Math.round(vy)})}
 function bossDefeat(){if(!boss||boss.dead)return;boss.dead=true;boss.hp=0;SFX.win();burst(boss.x+14,boss.y+14,BOSS[LV].c,30);keyItems.push({x:boss.x+14,y:boss.y+10,got:false,vy:-120,fall:true,boss:true});say(`${BOSS[LV].n} kalah! Ambil kunci terakhir yang dijatuhkannya.`,4)}
+function bossHit(d){if(!boss||boss.dead||boss.inv>0)return;boss.hp=Math.max(0,boss.hp-d);boss.inv=.25;SFX.click();
+  if(!boss.angry&&boss.hp<=boss.max/2){boss.angry=true;say(`${BOSS[LV].n} marah! Serangannya makin cepat.`,2.5)}if(boss.hp<=0)bossDefeat()}
+function bShot(x,y,vx,vy,k){const b={x,y,vx,vy,k,t:0};bshots.push(b);if(NET.on&&ME===0)netEv({t:'bs',x:Math.round(x),y:Math.round(y),vx:Math.round(vx),vy:Math.round(vy),k})}
+function bossAI(dt){const B=BOSS[LV];boss.t+=dt;if(boss.inv>0)boss.inv-=dt;const live=P.filter(p=>!(p.dead>0));const tg=live.slice().sort((a,b)=>Math.abs(a.x-boss.x)-Math.abs(b.x-boss.x))[0];
+  if(P.some(p=>p.x>boss.ax0-40))boss.seen=true;if(!boss.seen||!tg)return;const ang=boss.angry?1.35:1,cxb=boss.x+14,cyb=boss.y+14,dir=Math.sign(tg.x-(boss.x+9))||1;
+  if(boss.mode==='charge'){boss.mt-=dt;boss.x+=boss.cdir*(150+LV*15)*dt;if(boss.mt<=0)boss.mode=''}
+  else if(B.fly){const sw=(boss.t%4)>2.9;boss.x+=dir*(28+LV*6)*ang*dt;const ty=sw?tg.y-8:56+Math.sin(boss.t*2)*16;boss.y+=(ty-boss.y)*Math.min(1,dt*(sw?3:1.5))}
+  else{if(!(boss.tele>0))boss.x+=dir*(24+LV*6)*ang*dt;boss.vy+=GRAV*dt;boss.y+=boss.vy*dt;const gy=10*T-28;if(boss.y>=gy){if(boss.vy>200&&boss.mode==='wave'){bShot(boss.x-4,10*T-6,-150-LV*10,0,'wave');bShot(boss.x+20,10*T-6,150+LV*10,0,'wave');SFX.stomp();boss.mode=''}boss.y=gy;boss.vy=0}}
+  boss.x=Math.max(boss.ax0,Math.min(boss.ax1-28,boss.x));if(boss.mode!=='charge')boss.dir=dir;
+  if(boss.tele>0){boss.tele-=dt;if(boss.tele<=0){const k=boss.next;
+      if(k==='orb'){const dx=tg.x+5-cxb,dy=tg.y+7-cyb,d=Math.hypot(dx,dy)||1,v=(110+LV*14)*ang;bShot(cxb,cyb,dx/d*v,dy/d*v,'orb')}
+      else if(k==='spread'){const a0=Math.atan2(tg.y+7-cyb,tg.x+5-cxb),v=(105+LV*12)*ang;[-.35,0,.35].forEach(da=>bShot(cxb,cyb,Math.cos(a0+da)*v,Math.sin(a0+da)*v,'orb'))}
+      else if(k==='drop'){[-40,0,40].forEach(dx=>bShot(cxb,cyb+8,dx,40,'drop'))}
+      else if(k==='wave'){boss.vy=-330;boss.mode='wave'}
+      else if(k==='charge'){boss.mode='charge';boss.cdir=dir;boss.mt=.9}
+      else if(k==='minion'){if(enemies.filter(e=>!e.dead&&e.min).length<2){const e={x0:boss.ax0,x1:boss.ax1-12,x:cxb-6,y:10*T-12,dir:-dir,sp:40,min:1,dead:false,t:0};enemies.push(e);if(NET.on)netEv({t:'min',e})}}}}
+  else{boss.atk-=dt*ang;if(boss.atk<=0&&boss.mode===''){const L=BATK[LV];boss.next=L[Math.floor(Math.random()*L.length)];if(B.fly&&(boss.next==='wave'||boss.next==='charge'))boss.next='orb';boss.tele=.55;boss.atk=Math.max(1.3,2.6-LV*.2)}}}
 function fxStep(dt){
+  for(const b of bshots){b.t+=dt;if(b.k==='drop')b.vy+=300*dt;b.x+=b.vx*dt;b.y+=b.vy*dt;if(b.t>5||(b.k!=='wave'&&hitSolid(b.x-3,b.y-3,6,6))||(b.k==='wave'&&(hitSolid(b.x+(b.vx>0?12:0),b.y-6,1,4)||b.t>3)))b.t=99}
+  bshots=bshots.filter(b=>b.t<99);
+  for(const p of P){if(p.swing>0)p.swing-=dt;if(p.remote||p.dead>0)continue;for(const b of bshots){const hit=b.k==='wave'?ovl(p,PW,PH,{x:b.x,y:b.y-4},12,10):ovl(p,PW,PH,{x:b.x-4,y:b.y-4},8,8);if(hit){b.t=99;kill(p);break}}}
   // tembakan
   for(const s of shots){s.t+=dt;s.x+=s.vx*dt;s.y+=s.vy*dt;if(s.t>.9||hitSolid(s.x-2,s.y-2,4,4)){s.t=9;continue}
     if(!s.real)continue;
     for(const e of enemies)if(!e.dead&&ovl({x:s.x-3,y:s.y-3},6,6,e,12,12)){e.dead=true;s.t=9;SFX.stomp();burst(e.x+6,e.y+6,ENC[LV],10);netEv({t:'stomp',i:enemies.indexOf(e)});break}
-    if(s.t<9&&boss&&!boss.dead&&ovl({x:s.x-3,y:s.y-3},6,6,boss,28,28)){s.t=9;if(boss.inv<=0){boss.hp--;boss.inv=.25;SFX.click();burst(s.x,s.y,'#ffffff',6);if(boss.hp<=0)bossDefeat()}}}
+    if(s.t<9&&boss&&!boss.dead&&ovl({x:s.x-3,y:s.y-3},6,6,boss,28,28)){s.t=9;bossHit(1);burst(s.x,s.y,'#ffffff',6)}}
   shots=shots.filter(s=>s.t<9);
   // penjahat kecil & bos (dihitung tuan rumah)
   if(hostAuth()){for(const e of enemies){if(e.dead)continue;e.t+=dt;e.x+=e.dir*e.sp*dt;if(e.x<e.x0){e.x=e.x0;e.dir=1}if(e.x>e.x1){e.x=e.x1;e.dir=-1}}
-    if(boss&&!boss.dead){boss.t+=dt;if(boss.inv>0)boss.inv-=dt;const live=P.filter(p=>!(p.dead>0));const tg=live.sort((a,b)=>Math.abs(a.x-boss.x)-Math.abs(b.x-boss.x))[0];
-      const inArena=P.some(p=>p.x>boss.ax0-40);if(inArena)boss.seen=true;
-      if(boss.seen&&tg){const B=BOSS[LV];const dir=Math.sign(tg.x-(boss.x+9))||1;
-        if(B.fly){const sw=(boss.t%4)>2.8;boss.x+=dir*(28+LV*6)*dt;const ty=sw?tg.y-8:60+Math.sin(boss.t*2)*18;boss.y+=(ty-boss.y)*Math.min(1,dt*(sw?3:1.5))}
-        else{boss.x+=dir*(26+LV*6)*dt;boss.vy+=GRAV*dt;boss.y+=boss.vy*dt;const gy=10*T-28;if(boss.y>=gy){boss.y=gy;boss.vy=0;if(boss.t%3<dt*1.5)boss.vy=-300}}
-        boss.x=Math.max(boss.ax0,Math.min(boss.ax1-28,boss.x));boss.dir=dir}}}
+    if(boss&&!boss.dead)bossAI(dt)}
   else if(boss&&boss.inv>0)boss.inv-=dt;
   // kunci jatuh
   for(const k of keyItems)if(k.fall&&!k.got){k.vy+=GRAV*dt;k.y+=k.vy*dt;if(k.y>=10*T-8){k.y=10*T-8;k.fall=false}}
@@ -429,13 +454,20 @@ function drawFX(ox,now){
     cx.fillStyle='#fff8e7';cx.fillRect(X+3,Y+4,2,2);cx.fillRect(X+7,Y+4,2,2);cx.fillStyle='#2b2140';cx.fillRect(X+(e.dir>0?4:3),Y+5,1,1);cx.fillRect(X+(e.dir>0?8:7),Y+5,1,1);cx.fillRect(X+3,Y+2,2,1);cx.fillRect(X+7,Y+2,2,1);
     cx.fillStyle='#2b2140';cx.fillRect(X+2+f,Y+11,2,1);cx.fillRect(X+8-f,Y+11,2,1)}
   // bos
-  if(boss&&!boss.dead){const B=BOSS[LV],X=Math.round(boss.x-ox),Y=Math.round(boss.y),fl=boss.inv>0&&Math.floor(now/50)%2;
+  if(boss&&!boss.dead){const B=BOSS[LV],X=Math.round(boss.x-ox),Y=Math.round(boss.y),fl=(boss.inv>0&&Math.floor(now/50)%2)||(boss.tele>0&&Math.floor(now/90)%2);
     if(X>-40&&X<VW+40){cx.fillStyle='#2b2140';cx.fillRect(X+2,Y+2,24,26);cx.fillRect(X,Y+6,28,18);cx.fillStyle=fl?'#ffffff':B.c;cx.fillRect(X+3,Y+3,22,24);cx.fillRect(X+1,Y+7,26,16);
       if(B.fly){const w=Math.floor(now/120)%2;cx.fillStyle='#2b2140';cx.fillRect(X-8,Y+8+w*3,9,6);cx.fillRect(X+27,Y+8+w*3,9,6);cx.fillStyle=B.c2;cx.fillRect(X-7,Y+9+w*3,7,4);cx.fillRect(X+28,Y+9+w*3,7,4)}
       cx.fillStyle=B.c2;cx.fillRect(X+5,Y+4,18,3);cx.fillStyle='#fff8e7';cx.fillRect(X+6,Y+10,6,6);cx.fillRect(X+16,Y+10,6,6);cx.fillStyle='#2b2140';cx.fillRect(X+(boss.dir>0?9:7),Y+12,3,3);cx.fillRect(X+(boss.dir>0?19:17),Y+12,3,3);
       cx.fillRect(X+5,Y+8,7,2);cx.fillRect(X+16,Y+8,7,2);cx.fillRect(X+9,Y+20,10,2);cx.fillStyle='#fff8e7';cx.fillRect(X+10,Y+22,2,2);cx.fillRect(X+16,Y+22,2,2);
       if(LV===4||LV===0){cx.fillStyle='#f7c548';cx.fillRect(X+7,Y-3,14,4);cx.fillRect(X+7,Y-6,2,3);cx.fillRect(X+13,Y-6,2,3);cx.fillRect(X+19,Y-6,2,3)}}
     if(X>-40&&X<VW+40){const w=34,X0=X-3,Y0=Y-(LV===4||LV===0?13:9);cx.fillStyle='#2b2140';cx.fillRect(X0-1,Y0-1,w+2,5);cx.fillStyle='#5f6180';cx.fillRect(X0,Y0,w,3);cx.fillStyle='#e2483d';cx.fillRect(X0,Y0,Math.round(w*boss.hp/boss.max),3)}}
+  // serangan bos
+  for(const b of bshots){const X=Math.round(b.x-ox),Y=Math.round(b.y);if(b.k==='wave'){const f=Math.floor(now/60)%2;cx.fillStyle='#2b2140';cx.fillRect(X,Y-5,12,11);cx.fillStyle=BOSS[LV].c;cx.fillRect(X+1,Y-4+f,10,9-f);cx.fillStyle='#fff8e7';cx.fillRect(X+3,Y-3+f,6,2)}
+    else{cx.fillStyle='#2b2140';cx.fillRect(X-5,Y-5,10,10);cx.fillStyle=BOSS[LV].c2;cx.fillRect(X-4,Y-4,8,8);cx.fillStyle=BOSS[LV].c;cx.fillRect(X-2,Y-2,4,4)}}
+  // ayunan senjata jarak dekat
+  for(const p of P){if(!(p.swing>0)||p.dead>0)continue;const M=MELEE[LV],k=1-p.swing/.18,f=p.face>0?1:-1,X0=Math.round(p.x-ox+5),Y0=Math.round(p.y+6);cx.fillStyle='rgba(255,255,255,.6)';
+    for(let a=0;a<6;a++){const an=-1.3+a*.45;if(an>-1.3+k*2.6)break;cx.fillRect(X0+f*Math.round(Math.cos(an)*17)-1,Y0+Math.round(Math.sin(an)*14)-1,3,3)}
+    const an=-1.3+k*2.6,tx=X0+f*Math.round(Math.cos(an)*15),ty=Y0+Math.round(Math.sin(an)*13);cx.strokeStyle=M.c2;cx.lineWidth=3;cx.beginPath();cx.moveTo(X0+f*4,Y0);cx.lineTo(tx,ty);cx.stroke();cx.fillStyle=M.c;cx.fillRect(tx-3,ty-3,6,6)}
   // tembakan
   for(const s of shots){const W=WEAP[s.w]||WEAP[0];cx.fillStyle=W.c2;cx.fillRect(Math.round(s.x-ox)-3,Math.round(s.y)-3,6,6);cx.fillStyle=W.c;cx.fillRect(Math.round(s.x-ox)-2,Math.round(s.y)-2,4,4)}}
 function drawGate(X,open,start){cx.fillStyle='#2b2140';cx.fillRect(X-2,7*T-6,36,54);cx.fillStyle='#8d8fa8';cx.fillRect(X,7*T-4,32,52);cx.fillStyle='#b4b6cc';cx.fillRect(X,7*T-4,32,2);
@@ -476,11 +508,11 @@ function bankQ(){if(!QBANK.length)return null;if(!QBAG.length)QBAG=QBANK.slice()
 function openQuiz(arg){const isBox=typeof arg==='object',qi=isBox?-1:arg;quizOpen=true;let it=null;for(let k=0;k<5&&!it;k++)it=bankQ();if(!it)it=makeQ();
   const long=it.opts.some(o=>String(o).length>8);$('qTxt').textContent=it.q;$('qTxt').classList.toggle('sm',String(it.q).length>24);$('qOpts').classList.toggle('long',long);
   $('qTitle').textContent=isBox?'Kotak Misteri':'Batu Ajaib';
-  $('qHint').textContent=(QSUBJ?QSUBJ+' · ':'')+(isBox?`Jawab benar untuk mendapat ${WEAP[LV].n}!`:'Jawab benar untuk memunculkan jembatan!');
+  $('qHint').textContent=(QSUBJ?QSUBJ+' · ':'')+(isBox?`Jawab benar untuk mendapat ${wName(arg.box)}!`:'Jawab benar untuk memunculkan jembatan!');
   const box=$('qOpts');box.innerHTML='';it.opts.forEach(v=>{const b=document.createElement('button');b.className='btn';b.textContent=v;b.onclick=()=>{
     if(v===it.ans){SFX.ok();quizOpen=false;$('pQuiz').hidden=true;
-      if(isBox){const bx=boxes[arg.box],p=arg.p;if(!bx||bx.taken){say('Kotak ini sudah diambil temanmu. Cari kotak yang lain.',3);qCool=1.5;return}bx.taken=true;p.weapon=true;netEv({t:'box',i:arg.box,who:p.i});burst(bx.x*T+8,bx.y*T,'#f7c548',24);
-        say(`${NET.on?'Kamu':'Si '+ROLE[RM[p.i]]} mendapat ${WEAP[LV].n}! Tekan ✦ untuk menembak penjahat dan bos.`,4)}
+      if(isBox){const bx=boxes[arg.box],p=arg.p;if(!bx||bx.taken){say('Kotak ini sudah diambil temanmu. Cari kotak yang lain.',3);qCool=1.5;return}bx.taken=true;p.weapon=arg.box===1?'m':'r';netEv({t:'box',i:arg.box,who:p.i});burst(bx.x*T+8,bx.y*T,'#f7c548',24);
+        say(`${NET.on?'Kamu':'Si '+ROLE[RM[p.i]]} mendapat ${wName(arg.box)}! ${arg.box===1?'Senjata jarak dekat: dekati lawan lalu tekan ✦ untuk memukul. Pukulan juga bisa menangkis bola serangan bos.':'Senjata jarak jauh: tekan ✦ untuk menembak penjahat dan bos dari jauh.'}`,4)}
       else{qDone[qi]=true;netEv({t:'bridge',i:qi});const q=level.qs[qi];burst((q.x+5)*T,q.y*T,'#7be07f',24);say('Jembatan muncul! Seberangi bersama.',3)}}
     else{SFX.bad();$('qHint').textContent=`Belum tepat. Jawabannya: ${it.ans}. Coba soal lain.`;box.querySelectorAll('button').forEach(x=>x.disabled=true);setTimeout(()=>{if(quizOpen){$('pQuiz').hidden=true;quizOpen=false;openQuiz(arg)}},1800)}};box.appendChild(b)});
   $('pQuiz').hidden=false;Object.values(P).forEach(p=>{if(!p.remote)p.inp={l:0,r:0,j:0,f:0}})}
@@ -566,7 +598,7 @@ function draw(){cx.imageSmoothingEnabled=false;drawBG();const ox=Math.round(cam.
   for(const p of P){if(p.bub){const bx=Math.round(p.x+5-ox),by=Math.round(p.y+7);cx.fillStyle='rgba(156,208,255,.35)';cx.beginPath();cx.arc(bx,by,13,0,Math.PI*2);cx.fill();cx.strokeStyle='#e8f6ff';cx.lineWidth=1.5;cx.stroke();cx.fillStyle='#fff';cx.fillRect(bx-7,by-8,3,2)}
     else if(p.dead>0&&Math.floor(now/80)%2)continue;const s=sprFor(p.i);let img=!p.ground?s.jump:(p.vx&&Math.floor(p.anim)%2?s.walk:s.idle);if(p.face<0)img=flipped(img);
     cx.drawImage(img,Math.round(p.x-1-ox),Math.round(p.y-1+eo));
-    cx.fillStyle=SKIN[RM[p.i]].m;cx.fillRect(Math.round(p.x+3-ox),Math.round(p.y-7+eo),4,3);if(p.weapon&&!(p.dead>0)){const W=WEAP[LV];const hx=Math.round(p.x-ox+(p.face>0?9:-3)),hy=Math.round(p.y+7);cx.fillStyle='#2b2140';cx.fillRect(hx-1,hy-1,6,5);cx.fillStyle=W.c2;cx.fillRect(hx,hy,4,3);cx.fillStyle=W.c;cx.fillRect(hx,hy,2,1)}}
+    cx.fillStyle=SKIN[RM[p.i]].m;cx.fillRect(Math.round(p.x+3-ox),Math.round(p.y-7+eo),4,3);if(p.weapon&&!(p.dead>0)&&!(p.swing>0)){const W=p.weapon==='m'?MELEE[LV]:WEAP[LV];const hx=Math.round(p.x-ox+(p.face>0?9:-3)),hy=Math.round(p.y+7);cx.fillStyle='#2b2140';cx.fillRect(hx-1,hy-1,6,5);cx.fillStyle=W.c2;cx.fillRect(hx,hy,4,3);cx.fillStyle=W.c;cx.fillRect(hx,hy,2,1)}}
   if(clip)cx.restore();
   for(const q of parts){cx.fillStyle=q.col;cx.fillRect(Math.round(q.x-ox),Math.round(q.y),2,2)}
   hud(ox)}
@@ -611,7 +643,7 @@ function netLerp(p,dt){const n=p.net;if(!n)return;const k=Math.min(1,dt*14);cons
   {const me=P[1-p.i];if(n.o&&me&&!me.dead&&!n.d){p.x=me.x+(n.ox||0);p.y=me.y-PH}}p.vx=n.vx||0;p.vy=n.vy||0;p.face=n.f||1;p.ground=!!n.g;{const wb=p.bub;p.bub=!!n.bu;if(p.bub&&!wb)say('Temanmu di dalam gelembung! Lompat dan sentuh gelembungnya untuk menyelamatkan.',3.5)}p.dead=n.d?(p.bub?99:1):0;p.anim=n.a||0}
 function netEv(m){if(!NET.on||!NET.de||NET.de.readyState!=='open')return;try{NET.de.send(JSON.stringify(m))}catch(e){}}
 function netRx(m){NET.lastRx=performance.now();
-  if(m.t==='s'){const p=P[1-ME];if(p)p.net=m;if(m.en&&ME!==0)m.en.forEach((v,i)=>{const e=enemies[i];if(!e)return;if(v===-1)e.dead=true;else e.x=v});if(m.bo&&ME!==0&&boss&&!boss.dead){boss.x=m.bo[0];boss.y=m.bo[1];if(m.bo[2]<boss.hp)boss.inv=.25;boss.hp=m.bo[2];boss.seen=!!m.bo[3];boss.dir=m.bo[4]||1;if(boss.hp<=0)bossDefeat()}if(m.b&&RM[ME]!==1)m.b.forEach((b,i)=>{if(rocks[i]){rocks[i].x=b[0];rocks[i].y=b[1]}});if(ME===1&&m.lt!=null&&Math.abs(levelT-m.lt)>.12)levelT=m.lt+.04;return}
+  if(m.t==='s'){const p=P[1-ME];if(p)p.net=m;if(m.en&&ME!==0)m.en.forEach((v,i)=>{const e=enemies[i];if(!e)return;if(v===-1)e.dead=true;else e.x=v});if(m.bo&&ME!==0&&boss&&!boss.dead){boss.x=m.bo[0];boss.y=m.bo[1];if(m.bo[2]<boss.hp)boss.inv=.25;boss.hp=m.bo[2];boss.seen=!!m.bo[3];boss.dir=m.bo[4]||1;boss.tele=m.bo[5]||0;if(!boss.angry&&boss.hp<=boss.max/2)boss.angry=true;if(boss.hp<=0)bossDefeat()}if(m.b&&RM[ME]!==1)m.b.forEach((b,i)=>{if(rocks[i]){rocks[i].x=b[0];rocks[i].y=b[1]}});if(ME===1&&m.lt!=null&&Math.abs(levelT-m.lt)>.12)levelT=m.lt+.04;return}
   if(m.t==='coin'){const c=level.coins[m.i];if(c&&!c.got){c.got=true;coins++;coinLife();SFX.coin();burst(c.x,c.y,'#f7c548',8)}return}
   if(m.t==='bridge'){const i=m.i|0;if(!qDone[i]){qDone[i]=true;SFX.ok();if(quizOpen){quizOpen=false;$('pQuiz').hidden=true}say('Temanmu menjawab benar! Jembatan muncul.',3)}return}
   if(m.t==='latch'){if(m.k==='L')laserOff=true;else latched[m.k]=true;return}
@@ -619,7 +651,11 @@ function netRx(m){NET.lastRx=performance.now();
   if(m.t==='shot'){shots.push({x:m.x,y:m.y,vx:m.vx,vy:m.vy,t:0,real:hostAuth(),w:LV});SFX.shoot();return}
   if(m.t==='stomp'){const e=enemies[m.i];if(e&&!e.dead){e.dead=true;burst(e.x+6,e.y+6,ENC[LV],10)}return}
   if(m.t==='key'){const k=keyItems[m.i];if(k&&!k.got){k.got=true;keysGot++;SFX.key();keyMsg()}return}
-  if(m.t==='box'){const b=boxes[m.i];if(b)b.taken=true;const q=P[m.who];if(q)q.weapon=true;return}
+  if(m.t==='box'){const b=boxes[m.i];if(b)b.taken=true;const q=P[m.who];if(q)q.weapon=m.i===1?'m':'r';return}
+  if(m.t==='bs'){bshots.push({x:m.x,y:m.y,vx:m.vx,vy:m.vy,k:m.k,t:0});return}
+  if(m.t==='bhit'){if(hostAuth())bossHit(m.d|0||1);return}
+  if(m.t==='sw'){const q=P[m.i];if(q){q.swing=.18;SFX.swing()}return}
+  if(m.t==='min'){if(m.e)enemies.push({...m.e,dead:false});return}
   if(m.t==='level'){if(m.n>0)PRE=`Level ${m.n} selesai! `;else totCoins=0;loadLevel(m.n|0,m.seed);start();return}
   if(m.t==='win'){win();return}
   if(m.t==='restart'){if(m.lives!=null)LIVES=m.lives;start();return}
@@ -655,7 +691,7 @@ function netSetup(pc){pc.__types={};pc.ontrack=e=>{const a=$('rAudio');a.srcObje
     if(st==='disconnected')setTimeout(()=>{if(pc.connectionState==='disconnected')netLost('Sambungan dengan temanmu terputus.')},6000)}}
 function bothOpen(){return NET.dc&&NET.de&&NET.dc.readyState==='open'&&NET.de.readyState==='open'}
 function onReady(name){if(!bothOpen())return;NET.on=true;if(NET.unsub){NET.unsub();NET.unsub=null}
-  clearInterval(NET.sendT);NET.sendT=setInterval(()=>{if(!running||ME<0)return;const p=P[ME];if(!p||NET.dc.readyState!=='open')return;try{NET.dc.send(JSON.stringify({t:'s',x:+p.x.toFixed(1),y:+p.y.toFixed(1),vx:p.vx|0,vy:p.vy|0,f:p.face,g:p.ground?1:0,o:p.on?1:0,ox:p.on?+(p.x-p.on.x).toFixed(1):0,d:p.dead>0?1:0,bu:p.bub?1:0,a:+(p.anim||0).toFixed(1),lt:ME===0?+levelT.toFixed(2):undefined,b:RM[ME]===1&&rocks.length?rocks.map(r=>[Math.round(r.x),Math.round(r.y)]):undefined,en:ME===0&&enemies.length?enemies.map(e=>e.dead?-1:Math.round(e.x)):undefined,bo:ME===0&&boss?[Math.round(boss.x),Math.round(boss.y),boss.hp,boss.seen?1:0,boss.dir]:undefined}))}catch(e){}},50);
+  clearInterval(NET.sendT);NET.sendT=setInterval(()=>{if(!running||ME<0)return;const p=P[ME];if(!p||NET.dc.readyState!=='open')return;try{NET.dc.send(JSON.stringify({t:'s',x:+p.x.toFixed(1),y:+p.y.toFixed(1),vx:p.vx|0,vy:p.vy|0,f:p.face,g:p.ground?1:0,o:p.on?1:0,ox:p.on?+(p.x-p.on.x).toFixed(1):0,d:p.dead>0?1:0,bu:p.bub?1:0,a:+(p.anim||0).toFixed(1),lt:ME===0?+levelT.toFixed(2):undefined,b:RM[ME]===1&&rocks.length?rocks.map(r=>[Math.round(r.x),Math.round(r.y)]):undefined,en:ME===0&&enemies.length?enemies.map(e=>e.dead?-1:Math.round(e.x)):undefined,bo:ME===0&&boss?[Math.round(boss.x),Math.round(boss.y),boss.hp,boss.seen?1:0,boss.dir,boss.tele>0?+boss.tele.toFixed(2):0]:undefined}))}catch(e){}},50);
   NET.myName=name;PICK.done=false;if(ME===1)netEv({t:'hi',name,uid:NET.myUid,sx:SX.me});pickShow(true);$('bMic').hidden=$('bSpk').hidden=false;micUI();
   // ruang sudah terpakai: hapus dokumennya
   if(ME===0&&NET.code)try{fb().db.doc('duo/'+NET.code).delete().catch(()=>{})}catch(e){}}
@@ -767,7 +803,7 @@ document.querySelectorAll('#pPick .pk').forEach(b=>b.onclick=()=>{const r=+b.dat
   if(!PICK.online){RM=r===0?[0,1]:[1,0];$('pPick').hidden=true;totCoins=0;loadLevel(0);heroPrev();start();return}
   if(PICK.done)return;b.classList.add('sel');document.querySelectorAll('#pPick .pk').forEach(x=>x.disabled=true);
   if(ME===0)decide(r);else{netEv({t:'pick',r});$('pkMsg').textContent='Pilihan terkirim. Memulai permainan…'}});
-window.__duo={cheatKeys:()=>{keysGot=keysNeed()},get QBANK(){return QBANK},get LIVES(){return LIVES},get keysGot(){return keysGot},get boss(){return boss},get keyItems(){return keyItems},get enemies(){return enemies},get boxes(){return boxes},get failed(){return failed},kill:i=>kill(P[i]),get RM(){return RM},snap:x=>{cam.x=x;draw();return cv.toDataURL()},VW:()=>VW,get LD(){return LD},get rocks(){return rocks},get laserOff(){return laserOff},get pipeT(){return pipeT},get emerge(){return emerge},get latched(){return latched},get level(){return level},enterPipe,get P(){return P},get doors(){return doors},get qDone(){return qDone},get won(){return won},get LV(){return LV},get movers(){return movers},get blueOn(){return blueOn},get checkpoint(){return checkpoint},start,loadLevel,goLevel,step:(n=1)=>{for(let i=0;i<n;i++)step(1/60)},MAP:()=>MAP};
+window.__duo={get bshots(){return bshots},cheatKeys:()=>{keysGot=keysNeed()},get QBANK(){return QBANK},get LIVES(){return LIVES},get keysGot(){return keysGot},get boss(){return boss},get keyItems(){return keyItems},get enemies(){return enemies},get boxes(){return boxes},get failed(){return failed},kill:i=>kill(P[i]),get RM(){return RM},snap:x=>{cam.x=x;draw();return cv.toDataURL()},VW:()=>VW,get LD(){return LD},get rocks(){return rocks},get laserOff(){return laserOff},get pipeT(){return pipeT},get emerge(){return emerge},get latched(){return latched},get level(){return level},enterPipe,get P(){return P},get doors(){return doors},get qDone(){return qDone},get won(){return won},get LV(){return LV},get movers(){return movers},get blueOn(){return blueOn},get checkpoint(){return checkpoint},start,loadLevel,goLevel,step:(n=1)=>{for(let i=0;i<n;i++)step(1/60)},MAP:()=>MAP};
 })();
 </script>
 </body>
