@@ -314,7 +314,7 @@ let qCool=0;function step(dt){if(qCool>0)qCool-=dt;levelT+=dt;moverUpdate(dt);
     if(!open&&was&&P.some(p=>overlapsTile(p,k)))open=true;
     doors[k]=open;if(open!==was){SFX.door();if(open&&k==='A'&&LV===0)say('Pintu terbuka! Cepat lewat selagi temanmu menahan tombol.',3)}}
   const mid=(P[0].x+P[1].x)/2+PW/2;cam.x=Math.max(0,Math.min(MW*T-VW,mid-VW/2));
-  if(!won&&level.flag&&!(NET.on&&ME!==0)){const fx=level.flag.x*T;if(P.every(p=>!p.dead&&Math.abs(p.x+PW/2-fx-8)<34&&p.ground))win()}
+  if(!won&&level.flag){const fx=level.flag.x*T;if(P.every(p=>!p.dead&&p.x+PW/2>=fx-20&&(p.ground||p.on||p.onM||Math.abs(p.vy)<1)))win()}
   parts=parts.filter(q=>(q.t-=dt)>0);parts.forEach(q=>{q.x+=q.vx*dt;q.y+=q.vy*dt;q.vy+=300*dt})}
 function kill(p){if(p.dead>0)return;p.dead=.8;p.onM=null;p.on=null;SFX.hurt();burst(p.x+5,p.y+7,'#fff8e7',12)}
 function respawn(p){p.x=checkpoint.x+3;p.vx=0;p.vy=0;p.dj=true;p.y=2*T;let g=false;for(let y=2*T;y<12*T;y+=2){if(hitSolid(p.x,y+1,PW,PH)){p.y=y;g=true;break}}if(!g){p.y=9*T-PH}while(hitSolid(p.x,p.y,PW,PH))p.y-=T}
@@ -419,7 +419,7 @@ $('bPause').onclick=togglePause;$('bSound').onclick=()=>{soundOn=!soundOn;$('bSo
 /* ====== main online (WebRTC langsung antar-HP, Firebase hanya untuk mempertemukan) ====== */
 var ME=-1;const NET={on:false,pc:null,dc:null,de:null,peer:'',code:'',unsub:null,sendT:null,role:null,lastRx:0};
 function netLerp(p,dt){const n=p.net;if(!n)return;const k=Math.min(1,dt*14);const ox=p.x;p.x+=(n.x-p.x)*k;p.y+=(n.y-p.y)*k;if(Math.abs(n.x-p.x)>48||Math.abs(n.y-p.y)>48){p.x=n.x;p.y=n.y}
-  p.vx=n.vx||0;p.vy=n.vy||0;p.face=n.f||1;p.ground=!!n.g;p.dead=n.d?1:0;p.anim=n.a||0}
+  {const me=P[1-p.i];if(n.o&&me&&!me.dead&&!n.d){p.x=me.x+(n.ox||0);p.y=me.y-PH}}p.vx=n.vx||0;p.vy=n.vy||0;p.face=n.f||1;p.ground=!!n.g;p.dead=n.d?1:0;p.anim=n.a||0}
 function netEv(m){if(!NET.on||!NET.de||NET.de.readyState!=='open')return;try{NET.de.send(JSON.stringify(m))}catch(e){}}
 function netRx(m){NET.lastRx=performance.now();
   if(m.t==='s'){const p=P[1-ME];if(p)p.net=m;if(ME===1&&m.lt!=null&&Math.abs(levelT-m.lt)>.12)levelT=m.lt+.04;return}
@@ -458,7 +458,7 @@ function netSetup(pc){pc.__types={};pc.ontrack=e=>{const a=$('rAudio');a.srcObje
     if(st==='disconnected')setTimeout(()=>{if(pc.connectionState==='disconnected')netLost('Sambungan dengan temanmu terputus.')},6000)}}
 function bothOpen(){return NET.dc&&NET.de&&NET.dc.readyState==='open'&&NET.de.readyState==='open'}
 function onReady(name){if(!bothOpen())return;NET.on=true;if(NET.unsub){NET.unsub();NET.unsub=null}
-  clearInterval(NET.sendT);NET.sendT=setInterval(()=>{if(!running||ME<0)return;const p=P[ME];if(!p||NET.dc.readyState!=='open')return;try{NET.dc.send(JSON.stringify({t:'s',x:+p.x.toFixed(1),y:+p.y.toFixed(1),vx:p.vx|0,vy:p.vy|0,f:p.face,g:p.ground?1:0,d:p.dead>0?1:0,a:+(p.anim||0).toFixed(1),lt:ME===0?+levelT.toFixed(2):undefined}))}catch(e){}},50);
+  clearInterval(NET.sendT);NET.sendT=setInterval(()=>{if(!running||ME<0)return;const p=P[ME];if(!p||NET.dc.readyState!=='open')return;try{NET.dc.send(JSON.stringify({t:'s',x:+p.x.toFixed(1),y:+p.y.toFixed(1),vx:p.vx|0,vy:p.vy|0,f:p.face,g:p.ground?1:0,o:p.on?1:0,ox:p.on?+(p.x-p.on.x).toFixed(1):0,d:p.dead>0?1:0,a:+(p.anim||0).toFixed(1),lt:ME===0?+levelT.toFixed(2):undefined}))}catch(e){}},50);
   if(ME===0){if(!MAP.length)loadLevel(progGet());netEv({t:'start',g:GRADE,n:LV,name,uid:NET.myUid,sx:SX.me});start()}else netEv({t:'hi',name,uid:NET.myUid,sx:SX.me});$('bMic').hidden=$('bSpk').hidden=false;micUI();
   // ruang sudah terpakai: hapus dokumennya
   if(ME===0&&NET.code)try{fb().db.doc('duo/'+NET.code).delete().catch(()=>{})}catch(e){}}
