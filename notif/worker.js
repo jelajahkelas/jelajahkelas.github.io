@@ -379,6 +379,23 @@ export default {
       try { if (!SA) SA = JSON.parse(env.SERVICE_ACCOUNT); return await (path === '/midtrans' ? midtransWebhook(request, env) : xenditWebhook(request, env)); }
       catch (e) { return new Response('error: ' + String(e && e.message || e), { status: 500 }); }
     }
+    // Petualangan Berdua: server perantara (TURN) agar dua HP di jaringan berbeda tetap bisa tersambung
+    if (request.method === 'GET' && path === '/turn') {
+      if (!ALLOWED_ORIGINS.includes(origin)) return reply(403, { error: 'asal tidak dikenal' }, origin);
+      if (env.METERED_TURN_USER && env.METERED_TURN_PASS) {
+        const u = env.METERED_TURN_USER, c = env.METERED_TURN_PASS;
+        return reply(200, { iceServers: [
+          { urls: 'stun:stun.relay.metered.ca:80' },
+          { urls: ['turn:global.relay.metered.ca:80', 'turn:global.relay.metered.ca:80?transport=tcp', 'turn:global.relay.metered.ca:443', 'turns:global.relay.metered.ca:443?transport=tcp'], username: u, credential: c },
+        ] }, origin);
+      }
+      if (!env.TURN_KEY_ID || !env.TURN_KEY_TOKEN) return reply(200, { iceServers: [] }, origin);
+      try {
+        const r = await fetch(`https://rtc.live.cloudflare.com/v1/turn/keys/${env.TURN_KEY_ID}/credentials/generate-ice-servers`, { method: 'POST', headers: { Authorization: `Bearer ${env.TURN_KEY_TOKEN}`, 'Content-Type': 'application/json' }, body: JSON.stringify({ ttl: 7200 }) });
+        const j = await r.json().catch(() => ({}));
+        return reply(200, { iceServers: Array.isArray(j.iceServers) ? j.iceServers : [] }, origin);
+      } catch (e) { return reply(200, { iceServers: [] }, origin); }
+    }
     if (request.method !== 'POST') return reply(200, { ok: true, info: 'Pengirim notifikasi JELAS aktif.' }, origin);
     try {
       if (!SA) SA = JSON.parse(env.SERVICE_ACCOUNT);
