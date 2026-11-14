@@ -299,6 +299,7 @@ let qCool=0;function step(dt){if(qCool>0)qCool-=dt;levelT+=dt;moverUpdate(dt);
   if(emerge>0){emerge-=dt;P.forEach(p=>{if(p.remote)netLerp(p,dt)});return}
   if(pipeT>0){pipeT-=dt;P.forEach(p=>{p.vx=0;p.y+=22*dt});if(pipeT<=0)pipeDone();return}
   for(const p of P){if(p.remote){netLerp(p,dt);continue}if(p.dead>0){p.dead-=dt;if(p.dead<=0)respawn(p);continue}
+    if(solidP(p.x,p.y,PW,PH)){let k=0;while(k++<40&&solidP(p.x,p.y,PW,PH))p.y-=1;if(solidP(p.x,p.y,PW,PH)){p.y+=40;respawn(p)}}
     const want=(p.inp.r?1:0)-(p.inp.l?1:0);p.vx=want*(p.push?SPD*.65:SPD);if(want)p.face=want;
     if(p.inp.j&&!p.jHeld){p.jq=.12}p.jHeld=p.inp.j;if(p.jq>0)p.jq-=dt;
     p.coy=p.ground?.1:Math.max(0,p.coy-dt);if(p.ground)p.dj=true;
@@ -308,10 +309,10 @@ let qCool=0;function step(dt){if(qCool>0)qCool-=dt;levelT+=dt;moverUpdate(dt);
     // ikut bergerak saat berdiri di atas teman / papan bergerak
     let carry=0;if(p.on){const o=P[1-p.i];carry=o.lastDx||0}if(p.onM){carry=p.onM.dxp;p.y=p.onM.Y-PH}
     let nx=p.x+p.vx*dt+carry;
-    if(!LD.tether){const o=P[1-p.i],lim=VW-PW-8;if(!o.dead){if(nx-o.x>lim)nx=Math.max(p.x,o.x+lim);if(o.x-nx>lim)nx=Math.min(p.x,o.x-lim)}}
+    if(!LD.tether){const o=P[1-p.i],lim=236;if(!o.dead){if(nx-o.x>lim)nx=Math.max(p.x,o.x+lim);if(o.x-nx>lim)nx=Math.min(p.x,o.x-lim)}}
     nx=Math.max(T*2,Math.min(MW*T-T*2-PW,nx));
     // Si Kuat mendorong batu
-    p.push=false;if(nx!==p.x){const rk=rockAt(nx,p.y,PW,PH);if(rk){if(isK(p)&&rockAuth()&&Math.abs(rk.y+16-(p.y+PH))<6){const d=nx-p.x;if(!hitSolid(rk.x+d,rk.y,16,16)&&!rockAt(rk.x+d,rk.y,16,16,rk)){rk.x+=d;p.push=true}else nx=p.x}}}
+    const tx0=p.x;p.push=false;if(nx!==p.x){const rk=rockAt(nx,p.y,PW,PH);if(rk){if(isK(p)&&rockAuth()&&Math.abs(rk.y+16-(p.y+PH))<6){const d=nx-p.x;const o=P[1-p.i],hitO=!o.dead&&o.x<rk.x+d+16&&o.x+PW>rk.x+d&&o.y<rk.y+16&&o.y+PH>rk.y;if(!hitSolid(rk.x+d,rk.y,16,16)&&!rockAt(rk.x+d,rk.y,16,16,rk)&&!hitO){rk.x+=d;p.push=true}else nx=p.x}}}
     if(!solidP(nx,p.y,PW,PH))p.x=nx;else{const dir=Math.sign(nx-p.x);let n=0;while(n++<20&&Math.abs(nx-p.x)>=1&&!solidP(p.x+dir,p.y,PW,PH))p.x+=dir}
     const ny=p.y+p.vy*dt;p.ground=false;const wasOn=p.on||p.onM;p.on=null;p.onM=null;
     if(!solidP(p.x,ny,PW,PH)){
@@ -324,8 +325,8 @@ let qCool=0;function step(dt){if(qCool>0)qCool-=dt;levelT+=dt;moverUpdate(dt);
     // tali pengikat
     p.hang=false;
     if(LD.tether){const o=P[1-p.i];if(!o.dead){const dx=p.x-o.x,dy=p.y-o.y,d=Math.hypot(dx,dy);if(d>ROPE){const oG=o.ground||!!o.on||!!o.onM;
-      if(!p.ground&&!p.onM){const ux=dx/d,uy=dy/d;const okX=moveX(p,o.x+ux*ROPE);moveY(p,o.y+uy*ROPE);const vr=p.vx*ux+p.vy*uy;if(vr>0)p.vy-=vr*uy;if(!okX&&oG&&uy>0)p.vy=Math.min(p.vy,-75);p.hang=uy>.3&&oG}
-      else if(oG&&Math.abs(dy)<ROPE){moveX(p,o.x+Math.sign(dx)*Math.sqrt(ROPE*ROPE-dy*dy))}}}}
+      if(!p.ground&&!p.onM){const ux=dx/d,uy=dy/d,cl=v=>Math.max(-6,Math.min(6,v));const okX=moveX(p,p.x+cl(o.x+ux*ROPE-p.x));moveY(p,p.y+cl(o.y+uy*ROPE-p.y));const vr=p.vx*ux+p.vy*uy;if(vr>0)p.vy-=vr*uy;if(!okX&&oG&&uy>0)p.vy=Math.min(p.vy,-75);p.hang=uy>.3&&oG}
+      else if(oG&&Math.abs(p.x-o.x)>Math.abs(tx0-o.x))p.x=tx0}}}
     if((p.on||p.onM)&&!wasOn)beep(330,.04,'square',.03);
     p.anim+=dt*(p.vx?10:0);
     if(overlapsTile({x:p.x+2,y:p.y+6},'^')||p.y>MH*T+8)kill(p);
