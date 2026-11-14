@@ -8,6 +8,7 @@ const P = sa.project_id, FS = `https://firestore.googleapis.com/v1/projects/${P}
 const out = {};
 const get = async (p) => { try { const r = await cl.request({ url: `${FS}/${p}` }); return r.data; } catch (e) { return { err: e.response && e.response.status }; } };
 for (const p of (process.env.CEK_DOCS || '').split(',').filter(Boolean)) {
+  if (p.startsWith('grep:')) { const [, c, q] = p.split(':'); try { const r = await cl.request({ url: `${FS}/${c}?pageSize=300&orderBy=created%20desc` }); out[p] = (r.data.documents || []).map(d => Object.fromEntries(Object.entries(d.fields || {}).map(([k, v]) => [k, Object.values(v)[0]]))).filter(f => String(f.msg || '').includes(q)).slice(0, 30); } catch (e) { out[p] = { err: e.response && e.response.status }; } continue; }
   if (p.startsWith('list:')) { const c = p.slice(5); try { const r = await cl.request({ url: `${FS}/${c}?pageSize=300` }); out[p] = (r.data.documents || []).map(d => ({ id: d.name.split('/').pop(), f: Object.fromEntries(Object.entries(d.fields || {}).map(([k, v]) => [k, Object.values(v)[0]])) })); } catch (e) { out[p] = { err: e.response && e.response.status }; } }
   else out[p] = await get(p);
 }
