@@ -375,7 +375,7 @@ let qCool=0;function step(dt){if(qCool>0)qCool-=dt;levelT+=dt;moverUpdate(dt);
   // finis: masuk pipa bersama
   fxStep(dt);
   if(!won&&pipeT<=0&&hostAuth()&&keysGot>=keysNeed()){const X=LD.gate*T;if(P.every(p=>!(p.dead>0)&&p.x+PW>X+2&&p.x<X+30&&p.y>8*T-4)){netEv({t:'pipe'});enterPipe()}}
-  parts=parts.filter(q=>(q.t-=dt)>0);parts.forEach(q=>{q.x+=q.vx*dt;q.y+=q.vy*dt;q.vy+=300*dt})}
+  parts=parts.filter(q=>(q.t-=dt)>0);parts.forEach(q=>{q.x+=q.vx*dt;q.y+=q.vy*dt;if(!q.ng)q.vy+=300*dt;else{q.vx*=.9;q.vy*=.9}});FX.txt=FX.txt.filter(t=>(t.t-=dt)>0);FX.txt.forEach(t=>t.y-=22*dt)}
 /* ====== penjahat, bos, senjata, kunci & gerbang ====== */
 const WEAP=[{n:'Ketapel Batu',c:'#c9b8e8',c2:'#5f6180'},{n:'Pistol Gelembung',c:'#9cd0ff',c2:'#3d8bfd'},{n:'Lentera Cahaya',c:'#fff3b0',c2:'#f7c548'},{n:'Bumerang Angin',c:'#c8ffe0',c2:'#3fa34d'},{n:'Tongkat Pelangi',c:'#ff9cc2',c2:'#9b6bff'}];
 const MELEE=[{n:'Pedang Kayu',c:'#d9a866',c2:'#6b4a26'},{n:'Palu Batu',c:'#b4b6cc',c2:'#5f6180'},{n:'Tongkat Kristal',c:'#7fe3ff',c2:'#3d8bfd'},{n:'Pedang Angin',c:'#c8ffe0',c2:'#2e7d3a'},{n:'Pedang Pelangi',c:'#ffd0f0',c2:'#e2483d'}];
@@ -393,16 +393,17 @@ function fxReset(){enemies=(LD.enemies||[]).map(e=>({...e,dead:false,t:Math.rand
 function fire(p){if(!p.weapon){if(!p.wHint){p.wHint=true;say('Kamu belum punya senjata. Ambil di Kotak Misteri dengan menjawab soal.',3)}return}if(p.cool>0)return;
   if(p.weapon==='m'){p.cool=.4;p.swing=.18;SFX.swing();if(NET.on)netEv({t:'sw',i:p.i});
     const hb={x:p.face>0?p.x+PW-2:p.x-22,y:p.y-8};
-    for(const e of enemies)if(!e.dead&&ovl(hb,24,PH+10,e,12,12)){e.dead=true;SFX.stomp();burst(e.x+6,e.y+6,ENC[LV],10);netEv({t:'stomp',i:enemies.indexOf(e)})}
-    bshots.forEach(b=>{if(b.k!=='wave'&&ovl(hb,24,PH+10,{x:b.x-5,y:b.y-5},10,10)){b.t=99;burst(b.x,b.y,'#ffffff',6)}});
-    if(boss&&!boss.dead&&ovl(hb,24,PH+10,boss,28,28)){if(hostAuth())bossHit(2);else netEv({t:'bhit',d:2});burst(hb.x+12,p.y+4,'#ffffff',8)}return}
+    for(const e of enemies)if(!e.dead&&ovl(hb,24,PH+10,e,12,12)){e.dead=true;SFX.stomp();burst(e.x+6,e.y+6,ENC[LV],10);sparks(e.x+6,e.y+6,'#ffffff',8,140,.2);hitstop(.04);netEv({t:'stomp',i:enemies.indexOf(e)})}
+    bshots.forEach(b=>{if(b.k!=='wave'&&ovl(hb,24,PH+10,{x:b.x-5,y:b.y-5},10,10)){b.t=99;sparks(b.x,b.y,'#fff3b0',10,160,.25,2);ring(b.x,b.y,'#fff3b0',10);ftext(b.x,b.y-6,'TANGKIS!','#fff3b0')}});
+    if(boss&&!boss.dead&&ovl(hb,24,PH+10,boss,28,28)){if(hostAuth())bossHit(2);else{netEv({t:'bhit',d:2});ftext(boss.x+14,boss.y-18,'-2','#fff3b0');shake(3,.15)}hitstop(.07);sparks(hb.x+12,p.y+4,'#ffffff',14,180,.25,3);ring(hb.x+12,p.y+4,MELEE[LV].c,14)}return}
   p.cool=.35;
   let vx=p.face*230,vy=0;if(boss&&!boss.dead){const bx=boss.x+14,by=boss.y+14,dx=bx-(p.x+5);if(Math.sign(dx)===p.face&&Math.abs(dx)<220){vy=Math.max(-160,Math.min(160,(by-(p.y+6))/Math.abs(dx)*230))}}
-  const s={x:p.x+5+p.face*6,y:p.y+6,vx,vy,t:0,real:hostAuth(),w:LV};shots.push(s);SFX.shoot();if(NET.on)netEv({t:'shot',x:Math.round(s.x),y:Math.round(s.y),vx:Math.round(vx),vy:Math.round(vy)})}
-function bossDefeat(){if(!boss||boss.dead)return;boss.dead=true;boss.hp=0;SFX.win();burst(boss.x+14,boss.y+14,BOSS[LV].c,30);keyItems.push({x:boss.x+14,y:boss.y+10,got:false,vy:-120,fall:true,boss:true});say(`${BOSS[LV].n} kalah! Ambil kunci terakhir yang dijatuhkannya.`,4)}
-function bossHit(d){if(!boss||boss.dead||boss.inv>0)return;boss.hp=Math.max(0,boss.hp-d);boss.inv=.25;SFX.click();
+  const s={x:p.x+5+p.face*6,y:p.y+6,vx,vy,t:0,real:hostAuth(),w:LV};shots.push(s);SFX.shoot();sparks(s.x,s.y,(WEAP[LV]||WEAP[0]).c,6,90,.15,2);if(NET.on)netEv({t:'shot',x:Math.round(s.x),y:Math.round(s.y),vx:Math.round(vx),vy:Math.round(vy)})}
+function bossDefeat(){if(!boss||boss.dead)return;boss.dead=true;boss.hp=0;SFX.win();burst(boss.x+14,boss.y+14,BOSS[LV].c,30);flash(.35);shake(6,.7);hitstop(.15);const bx=boss.x+14,by=boss.y+14;for(let k=0;k<6;k++)setTimeout(()=>{sparks(bx+(Math.random()-.5)*34,by+(Math.random()-.5)*30,k%2?'#fff3b0':BOSS[LV].c,16,200,.4,3);ring(bx,by,'#ffffff',18+k*6)},k*110);keyItems.push({x:boss.x+14,y:boss.y+10,got:false,vy:-120,fall:true,boss:true});say(`${BOSS[LV].n} kalah! Ambil kunci terakhir yang dijatuhkannya.`,4)}
+function bossHit(d){if(!boss||boss.dead||boss.inv>0)return;boss.hp=Math.max(0,boss.hp-d);boss.inv=.25;SFX.click();ftext(boss.x+14,boss.y-18,'-'+d,d>1?'#fff3b0':'#ffffff');shake(d>1?3:1.5,.15);boss.x-=boss.dir*(d>1?6:3);
   if(!boss.angry&&boss.hp<=boss.max/2){boss.angry=true;say(`${BOSS[LV].n} marah! Serangannya makin cepat.`,2.5)}if(boss.hp<=0)bossDefeat()}
-function bShot(x,y,vx,vy,k){const b={x,y,vx,vy,k,t:0};bshots.push(b);if(NET.on&&ME===0)netEv({t:'bs',x:Math.round(x),y:Math.round(y),vx:Math.round(vx),vy:Math.round(vy),k})}
+function bShot(x,y,vx,vy,k){const b={x,y,vx,vy,k,t:0};bshots.push(b);bshotFx(b);if(NET.on&&ME===0)netEv({t:'bs',x:Math.round(x),y:Math.round(y),vx:Math.round(vx),vy:Math.round(vy),k})}
+function bshotFx(b){if(b.k==='wave'){shake(3,.25);sparks(b.x+6,b.y,'#c9a07a',10,120,.35,3)}else{sparks(b.x,b.y,BOSS[LV].c,6,90,.2);ring(b.x,b.y,BOSS[LV].c,8)}}
 function bossAI(dt){const B=BOSS[LV];boss.t+=dt;if(boss.inv>0)boss.inv-=dt;const live=P.filter(p=>!(p.dead>0));const tg=live.slice().sort((a,b)=>Math.abs(a.x-boss.x)-Math.abs(b.x-boss.x))[0];
   if(P.some(p=>p.x>boss.ax0-40))boss.seen=true;if(!boss.seen||!tg)return;const ang=boss.angry?1.35:1,cxb=boss.x+14,cyb=boss.y+14,dir=Math.sign(tg.x-(boss.x+9))||1;
   if(boss.mode==='charge'){boss.mt-=dt;boss.x+=boss.cdir*(150+LV*15)*dt;if(boss.mt<=0)boss.mode=''}
@@ -422,10 +423,10 @@ function fxStep(dt){
   bshots=bshots.filter(b=>b.t<99);
   for(const p of P){if(p.swing>0)p.swing-=dt;if(p.remote||p.dead>0)continue;for(const b of bshots){const hit=b.k==='wave'?ovl(p,PW,PH,{x:b.x,y:b.y-4},12,10):ovl(p,PW,PH,{x:b.x-4,y:b.y-4},8,8);if(hit){b.t=99;kill(p);break}}}
   // tembakan
-  for(const s of shots){s.t+=dt;s.x+=s.vx*dt;s.y+=s.vy*dt;if(s.t>.9||hitSolid(s.x-2,s.y-2,4,4)){s.t=9;continue}
+  for(const s of shots){s.t+=dt;s.x+=s.vx*dt;s.y+=s.vy*dt;if(s.t>.9||hitSolid(s.x-2,s.y-2,4,4)){if(s.t<=.9)sparks(s.x,s.y,(WEAP[s.w]||WEAP[0]).c,6,80,.2);s.t=9;continue}
     if(!s.real)continue;
     for(const e of enemies)if(!e.dead&&ovl({x:s.x-3,y:s.y-3},6,6,e,12,12)){e.dead=true;s.t=9;SFX.stomp();burst(e.x+6,e.y+6,ENC[LV],10);netEv({t:'stomp',i:enemies.indexOf(e)});break}
-    if(s.t<9&&boss&&!boss.dead&&ovl({x:s.x-3,y:s.y-3},6,6,boss,28,28)){s.t=9;bossHit(1);burst(s.x,s.y,'#ffffff',6)}}
+    if(s.t<9&&boss&&!boss.dead&&ovl({x:s.x-3,y:s.y-3},6,6,boss,28,28)){s.t=9;bossHit(1);sparks(s.x,s.y,'#ffffff',10,150,.25);ring(s.x,s.y,(WEAP[s.w]||WEAP[0]).c,10)}}
   shots=shots.filter(s=>s.t<9);
   // penjahat kecil & bos (dihitung tuan rumah)
   if(hostAuth()){for(const e of enemies){if(e.dead)continue;e.t+=dt;e.x+=e.dir*e.sp*dt;if(e.x<e.x0){e.x=e.x0;e.dir=1}if(e.x>e.x1){e.x=e.x1;e.dir=-1}}
@@ -436,7 +437,7 @@ function fxStep(dt){
   // pemain lokal: sentuh penjahat, bos, kunci, kotak, tembak
   for(const p of P){if(p.remote||p.dead>0)continue;if(p.cool>0)p.cool-=dt;
     if(p.inp.f&&!p.fHeld)fire(p);p.fHeld=p.inp.f;
-    for(const e of enemies){if(e.dead||!ovl(p,PW,PH,e,12,12))continue;if(p.vy>40&&p.y+PH-e.y<9){e.dead=true;p.vy=-210;SFX.stomp();burst(e.x+6,e.y+6,ENC[LV],10);netEv({t:'stomp',i:enemies.indexOf(e)})}else{kill(p);break}}
+    for(const e of enemies){if(e.dead||!ovl(p,PW,PH,e,12,12))continue;if(p.vy>40&&p.y+PH-e.y<9){e.dead=true;p.vy=-210;SFX.stomp();burst(e.x+6,e.y+6,ENC[LV],10);ring(e.x+6,e.y+10,'#ffffff',10);ftext(e.x+6,e.y-4,'POW!','#fff3b0');netEv({t:'stomp',i:enemies.indexOf(e)})}else{kill(p);break}}
     if(boss&&!boss.dead&&!(p.dead>0)&&ovl(p,PW,PH,{x:boss.x+3,y:boss.y+4},22,24))kill(p);
     keyItems.forEach((k,i)=>{if(!k.got&&!k.fall&&Math.abs(p.x+5-k.x)<11&&Math.abs(p.y+7-k.y)<12){k.got=true;keysGot++;SFX.key();burst(k.x,k.y,'#f7c548',12);netEv({t:'key',i});keyMsg()}});
     if(!quizOpen&&qCool<=0&&!p.weapon)boxes.forEach((b,i)=>{if(!b.taken&&Math.abs(p.x+5-(b.x*T+8))<13&&Math.abs(p.y+7-(b.y*T+8))<16)openQuiz({box:i,p})})}}
@@ -455,6 +456,8 @@ function drawFX(ox,now){
     cx.fillStyle='#2b2140';cx.fillRect(X+2+f,Y+11,2,1);cx.fillRect(X+8-f,Y+11,2,1)}
   // bos
   if(boss&&!boss.dead){const B=BOSS[LV],X=Math.round(boss.x-ox),Y=Math.round(boss.y),fl=(boss.inv>0&&Math.floor(now/50)%2)||(boss.tele>0&&Math.floor(now/90)%2);
+    if(X>-40&&X<VW+40&&boss.tele>0){const r=18+Math.sin(now/60)*3;cx.globalAlpha=.35;cx.fillStyle='#e2483d';cx.beginPath();cx.arc(X+14,Y+14,r,0,Math.PI*2);cx.fill();cx.globalAlpha=1;cx.fillStyle='#2b2140';cx.fillRect(X+11,Y-22,7,13);cx.fillStyle='#ffd23f';cx.fillRect(X+12,Y-21,5,8);cx.fillRect(X+12,Y-12,5,2)}
+    if(boss.px!=null&&Math.abs(boss.x-boss.px)>1.6&&!B.fly&&Math.random()<.6)parts.push({x:boss.x+14-boss.dir*12,y:10*T-2,vx:-boss.dir*30,vy:-20,t:.3,col:'#c9a07a',ng:1,sz:3});boss.px=boss.x;
     if(X>-40&&X<VW+40){cx.fillStyle='#2b2140';cx.fillRect(X+2,Y+2,24,26);cx.fillRect(X,Y+6,28,18);cx.fillStyle=fl?'#ffffff':B.c;cx.fillRect(X+3,Y+3,22,24);cx.fillRect(X+1,Y+7,26,16);
       if(B.fly){const w=Math.floor(now/120)%2;cx.fillStyle='#2b2140';cx.fillRect(X-8,Y+8+w*3,9,6);cx.fillRect(X+27,Y+8+w*3,9,6);cx.fillStyle=B.c2;cx.fillRect(X-7,Y+9+w*3,7,4);cx.fillRect(X+28,Y+9+w*3,7,4)}
       cx.fillStyle=B.c2;cx.fillRect(X+5,Y+4,18,3);cx.fillStyle='#fff8e7';cx.fillRect(X+6,Y+10,6,6);cx.fillRect(X+16,Y+10,6,6);cx.fillStyle='#2b2140';cx.fillRect(X+(boss.dir>0?9:7),Y+12,3,3);cx.fillRect(X+(boss.dir>0?19:17),Y+12,3,3);
@@ -462,21 +465,28 @@ function drawFX(ox,now){
       if(LV===4||LV===0){cx.fillStyle='#f7c548';cx.fillRect(X+7,Y-3,14,4);cx.fillRect(X+7,Y-6,2,3);cx.fillRect(X+13,Y-6,2,3);cx.fillRect(X+19,Y-6,2,3)}}
     if(X>-40&&X<VW+40){const w=34,X0=X-3,Y0=Y-(LV===4||LV===0?13:9);cx.fillStyle='#2b2140';cx.fillRect(X0-1,Y0-1,w+2,5);cx.fillStyle='#5f6180';cx.fillRect(X0,Y0,w,3);cx.fillStyle='#e2483d';cx.fillRect(X0,Y0,Math.round(w*boss.hp/boss.max),3)}}
   // serangan bos
-  for(const b of bshots){const X=Math.round(b.x-ox),Y=Math.round(b.y);if(b.k==='wave'){const f=Math.floor(now/60)%2;cx.fillStyle='#2b2140';cx.fillRect(X,Y-5,12,11);cx.fillStyle=BOSS[LV].c;cx.fillRect(X+1,Y-4+f,10,9-f);cx.fillStyle='#fff8e7';cx.fillRect(X+3,Y-3+f,6,2)}
-    else{cx.fillStyle='#2b2140';cx.fillRect(X-5,Y-5,10,10);cx.fillStyle=BOSS[LV].c2;cx.fillRect(X-4,Y-4,8,8);cx.fillStyle=BOSS[LV].c;cx.fillRect(X-2,Y-2,4,4)}}
-  // ayunan senjata jarak dekat
-  for(const p of P){if(!(p.swing>0)||p.dead>0)continue;const M=MELEE[LV],k=1-p.swing/.18,f=p.face>0?1:-1,X0=Math.round(p.x-ox+5),Y0=Math.round(p.y+6);cx.fillStyle='rgba(255,255,255,.6)';
-    for(let a=0;a<6;a++){const an=-1.3+a*.45;if(an>-1.3+k*2.6)break;cx.fillRect(X0+f*Math.round(Math.cos(an)*17)-1,Y0+Math.round(Math.sin(an)*14)-1,3,3)}
-    const an=-1.3+k*2.6,tx=X0+f*Math.round(Math.cos(an)*15),ty=Y0+Math.round(Math.sin(an)*13);cx.strokeStyle=M.c2;cx.lineWidth=3;cx.beginPath();cx.moveTo(X0+f*4,Y0);cx.lineTo(tx,ty);cx.stroke();cx.fillStyle=M.c;cx.fillRect(tx-3,ty-3,6,6)}
+  for(const b of bshots){const X=Math.round(b.x-ox),Y=Math.round(b.y),B=BOSS[LV];
+    if(b.k==='wave'){const f=Math.floor(now/60)%2,h=12+f*2;cx.fillStyle='rgba(255,255,255,.25)';cx.fillRect(X-2,Y-h+4,16,h);cx.fillStyle='#2b2140';cx.fillRect(X,Y-h+5,12,h-1);cx.fillStyle=B.c;cx.fillRect(X+1,Y-h+6,10,h-3);cx.fillStyle='#fff8e7';cx.fillRect(X+2,Y-h+6,8,2);cx.fillStyle='#c9a07a';cx.fillRect(X-4*Math.sign(b.vx),Y+2,6,2);continue}
+    if(b.k==='drop'){const gy=10*T;const near=1-Math.min(1,(gy-b.y)/120);cx.fillStyle=`rgba(43,33,64,${.25+near*.35})`;cx.fillRect(X-4-near*2,gy-2,8+near*4,2)}
+    const pu=Math.sin(now/70)*1.2,d=Math.hypot(b.vx,b.vy)||1;for(let k=3;k>=1;k--){cx.globalAlpha=.15*(4-k);cx.fillStyle=B.c;cx.fillRect(Math.round(X-b.vx/d*k*5)-3,Math.round(Y-b.vy/d*k*5)-3,6,6)}
+    cx.globalAlpha=.3;cx.fillStyle=B.c;cx.fillRect(X-7-pu,Y-7-pu,14+pu*2,14+pu*2);cx.globalAlpha=1;cx.fillStyle='#2b2140';cx.fillRect(X-5,Y-5,10,10);cx.fillStyle=B.c2;cx.fillRect(X-4,Y-4,8,8);cx.fillStyle=B.c;cx.fillRect(X-2,Y-2,4,4);cx.fillStyle='#fff';cx.fillRect(X-3,Y-3,2,2)}
+  // ayunan senjata jarak dekat: tebasan bulan sabit
+  for(const p of P){if(!(p.swing>0)||p.dead>0)continue;const M=MELEE[LV],k=1-p.swing/.18,f=p.face>0?1:-1,X0=Math.round(p.x-ox+5),Y0=Math.round(p.y+6);
+    const a0=f>0?-1.4:Math.PI+1.4,a1=f>0?-1.4+k*2.8:Math.PI+1.4-k*2.8;cx.lineCap='round';
+    cx.globalAlpha=.35*(1-k*.5);cx.strokeStyle=M.c;cx.lineWidth=7;cx.beginPath();cx.arc(X0,Y0,15,Math.min(a0,a1),Math.max(a0,a1));cx.stroke();
+    cx.globalAlpha=.9;cx.strokeStyle='#ffffff';cx.lineWidth=2;cx.beginPath();cx.arc(X0,Y0,17,Math.min(a0,a1),Math.max(a0,a1));cx.stroke();cx.globalAlpha=1;
+    const tx=X0+Math.round(Math.cos(a1)*15),ty=Y0+Math.round(Math.sin(a1)*15);cx.strokeStyle=M.c2;cx.lineWidth=3;cx.beginPath();cx.moveTo(X0+f*3,Y0+1);cx.lineTo(tx,ty);cx.stroke();cx.fillStyle=M.c;cx.fillRect(tx-3,ty-3,6,6);cx.fillStyle='#fff';cx.fillRect(tx-1,ty-2,2,2);cx.lineCap='butt'}
   // tembakan
-  for(const s of shots){const W=WEAP[s.w]||WEAP[0];cx.fillStyle=W.c2;cx.fillRect(Math.round(s.x-ox)-3,Math.round(s.y)-3,6,6);cx.fillStyle=W.c;cx.fillRect(Math.round(s.x-ox)-2,Math.round(s.y)-2,4,4)}}
+  for(const s of shots){const W=WEAP[s.w]||WEAP[0],X=Math.round(s.x-ox),Y=Math.round(s.y),d=Math.hypot(s.vx,s.vy)||1,ux=s.vx/d,uy=s.vy/d;
+    for(let k=3;k>=1;k--){cx.globalAlpha=.18*(4-k);cx.fillStyle=W.c;cx.fillRect(Math.round(X-ux*k*5)-2,Math.round(Y-uy*k*5)-2,4,4)}cx.globalAlpha=.35;cx.fillStyle=W.c;cx.fillRect(X-5,Y-5,10,10);cx.globalAlpha=1;
+    cx.fillStyle=W.c2;cx.fillRect(X-3,Y-3,6,6);cx.fillStyle=W.c;cx.fillRect(X-2,Y-2,4,4);cx.fillStyle='#fff';cx.fillRect(X-1,Y-2,2,1)}}
 function drawGate(X,open,start){cx.fillStyle='#2b2140';cx.fillRect(X-2,7*T-6,36,54);cx.fillStyle='#8d8fa8';cx.fillRect(X,7*T-4,32,52);cx.fillStyle='#b4b6cc';cx.fillRect(X,7*T-4,32,2);
   if(open||start){cx.fillStyle='#1b1d3a';cx.fillRect(X+5,7*T+2,22,46);cx.fillStyle='rgba(255,243,176,.25)';cx.fillRect(X+5,7*T+2,22,46)}
   else{cx.fillStyle='#8a5a3b';cx.fillRect(X+5,7*T+2,22,46);cx.fillStyle='#6b4a26';cx.fillRect(X+15,7*T+2,2,46);cx.fillStyle='#f7c548';cx.fillRect(X+13,7*T+20,6,7);cx.fillStyle='#2b2140';cx.fillRect(X+15,7*T+22,2,3)}}
 
 function enterPipe(){if(pipeT>0)return;pipeT=1;SFX.pipe();P.forEach(p=>{p.inp={l:0,r:0,j:0};p.vx=0;p.vy=0;p.dead=0;p.bub=false})}
 function pipeDone(){totCoins+=coins;if(NET.on&&ME!==0)return;if(LV>=LVCFG.length-1){netEv({t:'win'});win()}else{PRE=`Level ${LV+1} selesai! `;goLevel(LV+1)}}
-function kill(p){if(p.dead>0||failed||won)return;p.dead=.8;p.bub=false;p.onM=null;p.on=null;SFX.hurt();burst(p.x+5,p.y+7,'#fff8e7',12);loseLife();netEv({t:'die'})}
+function kill(p){if(p.dead>0||failed||won)return;p.dead=.8;p.bub=false;p.onM=null;p.on=null;SFX.hurt();burst(p.x+5,p.y+7,'#fff8e7',12);sparks(p.x+5,p.y+7,'#e2483d',10,150,.3,2);shake(3,.25);loseLife();netEv({t:'die'})}
 function loseLife(){LIVES=Math.max(0,LIVES-1);if(LIVES<=0)setTimeout(()=>{if(!failed&&!won&&running)levelFail('Nyawa tim habis.')},700)}
 function coinLife(){if(coins>0&&coins%10===0){LIVES++;say('10 koin terkumpul: nyawa tim bertambah 1!',2.5)}}
 /* gelembung: pemain yang jatuh melayang menuju temannya dan bisa diselamatkan dengan disentuh */
@@ -491,6 +501,14 @@ function levelFail(why){if(failed||won)return;failed=true;netEv({t:'fail',why});
   $('bNext').textContent='Ulangi level ini';$('bAgain').style.display='none';setTimeout(()=>{$('pWin').hidden=false},600)}
 function respawn(p){p.x=checkpoint.x+3+p.i*12;p.vx=0;p.vy=0;p.dj=true;p.y=2*T;let g=false;for(let y=2*T;y<12*T;y+=2){if(solidP(p.x,y+1,PW,PH)){p.y=y;g=true;break}}if(!g){p.y=9*T-PH}let n=0;while(n++<14&&solidP(p.x,p.y,PW,PH))p.y-=T}
 function burst(x,y,col,n){for(let i=0;i<n;i++)parts.push({x,y,vx:(Math.random()-.5)*120,vy:-Math.random()*140,t:.5+Math.random()*.3,col})}
+/* efek: getar layar, kilat, jeda singkat saat pukulan kena, percikan, angka kerusakan */
+const FX={sh:0,sm:0,fl:0,hs:0,txt:[]};
+function shake(m,t){FX.sm=Math.max(FX.sm,m);FX.sh=Math.max(FX.sh,t)}
+function flash(t){FX.fl=Math.max(FX.fl,t)}
+function hitstop(t){FX.hs=Math.max(FX.hs,t)}
+function sparks(x,y,col,n,sp=160,life=.25,sz=2){for(let i=0;i<n;i++){const a=Math.random()*Math.PI*2,v=sp*(.4+Math.random()*.6);parts.push({x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v,t:life*(.6+Math.random()*.6),col,ng:1,sz})}}
+function ring(x,y,col,r){parts.push({x,y,vx:0,vy:0,t:.3,t0:.3,col,ring:r})}
+function ftext(x,y,txt,col){FX.txt.push({x,y,txt,col,t:.8})}
 
 /* ====== soal (makin sulit di level berikutnya) ====== */
 function makeQ(){const r=n=>Math.floor(Math.random()*n);let a,b,q,ans;const G=(GRADE_ON!=null?GRADE_ON:GRADE0),L=LV;
@@ -558,7 +576,7 @@ function drawPipe(x,y,X,Y){const left=MAP[y][x+1]==='P',rim=y===0||MAP[y-1][x]!=
   if(rim){cx.fillStyle='#2b2140';cx.fillRect(X,Y,16,8);cx.fillStyle='#3fa34d';cx.fillRect(X+(left?1:0),Y+1,left?15:15,6);cx.fillStyle='#7be07f';if(left)cx.fillRect(X+2,Y+2,3,4);cx.fillStyle='#2e7d3a';if(!left)cx.fillRect(X+11,Y+2,3,4);
     cx.fillStyle='#2b2140';cx.fillRect(X+(left?2:0),Y+8,14,8);cx.fillStyle='#3fa34d';cx.fillRect(X+(left?3:0),Y+8,left?13:13,8);if(left){cx.fillStyle='#7be07f';cx.fillRect(X+5,Y+8,2,8)}else{cx.fillStyle='#2e7d3a';cx.fillRect(X+9,Y+8,3,8)}}
   else{cx.fillStyle='#2b2140';cx.fillRect(X+(left?2:0),Y,14,16);cx.fillStyle='#3fa34d';cx.fillRect(X+(left?3:0),Y,13,16);if(left){cx.fillStyle='#7be07f';cx.fillRect(X+5,Y,2,16)}else{cx.fillStyle='#2e7d3a';cx.fillRect(X+9,Y,3,16)}}}
-function draw(){cx.imageSmoothingEnabled=false;drawBG();const ox=Math.round(cam.x),now=performance.now();
+function draw(){cx.imageSmoothingEnabled=false;drawBG();cx.save();if(FX.sh>0){const m=FX.sm*Math.min(1,FX.sh*6);cx.translate(Math.round((Math.random()-.5)*m*2),Math.round((Math.random()-.5)*m*2))}else FX.sm=0;const ox=Math.round(cam.x),now=performance.now();
   const x0=Math.max(0,Math.floor(ox/T)),x1=Math.min(MW-1,x0+Math.ceil(VW/T)+1);
   const PL=P.find(isL),L0=PL&&!(PL.dead>0)?{x:PL.x+5,y:PL.y+7}:null;
   if(LD.hasH&&L0){const g=cx.createRadialGradient(L0.x-ox,L0.y,4,L0.x-ox,L0.y,70);g.addColorStop(0,'rgba(255,236,160,.35)');g.addColorStop(1,'rgba(255,236,160,0)');cx.fillStyle=g;cx.fillRect(L0.x-ox-70,L0.y-70,140,140)}
@@ -600,7 +618,10 @@ function draw(){cx.imageSmoothingEnabled=false;drawBG();const ox=Math.round(cam.
     cx.drawImage(img,Math.round(p.x-1-ox),Math.round(p.y-1+eo));
     cx.fillStyle=SKIN[RM[p.i]].m;cx.fillRect(Math.round(p.x+3-ox),Math.round(p.y-7+eo),4,3);if(p.weapon&&!(p.dead>0)&&!(p.swing>0)){const W=p.weapon==='m'?MELEE[LV]:WEAP[LV];const hx=Math.round(p.x-ox+(p.face>0?9:-3)),hy=Math.round(p.y+7);cx.fillStyle='#2b2140';cx.fillRect(hx-1,hy-1,6,5);cx.fillStyle=W.c2;cx.fillRect(hx,hy,4,3);cx.fillStyle=W.c;cx.fillRect(hx,hy,2,1)}}
   if(clip)cx.restore();
-  for(const q of parts){cx.fillStyle=q.col;cx.fillRect(Math.round(q.x-ox),Math.round(q.y),2,2)}
+  for(const q of parts){if(q.ring){const k=1-q.t/q.t0;cx.globalAlpha=Math.max(0,1-k);cx.strokeStyle=q.col;cx.lineWidth=2;cx.beginPath();cx.arc(Math.round(q.x-ox),Math.round(q.y),2+q.ring*k,0,Math.PI*2);cx.stroke();cx.globalAlpha=1;continue}
+    const z=q.sz||2;cx.globalAlpha=q.ng?Math.min(1,q.t*5):1;cx.fillStyle=q.col;cx.fillRect(Math.round(q.x-ox-z/2),Math.round(q.y-z/2),z,z);cx.globalAlpha=1}
+  cx.font='bold 9px ui-monospace,monospace';cx.textAlign='center';for(const t of FX.txt){const X=Math.round(t.x-ox),Y=Math.round(t.y);cx.globalAlpha=Math.min(1,t.t*2.5);cx.fillStyle='#2b2140';cx.fillText(t.txt,X+1,Y+1);cx.fillStyle=t.col;cx.fillText(t.txt,X,Y)}cx.globalAlpha=1;cx.textAlign='start';
+  cx.restore();if(FX.fl>0){cx.fillStyle=`rgba(255,255,255,${Math.min(.75,FX.fl*2.5)})`;cx.fillRect(0,0,VW,VH)}
   hud(ox)}
 function drawQ(X,Y,now,done){cx.fillStyle='#5f6180';cx.fillRect(X+1,Y+2,14,14);cx.fillStyle=done?'#7be07f':'#9b6bff';cx.fillRect(X+2,Y+3,12,12);cx.fillStyle='#fff8e7';const b=done?0:Math.floor(now/300)%2;
   const q=["0110","1001","0010","0100","0000","0100"];if(done){cx.fillRect(X+5,Y+9,2,2);cx.fillRect(X+7,Y+11,2,2);cx.fillRect(X+9,Y+7,2,4)}else q.forEach((r,i)=>[...r].forEach((v,j)=>{if(v==='1')cx.fillRect(X+4+j*2,Y+3+i*2-b,2,2)}))}
@@ -630,7 +651,7 @@ addEventListener('resize',fit);fit();
 
 /* ====== putaran utama ====== */
 let last=0,acc=0;function loop(ts){requestAnimationFrame(loop);const dt=Math.min(.05,(ts-last)/1000||0);last=ts;
-  if(running&&!paused&&!quizOpen&&!window.__duoManual){acc+=dt;elapsed+=dt;while(acc>=1/60){step(1/60);acc-=1/60}}draw()}
+  if(FX.sh>0)FX.sh-=dt;if(FX.fl>0)FX.fl-=dt;if(running&&!paused&&!quizOpen&&!window.__duoManual){if(FX.hs>0){FX.hs-=dt}else{acc+=dt;elapsed+=dt;while(acc>=1/60){step(1/60);acc-=1/60}}}draw()}
 function start(){if(!MAP.length)loadLevel(0);reset();running=true;paused=false;quizOpen=false;['pStart','pWin','pPause','pQuiz','pOnline','pPick'].forEach(i=>$(i).hidden=true);$('top').hidden=false;$('padL').hidden=$('padR').hidden=!touch;padMode();document.body.classList.add('playing');ac();music(true);
   try{if(touch&&document.documentElement.requestFullscreen&&!document.fullscreenElement)document.documentElement.requestFullscreen().catch(()=>{})}catch(e){}}
 function togglePause(){paused=!paused;$('pPause').hidden=!paused;if(!paused)P.forEach(p=>p.inp={l:0,r:0,j:0})}
@@ -643,7 +664,7 @@ function netLerp(p,dt){const n=p.net;if(!n)return;const k=Math.min(1,dt*14);cons
   {const me=P[1-p.i];if(n.o&&me&&!me.dead&&!n.d){p.x=me.x+(n.ox||0);p.y=me.y-PH}}p.vx=n.vx||0;p.vy=n.vy||0;p.face=n.f||1;p.ground=!!n.g;{const wb=p.bub;p.bub=!!n.bu;if(p.bub&&!wb)say('Temanmu di dalam gelembung! Lompat dan sentuh gelembungnya untuk menyelamatkan.',3.5)}p.dead=n.d?(p.bub?99:1):0;p.anim=n.a||0}
 function netEv(m){if(!NET.on||!NET.de||NET.de.readyState!=='open')return;try{NET.de.send(JSON.stringify(m))}catch(e){}}
 function netRx(m){NET.lastRx=performance.now();
-  if(m.t==='s'){const p=P[1-ME];if(p)p.net=m;if(m.en&&ME!==0)m.en.forEach((v,i)=>{const e=enemies[i];if(!e)return;if(v===-1)e.dead=true;else e.x=v});if(m.bo&&ME!==0&&boss&&!boss.dead){boss.x=m.bo[0];boss.y=m.bo[1];if(m.bo[2]<boss.hp)boss.inv=.25;boss.hp=m.bo[2];boss.seen=!!m.bo[3];boss.dir=m.bo[4]||1;boss.tele=m.bo[5]||0;if(!boss.angry&&boss.hp<=boss.max/2)boss.angry=true;if(boss.hp<=0)bossDefeat()}if(m.b&&RM[ME]!==1)m.b.forEach((b,i)=>{if(rocks[i]){rocks[i].x=b[0];rocks[i].y=b[1]}});if(ME===1&&m.lt!=null&&Math.abs(levelT-m.lt)>.12)levelT=m.lt+.04;return}
+  if(m.t==='s'){const p=P[1-ME];if(p)p.net=m;if(m.en&&ME!==0)m.en.forEach((v,i)=>{const e=enemies[i];if(!e)return;if(v===-1)e.dead=true;else e.x=v});if(m.bo&&ME!==0&&boss&&!boss.dead){boss.x=m.bo[0];boss.y=m.bo[1];if(m.bo[2]<boss.hp){boss.inv=.25;ftext(boss.x+14,boss.y-18,'-'+(boss.hp-m.bo[2]),'#ffffff');sparks(boss.x+14,boss.y+14,'#ffffff',8,140,.2)}boss.hp=m.bo[2];boss.seen=!!m.bo[3];boss.dir=m.bo[4]||1;boss.tele=m.bo[5]||0;if(!boss.angry&&boss.hp<=boss.max/2)boss.angry=true;if(boss.hp<=0)bossDefeat()}if(m.b&&RM[ME]!==1)m.b.forEach((b,i)=>{if(rocks[i]){rocks[i].x=b[0];rocks[i].y=b[1]}});if(ME===1&&m.lt!=null&&Math.abs(levelT-m.lt)>.12)levelT=m.lt+.04;return}
   if(m.t==='coin'){const c=level.coins[m.i];if(c&&!c.got){c.got=true;coins++;coinLife();SFX.coin();burst(c.x,c.y,'#f7c548',8)}return}
   if(m.t==='bridge'){const i=m.i|0;if(!qDone[i]){qDone[i]=true;SFX.ok();if(quizOpen){quizOpen=false;$('pQuiz').hidden=true}say('Temanmu menjawab benar! Jembatan muncul.',3)}return}
   if(m.t==='latch'){if(m.k==='L')laserOff=true;else latched[m.k]=true;return}
@@ -652,7 +673,7 @@ function netRx(m){NET.lastRx=performance.now();
   if(m.t==='stomp'){const e=enemies[m.i];if(e&&!e.dead){e.dead=true;burst(e.x+6,e.y+6,ENC[LV],10)}return}
   if(m.t==='key'){const k=keyItems[m.i];if(k&&!k.got){k.got=true;keysGot++;SFX.key();keyMsg()}return}
   if(m.t==='box'){const b=boxes[m.i];if(b)b.taken=true;const q=P[m.who];if(q)q.weapon=m.i===1?'m':'r';return}
-  if(m.t==='bs'){bshots.push({x:m.x,y:m.y,vx:m.vx,vy:m.vy,k:m.k,t:0});return}
+  if(m.t==='bs'){const b={x:m.x,y:m.y,vx:m.vx,vy:m.vy,k:m.k,t:0};bshots.push(b);bshotFx(b);return}
   if(m.t==='bhit'){if(hostAuth())bossHit(m.d|0||1);return}
   if(m.t==='sw'){const q=P[m.i];if(q){q.swing=.18;SFX.swing()}return}
   if(m.t==='min'){if(m.e)enemies.push({...m.e,dead:false});return}
