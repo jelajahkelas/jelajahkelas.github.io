@@ -4156,7 +4156,7 @@ html[data-theme=malam] .plstick{background:#0a0f1e}
 <div class="syncpill" id="syncPill" hidden></div>
 <div class="toast" id="toast" hidden></div>
 
-<script src="av.js?v=350"></script>
+<script src="av.js?v=358"></script>
 <script>
 /* ---------- visual assets ---------- */
 const INK='#1B1E3D';
@@ -10042,7 +10042,7 @@ const MODE_LIST=[
   icon:'<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><circle cx="24" cy="24" r="14"/><circle cx="24" cy="24" r="4" fill="currentColor"/><path d="M24 3v9M24 36v9M3 24h9M36 24h9"/></svg>'},
  {id:'lari',name:'Lari Jalur',desc:'Jawab benar untuk menyalip lawan',help:'Ketuk jawaban yang benar. Jawaban benar membuat pelarimu maju menyalip lawan, jawaban salah atau waktu habis membuatmu mundur sedikit. Sampai garis finis duluan!',
   icon:'<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M4 14h40M4 34h40"/><path d="M4 24h6M16 24h6M28 24h6" stroke-width="2"/><path d="M34 16l10 8-10 8"/></svg>'},
- {id:'balon',name:'Tangkap Balon',desc:'Geser keranjang, tangkap balon benar',help:'Seret jari/mouse atau tekan ← → untuk menggeser keranjang. Tangkap balon dengan jawaban benar dan hindari balon yang salah. Jangan biarkan balon benar lewat!',
+ {id:'balon',hidden:1,name:'Tangkap Balon',desc:'Geser keranjang, tangkap balon benar',help:'Seret jari/mouse atau tekan ← → untuk menggeser keranjang. Tangkap balon dengan jawaban benar dan hindari balon yang salah. Jangan biarkan balon benar lewat!',
   icon:'<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="24" cy="14" rx="10" ry="11"/><path d="M24 25l-2 8"/><path d="M11 34h26l-4 10H15z"/></svg>'},
  {id:'tikus',name:'Pukul Tikus',desc:'Pukul tikus pembawa jawaban benar',help:'Tikus muncul dari lubang membawa papan jawaban. Ketuk tikus dengan jawaban benar secepatnya. Keyboard: tekan angka pada papan.',
   icon:'<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M5 42h38"/><path d="M13 42c0-12 5-19 11-19s11 7 11 19"/><circle cx="20" cy="31" r="1.6" fill="currentColor"/><circle cx="28" cy="31" r="1.6" fill="currentColor"/><path d="M30 4l12 12M36 10l-8 8"/></svg>'},
@@ -10075,23 +10075,23 @@ const MODE_LIST=[
  {id:'zona',name:'Zona Jawaban',desc:'Lari ke zona jawaban yang benar',help:'Ketuk atau geser layar untuk menggerakkan avatarmu ke zona jawaban yang benar, lalu berdiri sebentar di sana. Ambil bintang agar lebih cepat, hindari lumpur. Jawaban benar menaikkan kendaraanmu! Keyboard: panah atau angka 1–4.',icon:'<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="12" rx="3"/><rect x="28" y="4" width="16" height="12" rx="3"/><rect x="4" y="32" width="16" height="12" rx="3"/><rect x="28" y="32" width="16" height="12" rx="3"/><circle cx="24" cy="24" r="4"/></svg>'},
  {id:'pacu',name:'Pacu Jalur',desc:'Jawab benar, perahumu melaju',help:'Setiap jawaban benar membuat perahu jalurmu mendayung lebih jauh, jawaban salah atau waktu habis membuatnya mundur sedikit. Kalahkan perahu lawan sampai garis finis! Ketuk tombol jawaban atau tekan angka 1–4.',
   icon:'<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 28h40l-6 8H10z"/><path d="M14 28l-4-10M24 28l-4-10M34 28l-4-10"/><path d="M4 42c4-3 8-3 12 0s8 3 12 0 8-3 12 0"/></svg>'},
- {id:'layang',name:'Main Layangan',desc:'Terbangkan layangan ke awan jawaban',help:'Geser jari ke kiri dan kanan untuk mengarahkan layangan ke awan dengan jawaban benar. Hindari layangan ungu yang bisa menyenggolmu! Keyboard: panah kiri dan kanan.',
+ {id:'layang',hidden:1,name:'Main Layangan',desc:'Terbangkan layangan ke awan jawaban',help:'Geser jari ke kiri dan kanan untuk mengarahkan layangan ke awan dengan jawaban benar. Hindari layangan ungu yang bisa menyenggolmu! Keyboard: panah kiri dan kanan.',
   icon:'<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round"><path d="M24 4l14 16-14 16-14-16z"/><path d="M24 36c-2 4 2 6 0 10" stroke-linecap="round"/></svg>'},
  {id:'kuis',name:'Kuis Klasik',desc:'Pilih jawaban, lengkap dengan pembahasan',help:'',
   icon:'<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3"><rect x="6" y="6" width="15" height="15" rx="3"/><rect x="27" y="6" width="15" height="15" rx="3"/><rect x="6" y="27" width="15" height="15" rx="3"/><rect x="27" y="27" width="15" height="15" rx="3" fill="currentColor"/></svg>'}];
 /* which games suit which subject: short numeric answers suit fast action games,
    word answers suit games with readable cards, long phrases suit games with wide labels or an A–D list */
 const FIT={
- num:{games:['lompat','zona','tembak','balap','balon','tikus','penalti','basket','buah','memori','benarsalah','kelompok','urut','pacu','layang','kuis'],note:'Jawabannya berupa angka pendek, jadi cocok untuk game cepat yang melatih ketangkasan berhitung.'},
+ num:{games:['lompat','zona','tembak','balap','tikus','penalti','basket','buah','memori','benarsalah','kelompok','urut','pacu','kuis'],note:'Jawabannya berupa angka pendek, jadi cocok untuk game cepat yang melatih ketangkasan berhitung.'},
  unit:{games:['lompat','zona','tembak','balap','lari','pancing','penalti','basket','memori','benarsalah','kelompok','urut','pacu','kuis'],note:'Jawabannya angka dengan satuan (cm, menit, N, J), jadi dipilih game yang kartunya cukup lebar.'},
- word:{games:['lompat','zona','pancing','katak','lari','tikus','penalti','buah','labirin','memori','benarsalah','susun','kelompok','urut','pacu','layang','kuis'],note:'Jawabannya berupa kata, jadi dipilih game yang memberi waktu membaca sebelum memilih.'},
+ word:{games:['lompat','zona','pancing','katak','lari','tikus','penalti','buah','labirin','memori','benarsalah','susun','kelompok','urut','pacu','kuis'],note:'Jawabannya berupa kata, jadi dipilih game yang memberi waktu membaca sebelum memilih.'},
  phrase:{games:['lompat','zona','ular','lari','katak','pancing','penalti','labirin','memori','benarsalah','susun','kelompok','urut','pacu','kuis'],note:'Jawabannya berupa istilah atau frasa, jadi dipilih game dengan kartu jawaban lebar.'},
  long:{games:['ular','zona','lari','katak','labirin','benarsalah','kelompok','urut','pacu','kuis'],note:'Jawabannya berupa kalimat atau nama panjang, jadi dipilih game yang menampilkan jawaban dengan jelas dan tidak terburu-buru.'},
- kid:{games:['katak','basket','penalti','balon','memori','pancing','urut','kuis'],note:'Untuk anak TK dipilih game yang cukup diketuk atau digeser, dengan gerakan pelan.'},
+ kid:{games:['katak','basket','penalti','memori','pancing','urut','kuis'],note:'Untuk anak TK dipilih game yang cukup diketuk atau digeser, dengan gerakan pelan.'},
  kidSlow:{games:['katak','basket','penalti','memori','kuis'],note:'Untuk anak TK dipilih game yang pelan dan cukup diketuk.'},
  picture:{games:['kuis'],note:'Jawabannya berupa gambar, jadi dimainkan sebagai kuis bergambar dengan tombol besar.'}};
 /* Semua game boleh dipilih di semua kelas. Game yang paling cocok tetap di urutan atas. Kuis bergambar (jawaban berupa gambar) hanya bisa dimainkan sebagai kuis. */
-const allGames=f=>{f=f||FIT.long;if(f===FIT.picture)return f.games;const rest=MODE_LIST.map(m=>m.id).filter(id=>!f.games.includes(id)&&id!=='kuis');const g=f.games.filter(x=>x!=='kuis').concat(rest);return g.concat(['kuis'])};
+const allGames=f=>{f=f||FIT.long;if(f===FIT.picture)return f.games;const rest=MODE_LIST.filter(m=>!m.hidden).map(m=>m.id).filter(id=>!f.games.includes(id)&&id!=='kuis');const g=f.games.filter(x=>x!=='kuis').concat(rest);return g.concat(['kuis'])};
 const SUBJ_FIT={'tk/hitung':'kid','tk/tambah':'kidSlow','tk/huruf':'kid','tk/warna':'kidSlow','tk/banyak':'picture','tk/__mix':'kidSlow',
  'sd/tambahkurang':'num','sd/kalibagi':'num','sd/mtk':'unit','sd/bindo':'word','sd/ipas':'phrase','sd/pancasila':'long','sd/eng':'word','sd/__mix':'phrase',
  'smp/mtk':'num','smp/ipa':'phrase','smp/ips':'long','smp/eng':'long','smp/__mix':'long',
@@ -14354,7 +14354,7 @@ function evalWizard2(){normBank();const c=tCls();const st={subj:EV.subj&&c.subje
    finish:{label:'Mulai evaluasi di TV',run:(s,b,close)=>{if(!list.length)throw new Error('Belum ada murid. Tambahkan di menu Murid.');Object.assign(EV,{subj:s.subj,src:s.src,game:s.game,fmt:s.fmt,n:s.n});const sb=subj(s),src=evalSource(sb);
      const ss=sessionOf(today,true);const e={id:'e'+Date.now().toString(36),subj:sb.id,subjName:sb.name,ui:src.bank||src.mod?null:src.ui,bank:src.bank?src.bank.id:null,mod:src.mod||null,modQs:src.modQs||null,modSrc:src.modSrc||null,unit:src.title,game:s.fmt==='rebutan'?'kuis':s.game,fmt:s.fmt,n:src.bank||src.modQs?Math.min(s.n,src.count):s.n,results:{},at:Date.now()};
      ss.evals.push(e);save();EVR={sid:ss.id,eid:e.id};EVSEL=[];close();fsOn();go('trun')}}})}
-function welcomeSlides(){const n=(typeof MODE_LIST!=='undefined'&&MODE_LIST.length)||19;
+function welcomeSlides(){const n=(typeof MODE_LIST!=='undefined'&&MODE_LIST.filter(m=>!m.hidden).length)||17;
   const S=[['game','#1CB0F6','Belajar lewat game',`${n} game seru seperti tembak, balap, dan labirin, dengan soal sesuai kelas dari TK sampai SMA/SMK.`],
     ['dumbbell','#58CC02','Olahraga di sela belajar','Gerakan singkat dengan contoh animasi, naik sedikit demi sedikit sesuai kemampuan anak.'],
     ['report','#CE82FF','Rapor otomatis untuk guru','Absensi, evaluasi di TV, soal tersulit, dan rapor PDF dalam satu aplikasi.']];
@@ -16041,7 +16041,7 @@ function folBind(root,list,after){root.querySelectorAll('[data-follow]').forEach
   try{await folDo(f,on);if(on){try{sfx.ok()}catch(_){}toast('team',`Kamu mengikuti ${f.name}.`)}b.outerHTML=folBtn(f,b.classList.contains('sm'));folBind(root,list,after);after&&after()}catch(err){b.disabled=false;toast('lock',fbErr(err))}})}
 const shareIcon='<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M12 3 V15 M7 8 L12 3 L17 8 M5 13 V19 C5 20 6 21 7 21 H17 C18 21 19 20 19 19 V13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const qrIcon='<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><path d="M14 14h3v3h-3zM18 18h3v3h-3zM18 14h3M14 18v3" stroke-linecap="round"/></svg>';
-let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=350';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
+let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=358';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
 function qrMatrix(text){const Q=window.QRCodeLib,q=new Q(-1,Q.ECL.M);q.addData(text);q.make();const n=q.getModuleCount(),m=[];for(let r=0;r<n;r++){m.push([]);for(let c=0;c<n;c++)m[r].push(q.isDark(r,c))}return m}
 function qrSvgOf(m){const n=m.length;let d='';for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(m[r][c])d+=`M${c} ${r}h1.02v1.02h-1.02z`;
   return `<svg viewBox="-2 -2 ${n+4} ${n+4}" class="pcqr" shape-rendering="crispEdges" aria-label="Kode QR profil"><rect x="-2" y="-2" width="${n+4}" height="${n+4}" fill="#fff"/><path d="${d}" fill="#1C1E3D"/></svg>`}
