@@ -1370,7 +1370,7 @@ body.has-invite .nav[data-tab=team] i::before{content:'';position:absolute;right
 body.fb-student #vTeam:not(.ph-on)>*:not(.pagehead):not(.phub):not(.roomcard):not(.friendcard):not(.duocard){display:none!important}
 .roomcard .roomcard-h{display:none}
 .friendcard{padding:14px 16px;display:flex;flex-direction:column;gap:4px}
-/* ===== Gaya Duolingo: putih bersih, garis abu lembut, tombol 3D datar ===== */
+/* ===== gaya JELAS: putih bersih, garis abu lembut, tombol 3D datar ===== */
 body{background:var(--card)!important;color:var(--ink);font-weight:600}
 .world{display:none!important}
 .onb,.roomov,.aved,.ajak{background:var(--card)!important}
@@ -1383,7 +1383,7 @@ h1,h2,h3{font-weight:900;letter-spacing:0}
 .wbtns .ghost{color:var(--blue)}
 .smallbtn{border:2px solid var(--line);box-shadow:0 3px 0 var(--line);border-radius:12px;color:var(--ink2)}
 .linkbtn{color:var(--blue);opacity:1;font-weight:800}
-/* jawaban ala Duolingo: putih, terpilih biru, benar hijau, salah merah */
+/* jawaban gaya JELAS: putih, terpilih biru, benar hijau, salah merah */
 .opt{background:var(--card)!important;color:var(--ink2)!important;border:2px solid var(--line);box-shadow:0 4px 0 var(--line);text-shadow:none;border-radius:16px}
 .opt .k{border:2px solid var(--line);color:var(--muted2);background:var(--card);font-family:var(--display);font-weight:800}
 .opt:hover:not(:disabled){transform:none;background:var(--tg)!important}
@@ -1471,7 +1471,7 @@ input:focus,select:focus,textarea:focus{border-color:#84D8FF!important;outline:n
 .ctr{display:grid;grid-template-columns:52px 1fr 52px;align-items:center;padding:7px 0;border-bottom:1px solid #EFEFEF}.ctr:last-child{border-bottom:0}
 .ctr.ch{font-size:13px;font-weight:800;color:var(--muted)}.ctr.ch span{text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .ctr .cl{text-align:center;font-size:14px;color:var(--muted);display:flex;align-items:center;justify-content:center;gap:5px}.ctr .cl i[data-icon]{width:15px;height:15px;display:inline-block}.ctr .cl i svg{width:100%;height:100%}
-/* ===== Interaksi ala Duolingo: tombol 3D yang "tenggelam" saat dipencet ===== */
+/* ===== Interaksi gaya JELAS: tombol 3D yang "tenggelam" saat dipencet ===== */
 *{-webkit-tap-highlight-color:transparent}
 button{touch-action:manipulation}
 .primary,.ghost,.smallbtn,.opt,.popover .row,.aved-it,.petit,.item .buy,.ajinv,.ajg,.ajopt,.stile,.back,.iconbtn,.pban-set,.pban-edit,.keypad button,.seg button,.lrow.tap,.pick,.tcard button{transition:transform .07s ease,box-shadow .07s ease,background-color .15s,filter .15s,border-color .15s}
@@ -1905,7 +1905,7 @@ html body:not(.teacher) #vDone .done>:first-child{margin-top:auto}
 .fllist{padding:6px 14px;display:flex;flex-direction:column}
 
 
-/* liga seperti Duolingo */
+/* liga gaya JELAS */
 .league:has(.lgx-head){padding:0 0 12px;gap:0;overflow:visible}
 .lgx-head{position:sticky;top:0;z-index:6;background:var(--card);padding:18px 18px 8px;border-bottom:2px solid var(--line2);border-radius:inherit}
 .lgx-head h2{font-size:30px;margin:0}
@@ -1960,7 +1960,7 @@ html body:not(.teacher) #vDone .done>:first-child{margin-top:auto}
 #phInv #invBox{background:var(--card);border:2px solid var(--line);border-radius:20px;padding:12px 14px}
 #phInv #invBox:empty{display:none}
 
-/* Header setiap menu (seperti Duolingo): menempel di atas saat digulir */
+/* Header setiap menu: menempel di atas saat digulir */
 .view>.pagehead{position:sticky;top:8px;z-index:25}
 .phback{flex:none}
 @media (max-width:999px){
@@ -1992,7 +1992,7 @@ body:not(.teacher) #tClsBar{display:none}
 .pausebox h3{font-size:26px;margin:0}.pausebox p{margin:0;color:var(--muted)}
 .pausebox .primary{width:100%}
 
-/* Kuis di HP: penuh layar tanpa kartu (seperti Duolingo) */
+/* Kuis di HP: penuh layar tanpa kartu */
 @media (max-width:720px){
  body.playing:not(.arcfs) #vPlay{min-height:100dvh;box-sizing:border-box;background:var(--card);margin:-12px calc(50% - 50vw) 0;padding:calc(8px + env(safe-area-inset-top,0px)) 16px 140px;gap:10px!important}
  body.playing:not(.arcfs) #vPlay .playbar{border:0!important;box-shadow:none!important;background:transparent!important;border-radius:0!important;padding:4px 0!important}
@@ -2140,7 +2140,7 @@ body.lessonmode .feedback{animation:sheetUp .28s cubic-bezier(.2,.9,.3,1)}
 .instk{display:inline-grid;place-items:center;min-width:24px;height:24px;border-radius:6px;background:var(--card);border:2px solid var(--line);font-weight:900;padding:0 4px;vertical-align:middle}
 .instacts{display:grid;grid-template-columns:1fr 1.4fr;gap:10px}.instacts button{min-height:48px}
 
-/* ---- sambutan & masuk gaya Duolingo ---- */
+/* ---- sambutan & masuk gaya JELAS ---- */
 #auth .dwel{min-height:100%;box-sizing:border-box;justify-content:space-between;text-align:center;padding:16px 4px calc(16px + env(safe-area-inset-bottom,0px));gap:12px}
 .dwel .dmid{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px}
 .dmas{width:130px}.dmas.big{width:170px}
@@ -2301,7 +2301,7 @@ html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
  .plist .pl{flex-wrap:wrap}.plist .pl .grow{min-width:60%}
 }
 
-/* header murid di HP: rapi seperti Duolingo */
+/* header murid di HP: rapi gaya JELAS */
 @media (max-width:999px){
  .stats{padding:8px 16px!important;gap:4px!important;min-height:58px;box-sizing:border-box;margin-left:calc(-1*max(16px, env(safe-area-inset-left, 0px)))!important;margin-right:calc(-1*max(16px, env(safe-area-inset-right, 0px)))!important}
  .stats{width:auto!important;max-width:none!important;align-self:stretch}
@@ -2380,7 +2380,7 @@ body.lvl-tk .speak::before{content:"🔊 "}
  .stats .stat{font-size:13.5px!important;padding:2px 1px!important;gap:2px!important}.stats .stat i,.stats .nbell svg{width:18px!important;height:18px!important}
 }
 
-/* ===== tipografi gaya Duolingo: judul & tombol membulat (Fredoka, pengganti Feather Bold), isi Nunito tebal (pengganti DIN Round) ===== */
+/* ===== tipografi gaya JELAS: judul & tombol membulat (Fredoka), isi Nunito tebal ===== */
 :root{--title:"Fredoka","Nunito",system-ui,sans-serif;--display:"Fredoka","Nunito",system-ui,sans-serif;--body:"Nunito",system-ui,-apple-system,"Segoe UI",sans-serif}
 body{font-weight:600;font-size:16px}
 h1,h2,h3,.pagehead h2,.wtitle,.dh,.dtt{font-family:var(--title);font-weight:600;letter-spacing:0}
@@ -2943,7 +2943,7 @@ p.vpara{margin:0;font-size:16.5px;line-height:1.55;font-weight:600}
 html[data-theme=malam] .xbig,html[data-theme=malam] .xask,html[data-theme=malam] .xbub{background:#fff}
 /* gulir di panel/jendela tidak ikut menggulir halaman di belakangnya */
 .mbox,.gb,.tbpop,.tbpb,.tsres,.tdpmenu,.ajlist,.onb,.onbin,.sheet,.petgrid,.lgx-list,.xstage,.vbody,.vcap,.xbub,#pop{overscroll-behavior-y:contain}
-/* liga gaya Duolingo: tanpa kartu, penuh kiri-kanan */
+/* liga gaya JELAS: tanpa kartu, penuh kiri-kanan */
 #leagueCard{background:transparent!important;border:0!important;box-shadow:none!important;border-radius:0!important;padding:0!important;overflow:visible!important}
 #leagueCard .lgx-head{background:var(--bg,#fff)!important;border-radius:0!important;border-bottom:2px solid var(--line)!important;padding:14px 18px 6px}
 #leagueCard .lgx-list{padding:4px 0}
@@ -2953,7 +2953,7 @@ html[data-theme=malam] .xbig,html[data-theme=malam] .xask,html[data-theme=malam]
 @media (max-width:999px){#leagueCard{width:100vw;max-width:100vw;margin-left:calc(50% - 50vw)!important;margin-right:0!important;margin-top:-14px!important}
  #leagueCard .lgx-head{top:0!important}}
 html[data-theme=malam] #leagueCard .lgx-head{background:#0a0f1e!important;border-color:#1f2a44!important}
-/* ===== gaya Duolingo: gambar tanpa garis hitam tebal, kotak abu tipis tanpa bayangan ===== */
+/* ===== gaya JELAS: gambar tanpa garis hitam tebal, kotak abu tipis tanpa bayangan ===== */
 /* garis tepi gambar: hitam tipis (lebih tipis dari aslinya) */
 svg [stroke="#1B1E3D"]{stroke:#1B1E3D;stroke-width:2.1px}
 .mascot svg .mbody{stroke:#1B1E3D;stroke-width:2.1px}
@@ -2981,7 +2981,7 @@ html[data-theme=malam] .nlinks path{stroke:#1f2b47}html[data-theme=malam] .nlink
 .uhead .guide{border:2px solid rgba(255,255,255,.8)!important;box-shadow:none!important;background:rgba(255,255,255,.12)!important}
 .node.k-chest.lock i{filter:grayscale(1) brightness(1.18)!important}
 /* ===================================================================
-   GAYA DUOLINGO (murid): 3D, abu tipis, huruf kapital, tanpa garis jalur
+   GAYA JELAS (murid): 3D, abu tipis, huruf kapital, tanpa garis jalur
    =================================================================== */
 .nlinks{display:none!important}
 html body:not(.teacher) .node{box-shadow:0 7px 0 rgba(0,0,0,.2)!important}
@@ -3012,7 +3012,7 @@ html body:not(.teacher) .qsec h3,html body:not(.teacher) .sect,html body:not(.te
 html[data-theme=malam] body:not(.teacher) .primary{box-shadow:0 4px 0 var(--lip,#1e40af)!important}
 html[data-theme=malam] body:not(.teacher) .npop .primary{background:#fff!important;color:var(--uc)!important;box-shadow:0 4px 0 rgba(0,0,0,.25)!important}
 @media (max-width:999px){html[data-theme=malam] body:not(.teacher) .side .nav:not([aria-current="page"]){background:transparent!important;border-color:transparent!important;box-shadow:none!important}}
-/* ---- interaksi ala Duolingo ---- */
+/* ---- interaksi gaya JELAS ---- */
 /* cincin level aktif berdenyut */
 body:not(.teacher) .nrow:has(>.node.cur:not(.k-chest))::before{content:"";position:absolute;top:-14px;bottom:-21px;left:-14px;right:-14px;border-radius:50%;border:5px solid color-mix(in srgb,var(--uc) 40%,#fff);pointer-events:none;z-index:-1;animation:curRing 1.6s ease-in-out infinite}
 @keyframes curRing{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
@@ -3043,7 +3043,7 @@ html body:not(#_x) :is(.phopt,.item.box,.roomcard,.friendcard,.duocard):not(:dis
 /* level: tombol turun setinggi bayangannya, bayangan tetap di tempat */
 html body:not(#_x) .node:not(.k-chest):active{transform:translateY(7px)!important;translate:none!important;box-shadow:none!important;animation:none!important;transition:transform .05s!important}
 html body:not(#_x) .node:not(.k-chest):active::after{display:none!important}
-/* ---- pelajaran ala Duolingo ---- */
+/* ---- pelajaran gaya JELAS ---- */
 body:not(.teacher) .lbar{position:relative;overflow:visible!important;height:18px!important;border:0!important;background:var(--track,#E5E5E5)!important;border-radius:999px!important}
 body:not(.teacher) .lbar i{border-radius:999px;position:relative;background:var(--green)!important;background-image:none!important;transition:width .55s cubic-bezier(.3,1.5,.5,1),background-color .3s!important;min-width:0}
 body:not(.teacher) .lbar i::after{content:"";position:absolute;left:8px;right:8px;top:4px;height:5px;border-radius:999px;background:rgba(255,255,255,.4)}
@@ -3072,7 +3072,7 @@ body:not(.teacher) #vDone .acts .primary{animation:tileIn .4s .8s both}
 body:not(.teacher) .bigflame{animation:popIn .5s,flick 1.2s .5s ease-in-out infinite!important;transform-origin:50% 100%}
 @keyframes flick{0%,100%{transform:scale(1,1) rotate(0)}30%{transform:scale(1.04,.97) rotate(-2deg)}60%{transform:scale(.97,1.04) rotate(2deg)}}
 @media (prefers-reduced-motion:reduce){body:not(.teacher) #vDone *,body:not(.teacher) #feedback,body:not(.teacher) .bigflame{animation:none!important}}
-/* ===== jalur belajar sesuai referensi Duolingo (clone react-duolingo + video) ===== */
+/* ===== jalur belajar  ===== */
 html body:not(#_x) .node:not(.k-chest){width:70px!important;height:57px!important;border-radius:50%!important;border:0!important;box-shadow:0 8px 0 color-mix(in srgb,var(--uc) 72%,#000)!important}
 html body:not(#_x) .node.k-test{width:70px!important;height:57px!important;border-radius:50%!important}
 html body:not(#_x) .node:not(.k-chest) i,html body:not(#_x) .node:not(.k-chest) svg{width:32px!important;height:32px!important;filter:none!important}
@@ -3102,7 +3102,7 @@ html body:not(#_x) .npop.lock b{color:#AFAFAF!important}
 html body:not(#_x) .npop .nplock{background:#E5E5E5!important;color:#AFAFAF!important;box-shadow:none!important}
 html[data-theme=malam] body:not(#_x) .npop.lock,html[data-theme=malam] body:not(#_x) .npop.lock::before{background:#131f24!important;border-color:#37464F!important}
 html[data-theme=malam] body:not(#_x) .npop .nplock{background:#37464F!important;color:#52656D!important}
-/* umpan balik warna resmi Duolingo */
+/* umpan balik warna umpan balik */
 html body:not(#_x):not(.teacher) .feedback.ok{background:#D7FFB8!important}
 html body:not(#_x):not(.teacher) .feedback.bad{background:#FFDFE0!important}
 html body:not(#_x):not(.teacher) .feedback.ok b,html body:not(#_x):not(.teacher) .feedback.ok #fbText{color:#58A700!important}
@@ -3309,7 +3309,7 @@ html body .tbpb .dnrow b,html body .tbpb .ntx b{display:block!important;margin-b
 .bdg .lv.lv3{background:linear-gradient(90deg,#FFD54A,#FFF3B0,#FFD54A)!important;color:#6B3A00!important;border-color:#C98A00!important;background-size:200% 100%!important;animation:lvShine 2s linear infinite}
 @keyframes lvShine{to{background-position:-200% 0}}
 .done span svg.bimg{width:100%;height:auto}
-/* pencapaian gaya Duolingo */
+/* pencapaian gaya JELAS */
 .chev{font-size:34px!important;line-height:1;color:var(--muted)!important;font-weight:400}
 .bdrow{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
 .bdit{background:none;border:0;padding:0;box-shadow:none!important;cursor:pointer}
@@ -3851,7 +3851,7 @@ html[data-theme=malam] .aved-tabs button[aria-selected="true"]{background:#eaf0f
  html body .stats .statgap{display:block!important;flex:0 0 100%!important;height:0!important;margin:0!important;padding:0!important}
  html body .stats .stat{padding:2px 4px!important;gap:4px!important}
 }
-/* ===== Bermain gaya Duolingo ===== */
+/* ===== Bermain gaya JELAS ===== */
 .pltop h1{margin:0;font-size:28px;font-weight:900}
 .plstats{display:flex;gap:16px;margin-top:4px}.plst{display:flex;align-items:center;gap:5px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--muted2,#AFAFAF);font-size:14px}
 .gfeat{display:block;width:100%;position:relative;padding:0!important;border:2px solid var(--line)!important;border-bottom-width:4px!important;border-radius:18px!important;overflow:hidden;background:var(--card)!important;text-align:left;margin:4px 0 14px;cursor:pointer}
@@ -4181,7 +4181,7 @@ html[data-theme=malam] .plstick{background:#0a0f1e}
 <div class="syncpill" id="syncPill" hidden></div>
 <div class="toast" id="toast" hidden></div>
 
-<script src="av.js?v=365"></script>
+<script src="av.js?v=366"></script>
 <script>
 /* ---------- visual assets ---------- */
 const INK='#1B1E3D';
@@ -12464,7 +12464,7 @@ function openStreak(tab){let el=$('#skOv');if(!el){document.body.insertAdjacentH
     if(tab==='fr'){const eb=$('#skEdit');eb.onclick=()=>{edit=!edit;render()};if(window.skFriends)skFriends($('#skFr'),$('#skArt'),edit,close,render);else $('#skFr').innerHTML='<p class="note">Masuk dengan akun murid untuk memulai Runtunan Teman.</p>'}};
   render()}
 window.openStreak=openStreak;
-/* ===== Pencapaian gaya Duolingo: Rekor Personal + Penghargaan ===== */
+/* ===== Pencapaian gaya JELAS: Rekor Personal + Penghargaan ===== */
 function recNote(){if(!P)return;P.rec=P.rec||{};P.bAt=P.bAt||{};const R=P.rec,now=Date.now(),up=(k,v)=>{v=+v||0;if(v>0&&(!R[k]||v>R[k].v))R[k]={v,at:now}};
   try{up('streak',Math.max(P.bestStreak||0,shownStreak()));up('perfect',(P.stats||{}).perfect||0);up('xpday',Math.max(0,...Object.values(P.xpd||{})));const s=typeof lgState==='function'?lgState():null;if(s)up('league',(s.t||0)+1)}catch(e){}
   BADGES.forEach(b=>{const l=blevel(b);const a=P.bAt[b.id]=P.bAt[b.id]||{};for(let i=1;i<=l;i++)if(!a[i])a[i]=now})}
@@ -12872,7 +12872,7 @@ function pathLinks(){const P_=$('#path');if(!P_)return;P_.querySelectorAll('.nod
   sv.setAttribute('viewBox',`0 0 ${R.width.toFixed(1)} ${R.height.toFixed(1)}`);sv.innerHTML=o})}
 (()=>{let t;const q=()=>{clearTimeout(t);t=setTimeout(pathLinks,60)};addEventListener('resize',q);try{new ResizeObserver(q).observe(document.getElementById('path')||document.body)}catch(e){}})();
 
-/* ---------- pose teman belajar di jalur: berbeda-beda tiap unit (seperti Duolingo) ---------- */
+/* ---------- pose teman belajar di jalur: berbeda-beda tiap unit ---------- */
 const PZK='#1B1E3D';
 const POSES=[
  {id:'baca',mood:'idle',front:`<svg viewBox="0 0 100 40" class="pzf pz-book"><path d="M50 10C38 2 22 2 8 6v28c14-4 30-4 42 4 12-8 28-8 42-4V6C78 2 62 2 50 10Z" fill="#fff" stroke="${PZK}" stroke-width="3.5" stroke-linejoin="round"/><path d="M50 10v28" stroke="${PZK}" stroke-width="3"/><path d="M18 14h22M18 21h22M60 14h22M60 21h22" stroke="#4DA3FF" stroke-width="3" stroke-linecap="round"/><path d="M8 6v28c14-4 30-4 42 4" fill="none" stroke="#FF4B4B" stroke-width="0"/></svg>`},
@@ -15185,7 +15185,7 @@ setInterval(()=>{try{ncBadge()}catch(e){}},8000);
 async function ncRefresh(){try{if(!FBX.user||isT()||!P)return;if(window.folLoad)await window.folLoad();if(window.fsLoad)await window.fsLoad();if(window.FQ&&window.fqSync){try{FQ.list=null;await window.fqSync()}catch(e){}}ncBadge()}catch(e){}}
 setTimeout(ncRefresh,5000);setInterval(ncRefresh,90000);document.addEventListener('visibilitychange',()=>{if(!document.hidden)ncRefresh()});window.ncRefresh=ncRefresh;
 window.ncBadge=ncBadge;
-/* ---------- gaya Duolingo: sambutan, masuk, masuk kembali, Facebook ---------- */
+/* ---------- gaya JELAS: sambutan, masuk, masuk kembali, Facebook ---------- */
 const FB_ICON='<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><rect width="24" height="24" rx="5" fill="#1877F2"/><path d="M16.5 24v-9h3l.5-3.6h-3.5V9.2c0-1 .3-1.8 1.8-1.8h1.9V4.2c-.3 0-1.5-.2-2.8-.2-2.8 0-4.6 1.7-4.6 4.8v2.6H9.6V15h3.2v9z" fill="#fff"/></svg>';
 const G_COLOR='<svg viewBox="0 0 48 48" width="26" height="26" aria-hidden="true"><path fill="#FFC107" d="M43.6 20.1H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 8 3l5.7-5.7C34 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.6-.4-3.9z"/><path fill="#FF3D00" d="m6.3 14.7 6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 8 3l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-8l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.1H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.6-.4-3.9z"/></svg>';
 async function fbFacebook(btn){if(!firebase.auth.FacebookAuthProvider){toast('lock','Masuk dengan Facebook belum tersedia.');return}if(btn)btn.disabled=true;setSession(null);const prov=new firebase.auth.FacebookAuthProvider();try{prov.addScope('email')}catch(e){}
@@ -15539,7 +15539,7 @@ renderLeague=function(){_rL();if(isT()||!FBX.user||!P)return;const m=FBX.me||{},
 function fbBoardPush(){const m=FBX.me||{},u=FBX.user;if(!m.classId||!u||!P||isT())return;ensureDay(P);const key=m.classId+':'+P.week.id+':'+P.week.xp+':'+P.name+':'+JSON.stringify(P.avatar||'');if(key===FBX.boardKey)return;FBX.boardKey=key;
   FB.db.doc('classes/'+m.classId+'/board/'+u.uid).set({name:P.name,color:P.color,av:P.avatar||null,week:P.week.id,wxp:P.week.xp,upd:Date.now()}).catch(()=>{FBX.boardKey=null})}
 
-/* ---------- LIGA MINGGUAN (seperti Duolingo) ----------
+/* ---------- LIGA MINGGUAN ----------
    Setiap minggu pemain yang sudah mendapat XP masuk ke grup berisi paling banyak 30 orang
    di liga yang sama. Akhir minggu: peringkat atas naik liga, peringkat bawah turun liga. */
 const LG_SIZE=30;
@@ -15876,7 +15876,7 @@ function upPage(uid,th,me,pres){const el=upEl();
   {const fo={uid,name:th.name,av:th.av||null,user:th.user||''};const put=()=>{const h=$('#upFol');if(!h)return;h.innerHTML=folBtn(fo);folBind(h,[fo])};if(FOL.following)put();else folLoad().then(put).catch(()=>{})}
   $('#upDuel').onclick=()=>{close();const f={uid,name:th.name,av:th.av||null};openAjak();setTimeout(()=>{const ab=document.querySelector(`#ajList .ajinv[data-uid="${CSS.escape(uid)}"]`);ajakInvite(f,ab||null)},350)}}
 addEventListener('keydown',e=>{if(e.key==='Escape'){const el=$('#upPage');if(el&&!el.hidden){const b=$('#upgX');b&&b.click()}}});
-/* ---------- AJAK TANDING (seperti Duolingo): bagikan, cari nama pengguna, undang teman ---------- */
+/* ---------- AJAK TANDING: bagikan, cari nama pengguna, undang teman ---------- */
 /* pengatur jumlah soal bebas: tombol − / + dan bisa diketik */
 function stepperHTML(id,v,min,max){return `<div class="stepper" id="${id}" data-min="${min}" data-max="${max}"><button type="button" data-d="-1" aria-label="Kurangi">−</button><input type="number" inputmode="numeric" min="${min}" max="${max}" value="${v}" aria-label="Jumlah soal"><span>soal</span><button type="button" data-d="1" aria-label="Tambah">+</button></div>`}
 function bindStepper(id,cb){const el=$('#'+id);if(!el)return;const inp=el.querySelector('input'),mn=+el.dataset.min,mx=+el.dataset.max;
@@ -16010,14 +16010,14 @@ const fqPrevWeek=()=>{const d=new Date(weekKey()+'T12:00:00');d.setDate(d.getDat
 async function fqLoad(){const me=FBX.user.uid,wk=weekKey(),col=FB.db.collection('fq');
   const q=await col.where('members','array-contains',me).where('week','==',wk).get();
   let all=q.docs.map(d=>Object.assign({id:d.id},d.data())).sort((a,b)=>(+a.created||0)-(+b.created||0));
-  /* aturan Duolingo: satu pasangan per minggu. Data lama yang dobel: pakai yang pertama dibuat. */
+  /* aturan liga: satu pasangan per minggu. Data lama yang dobel: pakai yang pertama dibuat. */
   FQ.list=all.slice(0,1);
   if(FQ.list[0]){const d=FQ.list[0];try{const lk=await FB.db.doc(`fql/${wk}_${me}`).get();if(!lk.exists)await FB.db.doc(`fql/${wk}_${me}`).set({week:wk,u:me,m:d.members,q:d.id,at:Date.now()})}catch(e){}}
   FQ.prev=null;try{const pq=await col.where('members','array-contains',me).where('week','==',fqPrevWeek()).get();
     const pd=pq.docs.map(d=>Object.assign({id:d.id},d.data())).find(d=>{const o=d.members.find(x=>x!==me);return !d['claim_'+me]&&(+d['n_'+me]||0)+(+d['n_'+o]||0)>=(+d.goal||FQ.goal)});FQ.prev=pd||null}catch(e){}
   return FQ.list}
 window.fqSync=async function(){try{if(!FBX.user||isT()||!P)return;if(!FQ.list)await fqLoad();const me=FBX.user.uid;
-  /* aturan Duolingo: level setelah target tercapai tidak dihitung lagi */
+  /* aturan liga: level setelah target tercapai tidak dihitung lagi */
   for(const d of FQ.list){const ref=FB.db.doc('fq/'+d.id),n=fqMine(d);
     await FB.db.runTransaction(async tr=>{const sn=await tr.get(ref);if(!sn.exists)return;const x=sn.data(),o=x.members.find(u=>u!==me),cur=+x['n_'+me]||0,g=+x.goal||FQ.goal;
       const v=Math.max(cur,Math.min(n,g-(+x['n_'+o]||0)));Object.assign(d,x);if(v!==cur){tr.update(ref,{['n_'+me]:v});d['n_'+me]=v}})}}catch(e){console.warn('fq',e)}};
@@ -16084,7 +16084,7 @@ function folBind(root,list,after){root.querySelectorAll('[data-follow]').forEach
   try{await folDo(f,on);if(on){try{sfx.ok()}catch(_){}toast('team',`Kamu mengikuti ${f.name}.`)}b.outerHTML=folBtn(f,b.classList.contains('sm'));folBind(root,list,after);after&&after()}catch(err){b.disabled=false;toast('lock',fbErr(err))}})}
 const shareIcon='<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M12 3 V15 M7 8 L12 3 L17 8 M5 13 V19 C5 20 6 21 7 21 H17 C18 21 19 20 19 19 V13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const qrIcon='<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><path d="M14 14h3v3h-3zM18 18h3v3h-3zM18 14h3M14 18v3" stroke-linecap="round"/></svg>';
-let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=365';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
+let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=366';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
 function qrMatrix(text){const Q=window.QRCodeLib,q=new Q(-1,Q.ECL.M);q.addData(text);q.make();const n=q.getModuleCount(),m=[];for(let r=0;r<n;r++){m.push([]);for(let c=0;c<n;c++)m[r].push(q.isDark(r,c))}return m}
 function qrSvgOf(m){const n=m.length;let d='';for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(m[r][c])d+=`M${c} ${r}h1.02v1.02h-1.02z`;
   return `<svg viewBox="-2 -2 ${n+4} ${n+4}" class="pcqr" shape-rendering="crispEdges" aria-label="Kode QR profil"><rect x="-2" y="-2" width="${n+4}" height="${n+4}" fill="#fff"/><path d="${d}" fill="#1C1E3D"/></svg>`}
@@ -16201,7 +16201,7 @@ setInterval(()=>{if(presActive()&&(PRES.last!==true||Date.now()-PRES.beatAt>9000
 document.addEventListener('visibilitychange',()=>presBeat(presActive()));
 addEventListener('focus',()=>presBeat(presActive()));addEventListener('blur',()=>setTimeout(()=>presBeat(presActive()),300));
 addEventListener('pagehide',()=>presBeat(false));addEventListener('freeze',()=>presBeat(false));
-/* ---------- tantangan: berlaku 2 menit, layar tunggu seperti Duolingo ---------- */
+/* ---------- tantangan: berlaku 2 menit, layar tunggu gaya JELAS ---------- */
 const INV_TTL=120000;
 const CLOCK_SVG='<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>';
 const invFmt=ms=>{const s=Math.max(0,Math.ceil(ms/1000));return Math.floor(s/60)+':'+String(s%60).padStart(2,'0')};
@@ -16276,7 +16276,7 @@ function tourAsk(){try{if(isT()||!P||P.tour||document.body.classList.contains('p
     $('#tourGo').onclick=()=>{if(last){closeModal();return}i++;draw();try{tone([620],.03)}catch(e){}};const sk=$('#tourSkip');if(sk)sk.onclick=closeModal};
   openModal('');draw();return true}catch(e){return false}}
 window.tourAsk=tourAsk;
-/* perbaiki runtunan yang putus (seperti Duolingo) */
+/* perbaiki runtunan yang putus */
 function repairInfo(){if(!P||!P.lastDay)return null;const t=dayKey(),gap=dayNum(t)-dayNum(P.lastDay);
   if(shownStreak()===0&&P.streak>=3&&gap>=2&&gap<=4)return {n:P.streak,kind:'a',from:P.lastDay};
   const b=P.brk;if(b&&b.n>=3&&dayNum(t)-dayNum(b.day)<=1&&!b.done)return {n:b.n,kind:'b',from:b.from,day:b.day};return null}
@@ -16295,7 +16295,7 @@ function repairAsk(force){try{if(isT()||!P||document.body.classList.contains('pl
   $('#repNo').onclick=()=>{closeModal();if(r.kind==='b'){P.brk.done=true;save()}};
   $('#repBuy').onclick=()=>{if(P.gems<cost)return;P.gems-=cost;repairDo(r);try{sfx.win()}catch(e){}closeModal();toast('flame',`Runtunan ${shownStreak()} hari kembali!`)};return true}catch(e){return false}}
 window.repairAsk=repairAsk;
-/* isi ulang pelindung api (seperti Duolingo) */
+/* isi ulang pelindung api */
 function freezeAsk(force){try{if(isT()||!P||document.body.classList.contains('playing')||!$('#modal').hidden||curTab!=='learn')return;
   const st=shownStreak(),miss=2-(+P.freeze||0);if(st<3||miss<=0)return;
   const used=(P.frz||[]).length,seen=+localStorage.getItem('jk_frz_n')||0,last=localStorage.getItem('jk_frz_d')||'',today=dayKey();
@@ -16652,7 +16652,7 @@ openAdmin=function(){const el=$('#adminPanel'),u=FBX.user;if(!u){showLogin();ret
 }
 
 /* ===================================================================
-   RUNTUNAN TEMAN (seperti Duolingo) & LENCANA BULANAN
+   RUNTUNAN TEMAN & LENCANA BULANAN
    =================================================================== */
 /* ---------- lencana bulanan: gambar khas tiap bulan ---------- */
 const MB_INFO=[['Kembang Api','Tahun baru, semangat baru'],['Lampion Imlek','Bulan Tahun Baru Imlek'],['Sahabat Air','Hari Air Sedunia, 22 Maret'],['Semangat Kartini','Hari Kartini, 21 April'],['Pelajar Sejati','Hari Pendidikan Nasional, 2 Mei'],['Garuda Pancasila','Hari Lahir Pancasila, 1 Juni'],['Hari Anak','Hari Anak Nasional, 23 Juli'],['Merah Putih','Bulan Kemerdekaan, 17 Agustus'],['Juara Olahraga','Hari Olahraga Nasional, 9 September'],['Batik Nusantara','Hari Batik Nasional, 2 Oktober'],['Pahlawan','Hari Pahlawan, 10 November'],['Sayang Ibu','Hari Ibu, 22 Desember']];
@@ -16856,7 +16856,7 @@ function handleBack(){
   if(!$('#auth').hidden){const b=$('#lgBack');if(b){b.click();return true}}
   if(!$('#adminPanel').hidden){const b=$('#adClose');if(b){b.click();return true}}
   const t=document.body.classList.contains('teacher'),home=t?'tdash':'learn';
-  /* Seperti Duolingo: dari menu mana pun, kembali langsung ke menu utama */
+  /* Seperti JELAS: dari menu mana pun, kembali langsung ke menu utama */
   if(P||t){TABSTK=[];
     if(curTab!==home){TABBACK=true;try{go(home)}finally{TABBACK=false}return true}}
   return false}
@@ -16929,7 +16929,7 @@ document.addEventListener('keydown',e=>{const tag=(e.target&&e.target.tagName)||
   if(e.altKey&&/^[1-9]$/.test(e.key)&&!document.body.classList.contains('playing')&&$('#modal').hidden){const n=navItems()[+e.key-1];if(n){e.preventDefault();n.click()}return}
   if(e.key==='?'&&!document.body.classList.contains('playing')&&$('#modal').hidden&&(P||document.body.classList.contains('teacher'))){e.preventDefault();keysHelp()}});
 /* =========================================================
-   AVATAR MURID (seperti Duolingo): bisa diubah, ada yang gratis
+   AVATAR MURID: bisa diubah, ada yang gratis
    dan ada yang dibeli dengan permata
    ========================================================= */
 const AVK='#1B1E3D';
@@ -17357,10 +17357,10 @@ else{normalizeApp();bootApp()}
 applyLic();setInterval(checkLock,60000);
 if(GAS)google.script.run.withSuccessHandler(licFromServer).getLicense();
 
-/* getar halus saat menekan tombol (seperti aplikasi Duolingo di HP) */
+/* getar halus saat menekan tombol */
 document.addEventListener('click',e=>{const b=e.target.closest('button,.node,.lrow.tap,[role=button],.tapprof');if(!b||b.disabled)return;haptic(b.classList.contains('lock')?[40,50,40]:30)},true);
 
-/* panah ke level terakhir (seperti Duolingo) */
+/* panah ke level terakhir */
 document.body.insertAdjacentHTML('beforeend','<button class="jumpcur" id="jumpCur" hidden aria-label="Ke level terakhir" title="Ke level terakhir"><svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><path d="M12 5 V19 M5 12 L12 19 L19 12" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>');
 function jumpCheck(){const b=$('#jumpCur');if(!b)return;const n=document.querySelector('#vLearn:not([hidden]) .node.cur');
   if(!n||curTab!=='learn'||document.body.classList.contains('playing')){b.hidden=true;return}
@@ -17426,7 +17426,7 @@ function playHub(){const v=$('#vTeam');if(!v)return;let hub=$('#phub');if(!hub){
     if(GPRE)document.querySelectorAll('#teamSubjects .gcount').forEach(g=>g.textContent=g.textContent.replace(/^\d+ game · /,''))}
   else document.querySelectorAll('#fmtSeg button').forEach(b=>b.hidden=false)}
 
-/* ---------- Bermain gaya Duolingo: Sendiri / Teman / Pemain Lain + riwayat ---------- */
+/* ---------- Bermain gaya JELAS: Sendiri / Teman / Pemain Lain + riwayat ---------- */
 var PLSEL='sendiri';
 function mhRecord(key,rows,uid){if(!P)return;P.mhk=P.mhk||[];if(P.mhk.includes(key))return;const me=rows.find(r=>r.uid===uid);if(!me)return;
   const others=rows.filter(r=>r.uid!==uid);if(!others.length)return;P.mhist=P.mhist||[];

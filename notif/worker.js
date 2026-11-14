@@ -272,7 +272,7 @@ async function reminders() {
   }
 }
 
-// ===== Pengingat harian: runtunan, liga (gaya Duolingo), dan ajakan belajar =====
+// ===== Pengingat harian: runtunan, liga, dan ajakan belajar =====
 // Paling banyak 2 notifikasi per murid per hari: (liga ATAU ajakan belajar) + pengingat runtunan.
 const TIER_NAMES = ['Perunggu', 'Perak', 'Emas', 'Safir', 'Rubi', 'Zamrud', 'Kecubung', 'Mutiara', 'Obsidian', 'Berlian'];
 const LG_SIZE = 30;

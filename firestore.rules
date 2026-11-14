@@ -243,7 +243,7 @@ service cloud.firestore {
       allow delete: if signedIn() && (resource.data.from == request.auth.uid || resource.data.to == request.auth.uid);
     }
 
-    // Liga mingguan (seperti Duolingo): penghitung isi grup per liga per minggu.
+    // Liga mingguan: penghitung isi grup per liga per minggu.
     match /lgc/{id} {
       allow get: if signedIn();
       allow list: if false;
