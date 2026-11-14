@@ -68,7 +68,7 @@ body.direct #onCode,body.direct #bShare{display:none!important}
 <div class="panel" id="pStart"><div class="box">
   <h1 class="px">Petualangan Berdua</h1>
   <div class="heroes"><canvas id="h1" width="12" height="15"></canvas><canvas id="h2" width="12" height="15"></canvas></div>
-  <p>Kalian berdua harus saling membantu: naik ke kepala teman, injak tombol untuk membuka pintu, dan jawab soal batu ajaib untuk membuat jembatan. Sampai di bendera <b>bersama-sama</b>!</p>
+  <p>Kalian berdua harus saling membantu. <b>Si Lincah</b> bisa lompat 2× dan membawa lentera. <b>Si Kuat</b> bisa mendorong batu dan kebal laser. Rintangannya berubah setiap kali main. Masuk ke <b>pipa</b> bersama-sama untuk lanjut ke level berikutnya!</p>
   <button class="btn" id="bLocal">Main berdua di perangkat ini</button>
   <button class="btn b2" id="bOnline">Main online dengan teman</button>
   <div class="keys">Pemain 1: A D untuk jalan, W untuk lompat<br>Pemain 2: ◀ ▶ untuk jalan, ▲ untuk lompat<br>Di HP: tombol kiri untuk pemain 1, kanan untuk pemain 2</div>
@@ -113,62 +113,68 @@ let VW=320,scale=2;
 const $=id=>document.getElementById(id);
 const Q=new URLSearchParams(location.search);const GRADE0=Math.max(0,Math.min(12,+(Q.get('g')||3)));const GRADE=GRADE0;
 
-/* ====== level-level (karya asli) ======
-   #/= padat  ^ duri  o koin  F bendera  k titik simpan  Q batu soal (jembatan x,y,z sesuai urutan batu)
-   A–D pintu dibuka tombol a–d (aturan per level: need = jumlah tombol bersamaan, latch = terbuka selamanya)
-   T pintu waktu: tombol t membukanya, tetap terbuka beberapa detik setelah dilepas
-   U balok biru: padat selama tombol u diinjak · R balok merah: padat selama tombol u TIDAK diinjak
-   Mover: papan bergerak {x,y,w,dx,dy,per,ph} dalam satuan ubin */
-const LEVELS=[];
-function mk(W,H=14){const g=[...Array(H)].map(()=>Array(W).fill(' '));const put=(c,x,y)=>{if(y>=0&&y<H&&x>=0&&x<W)g[y][x]=c},rect=(c,x0,x1,y0,y1)=>{for(let y=y0;y<=y1;y++)for(let x=x0;x<=x1;x++)put(c,x,y)};
-  rect('#',0,1,0,13);rect('#',W-2,W-1,0,13);return {g,put,rect,W,H}}
-const pit=(m,x0,x1,spike=true)=>{m.rect(' ',x0,x1,10,13);if(spike){m.rect('^',x0,x1,11,11);m.rect('#',x0,x1,12,13)}};
-// 1 — Hutan Bersahabat (pengenalan)
-LEVELS.push({name:'Hutan Bersahabat',theme:0,spawn:[4,6],tip:'Tembok batu terlalu tinggi! Satu jadi pijakan, temannya naik ke kepala lalu tekan LOMPAT 2× cepat.',rules:{},movers:[],
- build(){const m=mk(76);m.rect('#',0,75,10,13);[9,11,13].forEach(x=>m.put('o',x,8));
-  m.rect('A',17,18,5,9);m.put('a',22,9);m.put('k',20,9);
-  m.put('Q',26,9);m.put('k',24,9);pit(m,29,34);m.rect('x',29,34,10,10);m.put('o',31,7);
-  m.rect('=',40,42,7,7);m.put('o',41,5);m.put('k',37,9);
-  m.rect('C',48,48,7,9);m.rect('#',48,48,0,6);m.put('c',45,9);m.put('c',51,9);m.put('k',50,9);
-  m.rect('=',56,57,8,8);m.rect('=',60,61,6,6);m.put('o',60,4);m.put('o',64,8);m.put('k',55,9);m.put('F',69,9);return m}});
-// 2 — Sungai Berarus
-LEVELS.push({name:'Sungai Berarus',theme:1,spawn:[3,5],tip:'Naiki rakit yang bergerak. Untuk membuka gerbang besar, kedua tombol kuning harus diinjak BERSAMAAN.',rules:{B:{need:2,latch:1}},
- movers:[{x:14,y:10,w:3,dx:10,dy:0,per:5,ph:0},{x:62,y:10,w:2,dx:0,dy:-5,per:4.5,ph:0}],
- build(){const m=mk(94);m.rect('#',0,93,10,13);[7,9].forEach(x=>m.put('o',x,8));m.put('k',10,9);
-  pit(m,14,27);m.put('o',20,6);m.put('o',24,7);m.put('k',29,9);
-  m.rect('=',34,39,5,5);m.put('b',37,4);m.put('b',31,9);m.put('o',35,3);m.rect('B',43,43,3,9);m.rect('#',43,43,0,2);
-  m.put('k',45,9);m.put('Q',47,9);pit(m,50,56);m.rect('x',50,56,10,10);m.put('o',53,7);
-  m.put('k',58,9);pit(m,61,63,true);m.rect('#',64,74,5,9);m.put('o',68,3);m.put('o',71,3);m.put('k',65,4);
-  m.put('^',78,10);m.put('^',79,10);m.put('^',84,10);m.put('^',85,10);m.put('o',79,6);m.put('o',85,6);m.put('F',89,9);return m}});
-// 3 — Gua Kristal
-LEVELS.push({name:'Gua Kristal',theme:2,spawn:[3,5],tip:'Tombol biru memunculkan jembatan kristal tapi menghapus dinding merah. Gerbang jam hanya terbuka sebentar!',rules:{T:{timer:2},B:{need:2,latch:1}},movers:[],
- build(){const m=mk(102);m.rect('#',0,101,10,13);m.rect('#',2,99,0,0);
-  m.put('u',7,9);pit(m,10,17);m.rect('U',10,17,10,10);m.put('o',13,7);m.put('u',20,9);m.rect('R',23,23,3,9);m.rect('#',23,23,1,2);
-  m.put('k',25,9);m.put('t',27,9);m.rect('T',39,39,3,9);m.rect('#',39,39,1,2);m.put('t',42,9);m.put('o',33,8);m.put('k',41,9);
-  m.rect('^',45,62,10,10);m.rect('=',46,47,8,8);m.rect('=',50,51,7,7);m.rect('=',56,57,7,7);m.rect('=',61,62,8,8);m.put('o',51,5);m.put('o',54,5);m.put('o',57,5);
-  m.put('k',64,9);m.put('Q',67,9);pit(m,70,76);m.rect('x',70,76,10,10);m.put('o',73,7);
-  m.put('k',78,9);m.put('b',80,9);m.put('b',85,9);m.rect('B',89,89,3,9);m.rect('#',89,89,1,2);m.put('o',93,8);m.put('F',96,9);return m}});
-// 4 — Awan Melayang
-LEVELS.push({name:'Awan Melayang',theme:3,spawn:[3,5],tip:'Pulau-pulau melayang! Jatuh ke awan berarti mengulang dari titik simpan. Gunakan lompat 2×.',rules:{T:{timer:2.2}},
- movers:[{x:14,y:10,w:3,dx:5,dy:0,per:4,ph:0},{x:22,y:8,w:3,dx:5,dy:0,per:4,ph:.5},{x:67,y:10,w:2,dx:0,dy:-6,per:5,ph:0},{x:103,y:9,w:2,dx:0,dy:-3,per:3.5,ph:.25}],
- build(){const m=mk(116);m.rect('#',0,12,10,13);[6,8].forEach(x=>m.put('o',x,8));m.put('o',19,7);m.put('o',27,5);
-  m.rect('#',31,50,10,13);m.put('k',32,9);m.rect('A',38,39,5,9);m.put('a',44,9);m.put('k',42,9);
-  m.put('Q',48,9);m.rect('x',51,57,10,10);m.put('o',54,7);
-  m.rect('#',58,66,10,13);m.put('k',59,9);m.rect('=',70,80,4,4);m.put('o',73,2);m.put('o',77,2);
-  m.rect('#',81,101,10,13);m.put('k',82,9);m.put('t',83,9);m.rect('T',96,96,3,9);m.rect('#',96,96,0,2);m.put('t',99,9);m.put('o',90,8);
-  m.rect('#',107,115,10,13);m.rect('#',107,109,7,9);m.put('k',110,9);m.put('o',104,3);m.put('F',112,9);return m}});
-// 5 — Istana Pelangi (gabungan, paling sulit)
-LEVELS.push({name:'Istana Pelangi',theme:4,spawn:[3,5],tip:'Level terakhir! Semua rintangan digabung. Bicarakan rencana dengan temanmu sebelum bergerak.',rules:{B:{need:2,latch:1},T:{timer:1.8}},
- movers:[{x:12,y:10,w:2,dx:8,dy:0,per:4.2,ph:0},{x:52,y:10,w:2,dx:0,dy:-5,per:4,ph:0},{x:94,y:10,w:2,dx:7,dy:0,per:3.6,ph:0}],
- build(){const m=mk(132);m.rect('#',0,131,10,13);[5,7].forEach(x=>m.put('o',x,8));
-  pit(m,12,23);m.put('o',17,6);m.put('k',25,9);
-  m.rect('A',28,29,5,9);m.put('a',33,9);m.put('k',31,9);
-  m.put('u',36,9);pit(m,38,44);m.rect('U',38,44,10,10);m.put('u',47,9);m.rect('R',49,49,3,9);m.rect('#',49,49,0,2);m.put('o',41,7);
-  pit(m,51,54,true);m.rect('#',55,62,5,9);m.put('b',58,4);m.put('k',56,4);m.put('b',65,9);m.rect('=',63,64,7,7);
-  m.rect('B',68,68,3,9);m.rect('#',68,68,0,2);m.put('k',70,9);m.put('Q',72,9);pit(m,75,80);m.rect('x',75,80,10,10);m.put('o',77,7);
-  m.put('k',81,9);m.put('t',82,9);m.rect('T',93,93,3,9);m.rect('#',93,93,0,2);pit(m,94,103);m.put('o',98,6);m.put('t',105,9);m.put('k',104,9);
-  m.rect('^',107,118,10,10);m.rect('=',108,109,8,8);m.rect('=',113,114,7,7);m.rect('=',117,118,8,8);m.put('o',113,5);
-  m.put('Q',121,9);pit(m,123,126);m.rect('y',123,126,10,10);m.put('F',128,9);return m}});
+/* ====== level acak (karya asli) ======
+   Setiap kali main, rintangan dipilih acak dari kumpulan modul; urutan & letak tombolnya berubah.
+   Peta: # tanah  = papan  ^ duri  Q batu soal  x/y/z jembatan soal  D pintu (nomornya di DID)  U balok biru  R balok merah
+         L laser  h pijakan tersembunyi (tampak oleh lentera Si Lincah)  P pipa
+   Tombol: n biasa · heavy berat (Si Kuat / batu) · u biru · l sakelar laser · r kembalikan batu · s sakelar kembar */
+function rng(seed){let a=(seed>>>0)||1;return()=>{a=(a+0x6D2B79F5)>>>0;let t=a;t=Math.imul(t^t>>>15,t|1);t^=t+Math.imul(t^t>>>7,t|61);return((t^t>>>14)>>>0)/4294967296}}
+const newSeed=()=>1+Math.floor(Math.random()*2e9);
+const LVCFG=[
+ {name:'Hutan Bersahabat',theme:0,n:4,first:['gate','wall'],pool:['gate','wall','quiz','spikes','boulder','twin']},
+ {name:'Sungai Berarus',theme:1,n:5,pool:['raft','lift','twin','quiz','gate','boulder','sync','spikes']},
+ {name:'Gua Kristal',theme:2,n:5,first:['laser','lantern'],pool:['blue','timer','lantern','laser','quiz','boulder','wall','sync']},
+ {name:'Awan Bertali',theme:3,n:5,tether:1,first:['chasm'],pool:['chasm','cliff','cliff','raft','lantern','quiz','sync','spikes']},
+ {name:'Istana Pelangi',theme:4,n:7,pool:['wall','laser','lantern','sync','boulder','blue','timer','twin','raft','quiz','spikes','lift']}];
+const TIPS={
+ gate:'Pintu batu! Satu orang menahan tombol, temannya lewat. Lalu gantian menahan tombol di seberang.',
+ wall:'Tembok tinggi! Si Kuat jadi pijakan, Si Lincah naik ke kepalanya lalu lompat 2×. Di seberang, injak tombol untuk membuka pintu Si Kuat.',
+ quiz:'Sentuh batu ungu dan jawab soalnya untuk memunculkan jembatan.',
+ spikes:'Lantai berduri! Melompatlah dari papan ke papan.',
+ boulder:'Hanya Si Kuat yang bisa mendorong batu. Dorong batu ke tombol berat supaya pintu tetap terbuka. Batu nyangkut? Injak tombol abu-abu.',
+ raft:'Naiki rakit, lalu lompat ke seberang.',
+ lift:'Naik lift ke atas tebing.',
+ twin:'Gerbang emas butuh DUA tombol diinjak bersamaan. Si Lincah bisa naik ke tombol atas.',
+ sync:'Sakelar kembar! Injak keduanya pada detik yang SAMA. Hitung bersama: 1, 2, 3!',
+ blue:'Tombol biru memunculkan jembatan, tapi dinding merah hilang hanya saat tombol diinjak. Gantian ya!',
+ timer:'Pintu jam hanya terbuka sebentar setelah tombol dilepas. Lari!',
+ lantern:'Gelap! Pijakan hanya terlihat di dekat lentera Si Lincah. Si Lincah jalan duluan, Si Kuat mengikuti.',
+ laser:'Laser! Si Lincah jangan lewat. Si Kuat punya perisai: lewati laser dan injak sakelar merah untuk mematikannya.',
+ chasm:'Kalian terikat tali! Si Lincah lompat ke seberang. Kalau Si Kuat jatuh, ia bergelantungan. Si Lincah berjalan menjauh untuk menariknya naik.',
+ cliff:'Tebing! Si Lincah naik duluan. Si Kuat melompat, lalu Si Lincah berjalan menjauh untuk menarik Si Kuat naik.'};
+function genLevel(n,seed){const C=LVCFG[n],R=rng(seed),ri=(a,b)=>a+Math.floor(R()*(b-a+1)),D=n;
+  const W=320,H=14,g=[...Array(H)].map(()=>Array(W).fill(' ')),did=[...Array(H)].map(()=>Array(W).fill(-1));
+  const put=(c,x,y)=>{if(y>=0&&y<H&&x>=0&&x<W)g[y][x]=c},rect=(c,x0,x1,y0,y1)=>{for(let y=y0;y<=y1;y++)for(let x=x0;x<=x1;x++)put(c,x,y)};
+  const L={g,did,W,H,plates:[],doors:[],rules:{},movers:[],rocks:[],zones:[],coins:[],cps:[],qn:0,name:C.name,theme:C.theme,tether:!!C.tether,start:2,pipe:0,laserX:null,hasH:false,seq:[]};
+  rect('#',0,W-1,10,13);
+  let nd=0;const door=(x,w=1,y0=0,y1=9,rule={})=>{const id=nd++;rect('D',x,x+w-1,y0,y1);for(let y=y0;y<=y1;y++)for(let k=x;k<x+w;k++)did[y][k]=id;L.rules[id]=rule;L.doors.push({id,x,w,y0,y1});return id};
+  const plate=(x,y,id,kind='n')=>L.plates.push({x,y,id,kind});
+  const coin=(x,y)=>L.coins.push([x,y]);
+  const pit=(x0,x1,spike=true)=>{rect(' ',x0,x1,10,13);if(spike){rect('^',x0,x1,11,11);rect('#',x0,x1,12,13)}};
+  const M={
+   gate(x){const p1=x+ri(0,2),d=p1+ri(4,6),id=door(d);plate(p1,9,id);plate(d+ri(2,4),9,id);coin(d-2,8);return d+7},
+   wall(x){const w=x+ri(3,5);rect('#',w,w+1,5,6);const id=door(w,2,7,9);plate(w+2+ri(2,4),9,id);coin(w,3);coin(w+1,3);return w+9},
+   quiz(x){const q=x+ri(1,3);put('Q',q,9);const s=q+3,w=6+Math.min(2,D>>1);pit(s,s+w-1);rect(QB[L.qn++],s,s+w-1,10,10);coin(s+(w>>1),7);return s+w+2},
+   spikes(x){const w=ri(9,11)+D;pit(x+1,x+w);let i=x+2,y=8,end=i;while(i<x+w-2){rect('=',i,i+1,y,y);coin(i,y-2);end=i+1;i+=ri(3,4);y=y===8?(R()<.5?7:8):8}if(end<x+w-2)rect('=',x+w-2,x+w-1,8,8);return x+w+3},
+   boulder(x){rect('#',x,x,8,9);plate(x+1,9,-1,'r');L.rocks.push({x:(x+3)*T,y:9*T});const hp=x+3+ri(3,6),d=hp+ri(2,3),id=door(d);plate(hp,9,id,'heavy');coin(hp,6);return d+4},
+   raft(x){const w=ri(9,11)+D;pit(x+1,x+w);L.movers.push({x:x+1,y:10,w:3,dx:w-3,dy:0,per:Math.max(3.4,5-D*.3),ph:0});coin(x+(w>>1),7);return x+w+3},
+   lift(x){const l=x+ri(2,3);pit(l,l+1);L.movers.push({x:l,y:10,w:2,dx:0,dy:-5,per:Math.max(3.4,4.6-D*.2),ph:0});const e=l+2+ri(6,8);rect('#',l+2,e,5,9);coin(l+4,3);coin(l+6,3);return e+3},
+   twin(x){const a=x+1+ri(0,1),l=a+3+ri(0,2);rect('=',l,l+2,6,6);const d=l+3+ri(3,5),id=door(d,1,0,9,{need:2,latch:1});plate(a,9,id);plate(l+1,5,id);coin(l+1,3);return d+4},
+   sync(x){const a=x+1+ri(0,1),b=a+ri(5,8),d=b+ri(3,4),id=door(d,1,0,9,{sync:1,latch:1});plate(a,9,id,'s');plate(b,9,id,'s');coin((a+b)>>1,7);return d+4},
+   blue(x){const p0=x+ri(1,2);plate(p0,9,-1,'u');const s=p0+2,w=ri(6,7)+(D>>1);pit(s,s+w-1);rect('U',s,s+w-1,10,10);rect('R',s+w+1,s+w+1,0,9);plate(s+w+3,9,-1,'u');coin(s+(w>>1),7);return s+w+6},
+   timer(x){const p=x+1,d=p+ri(5,7),id=door(d,1,0,9,{timer:Math.max(1.6,2.6-D*.2)});plate(p,9,id);plate(d+3,9,id);coin(d-2,8);return d+6},
+   lantern(x){const w=ri(9,11)+D;pit(x+1,x+w);L.hasH=true;let i=x+2,y=8,last=i;while(i<=x+w-1){rect('h',i,i,y,y);last=i;i+=ri(2,3);y=Math.max(7,Math.min(9,y+ri(-1,1)))}if(last<x+w-2)rect('h',x+w-1,x+w-1,8,8);coin(x+(w>>1),5);return x+w+3},
+   laser(x){const l=x+ri(2,4);rect('L',l,l,0,9);L.laserX=l;plate(l+ri(2,4),9,-1,'l');return l+8},
+   chasm(x){rect(' ',x+2,x+4,10,13);coin(x+3,7);return x+8},
+   cliff(x){const c=x+ri(2,3),e=c+ri(6,8);rect('#',c,e,6,9);coin(c+3,4);return e+3}};
+  // pilih modul acak tanpa mengulang
+  const pool=C.pool.slice(),seq=[];if(C.first){const f=C.first[ri(0,C.first.length-1)];seq.push(f);pool.splice(pool.indexOf(f),1)}
+  while(seq.length<C.n&&pool.length)seq.push(pool.splice(ri(0,pool.length-1),1)[0]);
+  rect('P',2,3,8,9);let x=8;coin(6,8);L.seq=seq;
+  for(const k of seq){L.cps.push(x);L.zones.push({x,t:TIPS[k]});x=M[k](x);coin(x,8);x+=ri(2,3)}
+  L.cps.push(x);L.pipe=x+2;rect('P',x+2,x+3,8,9);const end=x+8;rect('#',end,end+1,0,13);L.W=end+2;
+  for(const r of g)r.length=L.W;for(const r of did)r.length=L.W;
+  return L}
 
 /* ====== warna & sprite piksel ====== */
 const PAL={k:'#2b2140',w:'#fff8e7',s:'#f2c39b',S:'#d99a73',h:'#4a2f27',b:'#3d8bfd',B:'#2564c4',o:'#ff9636',O:'#d9661c',g:'#3fa34d',G:'#2e7d3a',y:'#f7c548',r:'#e2483d',n:'#5b4a6b'};
@@ -242,82 +248,118 @@ function ptext(s,X,Y,col,sz=1){cx.fillStyle=col;let x=X;for(const ch of s){const
 /* ====== suara chiptune ====== */
 let AC=null,soundOn=true;function ac(){if(!AC){try{AC=new (window.AudioContext||window.webkitAudioContext)()}catch(e){}}return AC}
 function beep(f,d=.08,type='square',vol=.05,slide=0){if(!soundOn)return;const a=ac();if(!a)return;const o=a.createOscillator(),g=a.createGain();o.type=type;o.frequency.setValueAtTime(f,a.currentTime);if(slide)o.frequency.linearRampToValueAtTime(f+slide,a.currentTime+d);g.gain.setValueAtTime(vol,a.currentTime);g.gain.exponentialRampToValueAtTime(.0001,a.currentTime+d);o.connect(g);g.connect(a.destination);o.start();o.stop(a.currentTime+d+.02)}
-const SFX={jump:()=>beep(440,.12,'square',.04,320),coin:()=>{beep(988,.06);setTimeout(()=>beep(1319,.12),60)},click:()=>beep(220,.06,'square',.05),door:()=>beep(160,.25,'triangle',.08,-60),ok:()=>[523,659,784,1047].forEach((f,i)=>setTimeout(()=>beep(f,.1),i*80)),bad:()=>beep(196,.25,'sawtooth',.05,-80),hurt:()=>beep(330,.2,'square',.05,-250),jump2:()=>beep(660,.1,'square',.04,420),win:()=>[523,523,784,784,880,1047].forEach((f,i)=>setTimeout(()=>beep(f,.14,'square',.05),i*120))};
+const SFX={jump:()=>beep(440,.12,'square',.04,320),coin:()=>{beep(988,.06);setTimeout(()=>beep(1319,.12),60)},click:()=>beep(220,.06,'square',.05),door:()=>beep(160,.25,'triangle',.08,-60),ok:()=>[523,659,784,1047].forEach((f,i)=>setTimeout(()=>beep(f,.1),i*80)),bad:()=>beep(196,.25,'sawtooth',.05,-80),hurt:()=>beep(330,.2,'square',.05,-250),jump2:()=>beep(660,.1,'square',.04,420),pipe:()=>[392,330,262,196].forEach((f,i)=>setTimeout(()=>beep(f,.1,'square',.05),i*90)),win:()=>[523,523,784,784,880,1047].forEach((f,i)=>setTimeout(()=>beep(f,.14,'square',.05),i*120))};
 let musT=null;const MEL=[523,0,659,0,784,659,523,0,587,0,698,0,880,698,587,0,523,0,659,784,1047,0,880,784,698,659,587,523,587,0,0,0],BASS=[131,131,165,165,196,196,165,165,147,147,175,175,220,220,175,175];
 function music(on){clearInterval(musT);musT=null;if(!on||!soundOn)return;let i=0;musT=setInterval(()=>{if(paused||!running)return;const m=MEL[i%MEL.length];if(m)beep(m,.11,'square',.018);if(i%2===0)beep(BASS[(i/2)%BASS.length],.2,'triangle',.03);i++},150)}
 
 /* ====== status permainan ====== */
-const JUMP2=240;
-let MAP=[],MW=0,MH=14,LV=0,LVDEF=null,levelT=0;
-let P=[],level,cam={x:0,y:0},running=false,paused=false,quizOpen=false,t0=0,elapsed=0,coins=0,coinTot=0,checkpoint={x:3*T,y:9*T},doors={},latched={},timers={},blueOn=false,qDone=[],parts=[],msg=null,won=false,movers=[];
-const QB='xyz';
-function loadLevel(n){LV=Math.max(0,Math.min(LEVELS.length-1,n|0));LVDEF=LEVELS[LV];const m=LVDEF.build();MAP=m.g;MW=m.W;MH=m.H}
-function reset(){coins=0;won=false;doors={};latched={};timers={};blueOn=false;parts=[];elapsed=0;levelT=0;
-  level={coins:[],plates:[],qs:[],flag:null,cps:[]};coinTot=0;
-  for(let y=0;y<MH;y++)for(let x=0;x<MW;x++){const c=MAP[y][x];
-    if(c==='o'){level.coins.push({x:x*T+8,y:y*T+8,got:false});coinTot++}
-    if(/[abcdtu]/.test(c))level.plates.push({x,y,k:c.toUpperCase(),on:false});
-    if(c==='Q')level.qs.push({x,y});if(c==='F')level.flag={x,y};if(c==='k')level.cps.push(x*T)}
+const JUMP2=240,ROPE=72;
+let MAP=[],DID=[],MW=0,MH=14,LV=0,LD=null,SEED=1,levelT=0;
+let P=[],level,cam={x:0,y:0},running=false,paused=false,quizOpen=false,t0=0,elapsed=0,coins=0,coinTot=0,checkpoint={x:3*T,y:9*T},doors={},latched={},timers={},blueOn=false,laserOff=false,qDone=[],parts=[],msg=null,won=false,movers=[],rocks=[],pipeT=0,emerge=0,totCoins=0,PRE='';
+const QB='xyz',ROLE=['Lincah','Kuat'];
+const rockAuth=()=>!NET.on||ME===1;
+function loadLevel(n,seed){LV=Math.max(0,Math.min(LVCFG.length-1,n|0));SEED=seed||newSeed();LD=genLevel(LV,SEED);MAP=LD.g;DID=LD.did;MW=LD.W;MH=LD.H}
+function reset(){coins=0;won=false;doors={};latched={};timers={};blueOn=false;laserOff=false;parts=[];elapsed=0;levelT=0;pipeT=0;emerge=.8;
+  level={coins:LD.coins.map(([x,y])=>({x:x*T+8,y:y*T+8,got:false})),plates:LD.plates.map(p=>({...p,on:false,lit:0})),qs:[],cps:LD.cps.map(x=>x*T),zones:LD.zones.map(z=>({...z,done:false}))};coinTot=level.coins.length;
+  for(let y=0;y<MH;y++)for(let x=0;x<MW;x++)if(MAP[y][x]==='Q')level.qs.push({x,y});
   level.qs.sort((a,b)=>a.x-b.x);qDone=level.qs.map(()=>false);
-  movers=(LVDEF.movers||[]).map(d=>({...d,X:d.x*T,Y:d.y*T,px:d.x*T,py:d.y*T,dxp:0,dyp:0}));moverUpdate(0);
-  const [s0,s1]=LVDEF.spawn;P=[s0,s1].map((sx,i)=>({x:sx*T+3,y:10*T-PH,i,vx:0,vy:0,ground:false,face:1,anim:0,on:null,onM:null,inp:{l:0,r:0,j:0},jq:0,coy:0,dead:0,dj:true}));
-  if(NET.on){P[1-ME].remote=true;P[1-ME].net={x:P[1-ME].x,y:P[1-ME].y}}checkpoint={x:P[ME<0?0:ME].x,y:P[ME<0?0:ME].y};cam.x=0;
-  setTheme(LVDEF.theme);say(`Level ${LV+1}: ${LVDEF.name}. ${LVDEF.tip}`,7)}
+  rocks=LD.rocks.map(r=>({x:r.x,y:r.y,hx:r.x,hy:r.y,vy:0}));
+  movers=(LD.movers||[]).map(d=>({...d,X:d.x*T,Y:d.y*T,dxp:0,dyp:0}));moverUpdate(0);
+  const sx=LD.start*T;P=[0,1].map(i=>({x:sx+3+i*16,y:8*T-PH,i,vx:0,vy:0,ground:true,face:1,anim:0,on:null,onM:null,inp:{l:0,r:0,j:0},jq:0,coy:0,dead:0,dj:true,hang:false}));
+  if(NET.on){P[1-ME].remote=true;P[1-ME].net={x:P[1-ME].x,y:P[1-ME].y}}checkpoint={x:sx+3,y:8*T-PH};cam.x=0;
+  setTheme(LD.theme);
+  const role=NET.on?` Kamu Si ${ROLE[ME]}.`:'';
+  say(`${PRE}Level ${LV+1}: ${LD.name}.${role}${LV===0?' Si Lincah (biru) bisa lompat 2× dan membawa lentera. Si Kuat (jingga) bisa mendorong batu dan kebal laser.':''}${LD.tether?' Kalian terikat tali, jadi bergeraklah bersama!':''}`,6);PRE=''}
 function say(t,s=3){msg={t,until:performance.now()+s*1000};const el=$('tip');if(el){el.textContent=t;el.hidden=false;clearTimeout(say._t);say._t=setTimeout(()=>{el.hidden=true},s*1000)}}
 
 /* ====== papan bergerak ====== */
 function moverUpdate(dt){for(const m of movers){const k=(1-Math.cos(2*Math.PI*(levelT/m.per+m.ph)))/2;const nx=(m.x+m.dx*k)*T,ny=(m.y+m.dy*k)*T;m.dxp=nx-m.X;m.dyp=ny-m.Y;m.X=nx;m.Y=ny}}
 
-/* ====== tabrakan ubin ====== */
-function doorOpen(c){return !!doors[c]}
-function solidAt(tx,ty){if(tx<0||tx>=MW)return true;if(ty<0)return false;if(ty>=MH)return false;const c=MAP[ty][tx];
-  if(c==='#'||c==='='||c==='Q')return true;if(/[ABCDT]/.test(c))return !doorOpen(c);if(c==='U')return blueOn;if(c==='R')return !blueOn;
-  const qi=QB.indexOf(c);if(qi>=0&&c!==' ')return !!qDone[qi];return false}
+/* ====== tabrakan ====== */
+function solidAt(tx,ty){if(tx<0||tx>=MW)return true;if(ty<0||ty>=MH)return false;const c=MAP[ty][tx];
+  if(c==='#'||c==='='||c==='Q'||c==='P'||c==='h')return true;if(c==='D')return !doors[DID[ty][tx]];if(c==='U')return blueOn;if(c==='R')return !blueOn;
+  const qi=c===' '?-1:QB.indexOf(c);if(qi>=0)return !!qDone[qi];return false}
 function hitSolid(x,y,w,h){const x0=Math.floor(x/T),x1=Math.floor((x+w-1)/T),y0=Math.floor(y/T),y1=Math.floor((y+h-1)/T);for(let ty=y0;ty<=y1;ty++)for(let tx=x0;tx<=x1;tx++)if(solidAt(tx,ty))return true;return false}
+function rockAt(x,y,w,h,skip){for(const r of rocks){if(r===skip)continue;if(x<r.x+16&&x+w>r.x&&y<r.y+16&&y+h>r.y)return r}return null}
+const solidP=(x,y,w,h)=>hitSolid(x,y,w,h)||!!rockAt(x,y,w,h);
 function overlapsTile(p,ch){const x0=Math.floor(p.x/T),x1=Math.floor((p.x+PW-1)/T),y0=Math.floor(p.y/T),y1=Math.floor((p.y+PH-1)/T);for(let ty=y0;ty<=y1;ty++)for(let tx=x0;tx<=x1;tx++)if(ty>=0&&ty<MH&&tx>=0&&tx<MW&&MAP[ty][tx]===ch)return {tx,ty};return null}
+function inDoor(p,id){const x0=Math.floor(p.x/T),x1=Math.floor((p.x+PW-1)/T),y0=Math.floor(p.y/T),y1=Math.floor((p.y+PH-1)/T);for(let ty=y0;ty<=y1;ty++)for(let tx=x0;tx<=x1;tx++)if(ty>=0&&ty<MH&&tx>=0&&tx<MW&&DID[ty][tx]===id)return true;return false}
+function moveX(p,tx){const dir=Math.sign(tx-p.x);let n=0;while(dir&&Math.abs(tx-p.x)>=1&&n++<80){if(solidP(p.x+dir,p.y,PW,PH))return false;p.x+=dir}if(!solidP(tx,p.y,PW,PH))p.x=tx;return true}
+function moveY(p,ty){const dir=Math.sign(ty-p.y);let n=0;while(dir&&Math.abs(ty-p.y)>=1&&n++<80){if(solidP(p.x,p.y+dir,PW,PH))return false;p.y+=dir}if(!solidP(p.x,ty,PW,PH))p.y=ty;return true}
+function rockReset(r){r.x=r.hx;r.y=r.hy;r.vy=0}
 
 /* ====== fisika per pemain ====== */
 let qCool=0;function step(dt){if(qCool>0)qCool-=dt;levelT+=dt;moverUpdate(dt);
+  if(emerge>0){emerge-=dt;P.forEach(p=>{if(p.remote)netLerp(p,dt)});return}
+  if(pipeT>0){pipeT-=dt;P.forEach(p=>{p.vx=0;p.y+=22*dt});if(pipeT<=0)pipeDone();return}
   for(const p of P){if(p.remote){netLerp(p,dt);continue}if(p.dead>0){p.dead-=dt;if(p.dead<=0)respawn(p);continue}
-    const want=(p.inp.r?1:0)-(p.inp.l?1:0);p.vx=want*SPD;if(want)p.face=want;
+    const want=(p.inp.r?1:0)-(p.inp.l?1:0);p.vx=want*(p.push?SPD*.65:SPD);if(want)p.face=want;
     if(p.inp.j&&!p.jHeld){p.jq=.12}p.jHeld=p.inp.j;if(p.jq>0)p.jq-=dt;
     p.coy=p.ground?.1:Math.max(0,p.coy-dt);if(p.ground)p.dj=true;
-    if(p.jq>0&&p.coy>0){p.vy=-JUMP;p.jq=0;p.coy=0;p.ground=false;p.on=null;p.onM=null;SFX.jump()}
-    else if(p.jq>0&&!p.ground&&p.dj){p.vy=-JUMP2;p.jq=0;p.dj=false;SFX.jump2();burst(p.x+5,p.y+PH,'#ffffff',6)}
+    if(p.jq>0&&(p.coy>0||p.hang)){p.vy=-JUMP*(p.coy>0?1:.85);p.jq=0;p.coy=0;p.ground=false;p.on=null;p.onM=null;SFX.jump()}
+    else if(p.jq>0&&!p.ground&&p.dj&&p.i===0){p.vy=-JUMP2;p.jq=0;p.dj=false;SFX.jump2();burst(p.x+5,p.y+PH,'#ffffff',6)}
     p.vy=Math.min(p.vy+GRAV*dt,420);
     // ikut bergerak saat berdiri di atas teman / papan bergerak
-    let carry=0;if(p.on){const o=P[1-p.i];carry=o.lastDx||0}if(p.onM){carry=p.onM.dxp;p.y=p.onM.Y-PH;if(hitSolid(p.x,p.y,PW,PH)){p.y+=0}}
-    let nx=p.x+p.vx*dt+carry;{const o=P[1-p.i],lim=VW-PW-8;if(!o.dead){if(nx-o.x>lim)nx=Math.max(p.x,o.x+lim);if(o.x-nx>lim)nx=Math.min(p.x,o.x-lim)}}
+    let carry=0;if(p.on){const o=P[1-p.i];carry=o.lastDx||0}if(p.onM){carry=p.onM.dxp;p.y=p.onM.Y-PH}
+    let nx=p.x+p.vx*dt+carry;
+    if(!LD.tether){const o=P[1-p.i],lim=VW-PW-8;if(!o.dead){if(nx-o.x>lim)nx=Math.max(p.x,o.x+lim);if(o.x-nx>lim)nx=Math.min(p.x,o.x-lim)}}
     nx=Math.max(T*2,Math.min(MW*T-T*2-PW,nx));
-    if(!hitSolid(nx,p.y,PW,PH))p.x=nx;else{const dir=Math.sign(nx-p.x);while(Math.abs(nx-p.x)>=1&&!hitSolid(p.x+dir,p.y,PW,PH))p.x+=dir}
+    // Si Kuat mendorong batu
+    p.push=false;if(nx!==p.x){const rk=rockAt(nx,p.y,PW,PH);if(rk){if(p.i===1&&rockAuth()&&Math.abs(rk.y+16-(p.y+PH))<6){const d=nx-p.x;if(!hitSolid(rk.x+d,rk.y,16,16)&&!rockAt(rk.x+d,rk.y,16,16,rk)){rk.x+=d;p.push=true}else nx=p.x}}}
+    if(!solidP(nx,p.y,PW,PH))p.x=nx;else{const dir=Math.sign(nx-p.x);let n=0;while(n++<20&&Math.abs(nx-p.x)>=1&&!solidP(p.x+dir,p.y,PW,PH))p.x+=dir}
     const ny=p.y+p.vy*dt;p.ground=false;const wasOn=p.on||p.onM;p.on=null;p.onM=null;
-    if(!hitSolid(p.x,ny,PW,PH)){
+    if(!solidP(p.x,ny,PW,PH)){
       let landed=false;
       if(p.vy>=0){for(const m of movers){const top=m.Y;if(p.x+PW>m.X+1&&p.x<m.X+m.w*T-1&&p.y+PH<=top+Math.max(2,m.dyp+2)&&ny+PH>=top){p.y=top-PH;p.vy=0;p.ground=true;p.onM=m;landed=true;break}}}
-      if(!landed){const o=P[1-p.i];if(p.vy>0&&!o.dead&&p.x+PW>o.x+1&&p.x<o.x+PW-1&&p.y+PH<=o.y+1&&ny+PH>=o.y){p.y=o.y-PH;p.vy=0;p.ground=true;p.on=o}else p.y=ny}}
-    else{const dir=Math.sign(p.vy);while(!hitSolid(p.x,p.y+dir,PW,PH))p.y+=dir;if(p.vy>0)p.ground=true;p.vy=0}
+      if(!landed){const o=P[1-p.i];if(p.vy>0&&!o.dead&&p.x+PW>o.x+1&&p.x<o.x+PW-1&&p.y+PH<=o.y+1&&ny+PH>=o.y){p.y=o.y-PH;p.on=o;
+          // hanya terhitung berpijak kalau teman juga berpijak (mencegah "terbang" saat lompat bersamaan)
+          if(o.ground&&o.vy>=-1){p.vy=0;p.ground=true}else p.vy=Math.max(o.vy,0)}else p.y=ny}}
+    else{const dir=Math.sign(p.vy)||1;let n=0;while(n++<40&&!solidP(p.x,p.y+dir,PW,PH))p.y+=dir;if(p.vy>0)p.ground=true;p.vy=0}
+    // tali pengikat
+    p.hang=false;
+    if(LD.tether){const o=P[1-p.i];if(!o.dead){const dx=p.x-o.x,dy=p.y-o.y,d=Math.hypot(dx,dy);if(d>ROPE){const oG=o.ground||!!o.on||!!o.onM;
+      if(!p.ground&&!p.onM){const ux=dx/d,uy=dy/d;const okX=moveX(p,o.x+ux*ROPE);moveY(p,o.y+uy*ROPE);const vr=p.vx*ux+p.vy*uy;if(vr>0)p.vy-=vr*uy;if(!okX&&oG&&uy>0)p.vy=Math.min(p.vy,-75);p.hang=uy>.3&&oG}
+      else if(oG&&Math.abs(dy)<ROPE){moveX(p,o.x+Math.sign(dx)*Math.sqrt(ROPE*ROPE-dy*dy))}}}}
     if((p.on||p.onM)&&!wasOn)beep(330,.04,'square',.03);
     p.anim+=dt*(p.vx?10:0);
-    if(overlapsTile({x:p.x+2,y:p.y+6},'^')||p.y>MH*T+8){kill(p)}
+    if(overlapsTile({x:p.x+2,y:p.y+6},'^')||p.y>MH*T+8)kill(p);
+    if(!laserOff&&p.i===0&&overlapsTile(p,'L')){kill(p);say('Si Lincah tersengat laser! Biarkan Si Kuat yang mematikan sakelarnya.',3)}
     for(const c of level.coins)if(!c.got&&Math.abs(p.x+PW/2-c.x)<10&&Math.abs(p.y+PH/2-c.y)<11){c.got=true;coins++;SFX.coin();burst(c.x,c.y,'#f7c548',8);netEv({t:'coin',i:level.coins.indexOf(c)})}
-    for(const k of level.cps)if(p.ground&&!p.onM&&p.x>=k&&k>checkpoint.x)checkpoint={x:k,y:p.y}
     if(!quizOpen&&qCool<=0)level.qs.forEach((q,i)=>{if(!qDone[i]&&Math.abs(p.x+PW/2-(q.x*T+8))<16&&Math.abs(p.y-(q.y*T))<20)openQuiz(i)});
   }
-  {const [a,b]=P;if(!a.dead&&!b.dead&&!(NET.on&&(a.y<b.y?a:b).remote)&&a.x+PW>b.x+1&&a.x<b.x+PW-1&&a.y+PH>b.y&&a.y<b.y+PH){const top=a.y<b.y?a:b,bot=top===a?b:a;const ny=bot.y-PH;if(top.y+PH-bot.y<7&&!hitSolid(top.x,ny,PW,PH)){top.y=ny;top.vy=Math.min(top.vy,bot.vy);top.ground=bot.vy>=0;if(top.ground)top.on=bot}}}
+  {const [a,b]=P;if(!a.dead&&!b.dead&&!(NET.on&&(a.y<b.y?a:b).remote)&&a.x+PW>b.x+1&&a.x<b.x+PW-1&&a.y+PH>b.y&&a.y<b.y+PH){const top=a.y<b.y?a:b,bot=top===a?b:a;const ny=bot.y-PH;if(top.y+PH-bot.y<7&&!solidP(top.x,ny,PW,PH)){top.y=ny;top.vy=Math.min(top.vy,bot.vy);top.on=bot;top.ground=!!(bot.ground&&bot.vy>=0)}}}
   P.forEach(p=>{p.lastDx=(p.x-(p.px??p.x));p.px=p.x});
-  // tombol, pintu & balok warna
-  const cnt={};for(const pl of level.plates){const X=pl.x*T,Y=pl.y*T;const was=pl.on;pl.on=P.some(p=>!p.dead&&p.x+PW>X+2&&p.x<X+T-2&&p.y+PH>=Y+10&&p.y+PH<=Y+T+1);if(pl.on&&!was)SFX.click();if(pl.on)cnt[pl.k]=(cnt[pl.k]||0)+1}
-  const rules=LVDEF.rules||{};const wasB=blueOn;blueOn=!!cnt.U;if(blueOn!==wasB){SFX.door();if(blueOn)say('Jembatan kristal muncul, dinding merah hilang!',2.5)}
-  for(const k of ['A','B','C','D','T']){const r=rules[k]||{},need=r.need||1,was=!!doors[k];let open=(cnt[k]||0)>=need;
-    if(r.latch){if(open&&!latched[k]){latched[k]=true;netEv({t:'latch',k});say('Gerbang besar terbuka untuk selamanya!',2.5)}open=open||!!latched[k]}
-    if(r.timer){if(open)timers[k]=r.timer;else if(timers[k]>0){timers[k]-=dt;open=true}}
-    if(!open&&was&&P.some(p=>overlapsTile(p,k)))open=true;
-    doors[k]=open;if(open!==was){SFX.door();if(open&&k==='A'&&LV===0)say('Pintu terbuka! Cepat lewat selagi temanmu menahan tombol.',3)}}
+  // batu (dihitung oleh pemilik Si Kuat)
+  if(rockAuth())for(const r of rocks){r.vy=Math.min(r.vy+GRAV*dt,420);const ny=r.y+r.vy*dt;if(!hitSolid(r.x,ny,16,16)&&!rockAt(r.x,ny,16,16,r))r.y=ny;else{const dir=Math.sign(r.vy)||1;let n=0;while(n++<20&&!hitSolid(r.x,r.y+dir,16,16)&&!rockAt(r.x,r.y+dir,16,16,r))r.y+=dir;r.vy=0}if(r.y>MH*T)rockReset(r)}
+  // tombol, pintu, laser & balok warna
+  const cnt={},wasB=blueOn;let blue=false;
+  for(const pl of level.plates){const X=pl.x*T,Y=pl.y*T,was=pl.on;const hit=q=>q.x+PW>X+2&&q.x<X+T-2&&q.y+PH>=Y+10&&q.y+PH<=Y+T+1;
+    pl.on=P.some(p=>!p.dead&&(pl.kind!=='heavy'||p.i===1)&&hit(p))||((pl.kind==='heavy'||pl.kind==='n')&&rocks.some(r=>r.x+16>X+2&&r.x<X+T-2&&Math.abs(r.y+16-(Y+T))<3));
+    if(pl.on&&!was){SFX.click();if(pl.kind==='s')pl.lit=.6;
+      if(pl.kind==='r'&&rockAuth()&&rocks.some(r=>r.x!==r.hx||r.y!==r.hy)){rocks.forEach(rockReset);say('Batu kembali ke tempat semula.',2)}
+      if(pl.kind==='l'&&!laserOff){laserOff=true;netEv({t:'latch',k:'L'});SFX.door();say('Laser mati! Sekarang Si Lincah bisa lewat.',3)}}
+    if(pl.lit>0)pl.lit-=dt;
+    if(pl.kind==='u'&&pl.on)blue=true;
+    if((pl.kind==='n'||pl.kind==='heavy')&&pl.on)cnt[pl.id]=(cnt[pl.id]||0)+1}
+  blueOn=blue;if(blueOn!==wasB)SFX.door();
+  for(const d of LD.doors){const k=d.id,r=LD.rules[k]||{},was=!!doors[k];let open;
+    if(r.sync){if(!latched[k]&&(!NET.on||ME===0)&&level.plates.filter(p=>p.id===k).every(p=>p.lit>0)){latched[k]=true;netEv({t:'latch',k});say('Berbarengan! Gerbang terbuka.',2.5)}open=!!latched[k]}
+    else{open=(cnt[k]||0)>=(r.need||1);
+      if(r.latch){if(open&&!latched[k]){latched[k]=true;netEv({t:'latch',k});say('Gerbang terbuka untuk selamanya!',2.5)}open=open||!!latched[k]}
+      if(r.timer){if(open)timers[k]=r.timer;else if(timers[k]>0){timers[k]-=dt;open=true}}}
+    if(!open&&was&&P.some(p=>!p.dead&&inDoor(p,k)))open=true;
+    doors[k]=open;if(open!==was)SFX.door()}
+  // titik simpan maju hanya kalau kalian berdua sudah melewatinya
+  for(const k of level.cps)if(k>checkpoint.x&&P.every(p=>!p.dead&&p.x>=k)){const g=P.find(p=>p.ground&&!p.onM&&!p.on);if(g)checkpoint={x:k,y:g.y}}
+  if(elapsed>3.5)for(const z of level.zones)if(!z.done&&P.some(p=>p.x>=z.x*T-24)){z.done=true;say(z.t,6);break}
   const mid=(P[0].x+P[1].x)/2+PW/2;cam.x=Math.max(0,Math.min(MW*T-VW,mid-VW/2));
-  if(!won&&level.flag){const fx=level.flag.x*T;if(P.every(p=>!p.dead&&p.x+PW/2>=fx-20&&(p.ground||p.on||p.onM||Math.abs(p.vy)<1)))win()}
+  // finis: masuk pipa bersama
+  if(!won&&pipeT<=0&&(!NET.on||ME===0)){const X=LD.pipe*T,Y=8*T;if(P.every(p=>!p.dead&&p.x+PW>X+1&&p.x<X+2*T-1&&p.y+PH<=Y+2&&(p.ground||p.on))){netEv({t:'pipe'});enterPipe()}}
   parts=parts.filter(q=>(q.t-=dt)>0);parts.forEach(q=>{q.x+=q.vx*dt;q.y+=q.vy*dt;q.vy+=300*dt})}
+function enterPipe(){if(pipeT>0)return;pipeT=1;SFX.pipe();P.forEach(p=>{p.inp={l:0,r:0,j:0};p.vx=0;p.vy=0;p.dead=0})}
+function pipeDone(){totCoins+=coins;if(NET.on&&ME!==0)return;if(LV>=LVCFG.length-1){netEv({t:'win'});win()}else{PRE=`Level ${LV+1} selesai! `;goLevel(LV+1)}}
 function kill(p){if(p.dead>0)return;p.dead=.8;p.onM=null;p.on=null;SFX.hurt();burst(p.x+5,p.y+7,'#fff8e7',12)}
-function respawn(p){p.x=checkpoint.x+3;p.vx=0;p.vy=0;p.dj=true;p.y=2*T;let g=false;for(let y=2*T;y<12*T;y+=2){if(hitSolid(p.x,y+1,PW,PH)){p.y=y;g=true;break}}if(!g){p.y=9*T-PH}while(hitSolid(p.x,p.y,PW,PH))p.y-=T}
+function respawn(p){p.x=checkpoint.x+3+p.i*12;p.vx=0;p.vy=0;p.dj=true;p.y=2*T;let g=false;for(let y=2*T;y<12*T;y+=2){if(solidP(p.x,y+1,PW,PH)){p.y=y;g=true;break}}if(!g){p.y=9*T-PH}let n=0;while(n++<14&&solidP(p.x,p.y,PW,PH))p.y-=T}
 function burst(x,y,col,n){for(let i=0;i<n;i++)parts.push({x,y,vx:(Math.random()-.5)*120,vy:-Math.random()*140,t:.5+Math.random()*.3,col})}
 
 /* ====== soal (makin sulit di level berikutnya) ====== */
@@ -332,17 +374,13 @@ function openQuiz(qi){quizOpen=true;const it=makeQ();$('qTxt').textContent=it.q;
   const box=$('qOpts');box.innerHTML='';it.opts.forEach(v=>{const b=document.createElement('button');b.className='btn';b.textContent=v;b.onclick=()=>{if(v===it.ans){SFX.ok();qDone[qi]=true;netEv({t:'bridge',i:qi});quizOpen=false;$('pQuiz').hidden=true;const q=level.qs[qi];burst((q.x+5)*T,q.y*T,'#7be07f',24);say('Jembatan muncul! Seberangi bersama.',3)}else{SFX.bad();$('qHint').textContent='Belum tepat, coba soal lain.';setTimeout(()=>{if(quizOpen){$('pQuiz').hidden=true;quizOpen=false;openQuiz(qi)}},700)}};box.appendChild(b)});
   $('pQuiz').hidden=false;Object.values(P).forEach(p=>{if(!p.remote)p.inp={l:0,r:0,j:0}})}
 
-/* ====== menang & lanjut level ====== */
-const PROG_K='jk_duo_lv';function progGet(){try{return Math.min(LEVELS.length-1,+localStorage.getItem(PROG_K)||0)}catch(e){return 0}}
-function progSet(n){try{if(n>progGet())localStorage.setItem(PROG_K,String(Math.min(LEVELS.length-1,n)))}catch(e){}}
-function win(){if(won&&!running)return;won=true;netEv({t:'win'});running=false;music(false);SFX.win();const s=Math.round(elapsed);progSet(LV+1);
-  const last=LV>=LEVELS.length-1;
-  $('wTitle').textContent=last?'Semua level selesai!':`Level ${LV+1} selesai!`;
-  $('wTxt').innerHTML=`${esc(LVDEF.name)} · Koin <b>${coins}/${coinTot}</b> · Waktu <b>${Math.floor(s/60)}:${String(s%60).padStart(2,'0')}</b><br>${last?'Kalian berhasil menamatkan Petualangan Berdua. Hebat sekali!':'Kerja sama kalian hebat! Level berikutnya lebih menantang.'}`;
-  $('bNext').textContent=last?'Main lagi dari Level 1':`Lanjut ke Level ${LV+2}`;
-  try{const k='jk_duo_best';const prev=JSON.parse(localStorage.getItem(k)||'{}');prev['l'+LV]={coins:Math.max((prev['l'+LV]||{}).coins||0,coins)};localStorage.setItem(k,JSON.stringify(prev))}catch(e){}
-  setTimeout(()=>{$('pWin').hidden=false},700)}
-function goLevel(n,silent){if(!silent)netEv({t:'level',n});loadLevel(n);start(true)}
+/* ====== tamat & lanjut level ====== */
+function win(){if(won)return;won=true;running=false;music(false);SFX.win();
+  $('wTitle').textContent='Semua level selesai!';
+  $('wTxt').innerHTML=`Kalian menamatkan ${LVCFG.length} level Petualangan Berdua. Kerja sama yang hebat!<br>Total koin: <b>${totCoins}</b>`;
+  $('bNext').textContent='Main lagi dari Level 1';$('bAgain').hidden=true;
+  setTimeout(()=>{$('pWin').hidden=false},500)}
+function goLevel(n,silent){const s=newSeed();if(!silent)netEv({t:'level',n,seed:s});loadLevel(n,s);start(true)}
 
 /* ====== gambar ====== */
 const THEMES=[
@@ -356,38 +394,76 @@ function drawBG(){const g=cx.createLinearGradient(0,0,0,VH);g.addColorStop(0,BG.
   if(BG.cloud)for(let i=0;i<6;i++){const x=((i*150-cam.x*.2)%(VW+160)+VW+160)%(VW+160)-80,y=18+(i*37)%50;cx.fillStyle=BG.cloud;cx.fillRect(x,y,40,8);cx.fillRect(x+8,y-6,22,6);cx.fillRect(x+4,y+8,32,3)}
   if(BG.dark){for(let i=0;i<30;i++){const x=((i*53-cam.x*.15)%(VW+40)+VW+40)%(VW+40)-20,y=20+(i*29)%120;cx.fillStyle=i%3?'#7fe3ff':'#c9a0ff';cx.fillRect(x,y,2,2)}}
   for(let l=0;l<2;l++){const par=l?.5:.3,col=l?BG.h2:BG.h1,base=l?150:132;cx.fillStyle=col;for(let x=0;x<VW;x+=4){const wx=x+cam.x*par;const h=Math.round(18+12*Math.sin(wx/(l?40:70))+8*Math.sin(wx/23));cx.fillRect(x,base-h,4,VH)}}}
-const PLC={A:'#c9b8e8',B:'#f7c548',C:'#7fd0ff',D:'#ff9cc2',T:'#ff9636',U:'#3d8bfd'};
+const DCOL=['#c9b8e8','#f7c548','#7fd0ff','#ff9cc2','#7be07f','#ff9636','#b39cff','#5fe0d0'];
+const dcol=id=>id<0?'#ffffff':DCOL[id%DCOL.length];
 function drawBlock(X,Y,base,hi,lo,on){if(!on){cx.globalAlpha=.25}cx.fillStyle=lo;cx.fillRect(X,Y,16,16);cx.fillStyle=base;cx.fillRect(X+1,Y+1,14,14);cx.fillStyle=hi;cx.fillRect(X+1,Y+1,14,2);cx.fillRect(X+1,Y+1,2,14);cx.fillStyle='rgba(255,255,255,.55)';cx.fillRect(X+5,Y+5,3,3);cx.globalAlpha=1}
+function plateArt(X,Y,on,top,lit,strip){cx.fillStyle='#2b2140';cx.fillRect(X+1,Y+13,14,3);cx.fillStyle=on?lit:top;cx.fillRect(X+2,Y+(on?13:11),12,on?2:3);cx.fillStyle='rgba(255,255,255,.45)';cx.fillRect(X+3,Y+(on?13:11),10,1);if(strip){cx.fillStyle=strip;cx.fillRect(X+5,Y+15,6,1)}}
+function drawPlateK(pl,X,Y,now){const k=pl.kind;
+  if(k==='heavy'){plateArt(X,Y,pl.on,'#5b4a6b','#8d8fa8',dcol(pl.id));if(!pl.on){cx.fillStyle='#fff8e7';cx.fillRect(X+6,Y+5,4,1);cx.fillRect(X+5,Y+6,6,4)}}
+  else if(k==='u')plateArt(X,Y,pl.on,'#3d8bfd','#9cd0ff');
+  else if(k==='l')plateArt(X,Y,pl.on||laserOff,'#e2483d','#5f6180');
+  else if(k==='r'){plateArt(X,Y,pl.on,'#9a8fb0','#c9cbe0');cx.fillStyle='#2b2140';cx.fillRect(X+6,Y+5,4,1);cx.fillRect(X+5,Y+6,1,3);cx.fillRect(X+10,Y+6,1,1);cx.fillRect(X+6,Y+9,4,1);cx.fillRect(X+9,Y+4,2,1)}
+  else if(k==='s'){const l=pl.lit>0;plateArt(X,Y,pl.on||l,'#9b6bff',l?'#fff3b0':'#c9a0ff',dcol(pl.id));if(l){cx.fillStyle='rgba(255,243,176,.5)';cx.fillRect(X,Y+6,16,7)}}
+  else plateArt(X,Y,pl.on,dcol(pl.id),'#7be07f',dcol(pl.id))}
+// kabel berwarna dari tombol ke pintunya (tertanam di tanah)
+function wire(x0,y0,x1,col,on,ox,now){const yy=164;cx.globalAlpha=on?1:.55;cx.fillStyle=col;
+  if(y0<yy-6)for(let y=y0;y<yy;y+=3)cx.fillRect(x0-ox,y,2,2);
+  const a=Math.min(x0,x1),b=Math.max(x0,x1),sh=on?Math.floor(now/90)%5:0;
+  for(let x=a;x<=b;x+=5){const tx=Math.floor(x/T);if(MAP[10]&&MAP[10][tx]!=='#')continue;const X=x-ox+(x1>x0?sh:-sh);if(X<-4||X>VW+4)continue;cx.fillRect(X,yy,3,2)}
+  cx.fillRect(x1-ox,160,2,yy-160);cx.globalAlpha=1}
+function drawPipe(x,y,X,Y){const left=MAP[y][x+1]==='P',rim=y===0||MAP[y-1][x]!=='P';
+  if(rim){cx.fillStyle='#2b2140';cx.fillRect(X,Y,16,8);cx.fillStyle='#3fa34d';cx.fillRect(X+(left?1:0),Y+1,left?15:15,6);cx.fillStyle='#7be07f';if(left)cx.fillRect(X+2,Y+2,3,4);cx.fillStyle='#2e7d3a';if(!left)cx.fillRect(X+11,Y+2,3,4);
+    cx.fillStyle='#2b2140';cx.fillRect(X+(left?2:0),Y+8,14,8);cx.fillStyle='#3fa34d';cx.fillRect(X+(left?3:0),Y+8,left?13:13,8);if(left){cx.fillStyle='#7be07f';cx.fillRect(X+5,Y+8,2,8)}else{cx.fillStyle='#2e7d3a';cx.fillRect(X+9,Y+8,3,8)}}
+  else{cx.fillStyle='#2b2140';cx.fillRect(X+(left?2:0),Y,14,16);cx.fillStyle='#3fa34d';cx.fillRect(X+(left?3:0),Y,13,16);if(left){cx.fillStyle='#7be07f';cx.fillRect(X+5,Y,2,16)}else{cx.fillStyle='#2e7d3a';cx.fillRect(X+9,Y,3,16)}}}
 function draw(){cx.imageSmoothingEnabled=false;drawBG();const ox=Math.round(cam.x),now=performance.now();
   const x0=Math.max(0,Math.floor(ox/T)),x1=Math.min(MW-1,x0+Math.ceil(VW/T)+1);
+  const L0=P[0]&&!(P[0].dead>0)?{x:P[0].x+5,y:P[0].y+7}:null;
+  if(LD.hasH&&L0){const g=cx.createRadialGradient(L0.x-ox,L0.y,4,L0.x-ox,L0.y,70);g.addColorStop(0,'rgba(255,236,160,.35)');g.addColorStop(1,'rgba(255,236,160,0)');cx.fillStyle=g;cx.fillRect(L0.x-ox-70,L0.y-70,140,140)}
   for(let y=0;y<MH;y++)for(let x=x0;x<=x1;x++){const c=MAP[y][x],X=x*T-ox,Y=y*T;
     if(c==='#'){cx.drawImage(y>0&&MAP[y-1][x]==='#'?TILE.dirt:TILE.grass,X,Y)}
     else if(c==='=')cx.drawImage(TILE.plank,X,Y);
     else if(c==='^')cx.drawImage(TILE.spike,X,Y);
-    else if(/[ABCDT]/.test(c)){const img=c==='A'?TILE.stone:TILE.bars;if(!doors[c])cx.drawImage(img,X,Y);else{cx.globalAlpha=.25;cx.drawImage(img,X,Y);cx.globalAlpha=1}cx.fillStyle=PLC[c];cx.fillRect(X+6,Y+7,4,2)}
+    else if(c==='D'){const id=DID[y][x],r=LD.rules[id]||{},img=(r.timer||r.need||r.sync)?TILE.bars:TILE.stone;if(!doors[id])cx.drawImage(img,X,Y);else{cx.globalAlpha=.2;cx.drawImage(img,X,Y);cx.globalAlpha=1}cx.fillStyle=dcol(id);cx.fillRect(X+5,Y+6,6,4)}
     else if(c==='U')drawBlock(X,Y,'#3d8bfd','#9cd0ff','#1d4fa3',blueOn);
     else if(c==='R')drawBlock(X,Y,'#e2483d','#ff9c90','#8f1f17',!blueOn);
+    else if(c==='h'){const a=L0?Math.max(0,Math.min(1,1-(Math.hypot(x*T+8-L0.x,y*T+8-L0.y)-30)/50)):0;if(a>0){cx.globalAlpha=a;cx.fillStyle='#2b2140';cx.fillRect(X,Y,16,7);cx.fillStyle='#ffe9a0';cx.fillRect(X+1,Y+1,14,5);cx.fillStyle='#fff8e7';cx.fillRect(X+2,Y+1,5,1);cx.globalAlpha=1}}
+    else if(c==='P')drawPipe(x,y,X,Y);
     else if('xyz'.includes(c)&&c!==' '&&qDone['xyz'.indexOf(c)]){cx.drawImage(TILE.plank,X,Y);cx.fillStyle='#6b4a26';cx.fillRect(X+7,Y+6,2,10)}
     else if(c==='Q'){const qi=level.qs.findIndex(q=>q.x===x&&q.y===y);drawQ(X,Y,now,!!qDone[qi])}}
+  // kabel
+  for(const pl of level.plates){const px0=pl.x*T+8;let tx=null,col=null,on=pl.on;
+    if(pl.id>=0){const d=LD.doors.find(d=>d.id===pl.id);if(d){tx=d.x*T+d.w*8;col=dcol(pl.id);on=pl.on||pl.lit>0||!!doors[pl.id]&&pl.on}}
+    else if(pl.kind==='l'&&LD.laserX!=null){tx=LD.laserX*T+8;col='#e2483d';on=pl.on||laserOff}
+    if(tx!=null&&Math.max(px0,tx)>ox-20&&Math.min(px0,tx)<ox+VW+20)wire(px0,pl.y*T+16,tx,col,on,ox,now)}
   // papan bergerak
   for(const m of movers){const X=Math.round(m.X-ox),Y=Math.round(m.Y);for(let i=0;i<m.w;i++)cx.drawImage(TILE.plank,X+i*T,Y);cx.fillStyle='#f7c548';cx.fillRect(X+2,Y+2,2,2);cx.fillRect(X+m.w*T-4,Y+2,2,2)}
-  for(const pl of level.plates){drawPlate(pl.x*T-ox,pl.y*T,pl.on);cx.fillStyle=PLC[pl.k]||'#fff';cx.fillRect(pl.x*T-ox+5,pl.y*T+15,6,1)}
+  // laser
+  if(LD.laserX!=null){const X=LD.laserX*T-ox;if(X>-16&&X<VW+16){cx.fillStyle='#2b2140';cx.fillRect(X+3,0,10,7);cx.fillStyle=laserOff?'#5f6180':'#e2483d';cx.fillRect(X+5,2,6,3);
+    if(!laserOff){const f=Math.floor(now/70)%2;cx.fillStyle='rgba(226,72,61,.3)';cx.fillRect(X+4,7,8,153);cx.fillStyle=f?'#ff8a7a':'#ffd0c8';cx.fillRect(X+7,7,2,153)}}}
+  for(const pl of level.plates){const X=pl.x*T-ox;if(X<-16||X>VW+16)continue;drawPlateK(pl,X,pl.y*T,now)}
   // sisa waktu pintu jam
-  for(const k in timers)if(timers[k]>0&&!level.plates.some(pl=>pl.k===k&&pl.on)){const d=level.plates.find(pl=>pl.k===k);if(!d)continue;for(let y=0;y<MH;y++)for(let x=x0;x<=x1;x++)if(MAP[y][x]===k&&(y===0||MAP[y-1][x]!==k)){const r=timers[k]/((LVDEF.rules[k]||{}).timer||2);cx.fillStyle='rgba(43,33,64,.7)';cx.fillRect(x*T-ox-4,y*T-8,24,5);cx.fillStyle='#ff9636';cx.fillRect(x*T-ox-3,y*T-7,Math.round(22*r),3)}}
-  if(level.flag){const X=level.flag.x*T-ox,Y=level.flag.y*T;cx.fillStyle='#5b4a6b';cx.fillRect(X+3,Y-28,2,44);const wv=Math.floor(now/200)%2;cx.fillStyle='#e2483d';cx.fillRect(X+5,Y-28+wv,14,8);cx.fillStyle='#fff8e7';cx.fillRect(X+5,Y-20+wv,14,2);cx.fillStyle='#f7c548';cx.fillRect(X+2,Y-30,4,3)}
+  for(const d of LD.doors){const k=d.id,r=LD.rules[k]||{};if(!r.timer||!(timers[k]>0)||level.plates.some(pl=>pl.id===k&&pl.on))continue;const X=d.x*T-ox;if(X<-30||X>VW+30)continue;const q=timers[k]/r.timer;cx.fillStyle='rgba(43,33,64,.7)';cx.fillRect(X-4,5*T,24,5);cx.fillStyle='#ff9636';cx.fillRect(X-3,5*T+1,Math.round(22*q),3)}
+  // batu
+  for(const r of rocks){const X=Math.round(r.x-ox),Y=Math.round(r.y);if(X<-16||X>VW)continue;cx.fillStyle='#2b2140';cx.fillRect(X+1,Y,14,16);cx.fillRect(X,Y+2,16,13);cx.fillStyle='#8d8fa8';cx.fillRect(X+2,Y+1,12,14);cx.fillRect(X+1,Y+3,14,11);cx.fillStyle='#b4b6cc';cx.fillRect(X+3,Y+2,6,2);cx.fillRect(X+2,Y+4,2,4);cx.fillStyle='#5f6180';cx.fillRect(X+9,Y+9,4,3);cx.fillRect(X+4,Y+11,3,2)}
   for(const c of level.coins)if(!c.got){const f=Math.floor(now/120)%4,w=[6,4,2,4][f];cx.fillStyle='#2b2140';cx.fillRect(c.x-ox-w/2-1,c.y-5,w+2,10);cx.fillStyle='#f7c548';cx.fillRect(c.x-ox-w/2,c.y-4,w,8);cx.fillStyle='#fff3b0';cx.fillRect(c.x-ox-w/2,c.y-4,1,3)}
+  // tali
+  if(LD.tether&&P.length===2&&!(P[0].dead>0)&&!(P[1].dead>0)){const a=P[0],b=P[1],xa=a.x+5-ox,ya=a.y+8,xb=b.x+5-ox,yb=b.y+8,d=Math.hypot(xb-xa,yb-ya),sag=Math.max(0,ROPE-d)*.6;
+    cx.strokeStyle=d>ROPE-2?'#e2483d':'#8a5a3b';cx.lineWidth=2;cx.beginPath();cx.moveTo(xa,ya);cx.quadraticCurveTo((xa+xb)/2,(ya+yb)/2+sag,xb,yb);cx.stroke()}
+  // pemain (muncul dari / masuk ke pipa)
+  const clip=emerge>0||pipeT>0;if(clip){cx.save();cx.beginPath();cx.rect(0,0,VW,8*T);cx.clip()}const eo=emerge>0?Math.round(emerge/.8*18):0;
   for(const p of P){if(p.dead>0&&Math.floor(now/80)%2)continue;const s=sprFor(p.i);let img=!p.ground?s.jump:(p.vx&&Math.floor(p.anim)%2?s.walk:s.idle);if(p.face<0)img=flipped(img);
-    cx.drawImage(img,Math.round(p.x-1-ox),Math.round(p.y-1));
-    cx.fillStyle=SKIN[p.i].m;cx.fillRect(Math.round(p.x+3-ox),Math.round(p.y-7),4,3)}
+    cx.drawImage(img,Math.round(p.x-1-ox),Math.round(p.y-1+eo));
+    cx.fillStyle=SKIN[p.i].m;cx.fillRect(Math.round(p.x+3-ox),Math.round(p.y-7+eo),4,3)}
+  if(clip)cx.restore();
   for(const q of parts){cx.fillStyle=q.col;cx.fillRect(Math.round(q.x-ox),Math.round(q.y),2,2)}
   hud(ox)}
 function drawQ(X,Y,now,done){cx.fillStyle='#5f6180';cx.fillRect(X+1,Y+2,14,14);cx.fillStyle=done?'#7be07f':'#9b6bff';cx.fillRect(X+2,Y+3,12,12);cx.fillStyle='#fff8e7';const b=done?0:Math.floor(now/300)%2;
   const q=["0110","1001","0010","0100","0000","0100"];if(done){cx.fillRect(X+5,Y+9,2,2);cx.fillRect(X+7,Y+11,2,2);cx.fillRect(X+9,Y+7,2,4)}else q.forEach((r,i)=>[...r].forEach((v,j)=>{if(v==='1')cx.fillRect(X+4+j*2,Y+3+i*2-b,2,2)}))}
 /* HUD & label nama ditulis dengan HTML supaya tajam & mudah dibaca */
 function hud(ox){const s=Math.floor(elapsed);const h=$('hud');if(h){const t=`<b>LEVEL ${LV+1}</b><span>● ${coins}/${coinTot}</span><span>${Math.floor(s/60)}:${String(s%60).padStart(2,'0')}</span>`;if(h._t!==t){h.innerHTML=t;h._t=t}}
-  const sc=cv.clientWidth/VW;P.forEach(p=>{const el=$('nm'+p.i);if(!el)return;const show=NET.on&&running&&!(p.dead>0);el.hidden=!show;if(!show)return;
-    const nm=p.i===ME?'Kamu':(NET.peer||'Teman');const mic=(p.i===ME?VOICE.on:NET.peerMic)?' 🎤':'';const tx=nm+mic;if(el._t!==tx){el.textContent=tx;el._t=tx}
-    el.style.transform=`translate(${Math.round(cv.offsetLeft+(p.x+5-ox)*sc)}px,${Math.round(cv.offsetTop+(p.y-9)*sc)}px) translate(-50%,-100%)`})}
+  const sc=cv.clientWidth/VW;P.forEach(p=>{const el=$('nm'+p.i);if(!el)return;const show=running&&!(p.dead>0)&&!(emerge>0);el.hidden=!show;if(!show)return;
+    const nm=NET.on?(p.i===ME?'Kamu':(NET.peer||'Teman'))+' · '+ROLE[p.i]:'Si '+ROLE[p.i];const mic=NET.on&&(p.i===ME?VOICE.on:NET.peerMic)?' 🎤':'';const tx=nm+mic;if(el._t!==tx){el.textContent=tx;el._t=tx}
+    const o=P[1-p.i],near=o&&Math.abs(o.x-p.x)<46&&Math.abs(o.y-p.y)<22,lift=near&&p.i===1?15:0;el.style.transform=`translate(${Math.round(cv.offsetLeft+(p.x+5-ox)*sc)}px,${Math.round(cv.offsetTop+(p.y-9-lift+(emerge>0?0:0))*sc)}px) translate(-50%,-100%)`})}
 
 /* ====== kontrol ====== */
 const KEYS={KeyA:[0,'l'],KeyD:[0,'r'],KeyW:[0,'j'],Space:[0,'j'],ArrowLeft:[1,'l'],ArrowRight:[1,'r'],ArrowUp:[1,'j'],ShiftRight:[1,'j']};
@@ -410,11 +486,11 @@ addEventListener('resize',fit);fit();
 /* ====== putaran utama ====== */
 let last=0,acc=0;function loop(ts){requestAnimationFrame(loop);const dt=Math.min(.05,(ts-last)/1000||0);last=ts;
   if(running&&!paused&&!quizOpen&&!window.__duoManual){acc+=dt;elapsed+=dt;while(acc>=1/60){step(1/60);acc-=1/60}}draw()}
-function start(){if(!MAP.length)loadLevel(progGet());reset();running=true;paused=false;quizOpen=false;['pStart','pWin','pPause','pQuiz','pOnline'].forEach(i=>$(i).hidden=true);$('top').hidden=false;$('padL').hidden=$('padR').hidden=!touch;padMode();document.body.classList.add('playing');ac();music(true);
+function start(){if(!MAP.length)loadLevel(0);reset();running=true;paused=false;quizOpen=false;['pStart','pWin','pPause','pQuiz','pOnline'].forEach(i=>$(i).hidden=true);$('top').hidden=false;$('padL').hidden=$('padR').hidden=!touch;padMode();document.body.classList.add('playing');ac();music(true);
   try{if(touch&&document.documentElement.requestFullscreen&&!document.fullscreenElement)document.documentElement.requestFullscreen().catch(()=>{})}catch(e){}}
 function togglePause(){paused=!paused;$('pPause').hidden=!paused;if(!paused)P.forEach(p=>p.inp={l:0,r:0,j:0})}
 const exit=()=>{try{netClose()}catch(e){}try{if(document.fullscreenElement)document.exitFullscreen()}catch(e){}location.href='../'};
-$('qLater').onclick=()=>{quizOpen=false;qCool=2.5;$('pQuiz').hidden=true};$('bLocal').onclick=()=>{ME=-1;NET.on=false;loadLevel(progGet());start()};$('bAgain').onclick=()=>{netEv({t:'restart'});start()};$('bNext').onclick=()=>goLevel(LV>=LEVELS.length-1?0:LV+1);$('bResume').onclick=togglePause;$('bRestart').onclick=()=>{togglePause();netEv({t:'restart'});start()};$('bExit').onclick=exit;$('bExit2').onclick=exit;
+$('qLater').onclick=()=>{quizOpen=false;qCool=2.5;$('pQuiz').hidden=true};$('bLocal').onclick=()=>{ME=-1;NET.on=false;totCoins=0;loadLevel(0);start()};$('bAgain').onclick=()=>{netEv({t:'restart'});start()};$('bNext').onclick=()=>{totCoins=0;goLevel(0)};$('bResume').onclick=togglePause;$('bRestart').onclick=()=>{togglePause();netEv({t:'restart'});start()};$('bExit').onclick=exit;$('bExit2').onclick=exit;
 $('bPause').onclick=togglePause;$('bSound').onclick=()=>{soundOn=!soundOn;$('bSound').style.opacity=soundOn?1:.45;music(soundOn&&running)};
 /* ====== main online (WebRTC langsung antar-HP, Firebase hanya untuk mempertemukan) ====== */
 var ME=-1;const NET={on:false,pc:null,dc:null,de:null,peer:'',code:'',unsub:null,sendT:null,role:null,lastRx:0};
@@ -422,14 +498,15 @@ function netLerp(p,dt){const n=p.net;if(!n)return;const k=Math.min(1,dt*14);cons
   {const me=P[1-p.i];if(n.o&&me&&!me.dead&&!n.d){p.x=me.x+(n.ox||0);p.y=me.y-PH}}p.vx=n.vx||0;p.vy=n.vy||0;p.face=n.f||1;p.ground=!!n.g;p.dead=n.d?1:0;p.anim=n.a||0}
 function netEv(m){if(!NET.on||!NET.de||NET.de.readyState!=='open')return;try{NET.de.send(JSON.stringify(m))}catch(e){}}
 function netRx(m){NET.lastRx=performance.now();
-  if(m.t==='s'){const p=P[1-ME];if(p)p.net=m;if(ME===1&&m.lt!=null&&Math.abs(levelT-m.lt)>.12)levelT=m.lt+.04;return}
+  if(m.t==='s'){const p=P[1-ME];if(p)p.net=m;if(m.b&&ME===0)m.b.forEach((b,i)=>{if(rocks[i]){rocks[i].x=b[0];rocks[i].y=b[1]}});if(ME===1&&m.lt!=null&&Math.abs(levelT-m.lt)>.12)levelT=m.lt+.04;return}
   if(m.t==='coin'){const c=level.coins[m.i];if(c&&!c.got){c.got=true;coins++;SFX.coin();burst(c.x,c.y,'#f7c548',8)}return}
   if(m.t==='bridge'){const i=m.i|0;if(!qDone[i]){qDone[i]=true;SFX.ok();if(quizOpen){quizOpen=false;$('pQuiz').hidden=true}say('Temanmu menjawab benar! Jembatan muncul.',3)}return}
-  if(m.t==='latch'){latched[m.k]=true;return}
-  if(m.t==='level'){loadLevel(m.n|0);start();return}
-  if(m.t==='win'){if(!won)win();return}
+  if(m.t==='latch'){if(m.k==='L')laserOff=true;else latched[m.k]=true;return}
+  if(m.t==='pipe'){enterPipe();return}
+  if(m.t==='level'){if(m.n>0)PRE=`Level ${m.n} selesai! `;else totCoins=0;loadLevel(m.n|0,m.seed);start();return}
+  if(m.t==='win'){win();return}
   if(m.t==='restart'){start();return}
-  if(m.t==='start'){if(m.sx)SX.peer=m.sx;if(m.g!=null)GRADE_ON=m.g;if(m.n!=null)loadLevel(m.n|0);NET.peer=m.name||NET.peer;NET.peerUid=m.uid||NET.peerUid;start();return}
+  if(m.t==='start'){if(m.sx)SX.peer=m.sx;if(m.g!=null)GRADE_ON=m.g;if(m.n!=null){totCoins=0;loadLevel(m.n|0,m.seed)}NET.peer=m.name||NET.peer;NET.peerUid=m.uid||NET.peerUid;start();return}
   if(m.t==='hi'){if(m.sx)SX.peer=m.sx;NET.peer=m.name||NET.peer;NET.peerUid=m.uid||NET.peerUid;return}
   if(m.t==='mic'){NET.peerMic=!!m.on;return}
   if(m.t==='bye'){netLost('Temanmu keluar dari permainan.')}}
@@ -458,8 +535,8 @@ function netSetup(pc){pc.__types={};pc.ontrack=e=>{const a=$('rAudio');a.srcObje
     if(st==='disconnected')setTimeout(()=>{if(pc.connectionState==='disconnected')netLost('Sambungan dengan temanmu terputus.')},6000)}}
 function bothOpen(){return NET.dc&&NET.de&&NET.dc.readyState==='open'&&NET.de.readyState==='open'}
 function onReady(name){if(!bothOpen())return;NET.on=true;if(NET.unsub){NET.unsub();NET.unsub=null}
-  clearInterval(NET.sendT);NET.sendT=setInterval(()=>{if(!running||ME<0)return;const p=P[ME];if(!p||NET.dc.readyState!=='open')return;try{NET.dc.send(JSON.stringify({t:'s',x:+p.x.toFixed(1),y:+p.y.toFixed(1),vx:p.vx|0,vy:p.vy|0,f:p.face,g:p.ground?1:0,o:p.on?1:0,ox:p.on?+(p.x-p.on.x).toFixed(1):0,d:p.dead>0?1:0,a:+(p.anim||0).toFixed(1),lt:ME===0?+levelT.toFixed(2):undefined}))}catch(e){}},50);
-  if(ME===0){if(!MAP.length)loadLevel(progGet());netEv({t:'start',g:GRADE,n:LV,name,uid:NET.myUid,sx:SX.me});start()}else netEv({t:'hi',name,uid:NET.myUid,sx:SX.me});$('bMic').hidden=$('bSpk').hidden=false;micUI();
+  clearInterval(NET.sendT);NET.sendT=setInterval(()=>{if(!running||ME<0)return;const p=P[ME];if(!p||NET.dc.readyState!=='open')return;try{NET.dc.send(JSON.stringify({t:'s',x:+p.x.toFixed(1),y:+p.y.toFixed(1),vx:p.vx|0,vy:p.vy|0,f:p.face,g:p.ground?1:0,o:p.on?1:0,ox:p.on?+(p.x-p.on.x).toFixed(1):0,d:p.dead>0?1:0,a:+(p.anim||0).toFixed(1),lt:ME===0?+levelT.toFixed(2):undefined,b:ME===1&&rocks.length?rocks.map(r=>[Math.round(r.x),Math.round(r.y)]):undefined}))}catch(e){}},50);
+  if(ME===0){totCoins=0;loadLevel(0);netEv({t:'start',g:GRADE,n:0,seed:SEED,name,uid:NET.myUid,sx:SX.me});start()}else netEv({t:'hi',name,uid:NET.myUid,sx:SX.me});$('bMic').hidden=$('bSpk').hidden=false;micUI();
   // ruang sudah terpakai: hapus dokumennya
   if(ME===0&&NET.code)try{fb().db.doc('duo/'+NET.code).delete().catch(()=>{})}catch(e){}}
 function netLost(t){if(document.body.classList.contains('direct')){netClose();running=false;music(false);['pPause','pQuiz','pWin','pOnline','pStart'].forEach(i=>$(i).hidden=true);$('pVoice').hidden=false;$('vTitle').textContent='Petualangan Berdua';$('vBody').innerHTML=`<p>${esc(t)}</p><button class="btn" id="dBack">Kembali ke JELAS</button>`;$('dBack').onclick=exit;return}if(!NET.on&&!NET.pc)return;netClose();running=false;music(false);$('pPause').hidden=true;$('pQuiz').hidden=true;$('pWin').hidden=true;
@@ -558,8 +635,8 @@ const DIRECT=!!(Q.get('r')||Q.get('host')||Q.get('local'));if(DIRECT)document.bo
 {const r=(Q.get('r')||'').replace(/^P:/i,''),h=Q.get('host');if(h){$('pStart').hidden=true;try{history.replaceState(null,'',location.pathname+'?g='+GRADE0)}catch(e){}setTimeout(()=>host({quiet:true,code:h.toUpperCase()}).then(ok=>{if(ok){const lk=!!Q.get('link');showWait(lk?'Tautan terkirim. Menunggu temanmu membuka tautan dan bergabung…':'Menyambungkan dengan temanmu…','');setTimeout(()=>{if(!NET.on)netLost(lk?'Temanmu belum bergabung. Coba bagikan tautan lagi dari JELAS.':'Temanmu belum tersambung. Coba tantang lagi dari JELAS.')},lk?300000:45000)}}).catch(e=>netLost('Belum bisa tersambung: '+(e&&e.message||e))),200)}
   else if(Q.get('local')){$('pStart').hidden=true;setTimeout(()=>{ME=-1;NET.on=false;start()},150)}
   else if(r){$('pStart').hidden=true;try{history.replaceState(null,'',location.pathname+'?g='+GRADE0)}catch(e){}setTimeout(()=>join(r,{wait:true}).catch(()=>{}),300)}else if(Q.get('inv')){$('pStart').hidden=true;const x={uid:Q.get('inv'),name:Q.get('n')||'Teman'};try{history.replaceState(null,'',location.pathname+'?g='+GRADE0)}catch(e){}setTimeout(()=>inviteFriend(x).catch(e=>netLost('Undangan belum terkirim: '+(e&&e.message||e))),300)}else if(Q.get('online')){setTimeout(()=>$('bOnline').click(),200)}}
-loadLevel(progGet());reset();heroPrev();requestAnimationFrame(loop);
-window.__duo={get P(){return P},get doors(){return doors},get qDone(){return qDone},get won(){return won},get LV(){return LV},get movers(){return movers},get blueOn(){return blueOn},get checkpoint(){return checkpoint},start,loadLevel,goLevel,step:(n=1)=>{for(let i=0;i<n;i++)step(1/60)},MAP:()=>MAP};
+loadLevel(0);reset();heroPrev();requestAnimationFrame(loop);
+window.__duo={snap:x=>{cam.x=x;draw();return cv.toDataURL()},VW:()=>VW,get LD(){return LD},get rocks(){return rocks},get laserOff(){return laserOff},get pipeT(){return pipeT},get emerge(){return emerge},get latched(){return latched},get level(){return level},enterPipe,get P(){return P},get doors(){return doors},get qDone(){return qDone},get won(){return won},get LV(){return LV},get movers(){return movers},get blueOn(){return blueOn},get checkpoint(){return checkpoint},start,loadLevel,goLevel,step:(n=1)=>{for(let i=0;i<n;i++)step(1/60)},MAP:()=>MAP};
 })();
 </script>
 </body>
