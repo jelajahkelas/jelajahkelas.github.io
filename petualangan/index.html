@@ -117,6 +117,8 @@ body.direct #onCode,body.direct #bShare{display:none!important}
 .pad .tag{position:absolute;top:-20px;left:0;font:900 11px ui-monospace,monospace;letter-spacing:.08em;color:#fff;text-shadow:1px 1px 0 #000}
 .pad.l .tag{color:#ffb15c}.pad.r .tag{color:#7be07f}
 
+/* ruang online */
+.rosl{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:6px 0}.ros{display:flex;align-items:center;gap:4px;padding:4px 10px 4px 4px;border-radius:16px;font:800 13px system-ui,sans-serif;color:#2b2140;box-shadow:0 3px 0 rgba(43,33,64,.2)}.ros canvas{width:28px;height:30px;background:rgba(255,255,255,.6);border-radius:10px}
 /* ====== gaya halus (bukan piksel) ====== */
 html,body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
 canvas{image-rendering:auto}
@@ -164,7 +166,7 @@ canvas{image-rendering:auto}
   <div class="hl"><div class="heroes" id="heroes"></div><p class="hstat" id="hStat"></p></div>
   <div class="hr">
     <div class="np"><button class="btn" data-n="2"><big>2</big>Pemain<small>satu layar</small></button><button class="btn b4" data-n="3"><big>3</big>Pemain<small>satu layar</small></button><button class="btn b5" data-n="4"><big>4</big>Pemain<small>satu layar</small></button></div>
-    <button class="btn b2" id="bOnline">🌐 Main online berdua</button>
+    <button class="btn b2" id="bOnline">🌐 Main online (2–4 pemain)</button>
     <div class="hsub"><button class="btn b6" id="bCos">👤 Kostum</button><button class="btn b4" id="bHelp">❓ Cara main</button><button class="btn b3" id="bHome">← JELAS</button></div>
   </div>
 </div></div>
@@ -186,14 +188,15 @@ canvas{image-rendering:auto}
    <li><b>Tujuan:</b> ambil 🔑 kunci, bawa ke pintu, jawab soal gemboknya, lalu <b>semua pemain</b> masuk ke pintu.</li>
    <li><b>Naik ke kepala teman</b> untuk mencapai tempat tinggi. Kalian bisa bertumpuk sampai 4! Teman yang ditumpangi masih bisa berjalan, tapi lompatannya hanya kecil.</li>
    <li><b>Tombol</b> membuka palang selama diinjak. <b>Kotak</b> bisa didorong dan menahan tombol. Kotak berat 🪨 harus didorong <b>berdua</b>.</li>
+   <li><b>Tuas</b> membuka atau menutup palang hijau toska setiap kali disentuh. Kadang ada <b>2 kunci</b>: kumpulkan semuanya sebelum membuka pintu.</li>
    <li><b>Lempeng ungu</b> harus diinjak <b>bersamaan</b>. <b>Pegas</b> melambungkanmu tinggi. <b>Tombol jingga</b> membuka palang hanya beberapa detik: cepat! <b>Lift</b> bergerak sendiri, naiki bersama.</li>
    <li>Kena <b>duri</b>? Level langsung diulang. Tekan <b>↻</b> kapan saja kalau buntu.</li>
   </ol>
-  <div class="keys">Pemain 1: W A D · Pemain 2: ▲ ◀ ▶ · Pemain 3: T F H · Pemain 4: I J L<br>Di HP: tombol kiri untuk pemain 1, kanan untuk pemain 2 (3–4 pemain butuh keyboard)<br>Online: 💬 untuk mengirim gelembung isyarat</div>
+  <div class="keys">Pemain 1: W A D · Pemain 2: ▲ ◀ ▶ · Pemain 3: T F H · Pemain 4: I J L<br>Di HP: tombol kiri untuk pemain 1, kanan untuk pemain 2 (3–4 pemain butuh keyboard)<br>Online: sampai 4 pemain, 💬 untuk mengirim gelembung isyarat</div>
   <button class="btn b3" id="hpBack">← Kembali</button>
 </div></div>
 <div class="panel" id="pOnline" hidden><div class="box">
-  <h2 class="px">🌐 Main online</h2>
+  <h2 class="px">🌐 Main online · sampai 4 pemain</h2>
   <div id="onMenu"><p id="onMsg">Pilih teman untuk ditantang. Mereka akan mendapat undangan dan tinggal menekan Terima.</p>
     <div id="frList" class="frlist"><p class="keys">Memuat teman…</p></div>
     <details class="codebox"><summary>Main dengan kode ruang</summary>
@@ -201,7 +204,7 @@ canvas{image-rendering:auto}
     <div style="display:flex;gap:8px;margin-top:10px"><input id="inCode" maxlength="4" placeholder="KODE" autocomplete="off" autocapitalize="characters" style="flex:1;min-width:0;font:900 22px ui-monospace,monospace;letter-spacing:.3em;text-align:center;text-transform:uppercase;border:4px solid #2b2140;padding:8px;background:#fff"><button class="btn b2" id="bJoin" style="width:auto;margin:0;padding:8px 16px">Gabung</button></div></details>
     <button class="btn b3" id="bOnBack">Kembali</button></div>
   <div id="onWait" hidden><p id="onTxt">Menyiapkan ruang…</p><div class="qtxt" id="onCode" style="letter-spacing:.3em;font-size:40px"></div>
-    <button class="btn b2" id="bShare" hidden>Bagikan kode</button><button class="btn b3" id="bOnCancel">Batal</button></div>
+    <div id="onRoster" class="rosl"></div><button class="btn" id="bStart" hidden>▶ Mulai</button><button class="btn b4" id="bInvMore" hidden>➕ Ajak teman lagi</button><button class="btn b2" id="bShare" hidden>Bagikan kode</button><button class="btn b3" id="bOnCancel">Batal</button></div>
 </div></div>
 <div class="panel" id="pVoice" hidden><div class="box"><h2 class="px" id="vTitle">Obrolan suara</h2><div id="vBody"></div></div></div>
 <audio id="rAudio" autoplay playsinline></audio>
@@ -228,7 +231,7 @@ canvas{image-rendering:auto}
 'use strict';
 /* ====== Petualangan Berdua — teka-teki kerja sama satu layar (gaya permainan "pets park": karya, karakter & level asli JELAS) ====== */
 const $=id=>document.getElementById(id);
-const LEVELS=[{"n": "Ambil Kuncinya", "h": "Ambil kunci, bawa ke pintu, lalu masuk bersama.", "m": ["##############################", "#                            #", "#                            #", "#                            #", "#                            #", "#                            #", "#                            #", "#                            #", "#                            #", "#                            #", "#                  ###       #", "# 1 2 3 4      k   ###    D  #", "##############################", "##############################"]}, {"n": "Naik ke Pundak", "h": "Tebingnya terlalu tinggi! Naik ke kepala temanmu.", "m": ["##############################", "#                            #", "#                            #", "#                            #", "#                            #", "#                            #", "#                            #", "#                            #", "#                        k   #", "#                  ###########", "#                  ###########", "#  D    1 2 3 4    ###########", "##############################", "##############################"]}, {"n": "Tombol & Palang", "h": "Injak tombol untuk membuka palang. Bergantian ya!", "m": ["##############################", "#              X             #", "#              X             #", "#              X             #", "#              X             #", "#              X             #", "#              X             #", "#              X             #", "#              X             #", "#              X             #", "#              X             #", "# 1 2 34 b     X     b  k  D #", "##############################", "##############################"]}, {"n": "Kotak Pijakan", "h": "Dorong kotak ke dekat tebing, lalu naik bertumpuk.", "m": ["##############################", "#                            #", "#                            #", "#                            #", "#                            #", "#                            #", "#                            #", "#                        k   #", "#                   ##########", "#                   ##########", "#                   ##########", "#  D 12  o  3 4     ##########", "##############################", "##############################"]}, {"n": "Kotak Penahan", "h": "Kotak juga bisa menahan tombol!", "m": ["##############################", "#                 X          #", "#                 X          #", "#                 X          #", "#                 X          #", "#                 X          #", "#                 X          #", "#                 X          #", "#                 X          #", "#                 X          #", "#                 X          #", "# 12  o  34 b     X    k   D #", "##############################", "##############################"]}, {"n": "Kotak Berat", "h": "Kotak ini berat: dorong BERSAMA-SAMA!", "m": ["##############################", "#                   X        #", "#                   X        #", "#                   X        #", "#                   X        #", "#                   X        #", "#                   X        #", "#                   X        #", "#                   X        #", "#                   X        #", "#                   X        #", "# 1234 O      b     X   k  D #", "##############################", "##############################"]}, {"n": "Pegas Melambung", "h": "Lompat di atas pegas untuk melewati tembok tinggi.", "m": ["##############################", "#                            #", "#                            #", "#                            #", "#                            #", "#                            #", "#                            #", "#            ###             #", "#            ###             #", "#            ###             #", "#            ###             #", "#  D 1234 S  ###  S     k    #", "##############################", "##############################"]}, {"n": "Jembatan Duri", "h": "Hati-hati duri! Kuncinya tinggi, naik ke pundak di papan sempit.", "m": ["##############################", "#                            #", "#                            #", "#                            #", "#                            #", "#           k                #", "#                            #", "#                            #", "#                            #", "#                            #", "#       ==  ==  ==  ==       #", "# 1234 ^^^^^^^^^^^^^^^^   D  #", "##############################", "##############################"]}, {"n": "Dua Lempeng", "h": "Kandang kunci terbuka kalau kedua lempeng diinjak bersamaan.", "m": ["##############################", "#                            #", "#                            #", "#           ZZZZ             #", "#          Z    Z            #", "#          Z    Z            #", "#          Z k  Z            #", "#          ######            #", "#                            #", "#                            #", "#       ===      ===         #", "#  m  12             34 m  D #", "##############################", "##############################"]}, {"n": "Kerja Tim", "h": "Buka palang, dorong kotak ke tebing, lalu naik bertumpuk.", "m": ["##############################", "#         X                  #", "#         X                  #", "#         X                  #", "#         X                  #", "#         X                  #", "#         X                  #", "#         X               k  #", "#         X           ########", "#         X           ########", "#         X           ########", "# 1234b   X o b  D    ########", "##############################", "##############################"]}, {"n": "Pegas di Atas Duri", "h": "Lambung dari pegas, mendarat di papan, ambil kunci!", "m": ["##############################", "#                            #", "#                            #", "#                            #", "#                            #", "#             k              #", "#            ==              #", "#                            #", "#                 ==         #", "#                            #", "#                            #", "# 1234    S ^^^^^^^^^      D #", "##############################", "##############################"]}, {"n": "Ujian Akhir", "h": "Gabungkan semua yang sudah kalian pelajari!", "m": ["##############################", "#        Y              Z    #", "#        Y              Z    #", "#        Y              Z    #", "#        Y              Z    #", "#        Y              Z    #", "#        Y              Z    #", "#        Y              Z    #", "#        Y              Z  k #", "#        Y              Z#####", "#        Y              Z#####", "# 1m2c34 Y   c O    m D Z#####", "##############################", "##############################"]}, {"n": "Tombol Waktu", "h": "Tombol jingga membuka palang hanya sebentar. Injak, lalu lari!", "m": ["##############################", "#                 W          #", "#                 W          #", "#                 W          #", "#                 W          #", "#                 W          #", "#                 W          #", "#                 W          #", "#                 W       k  #", "#                 W     ######", "#                 W     ######", "#12 t 34  ^^      W  D  ######", "##############################", "##############################"]}, {"n": "Lift Melintas", "h": "Naik lift bersama. Kuncinya tinggi: bertumpuk di atas lift!", "m": ["##############################", "#                            #", "#                            #", "#                            #", "#                            #", "#             k              #", "#                            #", "#                            #", "#                            #", "#                            #", "#                            #", "#1234 ^^^^^^^^^^^^^^^^^    D #", "##############################", "##############################"], "mv": [[2, 10, 3, 21, 10, 10]]}, {"n": "Tiga Lempeng", "h": "Tiga lempeng, dua kaki... dan satu kotak!", "m": ["##############################", "#                            #", "#                            #", "#                            #", "#                            #", "#                            #", "#                            #", "#                            #", "#                     ZZZ    #", "#                #####Z Z    #", "#                #####Z Z    #", "#12m 34 o    m   #####ZkZ mD #", "##############################", "##############################"]}, {"n": "Lorong Palang", "h": "Dua palang, tiga tombol. Siapa menahan, siapa berjalan?", "m": ["##############################", "#        X       Y           #", "#        X       Y           #", "#        X       Y           #", "#        X       Y           #", "#        X       Y           #", "#        X       Y           #", "#        X       Y    k      #", "#        X       Y           #", "#        X       Y           #", "#        X       Y           #", "# 1234b  X o c b Y         D #", "##############################", "##############################"]}, {"n": "Lift Naik", "h": "Lift ke atas tebing. Palangnya harus dibuka dari bawah... lalu dari atas!", "m": ["##############################", "#                 X          #", "#                 X          #", "#                 X  b   k D #", "#                 ############", "#                 ############", "#                 ############", "#                 ############", "#                 ############", "#                 ############", "#                 ############", "# 123 b  4        ############", "##############################", "##############################"], "mv": [[16, 10, 2, 16, 3.85, 7]]}, {"n": "Kotak Berat Berpacu", "h": "Dorong kotak berat melewati palang jingga sebelum waktunya habis!", "m": ["##############################", "#           W                #", "#           W                #", "#           W                #", "#           W                #", "#           W                #", "#           W                #", "#           W           k    #", "#           W     ############", "#           W     ############", "#           W     ############", "#12t 34 O   W D   ############", "##############################", "##############################"]}, {"n": "Pegas & Lift", "h": "Melambung, naik lift, lalu bertumpuk di ketinggian. Jangan jatuh!", "m": ["##############################", "#                       k    #", "#                            #", "#                            #", "#                            #", "#                            #", "#     ====            ====   #", "#                            #", "#                            #", "#                            #", "#                            #", "#123S  4  ^^^^^^^^^^^^     D #", "##############################", "##############################"], "mv": [[10, 6, 3, 19, 6, 8]]}, {"n": "Puncak Kerja Sama", "h": "Ujian terakhir: palang, kotak berat, lempeng, dan lift. Kalian pasti bisa!", "m": ["##############################", "#         X         Z        #", "#         X         Z        #", "#         X         Z        #", "#         X         Z     k  #", "#         X         Z  #######", "#         X         Z  #######", "#         X         Z  #######", "#         X         Z  #######", "#         X         Z  #######", "#         X         Z  #######", "#12m34b   X O b D m Z  #######", "##############################", "##############################"], "mv": [[21, 10, 2, 21, 4.85, 7]]}];
+const LEVELS=[{"n": "Ambil Kuncinya", "h": "Ambil kunci, bawa ke pintu, lalu masuk bersama.", "m": ["##############################", "#                            #", "#                            #", "#                            #", "#                            #", "#                            #", "#                            #", "#                            #", "#                            #", "#                            #", "#                  ###       #", "# 1 2 3 4      k   ###    D  #", "##############################", "##############################"]}, {"n": "Naik ke Pundak", "h": "Tebingnya terlalu tinggi! Naik ke kepala temanmu.", "m": ["##############################", "#                            #", "#                            #", "#                            #", "#                            #", "#                            #", "#                            #", "#                            #", "#                        k   #", "#                  ###########", "#                  ###########", "#  D    1 2 3 4    ###########", "##############################", "##############################"]}, {"n": "Tombol & Palang", "h": "Injak tombol untuk membuka palang. Bergantian ya!", "m": ["##############################", "#              X             #", "#              X             #", "#              X             #", "#              X             #", "#              X             #", "#              X             #", "#              X             #", "#              X             #", "#              X             #", "#              X             #", "# 1 2 34 b     X     b  k  D #", "##############################", "##############################"]}, {"n": "Kotak Pijakan", "h": "Dorong kotak ke dekat tebing, lalu naik bertumpuk.", "m": ["##############################", "#                            #", "#                            #", "#                            #", "#                            #", "#                            #", "#                            #", "#                        k   #", "#                   ##########", "#                   ##########", "#                   ##########", "#  D 12  o  3 4     ##########", "##############################", "##############################"]}, {"n": "Kotak Penahan", "h": "Kotak juga bisa menahan tombol!", "m": ["##############################", "#                 X          #", "#                 X          #", "#                 X          #", "#                 X          #", "#                 X          #", "#                 X          #", "#                 X          #", "#                 X          #", "#                 X          #", "#                 X          #", "# 12  o  34 b     X    k   D #", "##############################", "##############################"]}, {"n": "Kotak Berat", "h": "Kotak ini berat: dorong BERSAMA-SAMA!", "m": ["##############################", "#                   X        #", "#                   X        #", "#                   X        #", "#                   X        #", "#                   X        #", "#                   X        #", "#                   X        #", "#                   X        #", "#                   X        #", "#                   X        #", "# 1234 O      b     X   k  D #", "##############################", "##############################"]}, {"n": "Dua Kunci", "h": "Ada DUA kunci di atas balok melayang. Kumpulkan keduanya!", "m": ["##############################", "#                            #", "#                            #", "#         k        k         #", "#                            #", "#                            #", "#                            #", "#                            #", "#        ####    ####        #", "#                            #", "#             ##             #", "# 1 2 3 4   ######        D  #", "##############################", "##############################"]}, {"n": "Pegas Melambung", "h": "Lompat di atas pegas untuk melewati tembok tinggi.", "m": ["##############################", "#                            #", "#                            #", "#                            #", "#                            #", "#                            #", "#                            #", "#            ###             #", "#            ###             #", "#            ###             #", "#            ###             #", "#  D 1234 S  ###  S     k    #", "##############################", "##############################"]}, {"n": "Jembatan Duri", "h": "Hati-hati duri! Kuncinya tinggi, naik ke pundak di papan sempit.", "m": ["##############################", "#                            #", "#                            #", "#                            #", "#                            #", "#           k                #", "#                            #", "#                            #", "#                            #", "#                            #", "#       ==  ==  ==  ==       #", "# 1234 ^^^^^^^^^^^^^^^^   D  #", "##############################", "##############################"]}, {"n": "Dua Lempeng", "h": "Kandang kunci terbuka kalau kedua lempeng diinjak bersamaan.", "m": ["##############################", "#                            #", "#                            #", "#           ZZZZ             #", "#          Z    Z            #", "#          Z    Z            #", "#          Z k  Z            #", "#          ######            #", "#                            #", "#                            #", "#       ===      ===         #", "#  m  12             34 m  D #", "##############################", "##############################"]}, {"n": "Tuas di Atas", "h": "Sentuh tuas untuk membuka palang hijau. Tuasnya tinggi!", "m": ["##############################", "#                 V          #", "#                 V          #", "#                 V          #", "#                 V          #", "#                 V          #", "#                 V          #", "#        l        V          #", "#       ###       V          #", "#                 V          #", "#                 V          #", "#123 ##     4     V    k  D  #", "##############################", "##############################"]}, {"n": "Kerja Tim", "h": "Buka palang, dorong kotak ke tebing, lalu naik bertumpuk.", "m": ["##############################", "#         X                  #", "#         X                  #", "#         X                  #", "#         X                  #", "#         X                  #", "#         X                  #", "#         X               k  #", "#         X           ########", "#         X           ########", "#         X           ########", "# 1234b   X o b  D    ########", "##############################", "##############################"]}, {"n": "Pegas di Atas Duri", "h": "Lambung dari pegas, mendarat di papan, ambil kunci!", "m": ["##############################", "#                            #", "#                            #", "#                            #", "#                            #", "#             k              #", "#            ==              #", "#                            #", "#                 ==         #", "#                            #", "#                            #", "# 1234    S ^^^^^^^^^      D #", "##############################", "##############################"]}, {"n": "Ujian Akhir", "h": "Gabungkan semua yang sudah kalian pelajari!", "m": ["##############################", "#        Y              Z    #", "#        Y              Z    #", "#        Y              Z    #", "#        Y              Z    #", "#        Y              Z    #", "#        Y              Z    #", "#        Y              Z    #", "#        Y              Z  k #", "#        Y              Z#####", "#        Y              Z#####", "# 1m2c34 Y   c O    m D Z#####", "##############################", "##############################"]}, {"n": "Lift Tombol", "h": "Lift kuning naik selama tombol kuning diinjak.", "m": ["##############################", "#                            #", "#                            #", "#                  k         #", "#                ####        #", "#                            #", "#                            #", "#                            #", "#                            #", "#                            #", "#                            #", "# 123 g  4                D  #", "##############################", "##############################"], "mv": [[12, 10, 3, 12, 4.1, 4, "g"]]}, {"n": "Tombol Waktu", "h": "Tombol jingga membuka palang hanya sebentar. Injak, lalu lari!", "m": ["##############################", "#                 W          #", "#                 W          #", "#                 W          #", "#                 W          #", "#                 W          #", "#                 W          #", "#                 W          #", "#                 W       k  #", "#                 W     ######", "#                 W     ######", "#12 t 34  ^^      W  D  ######", "##############################", "##############################"]}, {"n": "Lift Melintas", "h": "Naik lift bersama. Kuncinya tinggi: bertumpuk di atas lift!", "m": ["##############################", "#                            #", "#                            #", "#                            #", "#                            #", "#             k              #", "#                            #", "#                            #", "#                            #", "#                            #", "#                            #", "#1234 ^^^^^^^^^^^^^^^^^    D #", "##############################", "##############################"], "mv": [[2, 10, 3, 21, 10, 10]]}, {"n": "Tiga Lempeng", "h": "Tiga lempeng, dua kaki... dan satu kotak!", "m": ["##############################", "#                            #", "#                            #", "#                            #", "#                            #", "#                            #", "#                            #", "#                            #", "#                     ZZZ    #", "#                #####Z Z    #", "#                #####Z Z    #", "#12m 34 o    m   #####ZkZ mD #", "##############################", "##############################"]}, {"n": "Lorong Palang", "h": "Dua palang, tiga tombol. Siapa menahan, siapa berjalan?", "m": ["##############################", "#        X       Y           #", "#        X       Y           #", "#        X       Y           #", "#        X       Y           #", "#        X       Y           #", "#        X       Y           #", "#        X       Y    k      #", "#        X       Y           #", "#        X       Y           #", "#        X       Y           #", "# 1234b  X o c b Y         D #", "##############################", "##############################"]}, {"n": "Tuas & Lift", "h": "Lift, tuas, dan dua kunci. Atur siapa menekan, siapa naik!", "m": ["##############################", "#         k      V           #", "#                V           #", "#          l     V           #", "#        ####    V           #", "#                V           #", "#                V           #", "#                V           #", "#                V           #", "#                V           #", "#                V           #", "#12g34           V     k  D  #", "##############################", "##############################"], "mv": [[6, 10, 2, 6, 3.9, 4, "g"]]}, {"n": "Lift Naik", "h": "Lift ke atas tebing. Palangnya harus dibuka dari bawah... lalu dari atas!", "m": ["##############################", "#                 X          #", "#                 X          #", "#                 X  b   k D #", "#                 ############", "#                 ############", "#                 ############", "#                 ############", "#                 ############", "#                 ############", "#                 ############", "# 123 b  4        ############", "##############################", "##############################"], "mv": [[16, 10, 2, 16, 3.85, 7]]}, {"n": "Kotak Berat Berpacu", "h": "Dorong kotak berat melewati palang jingga sebelum waktunya habis!", "m": ["##############################", "#           W                #", "#           W                #", "#           W                #", "#           W                #", "#           W                #", "#           W                #", "#           W           k    #", "#           W     ############", "#           W     ############", "#           W     ############", "#12t 34 O   W D   ############", "##############################", "##############################"]}, {"n": "Pegas & Lift", "h": "Melambung, naik lift, lalu bertumpuk di ketinggian. Jangan jatuh!", "m": ["##############################", "#                       k    #", "#                            #", "#                            #", "#                            #", "#                            #", "#     ====            ====   #", "#                            #", "#                            #", "#                            #", "#                            #", "#123S  4  ^^^^^^^^^^^^     D #", "##############################", "##############################"], "mv": [[10, 6, 3, 19, 6, 8]]}, {"n": "Puncak Kerja Sama", "h": "Ujian terakhir: palang, kotak berat, lempeng, dan lift. Kalian pasti bisa!", "m": ["##############################", "#         X         Z        #", "#         X         Z        #", "#         X         Z        #", "#         X         Z     k  #", "#         X         Z  #######", "#         X         Z  #######", "#         X         Z  #######", "#         X         Z  #######", "#         X         Z  #######", "#         X         Z  #######", "#12m34b   X O b D m Z  #######", "##############################", "##############################"], "mv": [[21, 10, 2, 21, 4.85, 7]]}];
 const T=16,COLS=30,ROWS=14,VW=480,VH=224,PW=12,PH=16,JUMP=275,GRAV=900,SPD=82,SPRING=Math.round(JUMP*1.62),PUSH=40,MAXF=430;
 const cv=$('cv'),cx=cv.getContext('2d');cv.width=VW;cv.height=VH;
 const Q=new URLSearchParams(location.search);const GRADE0=Math.max(0,Math.min(12,+(Q.get('g')||3)));const GRADE=GRADE0;let GRADE_ON=null;
@@ -353,37 +356,37 @@ const fmtT=s=>{s=Math.max(0,s||0);const m=Math.floor(s/60),r=Math.floor(s%60);re
 let AC=null,soundOn=true;function ac(){if(!AC){try{AC=new (window.AudioContext||window.webkitAudioContext)()}catch(e){}}if(AC&&AC.state==='suspended')AC.resume().catch(()=>{});return AC}
 function beep(f,d=.08,type='square',vol=.05,slide=0){if(!soundOn)return;const a=ac();if(!a)return;const o=a.createOscillator(),g=a.createGain();o.type=type;o.frequency.setValueAtTime(f,a.currentTime);if(slide)o.frequency.linearRampToValueAtTime(f+slide,a.currentTime+d);g.gain.setValueAtTime(vol,a.currentTime);g.gain.exponentialRampToValueAtTime(.0001,a.currentTime+d);o.connect(g);g.connect(a.destination);o.start();o.stop(a.currentTime+d+.02)}
 const SFX={jump:()=>beep(440,.12,'square',.035,320),click:()=>beep(220,.06,'square',.05),door:()=>beep(160,.25,'triangle',.08,-60),ok:()=>[523,659,784,1047].forEach((f,i)=>setTimeout(()=>beep(f,.1),i*80)),bad:()=>beep(196,.25,'sawtooth',.05,-80),hurt:()=>beep(330,.25,'square',.05,-250),
-  key:()=>[784,988,1319].forEach((f,i)=>setTimeout(()=>beep(f,.08),i*70)),spring:()=>beep(300,.18,'square',.05,600),btn:()=>beep(520,.05,'square',.04),btnUp:()=>beep(380,.05,'square',.03),bar:()=>beep(140,.12,'triangle',.06,80),latch:()=>[392,523,659,784].forEach((f,i)=>setTimeout(()=>beep(f,.09,'triangle',.06),i*70)),
+  lever:()=>{beep(260,.06,'square',.05,-60);setTimeout(()=>beep(520,.08,'triangle',.05),60)},key:()=>[784,988,1319].forEach((f,i)=>setTimeout(()=>beep(f,.08),i*70)),spring:()=>beep(300,.18,'square',.05,600),btn:()=>beep(520,.05,'square',.04),btnUp:()=>beep(380,.05,'square',.03),bar:()=>beep(140,.12,'triangle',.06,80),latch:()=>[392,523,659,784].forEach((f,i)=>setTimeout(()=>beep(f,.09,'triangle',.06),i*70)),
   enter:()=>[660,880].forEach((f,i)=>setTimeout(()=>beep(f,.08,'triangle',.06),i*70)),stack:()=>beep(700,.04,'square',.025),push:()=>beep(90,.05,'triangle',.04),win:()=>[523,523,784,784,880,1047].forEach((f,i)=>setTimeout(()=>beep(f,.14,'square',.05),i*120))};
 let musT=null;const MEL=[523,0,659,0,784,659,523,0,587,0,698,0,880,698,587,0,523,0,659,784,1047,0,880,784,698,659,587,523,587,0,0,0],BASS=[131,131,165,165,196,196,165,165,147,147,175,175,220,220,175,175];
 function music(on){clearInterval(musT);musT=null;if(!on||!soundOn)return;let i=0;musT=setInterval(()=>{if(paused||!running)return;const m=MEL[i%MEL.length];if(m)beep(m,.11,'square',.016);if(i%2===0)beep(BASS[(i/2)%BASS.length],.2,'triangle',.028);i++},150)}
 
 /* ====== keadaan permainan ====== */
 let loadAt=0,LV=0,NPL=2,P=[],running=false,paused=false,quizOpen=false,qCool=0,levelT=0,won=false,wonT=0,dying=0,menuOpen=false;
-let SOL=null,BARS=[],BTNS=[],PLATES=[],SPRINGS=[],SPIKES=[],boxes=[],key=null,door=null,latched=false,barOpen={X:false,Y:false,Z:false,W:false},barAnim={X:0,Y:0,Z:0,W:0},MOV=[],wT=0,BG=null,parts=[];
-const BARC={X:'#e2483d',Y:'#3d8bfd',Z:'#9b6bff',W:'#ff9636'},BTN2BAR={b:'X',c:'Y',t:'W'},WTIME=3.5;
+let SOL=null,BARS=[],BTNS=[],PLATES=[],SPRINGS=[],SPIKES=[],boxes=[],KEYS=[],LEVERS=[],door=null,latched=false,barOpen={X:false,Y:false,Z:false,W:false},barAnim={X:0,Y:0,Z:0,W:0},MOV=[],wT=0,BG=null,parts=[];
+const BARC={X:'#e2483d',Y:'#3d8bfd',Z:'#9b6bff',W:'#ff9636',V:'#14b8a6',G:'#ffd23f'},BTN2BAR={b:'X',c:'Y',t:'W',g:'G'},WTIME=3.5;
 const TH=[{n:'Hutan',sky:['#7cc8f5','#d9f2ff'],h1:'#9ad57e',h2:'#6dbb57',g:'#8a5a33',gd:'#6b4226',gl:'#a06a3e',top:'#5fc04a',topd:'#3f9a35',pl:'#c68a4a',pld:'#8a5a2b'},
   {n:'Pantai',sky:['#ffbf8a','#fff0d6'],h1:'#ffd7a8',h2:'#7fc8d8',g:'#e3b86c',gd:'#c49650',gl:'#efcd8a',top:'#f6e0a6',topd:'#d9b66a',pl:'#b07a45',pld:'#7d5126'},
   {n:'Gua',sky:['#262256','#3f367c'],h1:'#3a3373',h2:'#2d2862',g:'#6a5a8a',gd:'#4f4270',gl:'#7d6da0',top:'#9b8acb',topd:'#6f60a0',pl:'#8a6a4a',pld:'#5c4630'},
   {n:'Candi',sky:['#9fe0d4','#e9fbf5'],h1:'#a9d6bf',h2:'#82bfa2',g:'#9a9488',gd:'#77715f',gl:'#b3ad9f',top:'#7cc45e',topd:'#5a9d42',pl:'#a07850',pld:'#6e4f30'}];
 const thOf=i=>TH[Math.floor(i/3)%TH.length];
 
-function loadLevel(i){LV=Math.max(0,Math.min(LEVELS.length-1,i|0));const m=LEVELS[LV].m;SOL=[];BARS=[];BTNS=[];PLATES=[];SPRINGS=[];SPIKES=[];boxes=[];key=null;door=null;latched=false;barOpen={X:false,Y:false,Z:false,W:false};barAnim={X:0,Y:0,Z:0,W:0};wT=0;parts=[];MOV=(LEVELS[LV].mv||[]).map(v=>({x0:v[0]*T,y0:v[1]*T,x1:v[3]*T,y1:v[4]*T,w:v[2]*T,h:6,per:v[5],x:v[0]*T,y:v[1]*T,dx:0,dy:0,mov:1}));FX.txt=[];
+function loadLevel(i){LV=Math.max(0,Math.min(LEVELS.length-1,i|0));const m=LEVELS[LV].m;SOL=[];BARS=[];BTNS=[];PLATES=[];SPRINGS=[];SPIKES=[];boxes=[];KEYS=[];LEVERS=[];door=null;latched=false;barOpen={X:false,Y:false,Z:false,W:false,V:false};barAnim={X:0,Y:0,Z:0,W:0,V:0};wT=0;parts=[];MOV=(LEVELS[LV].mv||[]).map(v=>({x0:v[0]*T,y0:v[1]*T,x1:v[3]*T,y1:v[4]*T,w:v[2]*T,h:6,per:v[5],trig:v[6]||'',s:0,x:v[0]*T,y:v[1]*T,dx:0,dy:0,mov:1}));FX.txt=[];
   const sp=[];
   for(let y=0;y<ROWS;y++){SOL.push(new Array(COLS).fill(0));for(let x=0;x<COLS;x++){const ch=m[y][x];
     if(ch==='#')SOL[y][x]=16;else if(ch==='=')SOL[y][x]=6;
-    else if(ch==='X'||ch==='Y'||ch==='Z'||ch==='W')BARS.push({x,y,t:ch});
-    else if(ch==='b'||ch==='c'||ch==='t')BTNS.push({x,y,t:ch,on:false});
+    else if(ch==='X'||ch==='Y'||ch==='Z'||ch==='W'||ch==='V')BARS.push({x,y,t:ch});else if(ch==='l')LEVERS.push({x,y,on:false,a:0,touch:{}});
+    else if(ch==='b'||ch==='c'||ch==='t'||ch==='g')BTNS.push({x,y,t:ch,on:false});
     else if(ch==='m')PLATES.push({x,y,on:false});
     else if(ch==='S')SPRINGS.push({x,y,a:0});
     else if(ch==='^')SPIKES.push({x,y});
     else if(ch==='o'||ch==='O')boxes.push({x:x*T,y:y*T,w:16,h:16,vy:0,heavy:ch==='O',dx:0,dy:0,tx:x*T,ty:y*T,pi:{},sx:x*T,sy:y*T});
-    else if(ch==='k')key={x:x*T+2,y:y*T+3,hx:x*T+2,hy:y*T+3,car:-1,used:false,fx:0,fy:0};
+    else if(ch==='k')KEYS.push({x:x*T+2,y:y*T+3,got:false,fly:0});
     else if(ch==='D')door={x:x*T,y:(y-1)*T,open:false,glow:0};
     else if(ch>='1'&&ch<='4')sp[+ch-1]={x:x*T+2,y:(y+1)*T-PH}}}
-  const n=NET.on?2:NPL;P=[];for(let i=0;i<n;i++){const s=sp[i]||sp[0];P.push(mkP(i,s.x,s.y))}
-  if(NET.on&&ME>=0){const q=P[1-ME],me_=P[ME];q.remote=true;me_.pet=selPets(1)[0];const e=costOf(me_.pet);me_.hat=e.h;me_.acc=e.a;q.pet=NET.peerPet||'uli';q.hat=NET.peerHat||'';q.acc=NET.peerAcc||''}else{const s=selPets(n);P.forEach(p=>{p.pet=s[p.i];const e=costOf(p.pet);p.hat=e.h;p.acc=e.a})}
-  levelT=0;won=false;wonT=0;dying=0;qCool=0;loadAt=performance.now();BG=bake();hudKey()}
+  const n=NET.on?Math.max(2,NET.roster.length):NPL;P=[];for(let i=0;i<n;i++){const s=sp[i]||sp[0];P.push(mkP(i,s.x,s.y))}
+  if(NET.on&&ME>=0){P.forEach(p=>{const r=NET.roster[p.i];if(p.i===ME){p.pet=selPets(1)[0];const e=costOf(p.pet);p.hat=e.h;p.acc=e.a;return}p.remote=true;if(!r||!r.on){p.gone=true;p.ent=true;return}p.pet=r.pet||PETIDS[p.i];p.hat=r.hat||'';p.acc=r.acc||''})}else{const s=selPets(n);P.forEach(p=>{p.pet=s[p.i];const e=costOf(p.pet);p.hat=e.h;p.acc=e.a})}
+  levelT=0;won=false;wonT=0;dying=0;qCool=0;loadAt=performance.now();CAM.init=false;BG=bake();hudKey()}
 function mkP(i,x,y){return {i,x,y,vx:0,vy:0,face:i%2?-1:1,ground:true,coy:0,jb:0,jh:0,inp:{l:0,r:0,j:0,d:0},on:null,anim:0,ent:false,entT:0,hat:'',remote:false,dx:0,dy:0,say:null,sq:0,blink:2+Math.random()*3,pb:null,ign:null,net:null,lastG:true}}
 
 /* ====== tabrakan ====== */
@@ -399,7 +402,7 @@ function barsOverlapping(r){const s=new Set();for(const b of BARS)if(ov(r,{x:b.x
 /* ====== fisika ====== */
 function step(dt){if(!running||won&&wonT>1.2)return;
   if(dying>0){dying-=dt;stepParts(dt);if(dying<=0)restartLevel(false);return}
-  if(!won)levelT+=dt;if(qCool>0)qCool-=dt;movUpdate();if(door)door.glow+=dt;
+  if(!won)levelT+=dt;if(qCool>0)qCool-=dt;movUpdate(dt);if(door)door.glow+=dt;
   // pemain jarak jauh (online)
   P.forEach(p=>{if(p.remote)netLerp(p,dt)});
   if(NET.on&&ME===1)boxes.forEach(b=>{const ox=b.x,oy=b.y;b.x+=(b.tx-b.x)*Math.min(1,dt*16);b.y+=(b.ty-b.y)*Math.min(1,dt*16);if(Math.abs(b.tx-b.x)>24||Math.abs(b.ty-b.y)>24){b.x=b.tx;b.y=b.ty}b.dx=b.x-ox;b.dy=b.y-oy});
@@ -458,22 +461,23 @@ function stepBoxes(dt){const cnt=boxes.map(()=>({'1':0,'-1':0}));
 /* tombol, lempeng & palang (dihitung oleh tuan rumah, dikirim ke tamu) */
 function standsOn(e,x,y){const bot=e.y+(e.h||PH),w=e.w||PW;if(Math.abs(bot-(y+1)*T)>2.5)return false;return Math.min(e.x+w,x*T+14)-Math.max(e.x,x*T+2)>=3}
 function pressedAt(x,y){return P.some(p=>!p.ent&&standsOn(p,x,y))||boxes.some(b=>standsOn(b,x,y))}
-function movUpdate(){MOV.forEach(m=>{const s=.5-.5*Math.cos(levelT*2*Math.PI/m.per),nx=m.x0+(m.x1-m.x0)*s,ny=m.y0+(m.y1-m.y0)*s;m.dx=nx-m.x;m.dy=ny-m.y;m.x=nx;m.y=ny})}
+function movUpdate(dt){const gOn=BTNS.some(b=>b.t==='g'&&b.on);MOV.forEach(m=>{let s;if(m.trig){m.s=Math.max(0,Math.min(1,m.s+(gOn?1:-1)*(dt||0)/(m.per/2)));s=m.s*m.s*(3-2*m.s)}else s=.5-.5*Math.cos(levelT*2*Math.PI/m.per);const nx=m.x0+(m.x1-m.x0)*s,ny=m.y0+(m.y1-m.y0)*s;m.dx=nx-m.x;m.dy=ny-m.y;m.x=nx;m.y=ny})}
 function updateSwitches(dt){const was={...barOpen};
   BTNS.forEach(b=>{const on=pressedAt(b.x,b.y);if(on&&!b.on)SFX.btn();else if(!on&&b.on)SFX.btnUp();b.on=on});
   PLATES.forEach(m=>{m.on=pressedAt(m.x,m.y)});
   if(PLATES.length&&!latched&&PLATES.every(m=>m.on)){latched=true;SFX.latch();shake(2,.25);say('Kandang terbuka! Lempeng terkunci.',2.5);BARS.filter(b=>b.t==='Z').forEach(b=>sparks(b.x*T+8,b.y*T+8,BARC.Z,4,90,.4))}
   barOpen.X=BTNS.some(b=>b.t==='b'&&b.on);barOpen.Y=BTNS.some(b=>b.t==='c'&&b.on);barOpen.Z=latched;
   if(BTNS.some(b=>b.t==='t'&&b.on))wT=WTIME;else if(wT>0){const a=Math.ceil(wT*2);wT-=dt;if(Math.ceil(wT*2)<a&&wT>0)beep(wT<1.2?1200:900,.04,'square',.03)}barOpen.W=wT>0;
-  ['X','Y','Z','W'].forEach(t=>{if(was[t]!==barOpen[t]&&BARS.some(b=>b.t===t))SFX.bar()})}
+  LEVERS.forEach(l=>{const r={x:l.x*T+2,y:l.y*T+4,w:12,h:12};P.forEach(p=>{if(p.ent)return;const o=ov(prect(p),r);if(o&&!l.touch[p.i]){const was=l.on;l.on=Math.abs(p.vx)>8||Math.abs((p.net&&p.net.vx)||0)>8?((p.remote?(p.net&&p.net.vx):p.vx)>0):!l.on;if(was!==l.on)SFX.lever();sparks(l.x*T+8,l.y*T+8,BARC.V,6,90,.35)}l.touch[p.i]=o})});barOpen.V=LEVERS.reduce((a,l)=>a!==l.on,false);
+  ['X','Y','Z','W','V'].forEach(t=>{if(was[t]!==barOpen[t]&&BARS.some(b=>b.t===t))SFX.bar()})}
 /* kunci & pintu */
-function updateKeyDoor(dt){if(!key)return;
-  if(key.car<0&&!key.used){for(const p of P){if(p.remote||p.ent)continue;if(ov(prect(p),{x:key.x-1,y:key.y-1,w:14,h:12})){key.car=p.i;p.joyU=performance.now()/1000+.7;SFX.key();ring(key.x+6,key.y+5,'#ffd23f',14);sparks(key.x+6,key.y+5,'#ffd23f',10,120,.4);netEv({t:'kpick',p:p.i});hudKey();
-        if(!NET.on||p.i===ME)say(NET.on?'Kamu membawa kunci! Bawa ke pintu.':`${petName(p.pet)} membawa kunci! Bawa ke pintu.`,2.5);break}}}
-  if(key.car>=0&&!key.used){const p=P[key.car];if(p){const tx=p.x+PW/2-6-p.face*7,ty=p.y-9;key.x+=(tx-key.x)*Math.min(1,dt*12);key.y+=(ty-key.y)*Math.min(1,dt*12);
-      if(!p.remote&&!door.open&&!quizOpen&&qCool<=0&&ov(prect(p),{x:door.x+1,y:door.y+4,w:14,h:28})){key.atDoor=true;openQuiz('gate')}}}
+function keyGet(k,who,remote){const K_=KEYS[k];if(!K_||K_.got)return;K_.got=true;K_.fly=performance.now()/1000;SFX.key();ring(K_.x+6,K_.y+3,'#ffd23f',14);sparks(K_.x+6,K_.y+3,'#ffd23f',12,130,.45);const p=P[who];if(p)p.joyU=performance.now()/1000+.7;
+  if(!remote)netEv({t:'kget',k});hudKey();const n=KEYS.filter(q=>q.got).length;say(n<KEYS.length?`Kunci ${n} dari ${KEYS.length}! Cari yang lain.`:'Semua kunci terkumpul! Sentuh pintunya untuk membuka gembok.',2.5)}
+function updateKeyDoor(dt){
+  KEYS.forEach((K_,k)=>{if(K_.got)return;for(const p of P){if(p.remote||p.ent)continue;if(ov(prect(p),{x:K_.x-1,y:K_.y-2,w:14,h:12})){keyGet(k,p.i,false);break}}});
+  if(door&&!door.open&&KEYS.every(q=>q.got)&&!quizOpen&&qCool<=0){for(const p of P){if(p.remote||p.ent)continue;if(ov(prect(p),{x:door.x+1,y:door.y+4,w:14,h:28})){openQuiz('gate');break}}}
   if(door&&door.open){for(const p of P){if(p.remote||p.ent)continue;if(p.ground&&Math.abs(p.x+PW/2-(door.x+8))<7&&Math.abs(p.y+PH-(door.y+32))<3){p.ent=true;p.entT=0;SFX.enter();sparks(door.x+8,door.y+20,'#ffe08a',10,80,.5);hudKey()}}}}
-function unlockDoor(remote){if(!door||door.open)return;door.open=true;P.forEach(p=>p.joyU=performance.now()/1000+.9);if(key){key.used=true;key.car=-1}SFX.ok();shake(2,.2);ring(door.x+8,door.y+16,'#ffe08a',22);sparks(door.x+8,door.y+14,'#ffe08a',18,140,.6);if(!remote)netEv({t:'unlock'});
+function unlockDoor(remote){if(!door||door.open)return;door.open=true;P.forEach(p=>p.joyU=performance.now()/1000+.9);SFX.ok();shake(2,.2);ring(door.x+8,door.y+16,'#ffe08a',22);sparks(door.x+8,door.y+14,'#ffe08a',18,140,.6);if(!remote)netEv({t:'unlock'});
   say(NET.on?'Gembok terbuka! Masuk ke pintu bersama.':'Gembok terbuka! Semua pemain masuk ke pintu.',3);hudKey()}
 function die(p){if(dying>0||won)return;dying=.7;SFX.hurt();shake(4,.3);flash(.15);sparks(p.x+6,p.y+7,'#ffffff',14,170,.5,2);sparks(p.x+6,p.y+7,PCOL[p.i],10,140,.5,2);p.dead=1;if(NET.on&&!p.remote)netEv({t:'restart'})}
 function restartLevel(manual){if(manual){netEv({t:'restart',man:1});SFX.click()}loadLevel(LV);running=true;paused=false;['pPause','pQuiz'].forEach(i=>$(i).hidden=true);quizOpen=false;Q2=null;if(NET.on)setTimeout(myHatSend,200)}
@@ -494,7 +498,7 @@ function stepParts(dt){parts.forEach(q=>{q.t-=dt;q.x+=q.vx*dt;q.y+=q.vy*dt;if(!q
 let tipT=null;function say(t,s=3){const el=$('tip');el.textContent=t;el.hidden=false;clearTimeout(tipT);tipT=setTimeout(()=>{el.hidden=true},s*1000)}
 function banner(sm,big){const b=$('banner');$('bnS').textContent=sm;$('bnT').textContent=big;b.hidden=true;void b.offsetWidth;b.hidden=false;clearTimeout(banner.t);banner.t=setTimeout(()=>b.hidden=true,2300)}
 function hudKey(){if(!LEVELS[LV])return;$('kcLv').textContent=(LV+1)+' · '+LEVELS[LV].n;const el=$('kc');const n=P.filter(p=>p.ent).length;
-  $('kcK').textContent=door&&door.open?`🚪 ${n}/${P.length}`:`🔑 ${key&&key.car>=0?1:0}/1`;el.classList.toggle('got',!!(key&&(key.car>=0||key.used)))}
+  const all=P.filter(p=>!p.gone).length,kg=KEYS.filter(q=>q.got).length;$('kcK').textContent=door&&door.open?`🚪 ${P.filter(p=>p.ent&&!p.gone).length}/${all}`:`🔑 ${kg}/${KEYS.length}`;el.classList.toggle('got',KEYS.length>0&&kg===KEYS.length)}
 
 /* ====== gambar ====== */
 /* ====== gambar halus (resolusi layar) ====== */
@@ -536,7 +540,14 @@ function drawKey(x,y,a){cx.save();cx.globalAlpha=a==null?1:a;cx.translate(x+6,y+
   rr(cx,-1.5,-1,9,2.4,1,kg,.8);rr(cx,4.5,0,1.4,3,.4,kg,.7);rr(cx,6.6,0,1.4,2.4,.4,kg,.7);
   ell(cx,-3.5,0,3.3,3.3,kg,.9);ell(cx,-3.5,0,1.3,1.3,'rgba(43,33,64,.85)',0);ell(cx,-4.6,-1.4,.8,.5,'rgba(255,255,255,.9)',0);cx.restore()}
 function tag(x,y,txt,col,alpha){cx.font='800 6.5px system-ui,-apple-system,Segoe UI,Roboto,sans-serif';const w=cx.measureText(txt).width+6;cx.globalAlpha=alpha;rr(cx,x-w/2,y-9,w,7.5,3.5,col,.7);cx.beginPath();cx.moveTo(x-1.8,y-1.6);cx.lineTo(x,y+.6);cx.lineTo(x+1.8,y-1.6);cx.closePath();shp(cx,col,0);cx.fillStyle=OL;cx.textAlign='center';cx.fillText(txt,x,y-3);cx.textAlign='left';cx.globalAlpha=1}
-function draw(){const now=performance.now()/1000;cx.setTransform(RS,0,0,RS,0,0);cx.imageSmoothingEnabled=true;
+/* kamera: dekat (jarak pandang kecil), mengikuti pemain; satu layar ramai → sedikit menjauh supaya semua tetap terlihat */
+const CAM={x:0,y:0,z:1,init:false},ZMAX=1.75;
+function camTarget(){let L=P.filter(p=>!p.ent&&!p.gone);if(!L.length)L=P.filter(p=>!p.gone);if(!L.length)return {x:VW/2,y:VH/2,z:1};
+  let x0=1e9,x1=-1e9,y0=1e9,y1=-1e9;L.forEach(p=>{x0=Math.min(x0,p.x);x1=Math.max(x1,p.x+PW);y0=Math.min(y0,p.y-10);y1=Math.max(y1,p.y+PH)});
+  const z=Math.max(1,Math.min(ZMAX,VW/(x1-x0+170),VH/(y1-y0+110)));return {x:(x0+x1)/2,y:(y0+y1)/2-8,z}}
+function camStep(snap){const t=camTarget(),k=snap?1:.08;CAM.z+=(t.z-CAM.z)*k;const vw=VW/CAM.z,vh=VH/CAM.z;let tx=t.x-vw/2,ty=t.y-vh/2;tx=Math.max(0,Math.min(VW-vw,tx));ty=Math.max(0,Math.min(VH-vh,ty));
+  if(snap||!CAM.init){CAM.x=tx;CAM.y=ty;CAM.init=true}else{CAM.x+=(tx-CAM.x)*.12;CAM.y+=(ty-CAM.y)*.12}CAM.x=Math.max(0,Math.min(VW-vw,CAM.x));CAM.y=Math.max(0,Math.min(VH-vh,CAM.y))}
+function draw(){const now=performance.now()/1000;if(running||won)camStep(false);else if(!CAM.init)camStep(true);const Z=RS*CAM.z;cx.setTransform(Z,0,0,Z,-CAM.x*Z,-CAM.y*Z);cx.imageSmoothingEnabled=true;
   cx.save();if(FX.sh>0){const m=FX.sm*Math.min(1,FX.sh*6);cx.translate((Math.random()-.5)*m*2,(Math.random()-.5)*m*2)}else FX.sm=0;
   if(BG)cx.drawImage(BG,0,0,VW,VH);
   // pintu
@@ -553,7 +564,7 @@ function draw(){const now=performance.now()/1000;cx.setTransform(RS,0,0,RS,0,0);
   PLATES.forEach(p=>{const x=p.x*T,y=p.y*T,col=latched?'#5ccf5a':BARC.Z,h=p.on?1.6:3.2;if(!latched){cx.globalAlpha=p.on?.45:.2+Math.sin(now*4)*.08;const gg=cx.createLinearGradient(0,y+2,0,y+14);gg.addColorStop(0,'rgba(155,107,255,0)');gg.addColorStop(1,BARC.Z);cx.fillStyle=gg;cx.fillRect(x+2,y+2,12,12);cx.globalAlpha=1}
     rr(cx,x+.5,y+13,15,3,1.2,'#8a8fa0',.8);rr(cx,x+2,y+13-h,12,h+.5,1.2,col,.8);rr(cx,x+3,y+13-h+.5,7,.8,.4,'rgba(255,255,255,.5)',0)});
   // palang
-  ['X','Y','Z','W'].forEach(t=>{barAnim[t]+=((barOpen[t]?1:0)-barAnim[t])*.25});
+  ['X','Y','Z','W','V'].forEach(t=>{barAnim[t]+=((barOpen[t]?1:0)-barAnim[t])*.25});
   const runs={};BARS.forEach(b=>{const k=b.t+'|'+b.x;(runs[k]=runs[k]||[]).push(b)});
   Object.values(runs).forEach(list=>{const t=list[0].t,o=barAnim[t],col=BARC[t];const xs=[...new Set(list.map(b=>b.x))],ys=list.map(b=>b.y);const y0=Math.min(...ys)*T,y1=(Math.max(...ys)+1)*T,x=list[0].x*T;
     if(list.every(b=>b.x===list[0].x)){if(o>.97){cx.globalAlpha=.3;cx.setLineDash([3,4]);cx.strokeStyle=col;cx.lineWidth=1.4;cx.beginPath();cx.moveTo(x+8,y0);cx.lineTo(x+8,y1);cx.stroke();cx.setLineDash([]);cx.globalAlpha=1;return}
@@ -568,12 +579,16 @@ function draw(){const now=performance.now()/1000;cx.setTransform(RS,0,0,RS,0,0);
   if(wT>0&&wT<WTIME-.05)BTNS.forEach(b=>{if(b.t!=='t')return;const x=b.x*T+8,y=b.y*T+3,f=wT/WTIME;cx.beginPath();cx.arc(x,y,4.5,0,Math.PI*2);shp(cx,'rgba(255,255,255,.85)',.8);cx.beginPath();cx.moveTo(x,y);cx.arc(x,y,3.6,-Math.PI/2,-Math.PI/2+Math.PI*2*f);cx.closePath();shp(cx,wT<1.2?'#e2483d':'#ff9636',0)});
   // pegas
   SPRINGS.forEach(s=>{const x=s.x*T+8,y=s.y*T+16;if(s.a>0)s.a-=1/60;const c=s.a>0?2.5:7;rr(cx,x-7,y-2.6,14,2.6,1,'#6b7088',.8);cx.beginPath();for(let i=0;i<=4;i++){const yy=y-2.6-c*i/4;cx.lineTo(x+(i%2?4:-4),yy)}cx.lineWidth=2.4;cx.strokeStyle=OL;cx.stroke();cx.lineWidth=1.2;cx.strokeStyle='#d8dbe8';cx.stroke();rr(cx,x-7,y-5.4-c,14,3,1.4,'#e2483d',.8)});
+  // tuas
+  LEVERS.forEach(l=>{const x=l.x*T+8,y=l.y*T+16;l.a+=((l.on?1:-1)*.7-l.a)*.25;cx.save();cx.translate(x,y-3);cx.rotate(l.a);cap(cx,0,0,0,-9,1.6,'#9aa0b4');ell(cx,0,-10,2.2,2.2,l.on?'#5ccf5a':'#e2483d',.8);ell(cx,-.7,-10.7,.7,.5,'rgba(255,255,255,.8)',0);cx.restore();cx.beginPath();cx.ellipse(x,y-.5,5.5,4,0,Math.PI,0);cx.closePath();shp(cx,'#8f95aa',.8);rr(cx,x-7,y-1.2,14,1.6,.6,'#6b7088',.6)});
   // kotak
   boxes.forEach(b=>{const x=b.x,y=b.y;if(b.heavy){rr(cx,x,y,16,16,2.5,'#8f95aa',.9);rr(cx,x+2,y+2,12,12,1.5,'#a3a9bc',0);[[3,3],[13,3],[3,13],[13,13]].forEach(([a,c])=>ell(cx,x+a,y+c,.9,.9,'#6c7288',0));cx.font='900 7px system-ui,sans-serif';cx.textAlign='center';cx.fillStyle=OL;cx.fillText('×2',x+8,y+10.6);cx.textAlign='left';
       if(b.cnt===1){cx.globalAlpha=.55+Math.sin(now*8)*.35;tag(x+8,y-2,'Butuh 2!','#ffe08a',cx.globalAlpha)}}
     else{rr(cx,x,y,16,16,2,'#d39555',.9);cx.strokeStyle='#a0672f';cx.lineWidth=1.2;cx.beginPath();cx.rect(x+2,y+2,12,12);cx.moveTo(x+2.5,y+2.5);cx.lineTo(x+13.5,y+13.5);cx.stroke();rr(cx,x+1,y+1,14,1.2,.6,'rgba(255,255,255,.35)',0)}});
   // kunci di tempatnya
-  if(key&&!key.used&&key.car<0){const by=Math.sin(now*3)*1.5;const gg=cx.createRadialGradient(key.x+6,key.y+3+by,1,key.x+6,key.y+3+by,11);gg.addColorStop(0,'rgba(255,230,140,.75)');gg.addColorStop(1,'rgba(255,230,140,0)');cx.fillStyle=gg;cx.fillRect(key.x-6,key.y-9+by,24,24);drawKey(key.x,key.y+by)}
+  KEYS.forEach(K_=>{if(K_.got){const f=now-K_.fly;if(f<.7){const k=f/.7,e=k*k*(3-2*k),hx=CAM.x+VW/CAM.z/2-6,hy=CAM.y-12/CAM.z,x=K_.x+(hx-K_.x)*e,y=K_.y+(hy-K_.y)*e-Math.sin(k*Math.PI)*30;cx.save();cx.translate(x+6,y+3);cx.scale(1+k*.6,1+k*.6);drawKey(-6,-3);cx.restore()}return}
+    const by=Math.sin(now*3+K_.x)*1.5;const gg=cx.createRadialGradient(K_.x+6,K_.y+3+by,1,K_.x+6,K_.y+3+by,11);gg.addColorStop(0,'rgba(255,230,140,.75)');gg.addColorStop(1,'rgba(255,230,140,0)');cx.fillStyle=gg;cx.fillRect(K_.x-6,K_.y-9+by,24,24);drawKey(K_.x,K_.y+by);
+    cx.globalAlpha=.6+Math.sin(now*5+K_.y)*.4;cx.fillStyle='#fff';[[-3,-4],[14,0],[4,8]].forEach(([dx,dy],q)=>{const s=.6+((Math.floor(now*3)+q)%3)*.4;cx.beginPath();cx.moveTo(K_.x+dx,K_.y+dy-s*1.6+by);cx.lineTo(K_.x+dx+s*.5,K_.y+dy+by);cx.lineTo(K_.x+dx,K_.y+dy+s*1.6+by);cx.lineTo(K_.x+dx-s*.5,K_.y+dy+by);cx.closePath();cx.fill()});cx.globalAlpha=1});
   // pemain
   const ord=P.map((p,i)=>i).sort((a,b)=>P[b].y-P[a].y);
   ord.forEach(i=>{const p=P[i];if(p.ent)return;if(p.dead&&dying>0&&Math.floor(now*20)%2)return;
@@ -595,19 +610,24 @@ function draw(){const now=performance.now()/1000;cx.setTransform(RS,0,0,RS,0,0);
     cx.save();cx.translate(p.x+PW/2,p.y+PH-bob);cx.rotate(p.face<0?-rot:rot);cx.scale(p.face<0?-sx:sx,sy);
     drawChar(cx,p.pet,{st,ph,t,bl:(st==='idle'||st==='run')&&p.blink<0,lk,ear,hat:p.hat,acc:p.acc});cx.restore()});
   // kunci yang dibawa
-  if(key&&!key.used&&key.car>=0){drawKey(key.x,key.y+Math.sin(now*6))}
   // penanda pemain
-  ord.forEach(i=>{const p=P[i];if(p.ent||p.dead||p.say)return;const show=NET.on||levelT<4||P.length>2;if(!show)return;const lbl=NET.on?(p.remote?(NET.peer||'Teman').slice(0,10):'Kamu'):'P'+(i+1);
+  ord.forEach(i=>{const p=P[i];if(p.ent||p.dead||p.say)return;const show=NET.on||levelT<4||P.length>2;if(!show)return;const lbl=NET.on?(p.remote?nameOf(i).slice(0,10):'Kamu'):'P'+(i+1);
     tag(p.x+PW/2,p.y-8-(p.hat?7:0)-(p.pet==='kiki'?6:0),lbl,PCOL[i],NET.on&&!p.remote?.75:.95)});
   // partikel
   parts.forEach(q=>{if(q.ring){const k=1-q.t/q.t0;cx.strokeStyle=q.col;cx.globalAlpha=1-k;cx.lineWidth=1.5;cx.beginPath();cx.arc(q.x,q.y,q.ring*k+2,0,7);cx.stroke();cx.globalAlpha=1;return}cx.globalAlpha=Math.min(1,q.t*3);ell(cx,q.x,q.y,(q.sz||2)*.6,(q.sz||2)*.6,q.col,0);cx.globalAlpha=1});
   cx.font='900 8px system-ui,sans-serif';cx.textAlign='center';FX.txt.forEach(t=>{cx.globalAlpha=Math.min(1,t.t*2);cx.lineWidth=2;cx.strokeStyle=OL;cx.strokeText(t.txt,t.x,t.y);cx.fillStyle=t.col;cx.fillText(t.txt,t.x,t.y)});cx.globalAlpha=1;cx.textAlign='left';
+  // penunjuk arah: teman & kunci di luar layar
+  {const vx0=CAM.x,vy0=CAM.y,vw=VW/CAM.z,vh=VH/CAM.z,m=7/CAM.z;const ind=(x,y,col,kind)=>{if(x>vx0&&x<vx0+vw&&y>vy0&&y<vy0+vh)return;const cxv=vx0+vw/2,cyv=vy0+vh/2,dx=x-cxv,dy=y-cyv;const s=Math.min((vw/2-m)/Math.abs(dx||1e-6),(vh/2-m)/Math.abs(dy||1e-6));const ax=cxv+dx*s,ay=cyv+dy*s,a=Math.atan2(dy,dx);
+      cx.save();cx.translate(ax,ay);cx.scale(1/CAM.z*1.4,1/CAM.z*1.4);cx.globalAlpha=.85+Math.sin(now*6)*.15;ell(cx,0,0,4.6,4.6,'#fff',.8);cx.rotate(a);cx.beginPath();cx.moveTo(7,0);cx.lineTo(4,-2.6);cx.lineTo(4,2.6);cx.closePath();shp(cx,col,.6);cx.rotate(-a);
+      if(kind==='k'){ell(cx,-1,0,1.6,1.6,'#ffd23f',.6);rr(cx,0,-.5,3,1,.4,'#ffd23f',0)}else ell(cx,0,0,2.4,2.4,col,.6);cx.restore();cx.globalAlpha=1};
+    if(running){P.forEach(p=>{if(p.ent||p.gone)return;ind(p.x+PW/2,p.y+PH/2,PCOL[p.i],'p')});KEYS.forEach(K_=>{if(!K_.got&&(K_.seen||levelT>12))ind(K_.x+6,K_.y+3,'#ffd23f','k')});
+      KEYS.forEach(K_=>{if(!K_.seen&&K_.x+6>vx0&&K_.x<vx0+vw&&K_.y>vy0&&K_.y<vy0+vh)K_.seen=1})}}
   // gelembung bicara
   P.forEach(p=>{if(p.say&&!p.ent)speech(p.x+PW/2,p.y-6-(p.hat?7:0)-(p.pet==='kiki'?6:0),p.say.t)});
-  cx.restore();
+  cx.restore();cx.setTransform(RS,0,0,RS,0,0);
   if(FX.fl>0){cx.fillStyle=`rgba(255,255,255,${Math.min(.6,FX.fl*4)})`;cx.fillRect(0,0,VW,VH)}
   if(dying>0&&dying<.35){cx.fillStyle=`rgba(27,29,58,${(.35-dying)/.35})`;cx.fillRect(0,0,VW,VH)}}
-function speech(X,Y,txt){cx.font='700 7.5px system-ui,-apple-system,Segoe UI,Roboto,sans-serif';const w=cx.measureText(txt).width+9,x0=Math.max(2,Math.min(VW-w-2,X-w/2)),y0=Math.max(18,Y-14);
+function speech(X,Y,txt){cx.font='700 7.5px system-ui,-apple-system,Segoe UI,Roboto,sans-serif';const w=cx.measureText(txt).width+9,x0=Math.max(CAM.x+2,Math.min(CAM.x+VW/CAM.z-w-2,X-w/2)),y0=Math.max(CAM.y+6,Y-14);
   rr(cx,x0,y0,w,11,5,'#fff8e7',.8);cx.beginPath();cx.moveTo(X-2.5,y0+10.6);cx.lineTo(X,y0+14);cx.lineTo(X+2.5,y0+10.6);cx.closePath();cx.fillStyle='#fff8e7';cx.fill();cx.strokeStyle=OL;cx.lineWidth=.8;cx.beginPath();cx.moveTo(X-2.5,y0+11);cx.lineTo(X,y0+14);cx.lineTo(X+2.5,y0+11);cx.stroke();
   cx.fillStyle=OL;cx.textAlign='left';cx.fillText(txt,x0+4.5,y0+7.8)}
 
@@ -636,25 +656,25 @@ function quizUI(title,hint,q,opts,onPick,none){document.querySelectorAll('#pQuiz
   if(none){const b=document.createElement('button');b.className='btn b3 qnone';b.textContent='🙅 Jawabannya tidak ada di layarku';b.onclick=()=>onPick('',b);box.appendChild(b)}
   $('pQuiz').hidden=false;quizOpen=true;P.forEach(p=>{if(!p.remote){p.inp={l:0,r:0,j:0,d:0};p.vx=0}});document.querySelectorAll('.pad button.on').forEach(b=>b.classList.remove('on'))}
 function q2Pick(v,b){const box=$('qOpts');box.querySelectorAll('button').forEach(x=>x.disabled=true);b.classList.add('picked');$('qHint').innerHTML='Menunggu jawaban temanmu…'}
-function openQuiz(arg,solo){quizOpen=true;let it=null;for(let k=0;k<5&&!it;k++)it=bankQ();if(!it)it=makeQ();const sub=(QSUBJ?esc(QSUBJ)+' · ':'');const mate=P[1-ME];
+function openQuiz(arg,solo){quizOpen=true;let it=null;for(let k=0;k<5&&!it;k++)it=bankQ();if(!it)it=makeQ();const sub=(QSUBJ?esc(QSUBJ)+' · ':'');const mates=P.filter(q=>q.i!==ME&&!q.gone&&q.remote),mate=mates[Math.floor(Math.random()*mates.length)];
   /* Soal Berdua (online): pilihan jawaban dibagi ke dua layar; jawaban benar hanya ada di salah satunya */
   if(!solo&&NET.on&&ME>=0&&mate&&it.opts.length>=3){const o=it.opts.slice().sort(()=>Math.random()-.5),h=Math.ceil(o.length/2),mine=o.slice(0,h),theirs=o.slice(h),id=Math.random().toString(36).slice(2,8);
-    Q2={id,role:'a',it,arg,mine,my:undefined,th:undefined,to:setTimeout(()=>{if(Q2&&Q2.id===id&&Q2.th===undefined){netEv({t:'q2c',id});Q2=null;qClose();say('Temanmu belum menjawab. Kamu jawab sendiri dulu, ya.',2.5);openQuiz(arg,true)}},30000)};
-    netEv({t:'q2',id,q:it.q,o:theirs});
+    Q2={id,role:'a',mate:mate&&mate.i,it,arg,mine,my:undefined,th:undefined,to:setTimeout(()=>{if(Q2&&Q2.id===id&&Q2.th===undefined){netEv({t:'q2c',id,to:mate.i});Q2=null;qClose();say('Temanmu belum menjawab. Kamu jawab sendiri dulu, ya.',2.5);openQuiz(arg,true)}},30000)};
+    netEv({t:'q2',id,q:it.q,o:theirs,to:mate.i});
     quizUI('Soal Berdua',sub+'Pilihan jawaban dibagi ke <b>dua layar</b>. Jawaban benar hanya ada di <b>salah satu</b> layar: pilih jawabannya, atau tekan "tidak ada" kalau tidak ada di layarmu.',it.q,mine,(v,b)=>{q2Pick(v,b);Q2.my=v;q2Check()},true);return}
   quizUI('🔒 Gembok Pintu',sub+'Jawab benar untuk membuka gembok pintu!',it.q,it.opts,(v)=>{advLog({q:1,ok:v===it.ans?1:0});
     if(v===it.ans){SFX.ok();qSuccess()}else{SFX.bad();qWrong(it.ans,it.ex,()=>openQuiz(arg,solo),'Belum tepat.')}})}
 function q2Check(){const Z=Q2;if(!Z||Z.role!=='a'||Z.my===undefined||Z.th===undefined)return;clearTimeout(Z.to);const inMine=Z.mine.includes(Z.it.ans);
-  const ok=inMine?(Z.my===Z.it.ans&&Z.th===''):(Z.th===Z.it.ans&&Z.my==='');netEv({t:'q2r',id:Z.id,ok:ok?1:0,ans:Z.it.ans,ex:Z.it.ex||'',w:inMine?0:1});advLog({q:1,ok:ok?1:0});Q2=null;
+  const ok=inMine?(Z.my===Z.it.ans&&Z.th===''):(Z.th===Z.it.ans&&Z.my==='');netEv({t:'q2r',id:Z.id,ok:ok?1:0,ans:Z.it.ans,ex:Z.it.ex||'',w:inMine?0:1,to:Z.mate});advLog({q:1,ok:ok?1:0});Q2=null;
   if(ok){SFX.ok();say('Kerja sama hebat! Kalian menjawab bersama dengan tepat.',3);qSuccess()}
   else{SFX.bad();qWrong(Z.it.ans,Z.it.ex,()=>openQuiz(Z.arg),inMine?'Jawabannya ada di layarmu.':'Jawabannya ada di layar temanmu.')}}
 function q2Recv(m){
-  if(m.t==='q2'){if(quizOpen||!running){netEv({t:'q2a',id:m.id,v:null});return}Q2={id:m.id,role:'b'};
-    quizUI('Soal Berdua',(QSUBJ?esc(QSUBJ)+' · ':'')+'Temanmu sampai di pintu! Pilihan jawaban dibagi ke <b>dua layar</b>: pilih jawabannya kalau ada di layarmu, atau tekan "tidak ada".',m.q,m.o,(v,b)=>{q2Pick(v,b);netEv({t:'q2a',id:m.id,v})},true);SFX.door();return}
+  if(m.t==='q2'){if(quizOpen||!running){netEv({t:'q2a',id:m.id,v:null,to:m.fi});return}Q2={id:m.id,role:'b',from:m.fi};
+    quizUI('Soal Berdua',(QSUBJ?esc(QSUBJ)+' · ':'')+'Temanmu sampai di pintu! Pilihan jawaban dibagi ke <b>dua layar</b>: pilih jawabannya kalau ada di layarmu, atau tekan "tidak ada".',m.q,m.o,(v,b)=>{q2Pick(v,b);netEv({t:'q2a',id:m.id,v,to:m.fi})},true);SFX.door();return}
   if(m.t==='q2a'){if(!Q2||Q2.id!==m.id||Q2.role!=='a')return;if(m.v===null){clearTimeout(Q2.to);const a=Q2.arg;Q2=null;qClose();openQuiz(a,true);return}Q2.th=m.v;if(Q2.my===undefined)$('qHint').innerHTML+=' <b>Temanmu sudah menjawab.</b>';q2Check();return}
   if(m.t==='q2r'){if(!Q2||Q2.id!==m.id)return;Q2=null;advLog({q:1,ok:m.ok});if(m.ok){SFX.ok();qClose();say('Kerja sama hebat! Jawaban kalian benar.',3)}else{SFX.bad();qWrong(m.ans,m.ex,null,m.w?'Jawabannya ada di layarmu.':'Jawabannya ada di layar temanmu.')}return}
   if(m.t==='q2c'){if(Q2&&Q2.id===m.id){Q2=null;qClose()}return}}
-$('qLater').onclick=()=>{if(Q2){if(Q2.role==='a'){clearTimeout(Q2.to);netEv({t:'q2c',id:Q2.id})}else netEv({t:'q2a',id:Q2.id,v:null});Q2=null}qClose();qCool=2.5};
+$('qLater').onclick=()=>{if(Q2){if(Q2.role==='a'){clearTimeout(Q2.to);netEv({t:'q2c',id:Q2.id,to:Q2.mate})}else netEv({t:'q2a',id:Q2.id,v:null,to:Q2.from});Q2=null}qClose();qCool=2.5};
 
 /* ====== isyarat & pesan ====== */
 const EMOT=['Tunggu!','Ke sini!','Lompat bareng!','Bantu aku!','Oke!','Ayo cepat!','Hati-hati!','Kamu duluan','Aku duluan','Ambil kuncinya!','Dorong kotaknya!','Injak tombolnya!','Naik ke kepalaku!','Hebat!','Maaf!','Terima kasih!','Haha!','Siap!'];
@@ -673,12 +693,12 @@ function myHatSend(){if(!NET.on||ME<0)return;const pet=selPets(1)[0],e=costOf(pe
 
 /* ====== kontrol ====== */
 const touch=matchMedia('(pointer:coarse)').matches;document.body.classList.toggle('touch',touch);
-const KEYS={KeyW:[0,'j'],KeyA:[0,'l'],KeyD:[0,'r'],KeyS:[0,'d'],Space:[0,'j'],ArrowUp:[1,'j'],ArrowLeft:[1,'l'],ArrowRight:[1,'r'],ArrowDown:[1,'d'],KeyT:[2,'j'],KeyF:[2,'l'],KeyH:[2,'r'],KeyG:[2,'d'],KeyI:[3,'j'],KeyJ:[3,'l'],KeyL:[3,'r'],KeyK:[3,'d']};
+const KMAP={KeyW:[0,'j'],KeyA:[0,'l'],KeyD:[0,'r'],KeyS:[0,'d'],Space:[0,'j'],ArrowUp:[1,'j'],ArrowLeft:[1,'l'],ArrowRight:[1,'r'],ArrowDown:[1,'d'],KeyT:[2,'j'],KeyF:[2,'l'],KeyH:[2,'r'],KeyG:[2,'d'],KeyI:[3,'j'],KeyJ:[3,'l'],KeyL:[3,'r'],KeyK:[3,'d']};
 addEventListener('keydown',e=>{if(e.target&&e.target.tagName==='INPUT')return;if(e.key==='Escape'){if(running&&$('pRes').hidden)togglePause();return}
   if(running&&!paused&&!quizOpen&&e.code==='KeyR'){restartLevel(true);return}
   if(NET.on&&running&&/^Digit[1-9]$/.test(e.code)){emoSend(+e.code.slice(5)-1);return}
-  const k=KEYS[e.code];if(!k||!running)return;e.preventDefault();if(quizOpen||paused)return;const p=P[ME>=0?ME:k[0]];if(p&&!p.remote)p.inp[k[1]]=1});
-addEventListener('keyup',e=>{const k=KEYS[e.code];if(!k||!P.length)return;const p=P[ME>=0?ME:k[0]];if(p&&!p.remote)p.inp[k[1]]=0});
+  const k=KMAP[e.code];if(!k||!running)return;e.preventDefault();if(quizOpen||paused)return;const p=P[ME>=0?ME:k[0]];if(p&&!p.remote)p.inp[k[1]]=1});
+addEventListener('keyup',e=>{const k=KMAP[e.code];if(!k||!P.length)return;const p=P[ME>=0?ME:k[0]];if(p&&!p.remote)p.inp[k[1]]=0});
 document.querySelectorAll('.pad button').forEach(b=>{const set=v=>{if(!P.length)return;if(v&&(quizOpen||paused))return;const p=P[ME>=0?ME:+b.dataset.p];if(p&&!p.remote)p.inp[b.dataset.k]=v;b.classList.toggle('on',!!v)};
   b.addEventListener('pointerdown',e=>{e.preventDefault();try{b.setPointerCapture(e.pointerId)}catch(_){}set(1);ac()});['pointerup','pointercancel','lostpointercapture'].forEach(ev=>b.addEventListener(ev,()=>set(0)))});
 function padMode(){const on=NET.on&&touch;document.querySelectorAll('.pad .tag').forEach((t,i)=>t.textContent=on?(i?'LOMPAT':'JALAN'):(i?'PEMAIN 2':'PEMAIN 1'));
@@ -702,7 +722,7 @@ const PANELS=['pStart','pPets','pLv','pCos','pHelp','pOnline','pPause','pQuiz','
 function hideAll(){PANELS.forEach(i=>$(i).hidden=true)}
 function uiStop(){running=false;paused=false;quizOpen=false;Q2=null;music(false);$('hud').hidden=true;$('padL').hidden=$('padR').hidden=true;$('emo').hidden=true;$('tip').hidden=true;$('banner').hidden=true;document.body.classList.remove('playing')}
 function startLevel(lv,o={}){const fresh=lv!==LV||!running||o.fresh;hideAll();$('tip').hidden=true;loadLevel(lv);running=true;paused=false;quizOpen=false;Q2=null;$('hud').hidden=false;padMode();document.body.classList.add('playing');ac();music(true);
-  $('bLvSel').hidden=NET.on&&ME===1;banner('Level '+(LV+1),LEVELS[LV].n);if(fresh)setTimeout(()=>{if(running&&LV===lv)say(LEVELS[LV].h,4.5)},700);
+  $('bLvSel').hidden=NET.on&&ME>0;banner('Level '+(LV+1),LEVELS[LV].n);if(fresh)setTimeout(()=>{if(running&&LV===lv)say(LEVELS[LV].h,4.5)},700);
   if(NET.on){setTimeout(myHatSend,300);if(ME===0&&!o.remote)netEv({t:'start',lv:LV,g:GRADE,qb:QBANK.length?QBANK:undefined,qn:QSUBJ,name:NET.myName,uid:NET.myUid,rc:o.rc?1:0})}
   try{if(touch&&document.documentElement.requestFullscreen&&!document.fullscreenElement)document.documentElement.requestFullscreen().catch(()=>{})}catch(e){}}
 function togglePause(){if(!running)return;paused=!paused;$('pPause').hidden=!paused;P.forEach(p=>{if(!p.remote)p.inp={l:0,r:0,j:0,d:0}});document.querySelectorAll('.pad button.on').forEach(b=>b.classList.remove('on'))}
@@ -721,8 +741,8 @@ function drawPets(){const own=ownedPets(),n=PTON?1:NPL,s=selPets(4);
   $('ptRows').querySelectorAll('.prow').forEach((r,i)=>{const e=costOf(s[i]);aniThumb(r.querySelector('canvas'),s[i],e.h,e.a)});
   $('ptRows').querySelectorAll('button').forEach(b=>b.onclick=()=>{const i=+b.dataset.i,d=+b.dataset.d,pr=prog(),cur=selPets(4);const k=own.indexOf(cur[i]);cur[i]=own[(k+d+own.length)%own.length];pr.sel=cur;progSave(pr);SFX.click();drawPets()});
   $('ptNote').textContent=(n>1?'Boleh memilih karakter yang sama. ':'')+'Ganti topi & aksesoris kapan saja lewat tombol 👤 di pojok atas.'}
-$('ptGo').onclick=()=>{SFX.click();if(PTON){myHatSend();if(ME===0)showLevels();else{showWait(`${NET.peer||'Temanmu'} sedang memilih level…`,'');$('bOnCancel').textContent='Keluar'}}else showLevels()};
-$('ptBack').onclick=()=>{if(PTON){netClose()}showHome()};
+$('ptGo').onclick=()=>{SFX.click();if(PTON){myHatSend();if(ME===0)showLevels();else{showWait(`${nameOf(0)} sedang memilih level…`,'');lobbyUI();$('bOnCancel').textContent='Keluar'}}else showLevels()};
+$('ptBack').onclick=()=>{if(PTON){if(NET.host){NET.started=false;lobbyShow();return}netClose()}showHome()};
 $('bHome').onclick=exit;
 $('bHelp').onclick=()=>{hideAll();$('pHelp').hidden=false;$('pHelp').dataset.from='home'};
 $('bHelp2').onclick=()=>{if(!NET.on&&running){paused=true;P.forEach(p=>p.inp={l:0,r:0,j:0,d:0})}$('pHelp').hidden=false;$('pHelp').dataset.from='game'};
@@ -735,7 +755,7 @@ function showLevels(){uiStop();hideAll();$('pLv').hidden=false;const pr=prog();$
     b.innerHTML=`${i+1}<small>${done?fmtT(pr.d[i]):open?'Baru':'🔒'}</small>`;
     const info=()=>{$('lvInfo').textContent=open?`Level ${i+1}: ${L.n}${done?' · rekor '+fmtT(pr.d[i]):''}`:'Selesaikan level sebelumnya untuk membuka.'};b.onmouseenter=info;b.onfocus=info;
     b.onclick=()=>{ac();SFX.click();startLevel(i,{fresh:true})};g.appendChild(b)});
-  $('lvInfo').textContent=NET.on?`Kamu yang memilih level. ${NET.peer||'Temanmu'} menunggu.`:'Pilih level. Level berikutnya terbuka setelah level sebelumnya selesai.'}
+  $('lvInfo').textContent=NET.on?`Main online ${nOn()} pemain. Kamu yang memilih level.`:'Pilih level. Level berikutnya terbuka setelah level sebelumnya selesai.'}
 $('lvBack').onclick=()=>{if(NET.on){netClose()}showHome()};
 /* kostum */
 let COSTAB='';
@@ -766,40 +786,31 @@ function showRes(newBest,old){if(!won)return;running=false;$('padL').hidden=$('p
   const h=$('rsHero');h.innerHTML='';P.forEach(p=>{const c=document.createElement('canvas');c.width=28;c.height=30;aniThumb(c,p.pet,p.hat,p.acc);h.appendChild(c)});
   $('rsTime').textContent='⏱ '+fmtT(levelT);const pr=prog();$('rsBest').textContent=newBest?'🏆 Rekor baru!':(old!=null?'Rekor: '+fmtT(pr.d[LV]):'');
   const n=doneN(),unl=old==null&&HATS.concat(ACCS).find(s=>s.c===n&&s.id);$('rsMsg').textContent=unl?`🎁 Kostum baru terbuka: ${unl.n}!`:last?'Hebat! Kalian tim yang luar biasa.':'Kerja sama yang hebat!';
-  const guest=NET.on&&ME===1;$('rsNext').hidden=last;['rsNext','rsAgain','rsLv'].forEach(i=>$(i).disabled=guest);if(guest)$('rsMsg').textContent+=` Menunggu ${NET.peer||'temanmu'} memilih…`;
+  const guest=NET.on&&ME>0;$('rsNext').hidden=last;['rsNext','rsAgain','rsLv'].forEach(i=>$(i).disabled=guest);if(guest)$('rsMsg').textContent+=` Menunggu ${nameOf(0)||NET.peer||'temanmu'} memilih…`;
   const cf=$('conf');cf.innerHTML='';const cols=['#ffd23f','#e2483d','#3d8bfd','#5ccf5a','#9b6bff','#ff8fc0'];for(let i=0;i<40;i++){const e=document.createElement('i');e.style.left=Math.random()*100+'%';e.style.background=cols[i%cols.length];e.style.animationDelay=(Math.random()*.8)+'s';e.style.animationDuration=(1.8+Math.random()*1.4)+'s';cf.appendChild(e)}}
 $('rsNext').onclick=()=>{SFX.click();startLevel(LV+1,{fresh:true})};$('rsAgain').onclick=()=>{SFX.click();startLevel(LV,{fresh:true})};$('rsLv').onclick=()=>{if(NET.on&&ME===0)netEv({t:'menu'});showLevels()};
 
 /* ====== jaringan: terima & kirim ====== */
-var ME=-1;const NET={on:false,pc:null,dc:null,de:null,peer:'',code:'',unsub:null,sendT:null,role:null,lastRx:0};
+var ME=-1;const NET={on:false,host:false,peers:{},up:null,roster:[],code:'',rcode:'',unsubJ:null,sendT:null,lastRx:0,started:false,myName:'',myUid:''};
 function netLerp(p,dt){const n=p.net;if(!n)return;const ox=p.x,oy=p.y;const k=Math.min(1,dt*15);p.x+=(n.x-p.x)*k;p.y+=(n.y-p.y)*k;if(Math.abs(n.x-p.x)>40||Math.abs(n.y-p.y)>40){p.x=n.x;p.y=n.y}
   p.vx=n.vx||0;p.vy=n.vy||0;p.face=n.f||1;p.ground=!!n.g;p.anim=n.a||0;const we=p.ent;p.ent=!!n.e;if(p.ent&&!we){SFX.enter();if(door)sparks(door.x+8,door.y+20,'#ffe08a',10,80,.5);hudKey()}
   p.blink-=dt;if(p.blink<-.12)p.blink=2+Math.random()*3;p.dx=p.x-ox;p.dy=p.y-oy}
-function netEv(m){if(!NET.on||!NET.de||NET.de.readyState!=='open')return;try{NET.de.send(JSON.stringify(m))}catch(e){}}
-function netState(){const p=P[ME];if(!p)return null;const m={t:'s',lv:LV,x:+p.x.toFixed(1),y:+p.y.toFixed(1),vx:p.vx|0,vy:p.vy|0,f:p.face,g:p.ground?1:0,a:+(p.anim||0).toFixed(2),e:p.ent?1:0,pb:p.pb||0};
-  if(ME===0){m.lt=+levelT.toFixed(2);if(boxes.length)m.bx=boxes.map(b=>[Math.round(b.x*2)/2,Math.round(b.y*2)/2]);m.br=(barOpen.X?1:0)|(barOpen.Y?2:0)|(latched?4:0)|(barOpen.W?8:0);m.wt=+wT.toFixed(2);m.bt=BTNS.reduce((a,b,i)=>a|(b.on?1<<i:0),0);m.pt=PLATES.reduce((a,b,i)=>a|(b.on?1<<i:0),0)}return m}
-function netRx(m){NET.lastRx=performance.now();
-  if(m.t==='s'){if(m.lv!==LV||!running||performance.now()-loadAt<250)return;const p=P[1-ME];if(p&&p.remote)p.net=m;
-    if(ME===1){if(m.bx)m.bx.forEach((v,i)=>{const b=boxes[i];if(b){b.tx=v[0];b.ty=v[1]}});
-      if(m.br!=null){const was={...barOpen};barOpen.X=!!(m.br&1);barOpen.Y=!!(m.br&2);if((m.br&4)&&!latched){latched=true;SFX.latch();shake(2,.25);say('Kandang terbuka! Lempeng terkunci.',2.5)}barOpen.Z=latched;barOpen.W=!!(m.br&8);if(m.wt!=null)wT=m.wt;['X','Y','W'].forEach(t=>{if(was[t]!==barOpen[t]&&BARS.some(b=>b.t===t))SFX.bar()})}
-      if(m.bt!=null)BTNS.forEach((b,i)=>{const on=!!(m.bt>>i&1);if(on&&!b.on)SFX.btn();b.on=on});if(m.pt!=null)PLATES.forEach((q,i)=>q.on=!!(m.pt>>i&1));
-      if(m.lt!=null&&Math.abs(levelT-m.lt)>.08)levelT=m.lt+.03}return}
-  if(m.t==='kpick'){if(!key||key.used)return;if(key.car<0||(ME===1&&key.car!==m.p)){key.car=m.p;SFX.key();hudKey();if(m.p!==ME)say('Temanmu membawa kunci! Ikuti dia ke pintu.',2.5)}else if(ME===0&&key.car===ME&&m.p!==ME)netEv({t:'kpick',p:ME});return}
+function netState(){const p=P[ME];if(!p)return null;return {t:'s',lv:LV,x:+p.x.toFixed(1),y:+p.y.toFixed(1),vx:p.vx|0,vy:p.vy|0,f:p.face,g:p.ground?1:0,a:+(p.anim||0).toFixed(2),e:p.ent?1:0,pb:p.pb||0}}
+function netRx(m){const from=P[m.fi];
+  if(m.t==='kget'){keyGet(m.k,m.fi,true);return}
+  if(m.t==='lever'){return}
   if(m.t==='unlock'){if(Q2){Q2=null}if(quizOpen)qClose();unlockDoor(true);return}
-  if(m.t==='restart'){if(won||!running)return;if(m.man){restartLevel(false);return}if(dying>0)return;const p=P[1-ME];if(p)die(p);return}
-  if(m.t==='start'){if(Array.isArray(m.qb)&&m.qb.length){QBANK=m.qb;QBAG=[];QSUBJ=m.qn||''}if(m.g!=null)GRADE_ON=m.g;NET.peer=m.name||NET.peer;NET.peerUid=m.uid||NET.peerUid;$('pVoice').hidden=true;startLevel(m.lv|0,{remote:true});if(m.rc)setTimeout(()=>say('Tersambung lagi! Level diulang dari awal.',4),300);return}
-  if(m.t==='menu'){if(ME===1){uiStop();hideAll();showWait(`${NET.peer||'Temanmu'} sedang memilih level…`,'');$('bOnCancel').textContent='Keluar'}return}
+  if(m.t==='restart'){if(won||!running)return;if(m.man){restartLevel(false);return}if(dying>0)return;if(from)die(from);return}
+  if(m.t==='start'){if(Array.isArray(m.qb)&&m.qb.length){QBANK=m.qb;QBAG=[];QSUBJ=m.qn||''}if(m.g!=null)GRADE_ON=m.g;$('pVoice').hidden=true;startLevel(m.lv|0,{remote:true});return}
+  if(m.t==='menu'){if(ME>0){uiStop();hideAll();showWait(`${nameOf(0)} sedang memilih level…`,'');lobbyUI();$('bOnCancel').textContent='Keluar'}return}
   if(m.t==='done'){if(!won)levelWin(true,m.time);return}
-  if(m.t==='say'){const p=P[1-ME];const t=cleanMsg(m.x);if(p&&t){p.say={t,until:performance.now()+3500};beep(1046,.07);setTimeout(()=>beep(1318,.07),80)}return}
-  if(m.t==='emo'){const p=P[1-ME];if(p&&EMOT[m.k]){p.say={t:EMOT[m.k],until:performance.now()+2600};beep(1046,.07);setTimeout(()=>beep(1318,.07),80)}return}
+  if(m.t==='say'){const t=cleanMsg(m.x);if(from&&t){from.say={t,until:performance.now()+3500};beep(1046,.07);setTimeout(()=>beep(1318,.07),80)}return}
+  if(m.t==='emo'){if(from&&EMOT[m.k]){from.say={t:EMOT[m.k],until:performance.now()+2600};beep(1046,.07);setTimeout(()=>beep(1318,.07),80)}return}
   if(m.t&&m.t.startsWith('q2')){q2Recv(m);return}
-  if(m.t==='hat'){NET.peerPet=PETIDS.includes(m.pet)?m.pet:'kiki';NET.peerHat=m.h||'';NET.peerAcc=m.a||'';const p=P[1-ME];if(p){p.pet=NET.peerPet;p.hat=NET.peerHat;p.acc=NET.peerAcc}return}
+  if(m.t==='hat'){const r=NET.roster[m.fi];const pet=PETIDS.includes(m.pet)?m.pet:'kiki';if(r){r.pet=pet;r.hat=m.h||'';r.acc=m.a||''}if(from&&from.remote){from.pet=pet;from.hat=m.h||'';from.acc=m.a||''}if(NET.host)rosterSend();else lobbyUI();return}
   if(m.t==='verbad'){verBad(true);return}
-  if(m.t==='gv'){NET.peerGV=m.gv;if(m.gv!==GV)verBad();return}
-  if(m.t==='hi'){NET.peerGV=m.gv||'old';if(NET.peerGV!==GV){verBad();return}NET.peer=m.name||NET.peer;NET.peerUid=m.uid||NET.peerUid;return}
   if(m.t==='mic'){NET.peerMic=!!m.on;return}
-  if(m.t==='bye'){if(verBad.on)return;netLost('Temanmu keluar dari permainan.',true)}}
-function onlineReady(){hideAll();showPets(true)}
+  if(m.t==='bye'){if(verBad.on)return;if(m.fi===0)netLost(`${nameOf(0)} (tuan rumah) keluar dari permainan.`,true);return}}
 const FBOK=()=>!!(window.firebase&&window.FB_CONFIG);let FBI=null;
 function fb(){if(FBI)return FBI;if(!FBOK())return null;try{if(!firebase.apps.length)firebase.initializeApp(window.FB_CONFIG)}catch(e){}FBI={auth:firebase.auth(),db:firebase.firestore()};return FBI}
 function me(){return new Promise(res=>{const f=fb();if(!f)return res(null);const u=f.auth.currentUser;if(u)return res(u);const off=f.auth.onAuthStateChanged(x=>{off();res(x)});setTimeout(()=>res(f.auth.currentUser),4000)})}
@@ -815,53 +826,119 @@ function gatherDone(pc){return new Promise(res=>{let done=false;const fin=()=>{i
   pc.__types=pc.__types||{};pc.addEventListener('icecandidate',e=>{if(e.candidate){const t=e.candidate.type||((e.candidate.candidate||'').match(/ typ (\w+)/)||[])[1]||'?';pc.__types[t]=(pc.__types[t]||0)+1;if(t==='relay')setTimeout(fin,1500)}});
   pc.addEventListener('icegatheringstatechange',()=>{if(pc.iceGatheringState==='complete')fin()});setTimeout(fin,10000)})}
 function sdpTypes(sdp){const o={};(String(sdp||'').match(/ typ (\w+)/g)||[]).forEach(x=>{const t=x.slice(5);o[t]=(o[t]||0)+1});return o}
-function netDiag(why){try{const f=fb(),u=f&&f.auth.currentUser;if(!u)return;const pc=NET.pc;const d={why,role:ME,iceN:NET.iceN,iceErr:NET.iceErr||'',loc:pc?sdpTypes(pc.localDescription&&pc.localDescription.sdp):{},rem:pc?sdpTypes(pc.remoteDescription&&pc.remoteDescription.sdp):{},st:pc?pc.connectionState+'/'+pc.iceConnectionState:'-'};
+/* ====== main online sampai 4 pemain: tuan rumah (pemain 1) tersambung langsung ke tiap tamu dan meneruskan pesan ====== */
+function netDiag(why,pc){try{const f=fb(),u=f&&f.auth.currentUser;if(!u)return;const d={why,role:ME,iceN:NET.iceN,iceErr:NET.iceErr||'',loc:pc?sdpTypes(pc.localDescription&&pc.localDescription.sdp):{},rem:pc?sdpTypes(pc.remoteDescription&&pc.remoteDescription.sdp):{},st:pc?pc.connectionState+'/'+pc.iceConnectionState:'-'};
   f.db.collection('errors').add({msg:('DIAG adv '+JSON.stringify(d)).slice(0,300),page:'adv',uid:u.uid,ua:navigator.userAgent.slice(0,200),created:Date.now()}).catch(()=>{})}catch(e){}}
-function wireDC(dc){dc.onmessage=e=>{try{netRx(JSON.parse(e.data))}catch(_){}};dc.onclose=()=>{if(NET.on&&running)netLost('Sambungan dengan temanmu terputus.')}}
-function netSetup(pc){pc.__types={};pc.ontrack=e=>{const a=$('rAudio');a.srcObject=(e.streams&&e.streams[0])||new MediaStream([e.track]);a.play().catch(()=>{})};pc.onconnectionstatechange=()=>{const st=pc.connectionState;if(st==='failed'){netDiag('failed');netLost('Sambungan gagal. Coba lagi beberapa saat, atau sambungkan kedua HP ke Wi-Fi yang sama.')}
-    if(st==='disconnected')setTimeout(()=>{if(pc.connectionState==='disconnected')netLost('Sambungan dengan temanmu terputus.')},6000)}}
-function bothOpen(){return NET.dc&&NET.de&&NET.dc.readyState==='open'&&NET.de.readyState==='open'}
-function onReady(name){if(!bothOpen())return;NET.on=true;if(NET.unsub){NET.unsub();NET.unsub=null}
-  clearInterval(NET.sendT);NET.sendT=setInterval(()=>{if(!running||ME<0||!NET.dc||NET.dc.readyState!=='open')return;const m=netState();if(m)try{NET.dc.send(JSON.stringify(m))}catch(e){}},50);
-  NET.myName=name;NET.peerGV=undefined;if(ME===1)netEv({t:'hi',name,uid:NET.myUid,sx:SX.me,gv:GV});else netEv({t:'gv',gv:GV});setTimeout(()=>{if(NET.on&&ME===1&&NET.peerGV===undefined)verBad()},4000);setTimeout(myHatSend,400);if(RC){$('bMic').hidden=$('bSpk').hidden=false;$('bEmo').hidden=false;micUI();rcResume();if(ME===0&&NET.code)try{fb().db.doc('duo/'+NET.code).delete().catch(()=>{})}catch(e){}return}onlineReady();$('bMic').hidden=$('bSpk').hidden=false;$('bEmo').hidden=false;micUI();
-  // ruang sudah terpakai: hapus dokumennya
-  if(ME===0&&NET.code)try{fb().db.doc('duo/'+NET.code).delete().catch(()=>{})}catch(e){}}
-/* sambung ulang otomatis bila sinyal putus sebentar (maks. 35 detik); level diulang dari awal dengan nyawa & koin yang sama */
-let RC=null;
-function netCloseQuiet(){try{micOff(true)}catch(e){}NET.on=false;clearInterval(NET.sendT);if(NET.unsub){NET.unsub();NET.unsub=null}try{NET.dc&&NET.dc.close();NET.de&&NET.de.close();NET.pc&&NET.pc.close()}catch(e){}NET.pc=NET.dc=NET.de=null}
-function tryReconnect(){if(RC||!NET.on||!NET.rcode||ME<0||(!running&&$('pRes').hidden&&$('pQuiz').hidden))return false;
-  const r={code:NET.rcode,me:ME,lv:LV,peer:NET.peer,t0:Date.now()};netCloseQuiet();RC=r;uiStop();hideAll();$('pRc').hidden=false;
-  const tick=()=>{if(!RC)return;const left=Math.max(0,35-Math.floor((Date.now()-RC.t0)/1000));$('rcTxt').textContent=`Sinyal ke ${r.peer||'temanmu'} terputus. Menyambung ulang otomatis… (${left})`;if(left<=0){RC=null;$('pRc').hidden=true;netLost('Sambungan dengan temanmu terputus dan belum bisa disambung ulang.')}else RC.tk=setTimeout(tick,1000)};tick();
-  setTimeout(()=>{if(!RC)return;ME=r.me;if(r.me===0)host({code:r.code,quiet:true}).catch(()=>{});else join(r.code,{wait:true}).catch(()=>{})},r.me===0?300:1500);return true}
-function rcResume(){const r=RC;RC=null;clearTimeout(r.tk);$('pRc').hidden=true;$('pOnline').hidden=true;
-  if(ME===0){startLevel(r.lv,{rc:true,fresh:true});say('Tersambung lagi! Level diulang dari awal.',4)}
-  else{$('pVoice').hidden=true;showWait('Tersambung lagi! Memulai ulang level…','')}}
-function netLost(t,final){if(RC&&!final){return}if(!final&&tryReconnect())return;if(RC){clearTimeout(RC.tk);RC=null;$('pRc').hidden=true}if(document.body.classList.contains('direct')){netClose();uiStop();hideAll();$('pVoice').hidden=false;$('vTitle').textContent='Petualangan Berdua';$('vBody').innerHTML=`<p>${esc(t)}</p><button class="btn" id="dBack">Kembali ke JELAS</button>`;$('dBack').onclick=exit;return}if(!NET.on&&!NET.pc)return;netClose();uiStop();hideAll();
-  $('pOnline').hidden=false;$('onMenu').hidden=false;$('onWait').hidden=true;$('onMsg').textContent=t;loadFriends()}
-function netClose(){try{netEv({t:'bye'})}catch(e){}micOff(true);NET.peerMic=false;$('bMic').hidden=$('bSpk').hidden=true;$('bEmo').hidden=true;$('emo').hidden=true;NET.on=false;clearInterval(NET.sendT);if(NET.unsub){NET.unsub();NET.unsub=null}try{NET.dc&&NET.dc.close();NET.de&&NET.de.close();NET.pc&&NET.pc.close()}catch(e){}NET.pc=NET.dc=NET.de=null;
-  if(ME===0&&NET.code&&FBI)try{FBI.db.doc('duo/'+NET.code).delete().catch(()=>{})}catch(e){}NET.code='';ME=-1}
-const ABC='ABCDEFGHJKLMNPQRSTUVWXYZ';const mkCode=()=>[...Array(4)].map(()=>ABC[Math.floor(Math.random()*ABC.length)]).join('');
-async function host(o={}){const u=await me();if(!u){needLogin();return false}NET.myUid=u.uid;showWait(o.quiet?'Mengirim tantangan…':'Menyiapkan ruang…','');const name=await myName(u);
-  ME=0;const pc=new RTCPeerConnection({iceServers:await iceServers()});NET.pc=pc;netSetup(pc);
-  try{pc.addTransceiver('audio',{direction:'sendrecv'})}catch(e){}NET.dc=pc.createDataChannel('s',{ordered:false,maxRetransmits:0});NET.de=pc.createDataChannel('e');[NET.dc,NET.de].forEach(d=>{wireDC(d);d.onopen=()=>onReady(name)});
-  await pc.setLocalDescription(await pc.createOffer());await gatherDone(pc);
+const nameOf=i=>((NET.roster[i]||{}).name||'Teman').slice(0,14);
+const nOn=()=>NET.roster.filter(r=>r&&r.on).length;
+function audioPc(){if(NET.host){const ps=Object.values(NET.peers).filter(p=>p.open);return nOn()===2&&ps.length===1?ps[0].pc:null}return nOn()===2&&NET.up?NET.up.pc:null}
+function setAudio(pc){pc.ontrack=e=>{const a=$('rAudio');a.srcObject=(e.streams&&e.streams[0])||new MediaStream([e.track]);a.play().catch(()=>{})}}
+function sendCh(ch,m){if(ch&&ch.readyState==='open')try{ch.send(typeof m==='string'?m:JSON.stringify(m))}catch(e){}}
+/* tuan rumah: kirim ke semua tamu (kecuali satu), atau ke satu tamu (to) */
+function hostSend(m,except){const s=JSON.stringify(m);Object.values(NET.peers).forEach(p=>{if(!p.open||p.i===except)return;if(m.to!=null&&m.to!==p.i)return;sendCh(p.de,s)})}
+function rosterSend(){if(!NET.host)return;NET.roster[0]=Object.assign(NET.roster[0]||{},myCard());hostSend({t:'roster',r:NET.roster});lobbyUI()}
+function myCard(){const pet=selPets(1)[0],e=costOf(pet);return {i:ME,uid:NET.myUid,name:NET.myName,on:true,pet,hat:e.h,acc:e.a}}
+function netReady(){NET.on=true;$('bEmo').hidden=false;micUI();clearInterval(NET.sendT);NET.sendT=setInterval(netTick,50)}
+function netTick(){if(!running||ME<0)return;const m=netState();if(!m)return;
+  if(NET.host){const ex={ms:MOV.map(m=>+m.s.toFixed(3)),lt:+levelT.toFixed(2),lv2:LEVERS.reduce((a,l,i)=>a|(l.on?1<<i:0),0),br:(barOpen.X?1:0)|(barOpen.Y?2:0)|(latched?4:0)|(barOpen.W?8:0)|(barOpen.V?16:0),wt:+wT.toFixed(2),bt:BTNS.reduce((a,b,i)=>a|(b.on?1<<i:0),0),pt:PLATES.reduce((a,b,i)=>a|(b.on?1<<i:0),0)};if(boxes.length)ex.bx=boxes.map(b=>[Math.round(b.x*2)/2,Math.round(b.y*2)/2]);
+    Object.values(NET.peers).forEach(pe=>{if(!pe.open)return;const ps={0:m};P.forEach(p=>{if(p.i!==0&&p.i!==pe.i&&p.net&&!p.gone)ps[p.i]=p.net});sendCh(pe.dc,Object.assign({t:'S',lv:LV,ps},ex))})}
+  else if(NET.up)sendCh(NET.up.dc,m)}
+function lobbyUI(){const box=$('onRoster');if(!box)return;box.innerHTML=NET.roster.filter(r=>r&&r.on).map(r=>`<span class="ros" style="background:${PCOL[r.i]}"><canvas width="28" height="30"></canvas>${esc(r.name)}${r.i===ME?' (kamu)':''}</span>`).join('');
+  [...box.querySelectorAll('canvas')].forEach((c,k)=>{const r=NET.roster.filter(r=>r&&r.on)[k];aniThumb(c,r.pet||'oyen',r.hat,r.acc)});
+  const n=nOn();$('bStart').hidden=!NET.host||NET.started;$('bStart').disabled=n<2;$('bStart').textContent=n<2?'Menunggu teman…':`▶ Mulai (${n} pemain)`;$('bInvMore').hidden=!NET.host||NET.started||n>=4;
+  $('bMic').hidden=$('bSpk').hidden=!(NET.on&&n===2)}
+function lobbyShow(){hideAll();$('pOnline').hidden=false;$('onMenu').hidden=true;$('onWait').hidden=false;$('bOnCancel').textContent=NET.host?'Bubarkan ruang':'Keluar';
+  $('onTxt').textContent=NET.host?(document.body.classList.contains('direct')?'Menunggu teman bergabung. Kamu bisa mengajak sampai 3 teman, lalu tekan Mulai.':'Bagikan kode ini. Kamu bisa main sampai 4 orang. Tekan Mulai kalau semua sudah masuk.'):`Tersambung! Menunggu ${nameOf(0)} memulai permainan…`;
+  $('onCode').textContent=NET.host?NET.code:'';$('bShare').hidden=!NET.host;lobbyUI()}
+/* --- tuan rumah --- */
+async function host(o={}){if(NET.host&&NET.code)return true;const u=await me();if(!u){needLogin();return false}NET.myUid=u.uid;showWait('Menyiapkan ruang…','');const name=await myName(u);NET.myName=name;
+  ME=0;NET.host=true;NET.started=false;NET.peers={};
   let code='';for(let i=0;i<5;i++){code=o.code&&i===0?o.code:mkCode();try{const ref=fb().db.doc('duo/'+code);const ex=await ref.get();if(ex.exists&&Date.now()-(ex.data().at||0)<36e5&&!(o.code&&ex.data().host===u.uid))continue;
-      await ref.set({host:u.uid,hostName:name,g:GRADE,offer:pc.localDescription.sdp,at:Date.now()});break}catch(e){code=''}}
-  if(!code){netLost('Ruang belum bisa dibuat. Periksa internetmu lalu coba lagi.');return false}
-  NET.code=code;NET.rcode=code;if(!o.quiet)showWait('Bagikan kode ini ke temanmu. Menunggu temanmu bergabung…',code);
-  NET.unsub=fb().db.doc('duo/'+code).onSnapshot(async sn=>{const d=sn.data();if(!d||!d.answer||pc.remoteDescription)return;NET.peer=d.guestName||'Teman';NET.peerUid=d.guest||'';$('onTxt').textContent=`${NET.peer} bergabung! Menyambungkan…`;
-    try{await pc.setRemoteDescription({type:'answer',sdp:d.answer})}catch(e){netLost('Gagal menyambung. Coba buat ruang baru.')}});return true}
+      await ref.set({host:u.uid,hostName:name,g:GRADE,at:Date.now(),v:2});break}catch(e){code=''}}
+  if(!code){NET.host=false;ME=-1;netLost('Ruang belum bisa dibuat. Periksa internetmu lalu coba lagi.');return false}
+  NET.code=code;NET.rcode=code;NET.roster=[myCard()];netReady();
+  NET.unsubJ=fb().db.collection('duo/'+code+'/j').onSnapshot(sn=>{sn.docs.forEach(d=>{const x=d.data();if(!x||x.offer||x.full)return;const old=NET.peers[d.id];if(old&&(x.at||0)<=(old.at||0))return;acceptJoin(d.id,x).catch(e=>console.warn(e))})},()=>{});
+  if(!o.quiet)lobbyShow();return true}
+async function acceptJoin(uid,x){const known=NET.roster.find(r=>r&&r.uid===uid);const jref=fb().db.doc(`duo/${NET.code}/j/${uid}`);
+  if(!known&&(NET.started||nOn()>=4)){jref.update({full:NET.started?2:1}).catch(()=>{});return}
+  const old=NET.peers[uid];if(old)peerDrop(old,true);
+  const pe={uid,name:(x.name||'Teman').slice(0,24),at:x.at||0,open:false,i:-1};NET.peers[uid]=pe;
+  const pc=new RTCPeerConnection({iceServers:await iceServers()});pe.pc=pc;setAudio(pc);
+  pc.onconnectionstatechange=()=>{const st=pc.connectionState;if(st==='failed'){netDiag('failed',pc);peerLost(pe)}if(st==='disconnected')setTimeout(()=>{if(pc.connectionState==='disconnected')peerLost(pe)},6000)};
+  try{pc.addTransceiver('audio',{direction:'sendrecv'})}catch(e){}
+  pe.dc=pc.createDataChannel('s',{ordered:false,maxRetransmits:0});pe.de=pc.createDataChannel('e');
+  [pe.dc,pe.de].forEach(ch=>{ch.onmessage=e=>{try{hostRx(pe,JSON.parse(e.data))}catch(_){}};ch.onopen=()=>{if(pe.dc.readyState==='open'&&pe.de.readyState==='open')pe.open=true};ch.onclose=()=>peerLost(pe)});
+  await pc.setLocalDescription(await pc.createOffer());await gatherDone(pc);if(NET.peers[uid]!==pe)return;
+  try{await jref.update({offer:pc.localDescription.sdp,ot:Date.now()})}catch(e){peerDrop(pe);return}
+  pe.un=jref.onSnapshot(async sn=>{const d=sn.data();if(!d||!d.answer||pc.remoteDescription)return;try{await pc.setRemoteDescription({type:'answer',sdp:d.answer})}catch(e){}},()=>{});
+  setTimeout(()=>{if(NET.peers[uid]===pe&&pe.i<1&&!pe.open)peerDrop(pe)},40000)}
+function peerDrop(pe,quiet){try{pe.un&&pe.un()}catch(e){}try{pe.dc&&pe.dc.close();pe.de&&pe.de.close();pe.pc&&pe.pc.close()}catch(e){}if(NET.peers[pe.uid]===pe)delete NET.peers[pe.uid]}
+function peerLost(pe){if(NET.peers[pe.uid]!==pe)return;const i=pe.i;peerDrop(pe);if(i>0&&NET.roster[i]){NET.roster[i].on=false;playerGone(i);rosterSend();if(running||!$('pRes').hidden)say(`${nameOf(i)} terputus. Kalau ia kembali, level diulang bersama.`,4)}}
+function playerGone(i){const p=P[i];if(p){p.gone=true;p.ent=true}if(!NET.host)return;if(running&&!won&&P.length&&P.every(p=>p.ent)&&P.some(p=>!p.gone))levelWin()}
+function hostRx(pe,m){NET.lastRx=performance.now();
+  if(m.t==='hi'){if(m.gv!==GV){sendCh(pe.de,{t:'verbad'});setTimeout(()=>peerDrop(pe),500);return}
+    let i=(NET.roster.find(r=>r&&r.uid===pe.uid)||{}).i;if(i==null){for(let k=1;k<4;k++)if(!NET.roster[k]||(!NET.roster[k].on&&!NET.started)){i=k;break}}
+    if(i==null){sendCh(pe.de,{t:'full'});return}
+    pe.i=i;NET.roster[i]={i,uid:pe.uid,name:(m.name||pe.name).slice(0,24),on:true,pet:PETIDS.includes(m.pet)?m.pet:PETIDS[i],hat:m.h||'',acc:m.a||''};
+    sendCh(pe.de,{t:'you',i,gv:GV,g:GRADE,started:NET.started?1:0});rosterSend();
+    try{fb().db.doc(`duo/${NET.code}/j/${pe.uid}`).delete().catch(()=>{})}catch(e){}
+    if(NET.started){if(running||!$('pRes').hidden){startLevel(LV,{fresh:true});say(`${nameOf(i)} kembali! Level diulang bersama.`,3)}else sendCh(pe.de,{t:'go'})}
+    SFX.key();return}
+  if(pe.i<1)return;m.fi=pe.i;
+  if(m.t==='s'){const p=P[pe.i];if(p&&p.remote&&m.lv===LV&&performance.now()-loadAt>250)p.net=m;return}
+  if(m.t==='bye'){peerLost(pe);return}
+  if(m.to!=null&&m.to!==0){hostSend(m);return}
+  if(m.t==='kget'){if(KEYS[m.k]&&KEYS[m.k].got){return}}
+  netRx(m);if(m.to==null)hostSend(m,pe.i)}
+/* --- tamu --- */
 async function join(code,o={}){code=String(code||'').trim().toUpperCase();if(!/^[A-Z]{4}$/.test(code)){$('inCode').focus();return}const u=await me();if(!u){needLogin();return}
-  showWait(o.wait?'Menunggu temanmu…':'Mencari ruang…','');let d=null;for(let k=0;k<(o.wait?25:1);k++){try{const sn=await fb().db.doc('duo/'+code).get();if(sn.exists&&sn.data().offer&&Date.now()-(sn.data().at||0)<36e5){d=sn.data();break}}catch(e){}if(o.wait)await new Promise(r=>setTimeout(r,1200))}
-  if(!d||Date.now()-(d.at||0)>36e5){netLost('Ruang dengan kode itu tidak ditemukan. Periksa lagi kodenya.');return}
-  NET.myUid=u.uid;NET.peerUid=d.host;if(d.host===u.uid){netLost('Ini ruang buatanmu sendiri. Minta temanmu yang bergabung.');return}
-  if(d.guest&&d.guest!==u.uid){netLost('Ruang ini sudah penuh.');return}
-  const name=await myName(u);ME=1;NET.peer=d.hostName||'Teman';if(d.g!=null)GRADE_ON=d.g;
-  const pc=new RTCPeerConnection({iceServers:await iceServers()});NET.pc=pc;netSetup(pc);
-  pc.ondatachannel=e=>{const ch=e.channel;if(ch.label==='s')NET.dc=ch;else NET.de=ch;wireDC(ch);ch.onopen=()=>onReady(name);if(ch.readyState==='open')onReady(name)};
-  await pc.setRemoteDescription({type:'offer',sdp:d.offer});try{pc.getTransceivers().forEach(t=>{if(t.receiver&&t.receiver.track&&t.receiver.track.kind==='audio')t.direction='sendrecv'})}catch(e){}await pc.setLocalDescription(await pc.createAnswer());await gatherDone(pc);
-  try{await fb().db.doc('duo/'+code).update({guest:u.uid,guestName:name,answer:pc.localDescription.sdp})}catch(e){netLost('Gagal bergabung. Coba lagi.');return}
-  NET.code='';NET.rcode=code;showWait(`Menyambung ke ${NET.peer}…`,'');setTimeout(()=>{if(!NET.on&&NET.pc===pc){netDiag('timeout');netLost('Belum bisa tersambung. Coba sambungkan kedua HP ke Wi-Fi yang sama, lalu ulangi.')}},30000)}
+  showWait(o.wait?'Menunggu temanmu…':'Mencari ruang…','');let d=null;for(let k=0;k<(o.wait?25:1);k++){try{const sn=await fb().db.doc('duo/'+code).get();if(sn.exists&&Date.now()-(sn.data().at||0)<36e5){d=sn.data();break}}catch(e){}if(o.wait)await new Promise(r=>setTimeout(r,1200))}
+  if(!d){netLost('Ruang dengan kode itu tidak ditemukan. Periksa lagi kodenya.',true);return}
+  if(d.host===u.uid){netLost('Ini ruang buatanmu sendiri. Minta temanmu yang bergabung.',true);return}
+  NET.myUid=u.uid;const name=await myName(u);NET.myName=name;NET.host=false;NET.rcode=code;NET.code='';if(d.g!=null)GRADE_ON=d.g;
+  NET.roster=[{i:0,uid:d.host,name:d.hostName||'Teman',on:true}];
+  const jref=fb().db.doc(`duo/${code}/j/${u.uid}`);try{await jref.set({name,at:Date.now()})}catch(e){netLost('Gagal bergabung. Coba lagi.',true);return}
+  showWait(`Menyambung ke ruang ${d.hostName||'temanmu'}…`,'');
+  let pc=null;const up={};NET.up=up;
+  up.un=jref.onSnapshot(async sn=>{const x=sn.data();if(!x)return;if(x.full){up.un&&up.un();jref.delete().catch(()=>{});netLost(x.full===2?'Permainan di ruang itu sudah dimulai. Minta temanmu membuat ruang baru.':'Ruang ini sudah penuh (4 pemain).',true);return}
+    if(!x.offer||pc)return;pc=new RTCPeerConnection({iceServers:await iceServers()});up.pc=pc;setAudio(pc);
+    pc.onconnectionstatechange=()=>{const st=pc.connectionState;if(st==='failed'){netDiag('failed',pc);netLost('Sambungan dengan tuan rumah terputus.')}if(st==='disconnected')setTimeout(()=>{if(pc.connectionState==='disconnected')netLost('Sambungan dengan tuan rumah terputus.')},6000)};
+    pc.ondatachannel=e=>{const ch=e.channel;if(ch.label==='s')up.dc=ch;else up.de=ch;ch.onmessage=ev=>{try{guestRx(JSON.parse(ev.data))}catch(_){}};ch.onclose=()=>{if(NET.up===up)netLost('Sambungan dengan tuan rumah terputus.')};
+      const ok=()=>{if(up.dc&&up.de&&up.dc.readyState==='open'&&up.de.readyState==='open'&&!up.hi){up.hi=1;const pet=selPets(1)[0],e2=costOf(pet);sendCh(up.de,{t:'hi',name,uid:u.uid,gv:GV,pet,h:e2.h,a:e2.a})}};ch.onopen=ok;ok()};
+    await pc.setRemoteDescription({type:'offer',sdp:x.offer});try{pc.getTransceivers().forEach(t=>{if(t.receiver&&t.receiver.track&&t.receiver.track.kind==='audio')t.direction='sendrecv'})}catch(e){}
+    await pc.setLocalDescription(await pc.createAnswer());await gatherDone(pc);try{await jref.update({answer:pc.localDescription.sdp})}catch(e){}},()=>{});
+  setTimeout(()=>{if(NET.up===up&&ME<0){netDiag('timeout',pc);netLost('Belum bisa tersambung. Coba sambungkan HP ke Wi-Fi yang sama, lalu ulangi.',true)}},30000)}
+function guestRx(m){NET.lastRx=performance.now();
+  if(m.t==='you'){ME=m.i;if(m.gv!==GV){verBad(true);return}if(m.g!=null)GRADE_ON=m.g;netReady();if(NET.up&&NET.up.un){NET.up.un();NET.up.un=null}if(RCW.on){RCW.on=false;$('pRc').hidden=true}if(!m.started)lobbyShow();else showWait('Tersambung lagi! Menunggu level dimulai…','');return}
+  if(m.t==='roster'){NET.roster=m.r||[];NET.roster.forEach(r=>{if(!r)return;const p=P[r.i];if(p&&p.remote){p.pet=r.pet||p.pet;p.hat=r.hat||'';p.acc=r.acc||'';if(!r.on&&!p.gone)playerGone(r.i)}});if(!$('pOnline').hidden&&!$('onWait').hidden&&!running)lobbyUI();else lobbyUI();
+    const other=NET.roster.find(r=>r&&r.on&&r.i!==ME);NET.peerUid=nOn()===2&&other?other.uid:'';return}
+  if(m.t==='S'){if(m.lv!==LV||!running||performance.now()-loadAt<250)return;Object.keys(m.ps||{}).forEach(k=>{const p=P[k];if(p&&p.remote)p.net=m.ps[k]});
+    if(m.bx)m.bx.forEach((v,i)=>{const b=boxes[i];if(b){b.tx=v[0];b.ty=v[1]}});
+    if(m.br!=null){const was={...barOpen};barOpen.X=!!(m.br&1);barOpen.Y=!!(m.br&2);if((m.br&4)&&!latched){latched=true;SFX.latch();shake(2,.25);say('Kandang terbuka! Lempeng terkunci.',2.5)}barOpen.Z=latched;barOpen.W=!!(m.br&8);barOpen.V=!!(m.br&16);if(m.wt!=null)wT=m.wt;if(m.lv2!=null)LEVERS.forEach((l,i)=>{const on=!!(m.lv2>>i&1);if(on!==l.on){l.on=on;SFX.lever()}});['X','Y','W','V'].forEach(t=>{if(was[t]!==barOpen[t]&&BARS.some(b=>b.t===t))SFX.bar()})}
+    if(m.bt!=null)BTNS.forEach((b,i)=>{const on=!!(m.bt>>i&1);if(on&&!b.on)SFX.btn();b.on=on});if(m.pt!=null)PLATES.forEach((q,i)=>q.on=!!(m.pt>>i&1));
+    if(m.ms)m.ms.forEach((v,i)=>{if(MOV[i]&&MOV[i].trig&&Math.abs(MOV[i].s-v)>.04)MOV[i].s=v});if(m.lt!=null&&Math.abs(levelT-m.lt)>.08)levelT=m.lt+.03;return}
+  if(m.t==='full'){netLost('Ruang ini sudah penuh (4 pemain).',true);return}
+  if(m.t==='go'){showPets(true);return}
+  netRx(m)}
+/* pesan permainan: tuan rumah menyiarkan, tamu mengirim ke tuan rumah */
+function netEv(m){if(!NET.on)return;m.fi=ME;if(NET.host)hostSend(m);else if(NET.up)sendCh(NET.up.de,m)}
+function netLost(t,final){
+  if(!final&&!NET.host&&NET.rcode&&ME>0&&(running||!$('pRes').hidden||!$('pPets').hidden||!$('pLv').hidden||!$('onWait').hidden)&&!RCW.on){guestRejoin(t);return}
+  if(RCW.on&&!final)return;RCW.on=false;
+  if(document.body.classList.contains('direct')){netClose();uiStop();hideAll();$('pVoice').hidden=false;$('vTitle').textContent='Petualangan Berdua';$('vBody').innerHTML=`<p>${esc(t)}</p><button class="btn" id="dBack">Kembali ke JELAS</button>`;$('dBack').onclick=exit;return}
+  netClose();uiStop();hideAll();$('pOnline').hidden=false;$('onMenu').hidden=false;$('onWait').hidden=true;$('onMsg').textContent=t;loadFriends()}
+/* tamu: sambung ulang otomatis ke ruang yang sama (maks. 35 detik) */
+const RCW={on:false};let RC=null;
+function guestRejoin(t){const code=NET.rcode;netCloseQuiet();RCW.on=true;RCW.t0=Date.now();uiStop();hideAll();$('pRc').hidden=false;
+  const tick=()=>{if(!RCW.on)return;const left=Math.max(0,35-Math.floor((Date.now()-RCW.t0)/1000));$('rcTxt').textContent=`Sinyal terputus. Menyambung ulang otomatis… (${left})`;if(left<=0){RCW.on=false;$('pRc').hidden=true;netLost('Sambungan terputus dan belum bisa disambung ulang.',true)}else setTimeout(tick,1000)};tick();
+  setTimeout(()=>{if(RCW.on)join(code,{wait:true}).catch(()=>{})},1500)}
+function netCloseQuiet(){try{micOff(true)}catch(e){}clearInterval(NET.sendT);Object.values(NET.peers||{}).forEach(p=>peerDrop(p,true));if(NET.unsubJ){NET.unsubJ();NET.unsubJ=null}
+  if(NET.up){try{NET.up.un&&NET.up.un();NET.up.dc&&NET.up.dc.close();NET.up.de&&NET.up.de.close();NET.up.pc&&NET.up.pc.close()}catch(e){}NET.up=null}NET.on=false;ME=-1}
+function netClose(){try{netEv({t:'bye'})}catch(e){}micOff(true);$('bMic').hidden=$('bSpk').hidden=true;$('bEmo').hidden=true;$('emo').hidden=true;
+  const wasHost=NET.host,code=NET.code||NET.rcode,uid=NET.myUid;netCloseQuiet();
+  if(FBI&&code){try{if(wasHost)FBI.db.doc('duo/'+code).delete().catch(()=>{});else if(uid)FBI.db.doc(`duo/${code}/j/${uid}`).delete().catch(()=>{})}catch(e){}}
+  NET.host=false;NET.code='';NET.rcode='';NET.roster=[];NET.started=false}
+const ABC='ABCDEFGHJKLMNPQRSTUVWXYZ';const mkCode=()=>[...Array(4)].map(()=>ABC[Math.floor(Math.random()*ABC.length)]).join('');
 const AVC=['#3d8bfd','#ff9636','#3fa34d','#e2483d','#9b6bff','#14b8a6'];
 async function loadFriends(){const box=$('frList');const u=await me();if(!u){box.innerHTML='<p class="keys">Masuk ke akun JELAS dulu untuk menantang teman.</p>';return}
   const f=fb(),map=new Map(),add=(uid,name,sub)=>{if(!uid||uid===u.uid)return;const o=map.get(uid)||{uid,name:name||'Teman',sub};if(name)o.name=name;map.set(uid,o)};
@@ -876,23 +953,24 @@ async function loadFriends(){const box=$('frList');const u=await me();if(!u){box
   box.querySelectorAll('[data-inv]').forEach(b=>b.onclick=()=>{const x=list.find(y=>y.uid===b.dataset.inv);inviteFriend(x).catch(e=>netLost('Undangan belum terkirim: '+(e&&e.message||e)))})}
 const esc=t=>String(t??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 let INV=null;
-async function inviteFriend(x){const ok=await host({quiet:true});if(!ok)return;const u=await me(),f=fb();const name=await myName(u);
+async function inviteFriend(x){const ok=await host({quiet:true});if(!ok)return;const u=await me(),f=fb();const name=NET.myName||await myName(u);
   const id=x.uid+'_P'+NET.code+'_'+Date.now().toString(36);
-  await f.db.doc('invites/'+id).set({to:x.uid,from:u.uid,fromName:name,code:'P:'+NET.code,kind:'adv',subjName:'Petualangan Berdua',title:'Game kerja sama',created:Date.now()});
-  INV={id,x,t:Date.now()};showWait(`Menunggu ${x.name} menerima tantangan…`,'');$('onCode').textContent='2:00';
+  await f.db.doc('invites/'+id).set({to:x.uid,from:u.uid,fromName:name,code:'P:'+NET.code,kind:'adv',subjName:'Petualangan Berdua',title:'Game kerja sama (sampai 4 pemain)',created:Date.now()});
   try{const tok=await u.getIdToken();fetch((window.FB_CONFIG||{}).pushUrl,{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+tok},body:JSON.stringify({type:'invite',id})}).catch(()=>{})}catch(e){}
-  const un=f.db.doc('invites/'+id).onSnapshot(sn=>{const d=sn.data();if(!d||!INV||INV.id!==id)return;if(d.status==='declined'){un();invEnd();netLost(`${x.name} menolak tantanganmu. Coba ajak teman lain.`)}if(d.status==='accepted'){$('onTxt').textContent=`${x.name} menerima! Menyambungkan…`}},()=>{});
-  INV.un=un;INV.tick=setInterval(()=>{if(!INV)return;const left=Math.max(0,120-Math.floor((Date.now()-INV.t)/1000));if(NET.on){invEnd();return}$('onCode').textContent=`${Math.floor(left/60)}:${String(left%60).padStart(2,'0')}`;if(!left){const nm=x.name;invEnd(true);netLost(`${nm} belum menjawab dalam 2 menit. Coba lagi nanti.`)}},500)}
-function invEnd(del){if(!INV)return;clearInterval(INV.tick);try{INV.un&&INV.un()}catch(e){}if(del){try{fb().db.doc('invites/'+INV.id).delete().catch(()=>{})}catch(e){}}INV=null}
-function showWait(t,code){$('pOnline').hidden=false;$('onMenu').hidden=true;$('onWait').hidden=false;$('onTxt').textContent=t;$('onCode').textContent=code||'';$('bShare').hidden=!code}
-function needLogin(){netLost('Masuk ke akun JELAS dulu, lalu buka game ini lagi dari menu Bermain.')}
-$('bOnline').onclick=()=>{hideAll();$('bOnCancel').textContent='Batal';$('pOnline').hidden=false;$('onMenu').hidden=false;$('onWait').hidden=true;$('onMsg').textContent='Pilih teman untuk ditantang. Mereka akan mendapat undangan dan tinggal menekan Terima.';ac();loadFriends()};
+  lobbyShow();say(`Undangan terkirim ke ${x.name}. Tunggu ia bergabung (maks. 2 menit).`,4);
+  const un=f.db.doc('invites/'+id).onSnapshot(sn=>{const d=sn.data();if(!d)return;if(d.status==='declined'){un();say(`${x.name} menolak undanganmu.`,3.5)}},()=>{});setTimeout(()=>{try{un()}catch(e){}},130000)}
+function invEnd(){}
+function showWait(t,code){$('pOnline').hidden=false;$('onMenu').hidden=true;$('onWait').hidden=false;$('onTxt').textContent=t;$('onCode').textContent=code||'';$('bShare').hidden=!code;$('bStart').hidden=true;$('bInvMore').hidden=true;$('onRoster').innerHTML=''}
+function needLogin(){netLost('Masuk ke akun JELAS dulu, lalu buka game ini lagi dari menu Bermain.',true)}
+$('bOnline').onclick=()=>{hideAll();$('bOnCancel').textContent='Batal';$('pOnline').hidden=false;$('onMenu').hidden=false;$('onWait').hidden=true;$('onMsg').textContent='Ajak sampai 3 teman. Mereka mendapat undangan dan tinggal menekan Terima.';ac();loadFriends()};
 $('bEmo').onclick=()=>{$('emo').hidden=!$('emo').hidden;if(!$('emo').hidden)emoMine()};$('emoForm').onsubmit=e=>{e.preventDefault();sayMine($('emoIn').value)};$('emoIn').addEventListener('keydown',e=>e.stopPropagation());document.querySelectorAll('#emo [data-e]').forEach(b=>b.onclick=()=>emoSend(+b.dataset.e));
-$('rcStop').onclick=()=>{if(RC){clearTimeout(RC.tk);RC=null}$('pRc').hidden=true;netClose();$('pOnline').hidden=false;$('onMenu').hidden=false;$('onWait').hidden=true;$('onMsg').textContent='Kamu berhenti menyambung ulang.';loadFriends()};
-$('bOnBack').onclick=()=>{invEnd(true);netClose();showHome()};
-$('bOnCancel').onclick=()=>{invEnd(true);if(document.body.classList.contains('direct')){exit();return}const was=NET.on;netClose();$('bOnCancel').textContent='Batal';if(was){showHome();return}$('onMenu').hidden=false;$('onWait').hidden=true};
-$('bHost').onclick=()=>host().catch(e=>netLost('Ruang belum bisa dibuat: '+(e&&e.message||e)));
-$('bJoin').onclick=()=>join($('inCode').value).catch(e=>netLost('Gagal bergabung: '+(e&&e.message||e)));
+$('rcStop').onclick=()=>{RCW.on=false;$('pRc').hidden=true;netClose();showHome()};
+$('bOnBack').onclick=()=>{if(NET.host&&NET.code){lobbyShow();return}netClose();showHome()};
+$('bOnCancel').onclick=()=>{if(document.body.classList.contains('direct')){exit();return}const was=NET.on||NET.up;netClose();$('bOnCancel').textContent='Batal';if(was){showHome();return}$('onMenu').hidden=false;$('onWait').hidden=true};
+$('bStart').onclick=()=>{if(!NET.host||nOn()<2)return;NET.started=true;hostSend({t:'go'});SFX.click();showPets(true)};
+$('bInvMore').onclick=()=>{$('onMenu').hidden=false;$('onWait').hidden=true;$('onMsg').textContent=`Pilih teman untuk diajak (${nOn()}/4 pemain).`;loadFriends()};
+$('bHost').onclick=()=>host().catch(e=>netLost('Ruang belum bisa dibuat: '+(e&&e.message||e),true));
+$('bJoin').onclick=()=>join($('inCode').value).catch(e=>netLost('Gagal bergabung: '+(e&&e.message||e),true));
 $('inCode').addEventListener('keydown',e=>{if(e.key==='Enter')$('bJoin').click()});
 $('bShare').onclick=async()=>{const url=location.origin+location.pathname+'?r='+NET.code;const txt=`Ayo main Petualangan Berdua di JELAS! Kode ruang: ${NET.code}\n${url}`;try{if(navigator.share){await navigator.share({text:txt});return}}catch(e){return}try{await navigator.clipboard.writeText(txt);$('onTxt').textContent='Tautan disalin. Kirim ke temanmu, lalu tunggu di sini.'}catch(e){}};
 addEventListener('pagehide',()=>{try{netClose()}catch(e){}});
@@ -903,7 +981,7 @@ addEventListener('pagehide',()=>{try{netClose()}catch(e){}});
 const VOICE={on:false,stream:null};
 function micUI(){const b=$('bMic');b.classList.toggle('live',VOICE.on);b.classList.toggle('off',!VOICE.on);b.title=VOICE.on?'Matikan mikrofon':'Nyalakan mikrofon';
   const s=$('bSpk');s.classList.toggle('off',$('rAudio').muted);s.title=$('rAudio').muted?'Dengarkan teman':'Bisukan teman'}
-function micOff(silent){VOICE.on=false;try{const t=NET.pc&&NET.pc.getTransceivers().find(x=>x.sender&&(x.receiver&&x.receiver.track&&x.receiver.track.kind==='audio'));t&&t.sender.replaceTrack(null).catch(()=>{})}catch(e){}
+function micOff(silent){VOICE.on=false;try{const vp=audioPc();const t=vp&&vp.getTransceivers().find(x=>x.sender&&(x.receiver&&x.receiver.track&&x.receiver.track.kind==='audio'));t&&t.sender.replaceTrack(null).catch(()=>{})}catch(e){}
   if(VOICE.stream){VOICE.stream.getTracks().forEach(t=>t.stop());VOICE.stream=null}if(!silent)netEv({t:'mic',on:false});micUI()}
 async function voiceAllowed(){const f=fb();if(!f||!NET.myUid||!NET.peerUid)return {ok:false,why:'Obrolan suara hanya tersedia saat main online dengan akun JELAS.'};
   const me_=NET.myUid,pe=NET.peerUid;let mutual=false,mate=false,teacherOff=false;
@@ -911,7 +989,7 @@ async function voiceAllowed(){const f=fb();if(!f||!NET.myUid||!NET.peerUid)retur
   try{const u=await f.db.doc('users/'+me_).get();const cid=u.exists&&u.data().classId;if(cid){try{const c=await f.db.doc(`classes/${cid}/cfg/main`).get();teacherOff=c.exists&&c.data().voice===false}catch(e){}
       try{mate=(await f.db.doc(`classes/${cid}/board/${pe}`).get()).exists}catch(e){}}}catch(e){}
   if(teacherOff)return {ok:false,why:'Gurumu menonaktifkan obrolan suara untuk kelasmu.'};
-  if(!mutual&&!mate)return {ok:false,why:`Obrolan suara hanya bisa dengan teman yang <b>saling mengikuti</b> atau <b>teman sekelas</b>. Ikuti ${NET.peer||'temanmu'} dan minta dia mengikutimu balik di JELAS.`};
+  if(!mutual&&!mate)return {ok:false,why:`Obrolan suara hanya bisa dengan teman yang <b>saling mengikuti</b> atau <b>teman sekelas</b>. Ikuti temanmu dan minta dia mengikutimu balik di JELAS.`};
   return {ok:true}}
 function vPanel(title,html,bind){$('vTitle').textContent=title;$('vBody').innerHTML=html;$('pVoice').hidden=false;bind&&bind()}
 const vClose=()=>{$('pVoice').hidden=true};
@@ -926,21 +1004,19 @@ async function micOn(){let blocked=false;try{blocked=localStorage.getItem('jk_vo
   if(!(await parentGate()))return;try{localStorage.removeItem('jk_voice_block')}catch(e){}
   if(!(await safety()))return;
   try{VOICE.stream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true}})}catch(e){vPanel('Mikrofon belum diizinkan',`<p>Izinkan JELAS memakai mikrofon di pengaturan HP atau browser, lalu coba lagi.</p><button class="btn" id="vOk">Oke</button>`,()=>{$('vOk').onclick=vClose});return}
-  const tr=NET.pc&&NET.pc.getTransceivers().find(x=>x.receiver&&x.receiver.track&&x.receiver.track.kind==='audio');if(!tr){micOff(true);return}
+  const vp=audioPc();const tr=vp&&vp.getTransceivers().find(x=>x.receiver&&x.receiver.track&&x.receiver.track.kind==='audio');if(!tr){micOff(true);return}
   await tr.sender.replaceTrack(VOICE.stream.getAudioTracks()[0]);VOICE.on=true;netEv({t:'mic',on:true});micUI();$('rAudio').play().catch(()=>{})}
-$('bMic').onclick=()=>{if(!NET.on)return;if(VOICE.on){vPanel('Mikrofon',`<p>Mikrofonmu sedang menyala.</p><button class="btn" id="mOff">Matikan mikrofon</button><button class="btn b2" id="mBlock">Matikan obrolan suara (orang tua)</button><button class="btn b3" id="mBack">Kembali</button>`,()=>{$('mOff').onclick=()=>{micOff();vClose()};$('mBlock').onclick=()=>{micOff();try{localStorage.setItem('jk_voice_block','1');localStorage.removeItem('jk_voice_gate')}catch(e){}vClose()};$('mBack').onclick=vClose});return}micOn()};
+$('bMic').onclick=()=>{if(!NET.on)return;if(!audioPc()){vPanel('Obrolan suara','<p>Obrolan suara hanya tersedia saat main online berdua.</p><button class="btn" id="vOk">Oke</button>',()=>{$('vOk').onclick=vClose});return}if(VOICE.on){vPanel('Mikrofon',`<p>Mikrofonmu sedang menyala.</p><button class="btn" id="mOff">Matikan mikrofon</button><button class="btn b2" id="mBlock">Matikan obrolan suara (orang tua)</button><button class="btn b3" id="mBack">Kembali</button>`,()=>{$('mOff').onclick=()=>{micOff();vClose()};$('mBlock').onclick=()=>{micOff();try{localStorage.setItem('jk_voice_block','1');localStorage.removeItem('jk_voice_gate')}catch(e){}vClose()};$('mBack').onclick=vClose});return}micOn()};
 $('bSpk').onclick=()=>{const a=$('rAudio');a.muted=!a.muted;if(!a.muted)a.play().catch(()=>{});micUI()};
 const DIRECT=!!(Q.get('r')||Q.get('host')||Q.get('local'));if(DIRECT)document.body.classList.add('direct');
-{const r=(Q.get('r')||'').replace(/^P:/i,''),h=Q.get('host');if(h){$('pStart').hidden=true;try{history.replaceState(null,'',location.pathname+'?g='+GRADE0)}catch(e){}setTimeout(()=>host({quiet:true,code:h.toUpperCase()}).then(ok=>{if(ok){const lk=!!Q.get('link');showWait(lk?'Tautan terkirim. Menunggu temanmu membuka tautan dan bergabung…':'Menyambungkan dengan temanmu…','');setTimeout(()=>{if(!NET.on)netLost(lk?'Temanmu belum bergabung. Coba bagikan tautan lagi dari JELAS.':'Temanmu belum tersambung. Coba tantang lagi dari JELAS.')},lk?300000:45000)}}).catch(e=>netLost('Belum bisa tersambung: '+(e&&e.message||e))),200)}
-  else if(Q.get('local')){$('pStart').hidden=true;setTimeout(()=>{ME=-1;NET.on=false;NPL=2;showLevels()},150)}
+{const r=(Q.get('r')||'').replace(/^P:/i,''),h=Q.get('host');if(h){$('pStart').hidden=true;try{history.replaceState(null,'',location.pathname+'?g='+GRADE0)}catch(e){}setTimeout(()=>host({quiet:true,code:h.toUpperCase()}).then(ok=>{if(ok){const lk=!!Q.get('link');lobbyShow()}}).catch(e=>netLost('Belum bisa tersambung: '+(e&&e.message||e))),200)}
+  else if(Q.get('local')){$('pStart').hidden=true;setTimeout(()=>{ME=-1;NET.on=false;NPL=2;showPets(false)},150)}
   else if(r){$('pStart').hidden=true;try{history.replaceState(null,'',location.pathname+'?g='+GRADE0)}catch(e){}setTimeout(()=>join(r,{wait:true}).catch(()=>{}),300)}else if(Q.get('inv')){$('pStart').hidden=true;const x={uid:Q.get('inv'),name:Q.get('n')||'Teman'};try{history.replaceState(null,'',location.pathname+'?g='+GRADE0)}catch(e){}setTimeout(()=>inviteFriend(x).catch(e=>netLost('Undangan belum terkirim: '+(e&&e.message||e))),300)}else if(Q.get('online')){setTimeout(()=>$('bOnline').click(),200)}}
-
-
 
 /* ====== mulai ====== */
 loadLevel(0);if(!DIRECT)showHome();
 requestAnimationFrame(loop);
-window.__duo={get P(){return P},get LV(){return LV},get key(){return key},get door(){return door},get boxes(){return boxes},get BTNS(){return BTNS},get PLATES(){return PLATES},get barOpen(){return barOpen},get MOV(){return MOV},get wT(){return wT},get latched(){return latched},get won(){return won},get dying(){return dying},get running(){return running},get quizOpen(){return quizOpen},get Q2(){return Q2},get ME(){return ME},get NET(){return NET},get levelT(){return levelT},get RC(){return RC},get QBANK(){return QBANK},
+window.__duo={get P(){return P},get LV(){return LV},get KEYS(){return KEYS},get LEVERS(){return LEVERS},get CAM(){return CAM},get door(){return door},get boxes(){return boxes},get BTNS(){return BTNS},get PLATES(){return PLATES},get barOpen(){return barOpen},get MOV(){return MOV},get wT(){return wT},get latched(){return latched},get won(){return won},get dying(){return dying},get running(){return running},get quizOpen(){return quizOpen},get Q2(){return Q2},get ME(){return ME},get NET(){return NET},get levelT(){return levelT},get RC(){return RC},get QBANK(){return QBANK},
   LEVELS,GV,qSuccess,startLevel,loadLevel,showLevels,showHome,unlockDoor,openQuiz,emoSend,sayMine,cleanMsg,restartLevel,ownedPets,selPets,showPets,showCos,setN:n=>{NPL=n},kill:i=>die(P[i]),step:(n=1)=>{for(let i=0;i<n;i++)step(1/60)},snap:()=>{draw();return cv.toDataURL()},drawChar,prog};
 })();
 </script>

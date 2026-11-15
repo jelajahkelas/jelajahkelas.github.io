@@ -214,6 +214,11 @@ service cloud.firestore {
             && request.resource.data.host == resource.data.host && request.resource.data.offer == resource.data.offer)
         || (('guest' in resource.data) && resource.data.guest == request.auth.uid && request.resource.data.guest == request.auth.uid));
       allow delete: if signedIn() && resource.data.host == request.auth.uid;
+      // permintaan bergabung (sampai 4 pemain): dokumen milik tamu, dibalas tuan rumah ruang
+      match /j/{uid} {
+        allow read, update, delete: if signedIn() && (request.auth.uid == uid || get(/databases/$(database)/documents/duo/$(code)).data.host == request.auth.uid);
+        allow create: if signedIn() && request.auth.uid == uid && request.resource.data.keys().hasOnly(['name','at']);
+      }
     }
 
     // Kunci misi teman: satu pasangan per murid per minggu (id = minggu_uid). Tidak bisa diubah/dihapus.
