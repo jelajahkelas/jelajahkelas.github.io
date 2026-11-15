@@ -119,6 +119,22 @@ body.direct #onCode,body.direct #bShare{display:none!important}
 
 /* ruang online */
 .rosl{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:6px 0}.ros{display:flex;align-items:center;gap:4px;padding:4px 10px 4px 4px;border-radius:16px;font:800 13px system-ui,sans-serif;color:#2b2140;box-shadow:0 3px 0 rgba(43,33,64,.2)}.ros canvas{width:28px;height:30px;background:rgba(255,255,255,.6);border-radius:10px}
+/* tata letak tanpa gulir */
+.box.cos{max-width:860px}.cwrap{display:grid;grid-template-columns:200px 1fr;gap:16px;align-items:start;text-align:left}.cleft{text-align:center}.cleft h2{margin:0 0 8px}
+.cright .csec{margin:2px 0 6px}.cright .cgrid{grid-template-columns:repeat(auto-fill,minmax(66px,1fr));gap:6px;margin-bottom:6px}
+.cit{padding:4px;font-size:10.5px;line-height:1.15;gap:1px}.cit canvas{width:34px!important;height:36px!important}.cit small{font-size:9.5px}
+.ctabs{gap:4px}.ctabs button{padding:2px 4px;font-size:10px}.ctabs button canvas{width:24px;height:26px}.cprev{width:84px;height:84px;margin:8px auto}.cprev canvas{width:72px;height:78px}
+.box.help{max-width:760px}.hcards{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px;text-align:left}.hcards div{background:#fff;border-radius:14px;padding:8px 10px 8px 38px;position:relative;font:500 13px/1.35 system-ui,sans-serif;box-shadow:0 2px 0 rgba(43,33,64,.12)}.hcards i{position:absolute;left:9px;top:7px;font-style:normal;font-size:19px}
+.keys{font-size:12px;margin-top:8px}
+.short .box{padding:10px 14px}.short .box h2{font-size:16px;margin:0 0 6px}.short .btn{padding:8px 10px;margin-top:6px;font-size:14px}
+.short .hcards{grid-template-columns:repeat(4,1fr);gap:6px}.short .hcards div{font-size:11px;padding:6px 6px 6px 30px}.short .hcards i{font-size:15px;left:7px}
+.short .cwrap{grid-template-columns:170px 1fr;gap:12px}.short .cprev{width:64px;height:64px;margin:4px auto}.short .cprev canvas{width:56px;height:60px}.short .cit canvas{width:28px!important;height:30px!important}.short .cit{font-size:9px;padding:3px 2px}.short .cit small{font-size:8.5px}.short .cright .cgrid{grid-template-columns:repeat(9,minmax(0,1fr));gap:4px}.short .cright .csec{font-size:11px;margin:0 0 4px}.short .cmsg{font-size:11px;margin:2px 0}
+.short #ptRows{display:grid;grid-template-columns:1fr 1fr;gap:6px}.short .prow{margin:0}
+.short .rtime{font-size:22px;margin:2px 0}.short .rhero canvas{width:40px;height:43px}.short #pRes p{margin:2px 0}
+.short .qtxt{font-size:20px;margin:4px 0 8px}.short .qtxt.sm{font-size:14px}.opts.long{grid-template-columns:1fr 1fr}.short .opts.long .btn{font-size:13px;padding:7px 8px}.short #pQuiz .box{max-width:720px}.short .opts{gap:6px}.short .opts .btn{font-size:16px;padding:8px}.short .qex{margin-top:6px;gap:6px;font-size:13px}.short .qex span{padding:6px 8px}
+.short #pQuiz p{margin:2px 0 6px;font-size:13px}.short .frlist{max-height:34vh}
+@media (max-width:640px){.cwrap{grid-template-columns:1fr}.cright .cgrid{grid-template-columns:repeat(5,1fr)}.hcards{grid-template-columns:1fr 1fr}}
+#qOpts[hidden],#qLater[hidden]{display:none}
 /* ====== gaya halus (bukan piksel) ====== */
 html,body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
 canvas{image-rendering:auto}
@@ -175,24 +191,25 @@ canvas{image-rendering:auto}
   <h2 class="px" id="lvTitle">Pilih level</h2><div class="lvg" id="lvGrid"></div><p class="lvinfo" id="lvInfo"></p>
   <button class="btn b3" id="lvBack">← Kembali</button>
 </div></div>
-<div class="panel" id="pCos" hidden><div class="box">
-  <h2 class="px">👤 Kostum</h2><div class="ctabs" id="cTabs"></div>
-  <div class="cprev"><canvas id="cPrev" width="28" height="30"></canvas></div>
-  <div class="cgrid" id="cGrid"></div><p class="cmsg" id="cMsg"></p>
-  <button class="btn b3" id="cBack">← Kembali</button>
+<div class="panel" id="pCos" hidden><div class="box cos">
+  <div class="cwrap"><div class="cleft"><h2 class="px">👤 Kostum</h2><div class="ctabs" id="cTabs"></div>
+  <div class="cprev"><canvas id="cPrev" width="28" height="30"></canvas></div><p class="cmsg" id="cMsg"></p>
+  <button class="btn b3" id="cBack">← Kembali</button></div>
+  <div class="cright" id="cGrid"></div></div>
 </div></div>
 <div class="panel" id="pHelp" hidden><div class="box help">
   <h2 class="px">❓ Cara Main</h2>
-  <ol>
-   <li><b>Karakter:</b> Oyen si kucing, Koko si katak, Kiki si kelinci, dan Piyik si anak ayam. Topi & aksesoris terbuka dengan menyelesaikan level. Ada juga yang tersembunyi di dalam <b>🫧 gelembung</b> di beberapa level: pecahkan untuk mendapatkannya! Ganti kapan saja lewat tombol 👤.</li>
-   <li><b>Tujuan:</b> ambil 🔑 kunci, bawa ke pintu, jawab soal gemboknya, lalu <b>semua pemain</b> masuk ke pintu.</li>
-   <li><b>Naik ke kepala teman</b> untuk mencapai tempat tinggi. Kalian bisa bertumpuk sampai 4! Teman yang ditumpangi masih bisa berjalan, tapi lompatannya hanya kecil.</li>
-   <li><b>Tombol</b> membuka palang selama diinjak. <b>Kotak</b> bisa didorong dan menahan tombol. Kotak berat 🪨 harus didorong <b>berdua</b>.</li>
-   <li><b>Tuas</b> membuka atau menutup palang hijau toska setiap kali disentuh. Kadang ada <b>2 kunci</b>: kumpulkan semuanya sebelum membuka pintu.</li>
-   <li><b>Lempeng ungu</b> harus diinjak <b>bersamaan</b>. <b>Pegas</b> melambungkanmu tinggi. <b>Tombol jingga</b> membuka palang hanya beberapa detik: cepat! <b>Lift</b> bergerak sendiri, naiki bersama.</li>
-   <li>Kena <b>duri</b>? Level langsung diulang. Tekan <b>↻</b> kapan saja kalau buntu.</li>
-  </ol>
-  <div class="keys">Pemain 1: W A D · Pemain 2: ▲ ◀ ▶ · Pemain 3: T F H · Pemain 4: I J L<br>Di HP: tombol kiri untuk pemain 1, kanan untuk pemain 2 (3–4 pemain butuh keyboard)<br>Online: sampai 4 pemain, 💬 untuk mengirim gelembung isyarat</div>
+  <div class="hcards">
+   <div><i>🔑</i>Kumpulkan <b>semua kunci</b>, sentuh pintu, jawab soal gemboknya, lalu <b>semua</b> masuk pintu.</div>
+   <div><i>🧍</i>Naik ke <b>kepala teman</b> untuk tempat tinggi. Bisa bertumpuk sampai 4!</div>
+   <div><i>🔴</i><b>Tombol</b> membuka palang selama diinjak. Tombol <b>jingga</b> hanya beberapa detik.</div>
+   <div><i>📦</i><b>Kotak</b> bisa didorong dan menahan tombol. Kotak <b>×2</b> didorong berdua.</div>
+   <div><i>🟣</i><b>Lempeng ungu</b> diinjak bersamaan. <b>Tuas</b> membuka palang toska.</div>
+   <div><i>🛗</i><b>Lift</b> dan <b>pegas</b> membawamu tinggi. Tombol <b>kuning</b> menaikkan lift.</div>
+   <div><i>🫧</i><b>Gelembung</b> berisi kostum (tidak wajib). Ganti kostum lewat 👤.</div>
+   <div><i>⚠️</i>Kena <b>duri</b>, level diulang. Buntu? Tekan <b>↻</b>.</div>
+  </div>
+  <div class="keys">P1: W A D · P2: ▲ ◀ ▶ · P3: T F H · P4: I J L · Di HP: tombol kiri P1, kanan P2 · Online sampai 4 pemain</div>
   <button class="btn b3" id="hpBack">← Kembali</button>
 </div></div>
 <div class="panel" id="pOnline" hidden><div class="box">
@@ -669,11 +686,11 @@ function bankQ(){if(!QBANK.length)return null;if(!QBAG.length)QBAG=QBANK.slice()
 function advLog(e){try{const L=JSON.parse(localStorage.getItem('jk_adv_log')||'[]');e.t=Date.now();L.push(e);localStorage.setItem('jk_adv_log',JSON.stringify(L.slice(-300)))}catch(_){}}
 function qClose(){quizOpen=false;$('pQuiz').hidden=true;document.querySelectorAll('#pQuiz .qex').forEach(x=>x.remove())}
 function qSuccess(){qClose();unlockDoor()}
-function qWrong(ans,ex,again,note){const box=$('qOpts');box.querySelectorAll('button').forEach(x=>x.disabled=true);$('qHint').innerHTML=`${note?esc(note)+' ':''}Jawaban yang benar: <b>${esc(ans)}</b>.`;
+function qWrong(ans,ex,again,note){const box=$('qOpts');box.querySelectorAll('button').forEach(x=>x.disabled=true);box.hidden=true;$('qLater').hidden=true;$('qHint').innerHTML=`${note?esc(note)+' ':''}Jawaban yang benar: <b>${esc(ans)}</b>.`;
   const e=document.createElement('div');e.className='qex';e.innerHTML=(ex?`<span>📘 ${esc(ex)}</span>`:'')+`<button class="btn" id="qAgain">${again?'Coba soal lain →':'Tutup'}</button>`;box.after(e);
   $('qAgain').onclick=()=>{e.remove();qClose();if(again)again();else qCool=1.2}}
 let Q2=null;
-function quizUI(title,hint,q,opts,onPick,none){document.querySelectorAll('#pQuiz .qex').forEach(x=>x.remove());
+function quizUI(title,hint,q,opts,onPick,none){document.querySelectorAll('#pQuiz .qex').forEach(x=>x.remove());$('qOpts').hidden=false;$('qLater').hidden=false;
   const long=opts.some(o=>String(o).length>8);$('qTxt').textContent=q;$('qTxt').classList.toggle('sm',String(q).length>24);$('qOpts').classList.toggle('long',long);$('qTitle').textContent=title;$('qHint').innerHTML=hint;
   const box=$('qOpts');box.innerHTML='';opts.forEach(v=>{const b=document.createElement('button');b.className='btn';b.textContent=v;b.onclick=()=>onPick(v,b);box.appendChild(b)});
   if(none){const b=document.createElement('button');b.className='btn b3 qnone';b.textContent='🙅 Jawabannya tidak ada di layarku';b.onclick=()=>onPick('',b);box.appendChild(b)}
@@ -790,7 +807,7 @@ function drawCos(){const own=ownedPets(),n=doneN(),cur=costOf(COSTAB);
   $('cTabs').querySelectorAll('button').forEach(b=>{const e=costOf(b.dataset.t);aniThumb(b.querySelector('canvas'),b.dataset.t,e.h,e.a);b.onclick=()=>{COSTAB=b.dataset.t;$('cMsg').textContent='';drawCos()}});
   aniThumb($('cPrev'),COSTAB,cur.h,cur.a);
   const card=(it,kind)=>{const ok=itemOk(it,n),on=(kind==='h'?cur.h:cur.a)===it.id;return `<button class="cit${on?' eq':''}${ok?'':' no'}" data-k="${kind}" data-v="${it.id}"><canvas width="28" height="30"></canvas>${esc(it.n)}<small>${!ok?(it.bub?'🫧 Cari di level '+it.bub:'🔒 '+it.c+' level'):on?'Dipakai':'Pakai'}</small></button>`};
-  $('cGrid').outerHTML=`<div id="cGrid"><p class="csec">🎩 Topi</p><div class="cgrid">${HATS.map(x=>card(x,'h')).join('')}</div><p class="csec">🎀 Aksesoris</p><div class="cgrid">${ACCS.map(x=>card(x,'a')).join('')}</div></div>`;
+  $('cGrid').outerHTML=`<div class="cright" id="cGrid"><p class="csec">🎩 Topi</p><div class="cgrid">${HATS.map(x=>card(x,'h')).join('')}</div><p class="csec">🎀 Aksesoris</p><div class="cgrid">${ACCS.map(x=>card(x,'a')).join('')}</div></div>`;
   $('cGrid').querySelectorAll('.cit').forEach(b=>{const k=b.dataset.k,v=b.dataset.v;aniThumb(b.querySelector('canvas'),COSTAB,k==='h'?v:cur.h,k==='a'?v:cur.a);
     b.onclick=()=>{const it=(k==='h'?HATS:ACCS).find(x=>x.id===v);if(!itemOk(it,n)){$('cMsg').textContent=it.bub?`${it.n} tersembunyi di dalam gelembung di level ${it.bub}. Temukan dan pecahkan gelembungnya!`:`Selesaikan ${it.c} level untuk membuka ${it.n}. Sekarang: ${n}.`;SFX.bad();return}
       const p=prog();const e=costOf(COSTAB);e[k]=v;p.eq[COSTAB]=e;progSave(p);SFX.click();applyCost();$('cMsg').textContent=`${petName(COSTAB)} memakai ${it.n}.`;drawCos()}})}
