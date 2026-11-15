@@ -4238,7 +4238,7 @@ html[data-theme=malam] .plstick{background:#0a0f1e}
 <div class="syncpill" id="syncPill" hidden></div>
 <div class="toast" id="toast" hidden></div>
 
-<script src="av.js?v=383"></script>
+<script src="av.js?v=391"></script>
 <script>
 /* ---------- visual assets ---------- */
 const INK='#1B1E3D';
@@ -16028,7 +16028,7 @@ async function ajakInvite(f,btn){if(AJAK.mode==='adv'&&(AJAK.max||8)<=2){if(btn)
     setTimeout(()=>{FB.db.doc('invites/'+invId).get().then(s=>{if(s.exists&&!s.data().status){s.ref.delete().catch(()=>{});AJAK.sent[f.uid]=false;const b=document.querySelector(`.ajinv[data-uid="${CSS.escape(f.uid)}"]`);if(b){b.disabled=false;b.textContent='UNDANG LAGI';b.classList.remove('sent')}}}).catch(()=>{})},INV_TTL+500)}
   catch(e){if(btn){btn.disabled=false;btn.textContent='UNDANG'}toast('lock',fbErr(e))}}
 async function ajakShare(){if(AJAK.mode==='adv'&&(AJAK.max||8)<=2){const A='ABCDEFGHJKLMNPQRSTUVWXYZ',code=[...Array(4)].map(()=>A[Math.floor(Math.random()*A.length)]).join('');
-    const link=`${location.origin}${location.pathname}?tantang=P:${code}`,text=`Ayo main Petualangan Berdua bersamaku di JELAS! Kita harus kerja sama mengalahkan bos dan membuka gerbang.`;
+    const link=`${location.origin}${location.pathname}?tantang=P:${code}`,text=`Ayo main Petualangan Berdua bersamaku di JELAS! Kita harus kerja sama mengambil kunci dan membuka pintu.`;
     const go=()=>{advSave(true);location.href=`petualangan/?sx=${(P&&P.gender)||''}&host=${code}&link=1&g=${advGrade()}`};
     if(navigator.share){try{await navigator.share({title:'Petualangan Berdua · JELAS',text,url:link});go();return}catch(e){if(e&&e.name==='AbortError')return}}
     try{await navigator.clipboard.writeText(text+'\n'+link);toast('check','Tautan disalin. Kirim ke temanmu, lalu tunggu di game.')}catch(e){prompt('Salin tautan ini:',link)}setTimeout(go,900);return}
@@ -16177,7 +16177,7 @@ function folBind(root,list,after){root.querySelectorAll('[data-follow]').forEach
   try{await folDo(f,on);if(on){try{sfx.ok()}catch(_){}toast('team',`Kamu mengikuti ${f.name}.`)}b.outerHTML=folBtn(f,b.classList.contains('sm'));folBind(root,list,after);after&&after()}catch(err){b.disabled=false;toast('lock',fbErr(err))}})}
 const shareIcon='<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M12 3 V15 M7 8 L12 3 L17 8 M5 13 V19 C5 20 6 21 7 21 H17 C18 21 19 20 19 19 V13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const qrIcon='<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><path d="M14 14h3v3h-3zM18 18h3v3h-3zM18 14h3M14 18v3" stroke-linecap="round"/></svg>';
-let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=383';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
+let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=391';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
 function qrMatrix(text){const Q=window.QRCodeLib,q=new Q(-1,Q.ECL.M);q.addData(text);q.make();const n=q.getModuleCount(),m=[];for(let r=0;r<n;r++){m.push([]);for(let c=0;c<n;c++)m[r].push(q.isDark(r,c))}return m}
 function qrSvgOf(m){const n=m.length;let d='';for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(m[r][c])d+=`M${c} ${r}h1.02v1.02h-1.02z`;
   return `<svg viewBox="-2 -2 ${n+4} ${n+4}" class="pcqr" shape-rendering="crispEdges" aria-label="Kode QR profil"><rect x="-2" y="-2" width="${n+4}" height="${n+4}" fill="#fff"/><path d="${d}" fill="#1C1E3D"/></svg>`}
@@ -16256,7 +16256,7 @@ window.friendsData=friendsData;
 /* main berdua offline di satu HP (layar terbagi) */
 /* Petualangan Berdua: game kerja sama bergaya piksel (halaman terpisah) */
 function advCardHTML(){const cid=String((CLS()||{}).id||''),m=cid.match(/(\d+)/),g=/^tk/.test(cid)?0:m?+m[1]:3;
-  return `<a class="card advcard press" id="advCard" href="petualangan/?g=${g}" onclick="try{advSave(false)}catch(e){}"><span class="advart" aria-hidden="true"><i class="a1"></i><i class="a2"></i></span><span class="grow"><small>BARU · KERJA SAMA</small><b>Petualangan Berdua</b><span>Game piksel jadul: saling bantu melewati rintangan dan jawab soal batu ajaib.</span></span><span class="advgo">MAIN</span></a>`}
+  return `<a class="card advcard press" id="advCard" href="petualangan/?g=${g}" onclick="try{advSave(false)}catch(e){}"><span class="advart" aria-hidden="true"><i class="a1"></i><i class="a2"></i></span><span class="grow"><small>BARU · KERJA SAMA</small><b>Petualangan Berdua</b><span>Teka-teki kerja sama 2–4 pemain: ambil kunci, jawab soal gembok, masuk pintu bersama.</span></span><span class="advgo">MAIN</span></a>`}
 function duoCard(){const v=$('#vTeam');if(!v||!P)return;let el=$('#duoCard');const rc=v.querySelector('.roomcard');
   if(!el){(rc||v.querySelector('.pagehead')).insertAdjacentHTML('afterend','<div class="card duocard" id="duoCard"></div>');el=$('#duoCard')}
   const c=CLS();const n1=GROUP.duo1||P.name,n2=GROUP.duo2||'Teman';const per=clamp(+GROUP.per||5,1,30);
@@ -17484,7 +17484,7 @@ const PH_ICON={
  adv:'<svg viewBox="0 0 48 48" shape-rendering="crispEdges"><rect x="2" y="34" width="44" height="12" fill="#8a5a3b"/><rect x="2" y="32" width="44" height="4" fill="#3fa34d"/><rect x="8" y="14" width="12" height="18" fill="#3d8bfd"/><rect x="8" y="10" width="12" height="4" fill="#2564c4"/><rect x="10" y="16" width="8" height="5" fill="#f2c39b"/><rect x="28" y="10" width="12" height="18" fill="#ff9636"/><rect x="28" y="6" width="12" height="4" fill="#d9661c"/><rect x="30" y="12" width="8" height="5" fill="#f2c39b"/><rect x="26" y="28" width="16" height="4" fill="#8d8fa8"/><path d="M6 6h4v4H6zM40 36h4v4h-4z" fill="#f7c548"/></svg>',
  teams:'<svg viewBox="0 0 48 48"><rect x="4" y="8" width="40" height="26" rx="4" fill="#3D8BFF" stroke="#1B1E3D" stroke-width="3"/><path d="M18 42 H30 M24 34 V42" stroke="#1B1E3D" stroke-width="3" stroke-linecap="round"/><circle cx="16" cy="21" r="4" fill="#FFC23D"/><circle cx="32" cy="21" r="4" fill="#FF8FC0"/></svg>'};
 const PH_SCREENS={
- root:{t:'Bermain',back:null,opts:[{id:'bareng',ic:'bareng',t:'Main bareng',d:'Bertanding dengan teman, online atau di satu HP.'},{id:'sendiri',ic:'sendiri',t:'Main sendiri',d:'Pilih pelajaran dan game, lalu mainkan sendiri.'},{id:'adv',ic:'adv',t:'Petualangan Berdua',d:'BARU! Game piksel jadul: saling bantu melewati rintangan dan jawab soal.'}]},
+ root:{t:'Bermain',back:null,opts:[{id:'bareng',ic:'bareng',t:'Main bareng',d:'Bertanding dengan teman, online atau di satu HP.'},{id:'sendiri',ic:'sendiri',t:'Main sendiri',d:'Pilih pelajaran dan game, lalu mainkan sendiri.'},{id:'adv',ic:'adv',t:'Petualangan Berdua',d:'BARU! Teka-teki kerja sama 2–4 pemain: ambil kunci dan masuk pintu bersama.'}]},
  bareng:{t:'Main bareng',back:'root',opts:[{id:'online',ic:'online',t:'Online',d:'Tantang teman dari HP masing-masing.'},{id:'offline',ic:'offline',t:'Offline',d:'Tanpa internet, di satu HP atau satu layar.'}]},
  online:{t:'Main online',back:'root',opts:[{id:'on2',ic:'duo',t:'Main berdua',d:'Tantang satu teman.'},{id:'onN',ic:'many',t:'Beberapa orang',d:'Sampai 8 pemain dalam satu ruang.'}]},
  offline:{t:'Main offline',back:'root',opts:[{id:'off2',ic:'split',t:'Main berdua',d:'Satu HP dibagi dua layar.'},{id:'teams',ic:'teams',t:'Beberapa tim',d:'Bergantian atau rebutan di satu layar, cocok untuk kelas.'}]},
@@ -17600,7 +17600,7 @@ const gModes=id=>id==='adv'?{solo:0,duo:1,grp:0,on2:1,off2:1,onN:0,offN:0}:{solo
 const GTAG={solo:'👤 Sendiri',duo:'👥 Berdua',grp:'👨‍👩‍👧 Kelompok'};
 function gList(){return MODE_LIST.filter(m=>!m.hidden).map(m=>m.id)}
 function gName(id){return id==='adv'?'Petualangan Berdua':(MODE_LIST.find(m=>m.id===id)||{name:id}).name}
-function gDesc(id){return id==='adv'?'Game piksel kerja sama: kalahkan bos dan buka gerbang bersama teman.':(MODE_LIST.find(m=>m.id===id)||{desc:''}).desc}
+function gDesc(id){return id==='adv'?'Teka-teki kerja sama 2–4 pemain: naik ke kepala teman, dorong kotak, ambil kunci, lalu masuk pintu bersama.':(MODE_LIST.find(m=>m.id===id)||{desc:''}).desc}
 function gTags(id,full){const m=gModes(id);return `<span class="gtags${full?'':' sm'}">${['solo','duo','grp'].filter(k=>m[k]).map(k=>`<i title="${GTAG[k].split(' ')[1]}">${full?GTAG[k]:GTAG[k].split(' ')[0]}</i>`).join('')}</span>`}
 function plGallery(){const last=store.get('mode',null);const ids=gList();
   const card=id=>`<button class="gcard press" data-g="${id}" style="--gc:${MCOL[id]||'#9B6BFF'}"><span class="gart">${gArt(id)}</span>${last===id?'<span class="glast">Terakhir</span>':''}<b>${esc(gName(id))}</b>${gTags(id)}</button>`;
