@@ -685,7 +685,7 @@ function makeQ(){const r=n=>Math.floor(Math.random()*n);let a,b,q,ans;const G=(G
   return {q,ans,opts:[...set].sort(()=>Math.random()-.5)}}
 let QBANK=[],QBAG=[],QSUBJ='';
 const plain=h=>{try{const d=new DOMParser().parseFromString('<p>'+String(h??'')+'</p>','text/html');return (d.body.textContent||'').replace(/\s+/g,' ').trim()}catch(e){return String(h??'')}};
-(()=>{try{const d=JSON.parse(localStorage.getItem('jk_adv_q')||'null');if(d&&Array.isArray(d.qs)&&Date.now()-(d.t||0)<2*864e5){QBANK=d.qs.filter(q=>q&&q.q&&Array.isArray(q.opts)&&q.opts.length>=2);QSUBJ=d.name||''}}catch(e){}})();
+(()=>{try{const d=JSON.parse(localStorage.getItem('jk_adv_q')||'null');if(d&&Array.isArray(d.qs)&&Date.now()-(d.t||0)<2*864e5){QBANK=d.qs.filter(q=>q&&q.q&&Array.isArray(q.opts)&&q.opts.length>=2&&![q.q,q.ans,...q.opts].some(x=>/<(?!\/?(b|i|u|em|strong|sup|sub)\b|\/?span class="formula"|\/span)[a-z\/]/i.test(String(x))));QSUBJ=d.name||''}}catch(e){}})();
 function bankQ(){if(!QBANK.length)return null;if(!QBAG.length)QBAG=QBANK.slice().sort(()=>Math.random()-.5);const q=QBAG.pop();const opts=q.opts.map(plain).filter(Boolean);const ans=plain(q.ans);if(!opts.includes(ans))return null;return {q:plain(q.q),ans,opts:opts.sort(()=>Math.random()-.5),ex:plain(q.ex||'')}}
 function advLog(e){try{const L=JSON.parse(localStorage.getItem('jk_adv_log')||'[]');e.t=Date.now();L.push(e);localStorage.setItem('jk_adv_log',JSON.stringify(L.slice(-300)))}catch(_){}}
 function qClose(){quizOpen=false;$('pQuiz').hidden=true;document.querySelectorAll('#pQuiz .qex').forEach(x=>x.remove())}

@@ -16005,7 +16005,7 @@ function advSave(useAjak){try{petCache()}catch(e){}try{let tri=[],name='';
     if(useAjak){tri=ajakTriples();const sp=ajakSpec();name=sp.s?sp.s.name:(sp.c?'Semua pelajaran '+sp.c.name:'Pelajaran acak')}
     else{const sb=SUBJ();tri=sb.units.map((u,i)=>({u,s:sb,i}));name=sb.name}
     const out=[],seen=new Set();let g=0;while(out.length<60&&g<1500&&tri.length){g++;const t=tri[Math.floor(Math.random()*tri.length)];let q=null;try{q=t&&unitQs(t.u,1)[0]}catch(e){}
-      if(!q||q.html||!Array.isArray(q.opts)||q.opts.length<2||seen.has(q.q))continue;seen.add(q.q);let ex='';try{ex=String(q.exp||fbHint(q)||'').replace(/<[^>]+>/g,' ').replace(/📘\s*Ingat:\s*/,'').replace(/\s+/g,' ').trim().slice(0,220)}catch(e){}out.push({q:String(q.q),ans:String(q.ans),opts:q.opts.map(String),ex})}
+      if(!q||q.html||q.pic||q.match||q.trace||q.warna||!Array.isArray(q.opts)||q.opts.length<2||seen.has(q.q))continue;{const vis=x=>/<(?!\/?(b|i|u|em|strong|sup|sub)\b|\/?span class="formula"|\/span)[a-z\/]/i.test(String(x));if(vis(q.q)||q.opts.some(vis)||vis(q.ans))continue}seen.add(q.q);let ex='';try{ex=String(q.exp||fbHint(q)||'').replace(/<[^>]+>/g,' ').replace(/📘\s*Ingat:\s*/,'').replace(/\s+/g,' ').trim().slice(0,220)}catch(e){}out.push({q:String(q.q),ans:String(q.ans),opts:q.opts.map(String),ex})}
     localStorage.setItem('jk_adv_q',JSON.stringify({t:Date.now(),name,qs:out}))}catch(e){}}
 /* hasil Petualangan Berdua (dicatat game di localStorage) masuk ke profil murid → terlihat di rapor guru */
 function advIngest(){try{if(!P)return;const L=JSON.parse(localStorage.getItem('jk_adv_log')||'[]');if(!L.length)return;localStorage.removeItem('jk_adv_log');
