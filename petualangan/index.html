@@ -93,7 +93,7 @@ body.rot{--vh:var(--rh)}body.rot .mapbox{width:calc(var(--rw) - 24px)!important;
 .pad button{width:58px;height:58px;font:900 22px/1 ui-monospace,monospace;color:#fff;background:rgba(43,33,64,.55);border:3px solid rgba(255,255,255,.75);box-shadow:inset -3px -3px 0 rgba(0,0,0,.3);touch-action:none}
 .pad button.on{background:rgba(247,197,72,.75);color:#2b2140}
 .pad .tag{position:absolute;top:-20px;left:0;font:900 11px ui-monospace,monospace;letter-spacing:.08em;color:#fff;text-shadow:1px 1px 0 #000}
-.pad button.fb{color:#f7c548}.pad.l .tag{color:#7fc8ff}.pad.r .tag{color:#ffb15c}
+.pad button.fb{display:none}.pad.l .tag{color:#7fc8ff}.pad.r .tag{color:#ffb15c}
 #top{position:fixed;top:calc(8px + env(safe-area-inset-top,0px));right:10px;z-index:4;display:flex;gap:8px}
 #emo{position:fixed;top:calc(56px + env(safe-area-inset-top,0px));right:10px;z-index:4;display:flex;flex-direction:column;gap:6px}#emo[hidden]{display:none}#emoMine{display:flex;flex-direction:column;gap:6px}#emoMine button{background:rgba(61,139,253,.85)}#emoForm{display:flex;gap:4px;width:220px}#emoIn{flex:1;min-width:0;font:700 14px system-ui,sans-serif;padding:7px 8px;border:3px solid #fff8e7;background:#fff;color:#2b2140}#emoForm button{width:auto;padding:6px 10px;text-align:center}#emo button{font:800 13px system-ui,sans-serif;color:#fff;background:rgba(43,33,64,.85);border:3px solid #fff8e7;padding:6px 10px;text-align:left;cursor:pointer}
 #emo .emog{display:grid;grid-template-columns:repeat(3,auto);gap:6px}#emo .emog button{position:relative;background:#fff;color:#2b2140;border:3px solid #2b2140;border-radius:14px;box-shadow:0 3px 0 #2b2140}#emo .emog button::after{content:'';position:absolute;left:14px;bottom:-8px;border:5px solid transparent;border-top-color:#2b2140}
@@ -135,15 +135,15 @@ body.direct #onCode,body.direct #bShare{display:none!important}
   <h2 class="px">📜 Cara Main</h2>
   <ol>
    <li><b>Dua peran:</b> Si Lincah 🔵 bisa lompat 2× dan membawa lentera. Si Kuat 🟠 bisa mendorong batu dan kebal laser. Kalian harus saling membantu!</li>
-   <li><b>Tujuan:</b> kumpulkan semua 🔑 kunci, kalahkan bos di Sarang Bos, lalu masuk ke gerbang bersama.</li>
-   <li><b>Batu Ajaib & Kotak Misteri:</b> jawab soal pelajaran untuk memunculkan jembatan atau mendapat senjata (jarak jauh & jarak dekat).</li>
-   <li><b>Darah:</b> tiap pemain punya 3 ♥. Kena serangan = terpental dan kebal sebentar. Jawaban benar & hati dari penjahat memulihkan ♥.</li>
+   <li><b>Tujuan:</b> ambil 🔑 kunci, <b>bawa</b> ke pintu di akhir level, buka gemboknya dengan menjawab soal, lalu masuk ke pintu <b>bersama-sama</b>. Kalau pembawa kunci jatuh, kunci kembali ke tempatnya!</li>
+   <li><b>Kerja sama:</b> naik ke pundak teman untuk mencapai tempat tinggi, injak tombol bersamaan, dan saling tunggu. Tidak ada musuh, yang ada hanya teka-teki!</li><li><b>Batu Ajaib:</b> jawab soal pelajaran untuk memunculkan jembatan.</li>
+   <li><b>Darah:</b> tiap pemain punya 3 ♥. Kena api atau batu penghancur = terpental dan kebal sebentar. Jawaban benar memulihkan ♥.</li>
    <li><b>Gelembung:</b> kalau temanmu jatuh, ia masuk gelembung. Sentuh gelembungnya untuk menyelamatkan.</li>
    <li><b>Bintang:</b> ★ selesai · ★ semua 💎 permata · ★ di bawah waktu target. Permata BIRU hanya untuk Si Lincah, JINGGA hanya untuk Si Kuat.</li>
    <li><b>Misteri:</b> kumpulkan semua permata di satu dunia untuk membuka Gua Rahasia ❓. Kumpulkan bintang untuk membuka 🧰 Peti Misteri di peta.</li>
    <li><b>Toko:</b> permata yang terkumpul bisa ditukar dengan kostum.</li>
   </ol>
-  <div class="keys">Pemain 1: A D jalan, W lompat, S tembak<br>Pemain 2: ◀ ▶ jalan, ▲ lompat, ▼ tembak<br>Online: tombol 💬 atau angka 1–5 untuk isyarat<br>Di HP: tombol kiri untuk pemain 1, kanan untuk pemain 2</div>
+  <div class="keys">Pemain 1: A D jalan, W lompat<br>Pemain 2: ◀ ▶ jalan, ▲ lompat<br>Online: tombol 💬 atau angka 1–5 untuk isyarat<br>Di HP: tombol kiri untuk pemain 1, kanan untuk pemain 2</div>
   <button class="btn b3" id="hpBack">← Kembali</button>
 </div></div>
 <div class="panel" id="pOnline" hidden><div class="box">
@@ -220,7 +220,7 @@ const MODS={harta:{n:'Ruang Harta',d:'Penuh koin dan permata. Kumpulkan sebanyak
 const SMOD=['harta','ringan','gelap','cepat','harta'];
 const FACTS=['Komodo adalah kadal terbesar di dunia, dan di alam liar hanya hidup di Indonesia.','Indonesia memiliki lebih dari 17.000 pulau.','Rafflesia arnoldii adalah bunga tunggal terbesar di dunia, lebarnya bisa sekitar 1 meter.','Cahaya Matahari butuh sekitar 8 menit untuk sampai ke Bumi.','Lebah madu memberi tahu temannya letak bunga dengan "tarian goyang".','Gurita memiliki tiga jantung.','Candi Borobudur adalah candi Buddha terbesar di dunia.','Burung cenderawasih dijuluki "burung dari surga" dan hidup di Papua.','Tubuh orang dewasa memiliki 206 tulang.','Air menutupi sekitar 71% permukaan Bumi.'];
 const stKey=(w,s)=>w+'-'+s;
-function stName(w,s){return s===SECRET?'Gua Rahasia':s===NST-1?'Sarang Bos':'Tahap '+(s+1)}
+function stName(w,s){return s===SECRET?'Gua Rahasia':s===NST-1?'Tahap Puncak':'Tahap '+(s+1)}
 const TIPS={
  gate:'Pintu batu! Satu orang menahan tombol, temannya lewat. Lalu gantian menahan tombol di seberang.',
  wall:'Tembok tinggi! Si Kuat jadi pijakan, Si Lincah naik ke kepalanya lalu lompat 2×. Di seberang, injak tombol untuk membuka pintu Si Kuat.',
@@ -243,7 +243,7 @@ const TIPS={
  crusher:'Batu penghancur! Batu besar jatuh dari atas. Lewati saat batunya naik.',
  conveyor:'Ban berjalan! Lantai ini menarik kalian mundur ke arah duri. Terus lari dan lompat!',
  cliff:'Tebing! Si Lincah naik duluan. Si Kuat melompat, lalu Si Lincah berjalan menjauh untuk menarik Si Kuat naik.'};
-function genLevel(n,seed){const C0=TUT?TUTCFG:LVCFG[n],R=rng(seed),ri=(a,b)=>a+Math.floor(R()*(b-a+1)),D=n;const C=TUT?C0:Object.assign({},C0,{n:STG===NST-1?C0.n:STG===SECRET?3:3+(STG>=2?1:0)+(n>=3?1:0),noBoss:STG!==NST-1});
+function genLevel(n,seed){const C0=TUT?TUTCFG:LVCFG[n],R=rng(seed),ri=(a,b)=>a+Math.floor(R()*(b-a+1)),D=n;const C=TUT?C0:Object.assign({},C0,{n:STG===NST-1?C0.n+1:STG===SECRET?3:3+(STG>=2?1:0)+(n>=3?1:0),noBoss:true});
   const W=320,H=14,g=[...Array(H)].map(()=>Array(W).fill(' ')),did=[...Array(H)].map(()=>Array(W).fill(-1));
   const put=(c,x,y)=>{if(y>=0&&y<H&&x>=0&&x<W)g[y][x]=c},rect=(c,x0,x1,y0,y1)=>{for(let y=y0;y<=y1;y++)for(let x=x0;x<=x1;x++)put(c,x,y)};
   const L={fire:[],crush:[],g,did,W,H,plates:[],doors:[],rules:{},movers:[],rocks:[],zones:[],coins:[],cps:[],qn:0,name:C.name,theme:C.theme,tether:!!C.tether,start:2,pipe:0,laserX:null,hasH:false,seq:[]};
@@ -281,9 +281,8 @@ function genLevel(n,seed){const C0=TUT?TUTCFG:LVCFG[n],R=rng(seed),ri=(a,b)=>a+M
   seq.forEach((k,i)=>{L.zones.push({x,t:TIPS[k]});x=M[k](x)+ri(1,2);
     // tempat istirahat: kotak misteri, kunci, penjahat
     const r0=x;L.cps.push(r0);
-    if(i<2){L.boxes.push({x:r0+3,y:9});if(i===0)L.zones.push({x:r0,t:`Kotak Misteri! Jawab soalnya untuk mendapat senjata. Kotak pertama berisi ${WEAP[n].n} (jarak jauh), kotak kedua ${MELEE[n].n} (jarak dekat). Satu kotak hanya untuk satu orang.`})}
-    else{L.enemies.push({x0:(r0+1)*T,x1:(r0+6)*T-12,x:(r0+3)*T,y:10*T-12,dir:R()<.5?-1:1,sp:22+n*5});if(i===2)L.zones.push({x:r0,t:'Awas penjahat! Injak kepalanya atau tembak dengan senjatamu.'})}
-    if(i===half||i===seq.length-1){L.keys.push({x:r0+5,y:7});if(i===half)L.zones.push({x:r0+2,t:'Kunci gerbang! Kumpulkan semua kunci untuk membuka gerbang di akhir level.'})}
+    /* satu kunci saja (seperti Pets Park): melayang tinggi di tengah level, harus dibawa ke pintu bersama */
+    if(i===Math.max(0,half-(seq.length>3?0:1))&&!L.keys.length){const ky=TUT?7:(R()<.5?5:6);rect('=',r0+4,r0+5,ky+2,ky+2);L.keys.push({x:r0+5,y:ky});L.zones.push({x:r0+1,t:'Kunci pintu! Ambil kuncinya (naik ke pundak teman atau papan), lalu BAWA ke pintu di akhir level. Kalau pembawanya jatuh, kunci kembali ke tempatnya!'})}
     coin(r0+1,8);x=r0+8});
   if(C.noBoss&&!TUT&&STG===SECRET){L.chest=x+1}
   if(C.noBoss){L.boss=null;L.gate=x+2;const end=x+7;rect('#',end,end+1,0,13);L.W=end+2;for(const r of g)r.length=L.W;for(const r of did)r.length=L.W;L.gems=gemPick(L);return L}
@@ -297,7 +296,7 @@ function genLevel(n,seed){const C0=TUT?TUTCFG:LVCFG[n],R=rng(seed),ri=(a,b)=>a+M
 /* Ruang Harta: tangga papan penuh koin & permata, tanpa bahaya; peti rahasia di ujung */
 function vaultLevel(L,R,ri,C,n){const g=L.g,put=(c,x,y)=>{if(y>=0&&y<L.H&&x>=0&&x<L.W)g[y][x]=c};let x=8;L.seq=['harta'];L.enemies=[];L.boxes=[];L.keys=[];
   L.zones.push({x:4,t:'Ruang Harta rahasia! Kumpulkan koin dan permata, lalu buka peti di ujung.'});
-  for(let k=0;k<9;k++){const y=[8,7,6,5,6,7,5,4,6][k],w=ri(2,3);for(let i=0;i<w;i++)put('=',x+i,y);for(let i=0;i<w;i++)L.coins.push([x+i,y-1]);if(k%3===1)L.coins.push([x+1,y-3]);x+=w+ri(2,3);if(k===4){L.keys.push({x:x,y:8});L.cps.push(x)}}
+  for(let k=0;k<9;k++){const y=[8,7,6,5,6,7,5,4,6][k],w=ri(2,3);for(let i=0;i<w;i++)put('=',x+i,y);for(let i=0;i<w;i++)L.coins.push([x+i,y-1]);if(k%3===1)L.coins.push([x+1,y-3]);x+=w+ri(2,3);if(k===4){L.cps.push(x)}}
   for(let i=8;i<x;i+=3)L.coins.push([i,9]);L.keys.push({x:x+2,y:8});L.cps.push(x);L.chest=x+4;L.boss=null;L.gate=x+7;const end=x+12;for(let y=0;y<14;y++){put('#',end,y);put('#',end+1,y)}L.W=end+2;for(const r of g)r.length=L.W;for(const r of L.did)r.length=L.W;
   L.gems=gemPick(L);return L}
 /* permata khusus peran: biru hanya bisa diambil Si Lincah (tempat tinggi), jingga hanya Si Kuat (di bawah) */
@@ -490,7 +489,7 @@ function reset(){CRUM={};SPRT={};coins=0;won=false;failed=false;doors={};latched
   if(NET.on){P[1-ME].remote=true;P[1-ME].net={x:P[1-ME].x,y:P[1-ME].y}}checkpoint={x:sx+3,y:10*T-PH};cam.x=0;fxReset();
   setTheme(LD.theme);
   const role=NET.on?` Kamu Si ${ROLE[RM[ME]]}.`:'';
-  say(TUT?`Latihan! Kenali kemampuan kalian satu per satu.${role} Ikuti petunjuk di atas layar. Permata BIRU hanya bisa diambil Si Lincah, permata JINGGA hanya Si Kuat.`:STG===SECRET?`${PRE}🗝️ ${LD.name} · Gua Rahasia: ${MODS[MOD].n}! ${MODS[MOD].d}${role}`:`${PRE}Dunia ${LV+1}-${STG+1}: ${LD.name}${STG===NST-1?' · Sarang Bos':''}. Tantangan khas: ${LVCFG[LV].sigN}!${role}${LV===0&&STG===0?' Si Lincah (biru) bisa lompat 2× dan membawa lentera. Si Kuat (jingga) bisa mendorong batu dan kebal laser.':''}${LD.tether?' Kalian terikat tali, jadi bergeraklah bersama!':''}`,6);PRE=''}
+  say(TUT?`Latihan! Kenali kemampuan kalian satu per satu.${role} Ikuti petunjuk di atas layar. Permata BIRU hanya bisa diambil Si Lincah, permata JINGGA hanya Si Kuat.`:STG===SECRET?`${PRE}🗝️ ${LD.name} · Gua Rahasia: ${MODS[MOD].n}! ${MODS[MOD].d}${role}`:`${PRE}Dunia ${LV+1}-${STG+1}: ${LD.name}${STG===NST-1?' · Tahap Puncak':''}. Tantangan khas: ${LVCFG[LV].sigN}!${role}${LV===0&&STG===0?' Si Lincah (biru) bisa lompat 2× dan membawa lentera. Si Kuat (jingga) bisa mendorong batu dan kebal laser.':''}${LD.tether?' Kalian terikat tali, jadi bergeraklah bersama!':''}`,6);PRE=''}
 function say(t,s=3){msg={t,until:performance.now()+s*1000};const el=$('tip');if(el){el.textContent=t;el.hidden=false;clearTimeout(say._t);say._t=setTimeout(()=>{el.hidden=true},s*1000)}}
 
 /* ====== papan bergerak ====== */
@@ -609,7 +608,7 @@ function heartDrop(x,y,force){if(!force&&Math.random()>.35)return;const h={x,y,v
 function heal(p,n,why){if(!p||p.dead>0)return false;const hp=p.hp==null?PHP:p.hp;if(hp>=PHP)return false;p.hp=Math.min(PHP,hp+(n||1));SFX.coin&&SFX.coin();ring(p.x+5,p.y+7,'#ff8f8f',14);ftext(p.x+5,p.y-12,'+1 ♥','#ffb3b3');if(why)say(why,2.2);if(!p.remote)netEv({t:'heal',i:p.i,h:p.hp});return true}
 function fxReset(){hearts=[];GATE.unlockAt=0;GATE.rattle=0;GATE.closeDust=false;enemies=(LD.enemies||[]).map(e=>({...e,dead:false,t:Math.random()*2}));
   boss=LD.boss?{...LD.boss,hp:LD.boss.hp,max:LD.boss.hp,dead:false,inv:0,t:0,vy:0,dir:-1,seen:false,atk:2.2,tele:0,mode:'',mt:0,angry:false}:null;
-  shots=[];bshots=[];keysGot=0;boxes=(LD.boxes||[]).map(b=>({...b,taken:false}));keyItems=(LD.keys||[]).map(k=>({x:k.x*T+8,y:k.y*T+8,got:false,vy:0,fall:false}))}
+  shots=[];bshots=[];keysGot=0;boxes=(LD.boxes||[]).map(b=>({...b,taken:false}));keyItems=(LD.keys||[]).map(k=>({x:k.x*T+8,y:k.y*T+8,sx:k.x*T+8,sy:k.y*T+8,got:false,vy:0,fall:false,car:-1}))}
 function fire(p){if(!p.weapon){if(!p.wHint){p.wHint=true;say('Kamu belum punya senjata. Ambil di Kotak Misteri dengan menjawab soal.',3)}return}if(p.cool>0)return;
   if(p.weapon==='m'){p.cool=.4;p.swing=.18;SFX.swing();if(NET.on)netEv({t:'sw',i:p.i});
     const hb={x:p.face>0?p.x+PW-2:p.x-22,y:p.y-8};
@@ -675,7 +674,7 @@ function fxStep(dt){
     for(const p of P){if(p.remote||p.dead>0||h.got)continue;if(Math.abs(p.x+5-h.x)<11&&Math.abs(p.y+7-h.y)<13){if((p.hp==null?PHP:p.hp)>=PHP){if(!h.full){h.full=1;ftext(h.x,h.y-10,'hatimu penuh','#fff')}continue}h.got=1;heal(p,1);netEv({t:'hgot',id:h.id})}}}
   hearts=hearts.filter(h=>!h.got&&h.t<14);
   // kunci jatuh
-  for(const k of keyItems)if(k.fall&&!k.got){k.vy+=GRAV*dt;k.y+=k.vy*dt;if(k.y>=10*T-8){k.y=10*T-8;k.fall=false}}
+  for(const k of keyItems){if(k.got)continue;if(k.car>=0){const c=P[k.car];if(c){const tx=c.x+5-(c.face||1)*9,ty=c.y-4;k.x+=(tx-k.x)*Math.min(1,dt*12);k.y+=(ty-k.y)*Math.min(1,dt*12)}}else if(k.fall){k.vy+=GRAV*dt;k.y+=k.vy*dt;if(k.y>=10*T-8){k.y=10*T-8;k.fall=false}}}
   // pemain lokal: sentuh penjahat, bos, kunci, kotak, tembak
   for(const p of P){if(p.remote||p.dead>0)continue;if(p.cool>0)p.cool-=dt;
     if(p.inp.f&&!p.fHeld)fire(p);p.fHeld=p.inp.f;
@@ -683,10 +682,14 @@ function fxStep(dt){
     if(boss&&!boss.dead&&!(p.dead>0)&&ovl(p,PW,PH,{x:boss.x+3,y:boss.y+4},22,24)){
       if(p.vy>60&&p.y+PH-(boss.y+4)<10){p.vy=-260;p.hit=Math.max(p.hit||0,.35);SFX.stomp();ring(p.x+5,p.y+PH,'#ffffff',12);ftext(boss.x+14,boss.y-14,'INJAK!','#fff3b0');if(hostAuth())bossHit(1,p.i);else{netEv({t:'bhit',d:1,i:p.i});shake(2,.12)}}
       else hurt(p,boss.x+14)}
-    keyItems.forEach((k,i)=>{if(!k.got&&!k.fall&&Math.abs(p.x+5-k.x)<11&&Math.abs(p.y+7-k.y)<12){k.got=true;keysGot++;p.emo=1;SFX.key();burst(k.x,k.y,'#f7c548',12);netEv({t:'key',i});keyMsg()}});
+    keyItems.forEach((k,i)=>{if(k.got)return;
+      if(k.car<0&&!k.fall&&Math.abs(p.x+5-k.x)<11&&Math.abs(p.y+7-k.y)<12){k.car=p.i;p.emo=1;SFX.key();burst(k.x,k.y,'#f7c548',12);netEv({t:'kpick',i,p:p.i});say(`${NET.on&&p.i===ME?'Kamu':'Si '+ROLE[RM[p.i]]} membawa kunci! Bawa ke pintu di akhir level, lalu buka gemboknya dengan menjawab soal.`,3.5)}
+      if(k.car===p.i){const gx=LD.gate*T;if(!quizOpen&&qCool<=0&&p.x+PW>gx-6&&p.x<gx+34&&p.y>7*T){openQuiz('gate')}}});
     if(!quizOpen&&qCool<=0&&!p.weapon)boxes.forEach((b,i)=>{if(!b.taken&&Math.abs(p.x+5-(b.x*T+8))<13&&Math.abs(p.y+7-(b.y*T+8))<16)openQuiz({box:i,p})})}}
-function keysNeed(){return (LD.keys||[]).length+(LD.boss?1:0)}
-function keyMsg(){const n=keysNeed();if(keysGot>=n)say('Semua kunci terkumpul! Kunci-kunci masuk ke gembok dan gerbang terbuka. Masuk bersama!',3.5);else say(`Kunci ${keysGot}/${n} terkumpul.`,2)}
+function keysNeed(){return (LD.keys||[]).length}
+function keyMsg(){say('Gembok terbuka! Pintu terbuka. Masuk ke pintu BERSAMA-SAMA!',3.5)}
+function keyDeliver(){const k=keyItems[0];if(!k||k.got)return;k.got=true;k.car=-1;keysGot=1;SFX.key();burst(LD.gate*T+16,9*T,'#f7c548',20);netEv({t:'key',i:0});keyMsg()}
+function keyReturn(pi,send){const k=keyItems[0];if(!k||k.got||k.car!==pi)return;k.car=-1;k.x=k.sx;k.y=k.sy;k.fall=false;ring(k.x,k.y,'#f7c548',16);say('Pembawa kunci jatuh! Kunci kembali ke tempatnya.',2.5);if(send)netEv({t:'kret',p:pi})}
 function drawFX(ox,now){
   // kotak misteri
   for(const b of boxes){const X=b.x*T-ox,Y=b.y*T;if(X<-16||X>VW+16)continue;cx.fillStyle='#2b2140';cx.fillRect(X,Y,16,16);cx.fillStyle=b.taken?'#9a8fb0':'#f7c548';cx.fillRect(X+1,Y+1,14,14);cx.fillStyle=b.taken?'#c9cbe0':'#fff3b0';cx.fillRect(X+1,Y+1,14,2);cx.fillStyle=b.taken?'#5f6180':'#d9661c';cx.fillRect(X+1,Y+13,14,2);
@@ -891,7 +894,7 @@ function hurt(p,sx,dmg,why){if(!p||p.remote||p.dead>0||failed||won||(p.hit>0)||p
   const d=Math.sign(p.x+5-sx)||-p.face||1;p.vx=d*200;p.vy=-210;p.ground=false;p.on=p.onM=null;p.kb=.28;p.hit=1.3;p.jq=0;
   SFX.hurt();hitstop(.07);shake(3,.22);sparks(p.x+5,p.y+7,'#ff5a5a',12,170,.3,2);ring(p.x+5,p.y+7,'#ff8080',12);ftext(p.x+5,p.y-10,'-1 ♥','#ff8f8f');
   if(p.hp===1)say((isL(p)?'Si Lincah':'Si Kuat')+' tinggal 1 hati! Hati-hati, jaga jarak dari serangan.',2.5);netEv({t:'hurt',i:p.i,h:p.hp});return true}
-function kill(p){if(p.dead>0||failed||won)return;p.hp=PHP;p.hit=0;p.kb=0;p.dead=.8;p.bub=false;p.onM=null;p.on=null;SFX.hurt();burst(p.x+5,p.y+7,'#fff8e7',12);sparks(p.x+5,p.y+7,'#e2483d',10,150,.3,2);shake(3,.25);loseLife();netEv({t:'die'})}
+function kill(p){if(p.dead>0||failed||won)return;if(!p.remote)keyReturn(p.i,true);p.hp=PHP;p.hit=0;p.kb=0;p.dead=.8;p.bub=false;p.onM=null;p.on=null;SFX.hurt();burst(p.x+5,p.y+7,'#fff8e7',12);sparks(p.x+5,p.y+7,'#e2483d',10,150,.3,2);shake(3,.25);loseLife();netEv({t:'die'})}
 function loseLife(){LIVES=Math.max(0,LIVES-1);if(LIVES<=0)setTimeout(()=>{if(!failed&&!won&&running)levelFail('Nyawa tim habis.')},700)}
 function coinLife(){if(coins>0&&coins%10===0){LIVES++;say('10 koin terkumpul: nyawa tim bertambah 1!',2.5)}}
 /* gelembung: pemain yang jatuh melayang menuju temannya dan bisa diselamatkan dengan disentuh */
@@ -937,6 +940,7 @@ function advLog(e){try{const L=JSON.parse(localStorage.getItem('jk_adv_log')||'[
 function qSuccess(arg,isBox,qi){quizOpen=false;$('pQuiz').hidden=true;{let hh=false;P.forEach(p=>{if(!p.remote&&heal(p,1))hh=true});if(hh)setTimeout(()=>say('Jawaban benar memulihkan 1 hati!',2),3200)}
   if(isBox){const bx=boxes[arg.box],p=arg.p;if(!bx||bx.taken){say('Kotak ini sudah diambil temanmu. Cari kotak yang lain.',3);qCool=1.5;return}bx.taken=true;p.weapon=arg.box===1?'m':'r';netEv({t:'box',i:arg.box,who:p.i});burst(bx.x*T+8,bx.y*T,'#f7c548',24);
     say(`${NET.on?'Kamu':'Si '+ROLE[RM[p.i]]} mendapat ${wName(arg.box)}! ${arg.box===1?'Senjata jarak dekat: dekati lawan lalu tekan ✦ untuk memukul. Pukulan juga bisa menangkis bola serangan bos.':'Senjata jarak jauh: tekan ✦ untuk menembak penjahat dan bos dari jauh.'}`,4)}
+  else if(qi==='gate'){keyDeliver()}
   else{qDone[qi]=true;netEv({t:'bridge',i:qi});const q=level.qs[qi];burst((q.x+5)*T,q.y*T,'#7be07f',24);say('Jembatan muncul! Seberangi bersama.',3)}}
 /* tampilkan pembahasan saat salah, lalu tombol untuk lanjut */
 function qWrong(ans,ex,again,note){const box=$('qOpts');box.querySelectorAll('button').forEach(x=>x.disabled=true);$('qHint').innerHTML=`${note?esc(note)+' ':''}Jawaban yang benar: <b>${esc(ans)}</b>.`;
@@ -949,15 +953,15 @@ function quizUI(title,hint,q,opts,onPick,none){document.querySelectorAll('#pQuiz
   if(none){const b=document.createElement('button');b.className='btn b3 qnone';b.textContent='🙅 Jawabannya tidak ada di layarku';b.onclick=()=>onPick('',b);box.appendChild(b)}
   $('pQuiz').hidden=false;quizOpen=true;Object.values(P).forEach(p=>{if(!p.remote)p.inp={l:0,r:0,j:0,f:0}})}
 function q2Pick(v,b){const box=$('qOpts');box.querySelectorAll('button').forEach(x=>x.disabled=true);b.classList.add('picked');$('qHint').innerHTML='Menunggu jawaban temanmu…'}
-function openQuiz(arg,solo){const isBox=typeof arg==='object',qi=isBox?-1:arg;quizOpen=true;let it=null;for(let k=0;k<5&&!it;k++)it=bankQ();if(!it)it=makeQ();
-  const title=isBox?'Kotak Misteri':'Batu Ajaib',sub=(QSUBJ?QSUBJ+' · ':'');
+function openQuiz(arg,solo){const isBox=typeof arg==='object',qi=isBox?-1:arg,isGate=arg==='gate';quizOpen=true;let it=null;for(let k=0;k<5&&!it;k++)it=bankQ();if(!it)it=makeQ();
+  const title=isGate?'Gembok Pintu':isBox?'Kotak Misteri':'Batu Ajaib',sub=(QSUBJ?QSUBJ+' · ':'');
   const mate=P[1-ME];
   /* Soal Berdua (online): pilihan jawaban dibagi ke dua layar; jawaban benar hanya ada di salah satunya */
   if(!solo&&!isBox&&NET.on&&ME>=0&&mate&&!(mate.dead>0)&&it.opts.length>=3){const o=it.opts.slice().sort(()=>Math.random()-.5),h=Math.ceil(o.length/2),mine=o.slice(0,h),theirs=o.slice(h),id=Math.random().toString(36).slice(2,8);
     Q2={id,role:'a',it,arg,qi,mine,my:undefined,th:undefined,to:setTimeout(()=>{if(Q2&&Q2.id===id&&Q2.th===undefined){netEv({t:'q2c',id});Q2=null;quizOpen=false;$('pQuiz').hidden=true;say('Temanmu belum menjawab. Kamu jawab sendiri dulu, ya.',2.5);openQuiz(arg,true)}},30000)};
     netEv({t:'q2',id,q:it.q,o:theirs});
     quizUI('Soal Berdua',sub+'Pilihan jawaban dibagi ke <b>dua layar</b>. Jawaban benar hanya ada di <b>salah satu</b> layar: pilih jawabannya, atau tekan "tidak ada" kalau tidak ada di layarmu.',it.q,mine,(v,b)=>{q2Pick(v,b);Q2.my=v;q2Check()},true);return}
-  quizUI(title,sub+(isBox?`Jawab benar untuk mendapat ${wName(arg.box)}!`:'Jawab benar untuk memunculkan jembatan!'),it.q,it.opts,(v)=>{
+  quizUI(title,sub+(isGate?'Jawab benar untuk membuka gembok pintu!':isBox?`Jawab benar untuk mendapat ${wName(arg.box)}!`:'Jawab benar untuk memunculkan jembatan!'),it.q,it.opts,(v)=>{
     advLog({q:1,ok:v===it.ans?1:0});
     if(v===it.ans){SFX.ok();qSuccess(arg,isBox,qi)}
     else{SFX.bad();qWrong(it.ans,it.ex,()=>openQuiz(arg,solo),'Belum tepat.')}})}
@@ -969,7 +973,7 @@ function q2Recv(m){
   if(m.t==='q2'){if(quizOpen||!running||(P[ME]&&P[ME].dead>0)){netEv({t:'q2a',id:m.id,v:null});return}Q2={id:m.id,role:'b'};
     quizUI('Soal Berdua',(QSUBJ?QSUBJ+' · ':'')+'Temanmu menemukan Batu Ajaib! Pilihan jawaban dibagi ke <b>dua layar</b>: pilih jawabannya kalau ada di layarmu, atau tekan "tidak ada".',m.q,m.o,(v,b)=>{q2Pick(v,b);netEv({t:'q2a',id:m.id,v})},true);SFX.door();return}
   if(m.t==='q2a'){if(!Q2||Q2.id!==m.id||Q2.role!=='a')return;if(m.v===null){clearTimeout(Q2.to);const a=Q2.arg;Q2=null;quizOpen=false;$('pQuiz').hidden=true;openQuiz(a,true);return}Q2.th=m.v;if(Q2.my===undefined)$('qHint').innerHTML+=' <b>Temanmu sudah menjawab.</b>';q2Check();return}
-  if(m.t==='q2r'){if(!Q2||Q2.id!==m.id)return;Q2=null;advLog({q:1,ok:m.ok});if(m.ok){SFX.ok();quizOpen=false;$('pQuiz').hidden=true;P.forEach(p=>{if(!p.remote)heal(p,1)});say('Kerja sama hebat! Jembatan muncul.',3)}else{SFX.bad();qWrong(m.ans,m.ex,null,m.w?'Jawabannya ada di layarmu.':'Jawabannya ada di layar temanmu.')}return}
+  if(m.t==='q2r'){if(!Q2||Q2.id!==m.id)return;Q2=null;advLog({q:1,ok:m.ok});if(m.ok){SFX.ok();quizOpen=false;$('pQuiz').hidden=true;P.forEach(p=>{if(!p.remote)heal(p,1)});say('Kerja sama hebat! Jawaban kalian benar.',3)}else{SFX.bad();qWrong(m.ans,m.ex,null,m.w?'Jawabannya ada di layarmu.':'Jawabannya ada di layar temanmu.')}return}
   if(m.t==='q2c'){if(Q2&&Q2.id===m.id){Q2=null;quizOpen=false;$('pQuiz').hidden=true}return}}
 /* ====== tamat & lanjut level ====== */
 function win(){if(won)return;won=true;MODE='win';running=false;music(false);SFX.win();
@@ -1125,7 +1129,7 @@ function start(){if(!MAP.length)loadLevel(0);if(NET.on)setTimeout(myHatSend,300)
   try{if(touch&&document.documentElement.requestFullscreen&&!document.fullscreenElement)document.documentElement.requestFullscreen().catch(()=>{})}catch(e){}}
 function togglePause(){paused=!paused;$('pPause').hidden=!paused;if(!paused)P.forEach(p=>p.inp={l:0,r:0,j:0})}
 const exit=()=>{try{netClose()}catch(e){}try{if(document.fullscreenElement)document.exitFullscreen()}catch(e){}location.href='../'};
-$('qLater').onclick=()=>{if(Q2){if(Q2.role==='a'){clearTimeout(Q2.to);netEv({t:'q2c',id:Q2.id})}else netEv({t:'q2a',id:Q2.id,v:null});Q2=null}document.querySelectorAll('#pQuiz .qex').forEach(x=>x.remove());quizOpen=false;qCool=2.5;$('pQuiz').hidden=true};$('bLocal').onclick=()=>{ME=-1;NET.on=false;$('pStart').hidden=true;pickShow(false)};$('bAgain').onclick=()=>{netEv({t:'restart'});start()};$('bNext').onclick=()=>{if(MODE==='fail'){LIVES=Math.max(LIVES,3);netEv({t:'retry',lives:LIVES,cx:checkpoint.x,cy:checkpoint.y});retryCP();return}totCoins=0;goLevel(0)};$('bResume').onclick=togglePause;$('bRestart').onclick=()=>{togglePause();netEv({t:'restart'});start()};$('bExit').onclick=exit;$('bExit2').onclick=exit;
+$('qLater').onclick=()=>{qCool=2.5;if(Q2){if(Q2.role==='a'){clearTimeout(Q2.to);netEv({t:'q2c',id:Q2.id})}else netEv({t:'q2a',id:Q2.id,v:null});Q2=null}document.querySelectorAll('#pQuiz .qex').forEach(x=>x.remove());quizOpen=false;qCool=2.5;$('pQuiz').hidden=true};$('bLocal').onclick=()=>{ME=-1;NET.on=false;$('pStart').hidden=true;pickShow(false)};$('bAgain').onclick=()=>{netEv({t:'restart'});start()};$('bNext').onclick=()=>{if(MODE==='fail'){LIVES=Math.max(LIVES,3);netEv({t:'retry',lives:LIVES,cx:checkpoint.x,cy:checkpoint.y});retryCP();return}totCoins=0;goLevel(0)};$('bResume').onclick=togglePause;$('bRestart').onclick=()=>{togglePause();netEv({t:'restart'});start()};$('bExit').onclick=exit;$('bExit2').onclick=exit;
 $('bPause').onclick=togglePause;$('bSound').onclick=()=>{soundOn=!soundOn;$('bSound').style.opacity=soundOn?1:.45;music(soundOn&&running)};
 /* ====== main online (WebRTC langsung antar-HP, Firebase hanya untuk mempertemukan) ====== */
 var ME=-1;const NET={on:false,pc:null,dc:null,de:null,peer:'',code:'',unsub:null,sendT:null,role:null,lastRx:0};
@@ -1141,7 +1145,9 @@ function netRx(m){NET.lastRx=performance.now();
   if(m.t==='pipe'){enterPipe();return}
   if(m.t==='shot'){const rq=P[1-ME];if(rq)rq.rec=.12;shots.push({x:m.x,y:m.y,vx:m.vx,vy:m.vy,t:0,real:hostAuth(),w:LV,pi:1-ME});SFX.shoot();return}
   if(m.t==='stomp'){const e=enemies[m.i];if(e&&!e.dead){e.dead=true;burst(e.x+6,e.y+6,ENC[LV],10)}return}
-  if(m.t==='key'){const k=keyItems[m.i];if(k&&!k.got){k.got=true;keysGot++;SFX.key();keyMsg()}return}
+  if(m.t==='key'){const k=keyItems[m.i];if(k&&!k.got){k.got=true;k.car=-1;keysGot=1;SFX.key();keyMsg()}return}
+  if(m.t==='kpick'){const k=keyItems[m.i];if(k&&!k.got&&k.car<0){k.car=m.p;SFX.key();say('Temanmu membawa kunci! Lindungi dan ikuti dia ke pintu.',3)}return}
+  if(m.t==='kret'){keyReturn(m.p,false);return}
   if(m.t==='box'){const b=boxes[m.i];if(b)b.taken=true;const q=P[m.who];if(q)q.weapon=m.i===1?'m':'r';return}
   if(m.t==='bs'){const b={x:m.x,y:m.y,vx:m.vx,vy:m.vy,k:m.k,t:0};bshots.push(b);bshotFx(b);return}
   if(m.t==='bhit'){if(hostAuth())bossHit(m.d|0||1,m.i);return}
@@ -1326,8 +1332,8 @@ function openMap(){$('pMap').hidden=false;const p=prog(),WW=440,H=Math.max(200,(
   const Y=(i)=>Math.round(H*.6+Math.sin(i*1.25)*H*.17);let html='',path=[];
   nodes.push({k:'t',x:46,y:Y(0)-6,lab:'L',st:p.s.t||0,un:true,done:!!p.s.t});
   LVCFG.forEach((c,w)=>{const th=THEMES[c.theme]||THEMES[0],open=stUnlocked(p,w,0);
-    html+=`<div class="mw" style="left:${w*WW}px;width:${WW}px;background:linear-gradient(${th.sky1},${th.sky2})"><div class="hill" style="background:${th.h1}"></div><div class="hill" style="background:${th.h2};left:20%;bottom:-48%"></div><h3>Dunia ${w+1} · ${open?esc(c.name):'???'}</h3>${MDEC[w].map((e,i)=>`<span class="dec" style="left:${18+i*58}px;top:${(i%2?40:22)+((i*37)%(H*.35))}%">${e}</span>`).join('')}${open?'':`<div class="fog"><div><b>☁️☁️☁️</b>Wilayah misterius<br><small>Kalahkan bos Dunia ${w}</small></div></div>`}</div>`;
-    for(let k=0;k<NST;k++){const i=w*NST+k+1,x=w*WW+(w===0?110:60)+k*(w===0?95:110),un=stUnlocked(p,w,k),st=p.s[stKey(w,k)]||0;nodes.push({k:stKey(w,k),w,s:k,x,y:Y(i),lab:k===NST-1?'👹':String(k+1),st,un,done:!!st,boss:k===NST-1,hide:!open})}
+    html+=`<div class="mw" style="left:${w*WW}px;width:${WW}px;background:linear-gradient(${th.sky1},${th.sky2})"><div class="hill" style="background:${th.h1}"></div><div class="hill" style="background:${th.h2};left:20%;bottom:-48%"></div><h3>Dunia ${w+1} · ${open?esc(c.name):'???'}</h3>${MDEC[w].map((e,i)=>`<span class="dec" style="left:${18+i*58}px;top:${(i%2?40:22)+((i*37)%(H*.35))}%">${e}</span>`).join('')}${open?'':`<div class="fog"><div><b>☁️☁️☁️</b>Wilayah misterius<br><small>Selesaikan Tahap Puncak Dunia ${w}</small></div></div>`}</div>`;
+    for(let k=0;k<NST;k++){const i=w*NST+k+1,x=w*WW+(w===0?110:60)+k*(w===0?95:110),un=stUnlocked(p,w,k),st=p.s[stKey(w,k)]||0;nodes.push({k:stKey(w,k),w,s:k,x,y:Y(i),lab:k===NST-1?'🏁':String(k+1),st,un,done:!!st,boss:k===NST-1,hide:!open})}
     {const un=stUnlocked(p,w,SECRET),st=p.s[stKey(w,SECRET)]||0,gc=[0,1,2,3].filter(k=>p.g[stKey(w,k)]).length;nodes.push({k:stKey(w,SECRET),w,s:SECRET,x:w*WW+(w===0?300:280),y:Math.round(H*.24),lab:'?',st,un,done:!!st,sec:true,gc,hide:!open,link:w*NST+3})}
     nodes.push({k:'c'+w,chest:w,x:w*WW+WW-30,y:Math.round(H*.87)-6,lab:p.ch['c'+w]?'📖':'🧰',open:!!p.ch['c'+w],un:tot>=CHEST_NEED[w],hide:!open})});
   const main=nodes.filter(n=>!n.sec&&n.chest==null);
@@ -1340,8 +1346,8 @@ function openMap(){$('pMap').hidden=false;const p=prog(),WW=440,H=Math.max(200,(
   const info=(n)=>{const I=$('mapInfo');if(n.chest!=null){if(n.open){I.innerHTML=`<span class="grow">📖 <b>Fakta unik #${n.chest+1}</b><br>${esc(FACTS[n.chest])}</span>`;return}
       if(!n.un){I.innerHTML=`<span class="grow">🧰 <b>Peti Misteri</b><br>Terbuka setelah kalian mengumpulkan <b>${CHEST_NEED[n.chest]} ★</b>. Bintang kalian sekarang: ${tot} ★.</span>`;return}
       const pp=prog();pp.ch['c'+n.chest]=1;localStorage.setItem('jk_adv_prog',JSON.stringify(pp));SFX.win();I.innerHTML=`<span class="grow">🎉 <b>Peti terbuka! Fakta unik #${n.chest+1}</b><br>${esc(FACTS[n.chest])}</span>`;setTimeout(()=>openMapKeep(n),900);return}
-    const nm=n.k==='t'?'Latihan':n.sec?`Gua Rahasia · ${MODS[SMOD[n.w]].n}`:`Dunia ${n.w+1}-${n.s+1} · ${LVCFG[n.w].name}${n.boss?' · Sarang Bos '+BOSS[n.w].n:''}`;
-    const desc=n.k==='t'?'Kenali kemampuan Si Lincah dan Si Kuat, tanpa bos.':n.sec?(n.un?MODS[SMOD[n.w]].d+' Di ujungnya ada peti berisi fakta unik!':`Masih tersegel. Kumpulkan <b>semua permata</b> di 4 tahap Dunia ${n.w+1} (${n.gc}/4 tahap lengkap).`):n.un?`Tantangan khas: ${LVCFG[n.w].sigN}.${n.boss?' Kalahkan bos untuk membuka dunia berikutnya!':''}${p.g[n.k]?' 💎 Semua permata sudah terkumpul.':''}`:'Selesaikan tahap sebelumnya dulu.';
+    const nm=n.k==='t'?'Latihan':n.sec?`Gua Rahasia · ${MODS[SMOD[n.w]].n}`:`Dunia ${n.w+1}-${n.s+1} · ${LVCFG[n.w].name}${n.boss?' · Tahap Puncak':''}`;
+    const desc=n.k==='t'?'Kenali kemampuan Si Lincah dan Si Kuat, lalu bawa kunci ke pintu.':n.sec?(n.un?MODS[SMOD[n.w]].d+' Di ujungnya ada peti berisi fakta unik!':`Masih tersegel. Kumpulkan <b>semua permata</b> di 4 tahap Dunia ${n.w+1} (${n.gc}/4 tahap lengkap).`):n.un?`Tantangan khas: ${LVCFG[n.w].sigN}.${n.boss?' Selesaikan untuk membuka dunia berikutnya!':''}${p.g[n.k]?' 💎 Semua permata sudah terkumpul.':''}`:'Selesaikan tahap sebelumnya dulu.';
     $('mapInfo').innerHTML=`<span class="grow"><b>${esc(nm)}</b>${n.st?' '+'★'.repeat(n.st)+'☆'.repeat(3-n.st):''}<br>${desc}</span>${n.un?'<button class="btn" id="mapGo">▶ Pilih</button>':''}`;
     if(n.un)$('mapGo').onclick=()=>{SEL=n.k==='t'?{tut:true,n:0,s:0,pick:1}:{tut:false,n:n.w,s:n.s,pick:1};$('pMap').hidden=true;lvSum();ac();if(!$('pStart').hidden)say(`Level dipilih: ${selLabel()}. Tekan Main untuk mulai!`,3)}};
   $('mapW').querySelectorAll('.mn').forEach(b=>b.onclick=()=>{const n=nodes[+b.dataset.i];$('mapW').querySelectorAll('.mn').forEach(x=>x.classList.toggle('sel',x===b));beep(n.un?660:220,.06);info(n)});
@@ -1373,7 +1379,7 @@ document.querySelectorAll('#pPick .pk').forEach(b=>b.onclick=()=>{const r=+b.dat
   if(!PICK.online){RM=r===0?[0,1]:[1,0];$('pPick').hidden=true;totCoins=0;TUT=!!SEL.tut;STG=SEL.s|0;MOD=STG===SECRET?SMOD[SEL.n]:'';LIVES=5;loadLevel(SEL.n);heroPrev();start();return}
   if(PICK.done)return;b.classList.add('sel');document.querySelectorAll('#pPick .pk').forEach(x=>x.disabled=true);
   if(ME===0)decide(r);else{netEv({t:'pick',r});$('pkMsg').textContent='Pilihan terkirim. Memulai permainan…'}});
-window.__duo={heroCanvas,mobArt,bossArt,bossHit,heal,heartDrop,get hearts(){return hearts},openQuiz,get Q2(){return Q2},pipeDone,prog,get STG(){return STG},get MOD(){return MOD},goLevel,openMap,get running(){return running},get ME(){return ME},get NET(){return NET},emoSend,sayMine,cleanMsg,get RC(){return RC},get totCoins(){return totCoins},get TUT(){return TUT},get RACE(){return RACE},get level(){return level},get bshots(){return bshots},cheatKeys:()=>{keysGot=keysNeed()},get QBANK(){return QBANK},get LIVES(){return LIVES},get keysGot(){return keysGot},get boss(){return boss},get keyItems(){return keyItems},get enemies(){return enemies},get boxes(){return boxes},get failed(){return failed},kill:i=>kill(P[i]),get RM(){return RM},snap:x=>{cam.x=x;draw();return cv.toDataURL()},VW:()=>VW,get LD(){return LD},get rocks(){return rocks},get laserOff(){return laserOff},get pipeT(){return pipeT},get emerge(){return emerge},get latched(){return latched},get level(){return level},enterPipe,get P(){return P},get doors(){return doors},get qDone(){return qDone},get won(){return won},get LV(){return LV},get movers(){return movers},get blueOn(){return blueOn},get checkpoint(){return checkpoint},start,loadLevel,goLevel,step:(n=1)=>{for(let i=0;i<n;i++)step(1/60)},MAP:()=>MAP};
+window.__duo={heroCanvas,mobArt,bossArt,bossHit,heal,heartDrop,get hearts(){return hearts},openQuiz,get Q2(){return Q2},pipeDone,prog,get STG(){return STG},get MOD(){return MOD},goLevel,openMap,get running(){return running},get ME(){return ME},get NET(){return NET},get keyItems(){return keyItems},get keysGot(){return keysGot},emoSend,sayMine,cleanMsg,get RC(){return RC},get totCoins(){return totCoins},get TUT(){return TUT},get RACE(){return RACE},get level(){return level},get bshots(){return bshots},cheatKeys:()=>{keysGot=keysNeed()},get QBANK(){return QBANK},get LIVES(){return LIVES},get keysGot(){return keysGot},get boss(){return boss},get keyItems(){return keyItems},get enemies(){return enemies},get boxes(){return boxes},get failed(){return failed},kill:i=>kill(P[i]),get RM(){return RM},snap:x=>{cam.x=x;draw();return cv.toDataURL()},VW:()=>VW,get LD(){return LD},get rocks(){return rocks},get laserOff(){return laserOff},get pipeT(){return pipeT},get emerge(){return emerge},get latched(){return latched},get level(){return level},enterPipe,get P(){return P},get doors(){return doors},get qDone(){return qDone},get won(){return won},get LV(){return LV},get movers(){return movers},get blueOn(){return blueOn},get checkpoint(){return checkpoint},start,loadLevel,goLevel,step:(n=1)=>{for(let i=0;i<n;i++)step(1/60)},MAP:()=>MAP};
 })();
 </script>
 </body>
