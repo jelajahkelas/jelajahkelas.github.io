@@ -4238,7 +4238,7 @@ html[data-theme=malam] .plstick{background:#0a0f1e}
 <div class="syncpill" id="syncPill" hidden></div>
 <div class="toast" id="toast" hidden></div>
 
-<script src="av.js?v=403"></script>
+<script src="av.js?v=406"></script>
 <script>
 /* ---------- visual assets ---------- */
 const INK='#1B1E3D';
@@ -5745,9 +5745,9 @@ const XQ4={
 ['Port default untuk FTP adalah …','21','22','53','110','FTP untuk transfer file.'],
 ['Protokol untuk mengirim email adalah …','SMTP','POP3','FTP','DNS','POP3/IMAP untuk menerima email.'],
 ['DNS menggunakan port …','53','80','25','23','DNS menerjemahkan nama domain ke IP.'],
-['Tag HTML untuk membuat paragraf adalah …','<p>','<br>','<h1>','<img>','<p> = paragraph.'],
-['Tag HTML untuk menampilkan gambar adalah …','<img>','<a>','<p>','<div>','Atribut src berisi alamat gambar.'],
-['Tag HTML untuk membuat tautan adalah …','<a>','<link>','<href>','<url>','Contoh: <a href="…">.'],
+['Tag HTML untuk membuat paragraf adalah …','&lt;p&gt;','&lt;br&gt;','&lt;h1&gt;','&lt;img&gt;','&lt;p&gt; = paragraph.'],
+['Tag HTML untuk menampilkan gambar adalah …','&lt;img&gt;','&lt;a&gt;','&lt;p&gt;','&lt;div&gt;','Atribut src berisi alamat gambar.'],
+['Tag HTML untuk membuat tautan adalah …','&lt;a&gt;','&lt;link&gt;','&lt;href&gt;','&lt;url&gt;','Contoh: &lt;a href="…"&gt;.'],
 ['CSS digunakan untuk …','Mengatur tampilan halaman web','Menyimpan database','Mengirim email','Membuat jaringan','CSS = Cascading Style Sheets.'],
 ['Server yang menyimpan dan menampilkan halaman web disebut …','Web server','Mail server','DNS server','DHCP server','Contoh: Apache, Nginx.'],
 ['Firewall berfungsi untuk …','Menyaring lalu lintas jaringan','Mempercepat internet','Mengisi baterai','Membuat website','Firewall melindungi jaringan.'],
@@ -6345,7 +6345,7 @@ const m2Turus=()=>{const items=shuffle([['Merah'],['Biru'],['Hijau']]).map(x=>x[
   return Q(`Warna kesukaan murid:<span class="mmtbl">${items.map((x,i)=>`<span><b>${x}</b> ${tur(vals[i])}</span>`).join('')}</span>Berapa murid suka ${items[k].toLowerCase()}?`,numOpts(vals[k],2,0),`Satu ikat turus = 5. ${items[k]}: ${vals[k]} murid.`)};
 const m2Diagram=()=>Math.random()<.5?m2Turus():mmPikto(2);
 /* --- Kelas 3 --- */
-const m3Tempat=()=>{const n=R(101,999),d=[Math.floor(n/100),Math.floor(n/10)%10,n%10];const k=R(0,2),nm=['ratusan','puluhan','satuan'][k],v=[100,10,1][k];return Q(`Nilai tempat angka ${d[k]} pada ${n} adalah …`,mmCh(`${d[k]} ${nm} (${d[k]*v})`,[0,1,2].filter(i=>i!==k).map(i=>`${d[k]} ${['ratusan','puluhan','satuan'][i]} (${d[k]*[100,10,1][i]})`).concat([`${d[k]} ribuan`])),`${n} = ${d[0]} ratusan + ${d[1]} puluhan + ${d[2]} satuan.`)};
+const m3Tempat=()=>{const n=R(101,999),d=[Math.floor(n/100),Math.floor(n/10)%10,n%10];const k=R(0,2),nm=['ratusan','puluhan','satuan'][k],v=[100,10,1][k];if(!d[k]||d.filter(x=>x===d[k]).length>1)return m3Tempat();return Q(`Nilai tempat angka ${d[k]} pada ${n} adalah …`,mmCh(`${d[k]} ${nm} (${d[k]*v})`,[0,1,2].filter(i=>i!==k).map(i=>`${d[k]} ${['ratusan','puluhan','satuan'][i]} (${d[k]*[100,10,1][i]})`).concat([`${d[k]} ribuan`])),`${n} = ${d[0]} ratusan + ${d[1]} puluhan + ${d[2]} satuan.`)};
 const m3Urut=()=>{const L=[...new Set([R(100,999),R(100,999),R(100,999),R(100,999)])];if(L.length<4)return m3Urut();const asc=[...L].sort((a,b)=>a-b);return Q(`Urutan dari yang terkecil: ${L.join(', ')}`,mmCh(asc.join(', '),[[...asc].reverse().join(', '),[asc[1],asc[0],asc[2],asc[3]].join(', '),[asc[0],asc[2],asc[1],asc[3]].join(', ')]),`Bandingkan ratusan, puluhan, lalu satuan.`)};
 const m3Ops=()=>{const r=R(0,3);if(r===0){const a=R(20,60),b=R(10,99-a);return Q(mmF(`${a} + ${b} = ?`),numOpts(a+b,10,0),`${a} + ${b} = ${a+b}.`)}if(r===1){const a=R(40,100),b=R(10,a-1);return Q(mmF(`${a} − ${b} = ?`),numOpts(a-b,10,0),`${a} − ${b} = ${a-b}.`)}
   if(r===2){const a=R(2,10),b=R(2,10);return Q(mmF(`${a} × ${b} = ?`),numOpts(a*b,a,0),`${a} × ${b} = ${a*b}.`)}const b=R(2,10),c=R(2,10);return Q(mmF(`${b*c} : ${b} = ?`),numOpts(c,3,1),`${b} × ${c} = ${b*c}, jadi ${b*c} : ${b} = ${c}.`)};
@@ -6363,8 +6363,8 @@ const mmTabel=(mx)=>{const nm=shuffle(['Andi','Beni','Cici','Dewi','Eko']).slice
   return Q(`Selisih nilai ${nm[0]} dan ${nm[1]} adalah …${tbl}`,numOpts(Math.abs(v[0]-v[1]),4,0),`|${v[0]} − ${v[1]}| = ${Math.abs(v[0]-v[1])}.`)};
 const m3Tabel=()=>mmTabel(100);
 /* --- Kelas 4 --- */
-const mmTempatBesar=(digits)=>()=>{const n=R(10**(digits-1),10**digits-1),s=String(n),k=R(0,digits-1),names=['satuan','puluhan','ratusan','ribuan','puluh ribuan','ratus ribuan','jutaan'];const pos=digits-1-k,d=+s[k];if(!d)return mmTempatBesar(digits)();
-  return Q(`Nilai angka ${d} pada ${fmtN(n)} adalah …`,mmCh(fmtN(d*10**pos),[fmtN(d*10**((pos+1)%digits)),fmtN(d*10**Math.max(0,pos-1)),fmtN(d)].filter(x=>x!==fmtN(d*10**pos))),`Angka ${d} berada di tempat ${names[pos]}: ${fmtN(d*10**pos)}.`)};
+const mmTempatBesar=(digits)=>()=>{const n=R(10**(digits-1),10**digits-1),s=String(n),k=R(0,digits-1),names=['satuan','puluhan','ratusan','ribuan','puluh ribuan','ratus ribuan','jutaan'];const pos=digits-1-k,d=+s[k];if(!d||s.split(s[k]).length>2)return mmTempatBesar(digits)();
+  return Q(`Nilai angka ${d} pada ${fmtN(n)} adalah …`,mmCh(fmtN(d*10**pos),shuffle([...Array(digits).keys()].filter(q=>q!==pos)).map(q=>fmtN(d*10**q))),`Angka ${d} berada di tempat ${names[pos]}: ${fmtN(d*10**pos)}.`)};
 const mmBandingBesar=(mx)=>()=>{let a=R(mx/10,mx),b=R(mx/10,mx);if(a===b)b++;return Q(`Tanda yang tepat: ${fmtN(a)} … ${fmtN(b)}`,mmCh(a>b?'>':'<',['>','<','=']),`Bandingkan dari angka paling kiri.`)};
 const m4Urai=()=>{const n=R(1000,9999),s=String(n);return Q(`${fmtN(n)} = …`,mmCh(`${s[0]}.000 + ${+s[1]*100} + ${+s[2]*10} + ${s[3]}`,[`${s[0]}00 + ${+s[1]*100} + ${+s[2]*10} + ${s[3]}`,`${s[0]}.000 + ${s[1]}0 + ${+s[2]*100} + ${s[3]}`,`${s[0]}.000 + ${+s[1]*10} + ${+s[2]*100} + ${s[3]}`]),`Uraikan menurut nilai tempat.`)};
 const m4Ops=()=>{const r=R(0,3);if(r===0){const a=R(200,700),b=R(100,999-a);return Q(mmF(`${a} + ${b} = ?`),numOpts(a+b,20,0),`${a} + ${b} = ${a+b}.`)}if(r===1){const a=R(400,1000),b=R(100,a-50);return Q(mmF(`${a} − ${b} = ?`),numOpts(a-b,20,0),`${a} − ${b} = ${a-b}.`)}
@@ -6403,8 +6403,8 @@ const m5Luas=()=>{const r=R(0,3);if(r===0){const a=R(4,20)*2,t=R(3,15);return Q(
   if(r===1){const a=R(4,15),t=R(3,12);return Q(`Luas jajar genjang dengan alas ${a} cm dan tinggi ${t} cm adalah … cm²`,numOpts(a*t,a,0),`L = alas × tinggi = ${a*t} cm².`)}
   if(r===2){const a=R(4,12),b=a+R(2,8),t=R(2,6)*2;return Q(`Luas trapesium dengan sisi sejajar ${a} cm dan ${b} cm, tinggi ${t} cm adalah … cm²`,numOpts((a+b)*t/2,t,0),`L = ½ × (${a} + ${b}) × ${t} = ${(a+b)*t/2} cm².`)}
   const p=R(6,12),l=R(4,8),s=R(2,3);return Q(`Persegi panjang ${p} cm × ${l} cm dipotong persegi kecil ${s} cm × ${s} cm di sudutnya. Luas sisanya … cm²`,numOpts(p*l-s*s,s*2,0),`${p*l} − ${s*s} = ${p*l-s*s} cm².`)};
-const m5Sudut=()=>{const r=R(0,2);if(r===0)return m3Sudut();if(r===1){const t=pick([[3,90],[6,180],[2,60],[4,120],[1,30]]);return Q(`Pada pukul ${t[0]}.00, sudut terkecil antara kedua jarum jam adalah …`,mmCh(`${t[1]}°`,[`${t[1]+30}°`,`${Math.max(30,t[1]-30)}°`,`${t[1]*2}°`].filter(x=>x!==`${t[1]}°`)),`Tiap angka jam = 30°. ${t[0]} × 30° = ${t[0]*30}°${t[0]>6?`, sudut terkecil ${360-t[0]*30}°`:''}.`)}
-  const a=R(20,80);return Q(`Sudut siku-siku dibagi menjadi dua. Satu bagian ${a}°. Bagian lainnya …`,mmCh(`${90-a}°`,[`${180-a}°`,`${a}°`,`${90+a}°`]),`90° − ${a}° = ${90-a}°.`)};
+const m5Sudut=()=>{const r=R(0,2);if(r===0)return m3Sudut();if(r===1){const t=pick([[3,90],[6,180],[2,60],[4,120],[1,30]]);return Q(`Pada pukul ${t[0]}.00, sudut terkecil antara kedua jarum jam adalah …`,mmCh(`${t[1]}°`,[`${t[1]+30}°`,`${Math.max(30,t[1]-30)}°`,`${t[1]*2}°`,`${t[1]+60}°`,`${t[1]+90}°`].filter(x=>x!==`${t[1]}°`)),`Tiap angka jam = 30°. ${t[0]} × 30° = ${t[0]*30}°${t[0]>6?`, sudut terkecil ${360-t[0]*30}°`:''}.`)}
+  let a=R(20,80);if(a===45)a=35;return Q(`Sudut siku-siku dibagi menjadi dua. Satu bagian ${a}°. Bagian lainnya …`,mmCh(`${90-a}°`,[`${180-a}°`,`${a}°`,`${90+a}°`]),`90° − ${a}° = ${90-a}°.`)};
 const m5Karakter=()=>{const t=pick([['segitiga sama kaki','dua sisi sama panjang'],['segitiga siku-siku','satu sudut 90°'],['segitiga sama sisi','tiga sisi sama panjang dan tiap sudut 60°'],['trapesium','tepat sepasang sisi sejajar'],['layang-layang','dua pasang sisi berdekatan sama panjang']]);return Q(`Bangun yang memiliki ${t[1]} adalah …`,mmCh(t[0],['segitiga sama kaki','segitiga siku-siku','segitiga sama sisi','trapesium','layang-layang','jajar genjang'].filter(x=>x!==t[0])),`${t[0]}: ${t[1]}.`)};
 const m5Data=()=>Math.random()<.5?mmBatang(5):mmTabel(100);
 const m5Bulat=()=>{const n=R(100000,999999),k=pick([1000,10000,100000]),r=Math.round(n/k)*k,nm={1000:'ribuan',10000:'puluh ribuan',100000:'ratus ribuan'}[k];return Q(`${fmtN(n)} dibulatkan ke ${nm} terdekat …`,mmCh(fmtN(r),[fmtN(Math.floor(n/k)*k===r?r+k:Math.floor(n/k)*k),fmtN(r+k*10),fmtN(Math.round(n/(k*10))*k*10)].filter(x=>x!==fmtN(r))),`Lihat angka di kanan tempat ${nm}: ≥5 dibulatkan ke atas.`)};
@@ -6417,7 +6417,7 @@ const mmFr=(n,d)=>{const g=gcd(n,d);return d/g===1?String(n/g):`${n/g}/${d/g}`};
 const m6KaliPec=()=>{const a=R(1,4),b=R(a+1,7),c=R(1,4),d=R(c+1,8);return Math.random()<.6?Q(mmF(`${a}/${b} × ${c}/${d} = ?`),mmCh(mmFr(a*c,b*d),[mmFr(a+c,b+d),mmFr(a*d,b*c),mmFr(a*c,b+d)]),`Pembilang × pembilang, penyebut × penyebut: ${a*c}/${b*d}${gcd(a*c,b*d)>1?' = '+mmFr(a*c,b*d):''}.`)
   :(()=>{const n=R(2,6),p=R(1,4),q=R(p+1,6);return Q(mmF(`${n} × ${p}/${q} = ?`),mmCh(mmFr(n*p,q),[mmFr(p,n*q),mmFr(n+p,q),mmFr(n*p,q*n+1)]),`${n} × ${p}/${q} = ${n*p}/${q}${gcd(n*p,q)>1?' = '+mmFr(n*p,q):''}.`)})()};
 const m6BagiPec=()=>{const a=R(1,4),b=R(a+1,7),c=R(1,4),d=R(c+1,8);if(Math.random()<.3){const n=R(2,9);return Q(`Kebalikan dari ${a}/${b} adalah …`,mmCh(`${b}/${a}`.replace(/\/1$/,''),[`${a}/${b}`,`-${a}/${b}`,`${a}/${b*2}`]),`Tukar pembilang dan penyebut: ${b}/${a}.`)}
-  return Q(mmF(`${a}/${b} : ${c}/${d} = ?`),mmCh(mmFr(a*d,b*c),[mmFr(a*c,b*d),mmFr(b*c,a*d),mmFr(a+d,b+c)]),`Bagi = kali kebalikannya: ${a}/${b} × ${d}/${c} = ${a*d}/${b*c}${gcd(a*d,b*c)>1?' = '+mmFr(a*d,b*c):''}.`)};
+  return Q(mmF(`${a}/${b} : ${c}/${d} = ?`),mmCh(mmFr(a*d,b*c),[mmFr(a*c,b*d),mmFr(b*c,a*d),mmFr(a+d,b+c),mmFr(a*d+1,b*c),mmFr(a*d,b*c+1),mmFr(a*d+2,b*c)]),`Bagi = kali kebalikannya: ${a}/${b} × ${d}/${c} = ${a*d}/${b*c}${gcd(a*d,b*c)>1?' = '+mmFr(a*d,b*c):''}.`)};
 const m6Kelipatan=()=>{const a=pick([6,8,10,12,15,20]),k=pick([2,3,4]),r=Math.random();if(r<.5)return Q(`Pita merah ${a*k} cm, pita biru ${a} cm. Panjang pita merah … kali pita biru`,numOpts(k,2,1),`${a*k} : ${a} = ${k}.`);
   const p=pick([2,3,4,5]),q=R(1,p-1);return Q(`Tinggi Andi ${a*p} cm. Tinggi adiknya ${q}/${p} tinggi Andi. Tinggi adiknya … cm`,numOpts(a*q,a,0),`${q}/${p} × ${a*p} = ${a*q} cm.`)};
 const m6Desimal=()=>{const r=R(0,2);if(r===0){const a=R(11,99)/10,b=R(11,49)/10;return Q(mmF(`${String(a).replace('.',',')} + ${String(b).replace('.',',')} = ?`),mmCh(String(Math.round((a+b)*10)/10).replace('.',','),[String(Math.round((a+b+1)*10)/10).replace('.',','),String(Math.round((a+b+.1)*10)/10).replace('.',','),String(Math.round((a+b)*100)/1000).replace('.',',')]),`Jumlahkan sesuai nilai tempat.`)}
@@ -6516,7 +6516,7 @@ const MM_PRIMA=[2,3,5,7,11,13,17,19,23,29,31,37,41,43,47];
 const m5Prima2=()=>{const p=pick(MM_PRIMA.slice(3)),bad=shuffle([9,15,21,25,27,33,35,39,49,51]).slice(0,3);return Q(`Manakah bilangan prima?`,mmCh(p,bad),`${p} hanya habis dibagi 1 dan ${p}.`)};
 const m5Cerita=()=>{if(Math.random()<.5){let a=pick([3,4,5,6]),b=pick([4,6,8,9,10]);if(a===b)b=a+2;return Q(`Andi berenang setiap ${a} hari, Budi setiap ${b} hari. Hari ini mereka berenang bersama. Mereka akan bersama lagi setelah … hari`,numOpts(lcm(a,b),a,1),`KPK ${a} dan ${b} = ${lcm(a,b)}.`)}
   const g=pick([4,6,8,12]),x=pick([2,3,5]),y=pick([3,4,7].filter(v=>v!==x&&gcd(v,x)===1));return Q(`Ada ${g*x} mawar dan ${g*y} melati dibagi sama banyak ke beberapa vas. Paling banyak ada … vas`,numOpts(g,3,1),`FPB ${g*x} dan ${g*y} = ${g}.`)};
-const m5Campuran=()=>{const b=R(1,4),d=pick([3,4,5,6]);let a=R(1,d-1);while(gcd(a,d)>1)a=R(1,d-1);if(Math.random()<.5)return Q(`${b} ${a}/${d} diubah menjadi pecahan biasa …`,mmCh(`${b*d+a}/${d}`,[`${b+a}/${d}`,`${b*a+d}/${d}`,`${b*d}/${d}`]),`${b} × ${d} + ${a} = ${b*d+a}, jadi ${b*d+a}/${d}.`);
+const m5Campuran=()=>{const b=R(1,4),d=pick([3,4,5,6]);let a=R(1,d-1);while(gcd(a,d)>1)a=R(1,d-1);if(Math.random()<.5)return Q(`${b} ${a}/${d} diubah menjadi pecahan biasa …`,mmCh(`${b*d+a}/${d}`,[`${b+a}/${d}`,`${b*a+d}/${d}`,`${b*d}/${d}`,`${b*d+a+1}/${d}`,`${b*d+a}/${d+1}`]),`${b} × ${d} + ${a} = ${b*d+a}, jadi ${b*d+a}/${d}.`);
   const q=R(1,d-2),p=R(q+1,d-1),x=mmFr(p-q,d);return Q(mmF(`${b+1} ${p}/${d} − ${b} ${q}/${d} = ?`),mmCh(`1 ${x}`,[x,`2 ${x}`,`${2*b+1} ${x}`]),`Bagian bulat: ${b+1} − ${b} = 1. Pecahan: ${p}/${d} − ${q}/${d} = ${x}. Hasilnya 1 ${x}.`)};
 const m5Kurang=()=>{const d1=pick([2,3,4]),d2=pick([6,8,12].filter(x=>x%d1===0||lcm(x,d1)<=24)),a=R(1,d1-1),b=R(1,d2-1),L=lcm(d1,d2),n=a*L/d1-b*L/d2;if(n<=0)return m5Kurang();return Q(mmF(`${a}/${d1} − ${b}/${d2} = ?`),mmCh(mmFr(n,L),[`${Math.abs(a-b)}/${Math.abs(d1-d2)||1}`,mmFr(n+1,L),mmFr(a*L/d1+b*L/d2,L)]),`Samakan penyebut ${L}: ${a*L/d1}/${L} − ${b*L/d2}/${L} = ${n}/${L}.`)};
 const m5LuasDiag=()=>{const d1=R(2,10)*2,d2=R(3,12),nm=pick(['belah ketupat','layang-layang']);return Q(`Luas ${nm} dengan diagonal ${d1} cm dan ${d2} cm adalah … cm²`,numOpts(d1*d2/2,d2,0),`L = ½ × ${d1} × ${d2} = ${d1*d2/2} cm².`)};
@@ -8022,16 +8022,16 @@ const s7Aljabar=()=>{const a=R(2,9),b=R(1,15),c=R(2,9),x=R(2,6),r=R(0,3);
   const h=pick([3000,4000,5000]),p=pick([2000,2500]);return Q(`Harga satu buku x rupiah dan satu pensil Rp${fmtN(p)}. Harga ${a} buku dan 1 pensil adalah …`,mmCh(`${a}x + ${fmtN(p)}`,[`${a}(x + ${fmtN(p)})`,`x + ${a*p}`,`${a+1}x`]),`${a} buku = ${a}x, ditambah pensil ${fmtN(p)}.`)};
 const s7Sudut=()=>{const r=R(0,3),a=R(20,80);if(r===0)return Q(`Pelurus sudut ${a}° adalah …`,mmCh(`${180-a}°`,[`${90-a}°`,`${360-a}°`,`${a}°`]),`Dua sudut berpelurus jumlahnya 180°.`);
   if(r===1)return Q(`Penyiku sudut ${a}° adalah …`,mmCh(`${90-a}°`,[`${180-a}°`,`${a}°`,`${360-a}°`]),`Dua sudut berpenyiku jumlahnya 90°.`);
-  if(r===2)return Q(`Dua garis berpotongan membentuk sudut ${a+50}°. Sudut yang bertolak belakang dengannya adalah …`,mmCh(`${a+50}°`,[`${130-a}°`,`${180-a}°`,`${a}°`]),`Sudut bertolak belakang sama besar.`);
+  if(r===2)return Q(`Dua garis berpotongan membentuk sudut ${a+50}°. Sudut yang bertolak belakang dengannya adalah …`,mmCh(`${a+50}°`,[`${130-a}°`,`${180-a}°`,`${a}°`,`${a+40}°`,`${a+60}°`]),`Sudut bertolak belakang sama besar.`);
   const k=pick([2,3]),s1=R(3,8),s2=R(3,8);return Q(`Dua segitiga sebangun. Sisi segitiga kecil ${s1} cm dan ${s2} cm. Segitiga besar ${k} kali lebih besar. Sisi yang bersesuaian dengan ${s2} cm adalah … cm`,numOpts(s2*k,3,1),`Sisi bersesuaian sebanding: ${s2} × ${k} = ${s2*k} cm.`)};
 const s7Data=()=>{const r=R(0,3);if(r===0){const t=pick([['warna kesukaan','kualitatif'],['tinggi badan','kuantitatif'],['jenis kelamin','kualitatif'],['jumlah saudara','kuantitatif']]);return Q(`Data "${t[0]}" termasuk data …`,mmCh(t[1],['kualitatif','kuantitatif']),`Kualitatif berupa kategori, kuantitatif berupa angka.`)}
-  if(r===1){const tot=pick([20,30,36,40,60]),p=pick([1/2,1/4,1/5,1/3,1/6].filter(f=>Number.isInteger(tot*f))),n=tot*p;return Q(`Dari ${tot} siswa, ${n} suka voli. Besar sudut juring voli pada diagram lingkaran adalah …`,mmCh(`${n/tot*360}°`,[`${n}°`,`${n/tot*100}°`,`${180-n}°`].filter(x=>x!==`${n/tot*360}°`)),`${n}/${tot} × 360° = ${n/tot*360}°.`)}
+  if(r===1){const tot=pick([20,30,36,40,60]),p=pick([1/2,1/4,1/5,1/3,1/6].filter(f=>Number.isInteger(tot*f))),n=tot*p;return Q(`Dari ${tot} siswa, ${n} suka voli. Besar sudut juring voli pada diagram lingkaran adalah …`,mmCh(`${Math.round(n*360/tot)}°`,[`${n}°`,`${Math.round(n*100/tot)}°`,`${180-n}°`,`${Math.round(n*360/tot)+30}°`].filter(x=>x!==`${Math.round(n*360/tot)}°`)),`${n}/${tot} × 360° = ${Math.round(n*360/tot)}°.`)}
   if(r===2){const v=[R(5,9),R(5,9),R(5,9),R(5,9),R(5,9)],s=[...v].sort((a,b)=>a-b);return Q(`Median dari ${v.join(', ')} adalah …`,numOpts(s[2],2,0),`Urutkan: ${s.join(', ')}. Nilai tengahnya ${s[2]}.`)}
   const m=R(5,9),v=shuffle([m,m,m,R(5,9),R(5,9)]);const cnt={};v.forEach(x=>cnt[x]=(cnt[x]||0)+1);const mo=+Object.keys(cnt).sort((a,b)=>cnt[b]-cnt[a])[0];return Q(`Modus dari ${v.join(', ')} adalah …`,numOpts(mo,2,0),`Modus = nilai yang paling sering muncul: ${mo}.`)};
 /* --- Kelas 8 --- */
 const s8Alj=()=>{const a=R(2,7),b=nz(-9,9),c=R(1,6),d=nz(-9,9),r=R(0,3),fx=(p,q)=>`${cx(p)} ${q<0?'−':'+'} ${Math.abs(q)}`;
   if(r===0)return Q(mmF(`(${fx(a,b)}) + (${fx(c,d)}) = ?`),mmCh(fx(a+c,b+d).replace(' + 0','').replace(' − 0',''),[fx(a+c,b-d),fx(a-c,b+d),fx(a*c,b+d)].map(x=>x.replace(' + 0','').replace(' − 0',''))),`Jumlahkan suku sejenis: x dengan x, konstanta dengan konstanta.`);
-  if(r===1)return Q(mmF(`${c}(${fx(a,b)}) = ?`),mmCh(fx(c*a,c*b),[fx(c*a,b),fx(a,c*b),fx(c+a,c+b)]),`Sifat distributif: kalikan ${c} ke setiap suku.`);
+  if(r===1){const c=R(2,6);return Q(mmF(`${c}(${fx(a,b)}) = ?`),mmCh(fx(c*a,c*b),[fx(c*a,b),fx(a,c*b),fx(c+a,c+b)]),`Sifat distributif: kalikan ${c} ke setiap suku.`)}
   if(r===2){const x=nz(-4,5);return Q(`Nilai ${a}x² ${b<0?'−':'+'} ${Math.abs(b)} untuk x = ${sn(x)} adalah …`,intOpts(a*x*x+b,5),`${a} × ${sp(x)}² ${b<0?'−':'+'} ${Math.abs(b)} = ${sn(a*x*x+b)}.`)}
   return Q(`Derajat dari bentuk aljabar ${a}x³ + ${c}x² − x + ${Math.abs(b)} adalah …`,numOpts(3,1,1),`Derajat = pangkat tertinggi variabel, yaitu 3.`)};
 const s8SPLDV=()=>{const x=R(1,9),y=R(1,9),r=R(0,2);if(r===0)return Q(`Penyelesaian dari x + y = ${x+y} dan x − y = ${x-y<0?'−'+(y-x):x-y} adalah x = …`,numOpts(x,3,0),`Jumlahkan kedua persamaan: 2x = ${2*x}, jadi x = ${x}.`);
@@ -8042,7 +8042,7 @@ const s8Fungsi=()=>{const a=nz(-5,5),b=nz(-9,9),x=R(-3,5),r=R(0,2);if(r===0)retu
   return Q(`Gradien garis y = ${cx(a)} ${b<0?'−':'+'} ${Math.abs(b)} adalah …`,intOpts(a,3),`Pada y = mx + c, gradiennya m = ${sn(a)}.`)};
 const s8Sudut=()=>{const r=R(0,3);if(r===0){const n=pick([5,6,8,10]);return Q(`Jumlah sudut dalam segi-${n} adalah …`,mmCh(`${(n-2)*180}°`,[`${n*180}°`,`${(n-1)*180}°`,`${360}°`]),`(n − 2) × 180° = ${(n-2)*180}°.`)}
   if(r===1){const n=pick([5,6,8,9,10,12]);return Q(`Besar satu sudut luar segi-${n} beraturan adalah …`,mmCh(`${360/n}°`,[`${180-360/n}°`,`${(n-2)*180/n+10}°`,`${360/n*2}°`]),`Jumlah sudut luar = 360°. 360° : ${n} = ${360/n}°.`)}
-  if(r===2){const a=R(40,130);return Q(`Dua garis sejajar dipotong garis lain. Jika sudut sehadap pertama ${a}°, sudut sehadap pasangannya adalah …`,mmCh(`${a}°`,[`${180-a}°`,`${90}°`,`${360-a}°`]),`Sudut sehadap sama besar.`)}
+  if(r===2){const a=R(40,130);return Q(`Dua garis sejajar dipotong garis lain. Jika sudut sehadap pertama ${a}°, sudut sehadap pasangannya adalah …`,mmCh(`${a}°`,[`${180-a}°`,`${90}°`,`${360-a}°`,`${a+10}°`,`${a-10}°`]),`Sudut sehadap sama besar.`)}
   const a=R(30,80),b=R(30,90);return Q(`Dua sudut segitiga ${a}° dan ${b}°. Sudut ketiga adalah …`,mmCh(`${180-a-b}°`,[`${360-a-b}°`,`${a+b}°`,`${180-a}°`]),`180° − ${a}° − ${b}° = ${180-a-b}°.`)};
 const s8Peluang=()=>{const r=R(0,3);if(r===0){const t=pick([['bilangan genap',3],['bilangan prima',3],['angka lebih dari 4',2],['angka 6',1],['kelipatan 3',2]]);return Q(`Sebuah dadu dilempar sekali. Peluang muncul ${t[0]} adalah …`,mmCh(mmFr(t[1],6),[mmFr(t[1]+1,6),mmFr(6-t[1]||1,6)+'x',`${t[1]}/${t[1]+6}`].map(x=>x.replace('x',''))),`Banyak kejadian ${t[1]} dari 6 kemungkinan: ${mmFr(t[1],6)}.`)}
   if(r===1){const n=pick([20,40,60,100]);return Q(`Sebuah koin dilempar ${n} kali. Frekuensi harapan muncul gambar adalah …`,numOpts(n/2,5,0),`½ × ${n} = ${n/2}.`)}
@@ -8707,7 +8707,7 @@ const t10Trig=()=>{const r=R(0,3);if(r===0){const t=pick(TRI),f=pick([['sin','de
   if(r===2){const d=pick([10,20,30]);return Q(`Seseorang berdiri ${d} m dari tiang dan melihat puncaknya dengan sudut elevasi 45°. Tinggi tiang (abaikan tinggi orang) adalah … m`,numOpts(d,5,1),`tan 45° = 1, jadi tinggi = ${d} m.`)}
   const m=pick([10,20,40]);return Q(`Tangga sepanjang ${m} m bersandar pada dinding membentuk sudut 30° dengan tanah. Tinggi ujung tangga di dinding adalah … m`,numOpts(m/2,3,1),`Tinggi = ${m} × sin 30° = ${m/2} m.`)};
 const t10SPL=()=>{const x=R(1,5),y=R(1,5),z=R(1,5),r=R(0,2);if(r===0)return Q(`Diketahui x + y + z = ${x+y+z}, x − y = ${x-y<0?'−'+(y-x):x-y}, dan y + z = ${y+z}. Nilai x adalah …`,numOpts(x,2,0),`Kurangkan persamaan 1 dengan 3: x = ${x+y+z} − ${y+z} = ${x}.`);
-  if(r===1){const a=R(1,4),b=R(1,4),c=R(6,15);const pts=[[0,0],[c,c],[R(0,2),R(0,2)],[c,0]];const ok=pts.filter(p=>a*p[0]+b*p[1]<=c);const bad=pts.filter(p=>a*p[0]+b*p[1]>c);if(!ok.length||!bad.length)return t10SPL();return Q(`Titik yang memenuhi ${cx(a)} + ${cx(b,'y')} ≤ ${c} adalah …`,mmCh(`(${ok[0][0]}, ${ok[0][1]})`,bad.map(p=>`(${p[0]}, ${p[1]})`)),`Substitusikan titik: ${a}×${ok[0][0]} + ${b}×${ok[0][1]} ≤ ${c}.`)}
+  if(r===1){const a=R(1,4),b=R(1,4),c=R(6,15);const pts=[[0,0],[c,c],[R(0,2),R(0,2)],[c+1,0],[0,c+1],[c,1]];const ok=pts.filter(p=>a*p[0]+b*p[1]<=c);const bad=pts.filter(p=>a*p[0]+b*p[1]>c);if(!ok.length||!bad.length)return t10SPL();return Q(`Titik yang memenuhi ${cx(a)} + ${cx(b,'y')} ≤ ${c} adalah …`,mmCh(`(${ok[0][0]}, ${ok[0][1]})`,bad.map(p=>`(${p[0]}, ${p[1]})`)),`Substitusikan titik: ${a}×${ok[0][0]} + ${b}×${ok[0][1]} ≤ ${c}.`)}
   return Q(`Sistem persamaan dengan dua garis sejajar memiliki … penyelesaian`,mmCh('tidak ada',['satu','tak hingga','dua']),`Garis sejajar tidak berpotongan.`)};
 const t10Kuad=()=>{const p=nz(-6,6),q=nz(-6,6),r=R(0,3);const b=-(p+q),c=p*q,fx=`x² ${b<0?'−':'+'} ${Math.abs(b)}x ${c<0?'−':'+'} ${Math.abs(c)}`.replace(' + 0x','').replace(' − 0x','');
   if(r===0)return Q(`Akar-akar persamaan ${fx} = 0 adalah …`,mmCh(`${sn(Math.min(p,q))} dan ${sn(Math.max(p,q))}`,[`${sn(-Math.min(p,q))} dan ${sn(-Math.max(p,q))}`,`${sn(p+q)} dan ${sn(p*q)}`,`${sn(Math.min(p,q)-1)} dan ${sn(Math.max(p,q)+1)}`]),`Faktorkan: (x ${p<0?'+':'−'} ${Math.abs(p)})(x ${q<0?'+':'−'} ${Math.abs(q)}) = 0.`);
@@ -10266,7 +10266,7 @@ function showQText(q){
 }
 function shakeCard(){const card=$('#qcard');card.classList.remove('pop','shake');void card.offsetWidth;card.classList.add('shake')}
 /* ---------- rekam jawaban per soal (untuk analisis guru) ---------- */
-const plainTx=v=>String(v==null?'':v).replace(/<[^>]*>/g,' ').replace(/&nbsp;/g,' ').replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/\s+/g,' ').trim();
+const plainTx=v=>String(v==null?'':v).replace(/<[^>]*>/g,' ').replace(/&nbsp;/g,' ').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&quot;/g,'"').replace(/&amp;/g,'&').replace(/\s+/g,' ').trim();
 function qStat(q,ok){try{if(typeof P==='undefined'||!P||(SESSION&&SESSION.role!=='student')||(game&&game.group)||q.again||!q._u)return;
   const raw=plainTx(q.q);if(!raw)return;const tpl=raw.replace(/\d+([.,]\d+)*/g,'#');const st=P.qst=P.qst||{};const k=qKey((q._s||'')+'|'+q._u+'|'+tpl);
   const e=st[k]||(st[k]={n:0,w:0});e.n++;e.u=q._u;e.s=q._s||'';e.c=P.cls;if(!e.x)e.x=raw.slice(0,160);if(tpl!==raw)e.g=1;
@@ -10474,7 +10474,7 @@ const FONT='"Baloo 2", "Trebuchet MS", system-ui, sans-serif';
 const READ={tk:45,sd:20,smp:26,sma:32};
 const SPEED={tk:.45,sd:.85,smp:1,sma:1};
 let arc={running:false,keys:{},parts:[],banner:null,lastW:0};
-const strip=h=>h.replace(/<[^>]+>/g,'').replace(/\s+/g,' ').trim();
+const strip=h=>String(h).replace(/<[^>]+>/g,'').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&quot;/g,'"').replace(/&nbsp;/g,' ').replace(/&amp;/g,'&').replace(/\s+/g,' ').trim();
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 function rr(c,x,y,w,h,r){r=Math.min(r,w/2,h/2);c.beginPath();c.moveTo(x+r,y);c.arcTo(x+w,y,x+w,y+h,r);c.arcTo(x+w,y+h,x,y+h,r);c.arcTo(x,y+h,x,y,r);c.arcTo(x,y,x+w,y,r);c.closePath()}
 function wrapText(c,text,maxW){
@@ -16177,7 +16177,7 @@ function folBind(root,list,after){root.querySelectorAll('[data-follow]').forEach
   try{await folDo(f,on);if(on){try{sfx.ok()}catch(_){}toast('team',`Kamu mengikuti ${f.name}.`)}b.outerHTML=folBtn(f,b.classList.contains('sm'));folBind(root,list,after);after&&after()}catch(err){b.disabled=false;toast('lock',fbErr(err))}})}
 const shareIcon='<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M12 3 V15 M7 8 L12 3 L17 8 M5 13 V19 C5 20 6 21 7 21 H17 C18 21 19 20 19 19 V13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const qrIcon='<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><path d="M14 14h3v3h-3zM18 18h3v3h-3zM18 14h3M14 18v3" stroke-linecap="round"/></svg>';
-let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=403';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
+let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=406';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
 function qrMatrix(text){const Q=window.QRCodeLib,q=new Q(-1,Q.ECL.M);q.addData(text);q.make();const n=q.getModuleCount(),m=[];for(let r=0;r<n;r++){m.push([]);for(let c=0;c<n;c++)m[r].push(q.isDark(r,c))}return m}
 function qrSvgOf(m){const n=m.length;let d='';for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(m[r][c])d+=`M${c} ${r}h1.02v1.02h-1.02z`;
   return `<svg viewBox="-2 -2 ${n+4} ${n+4}" class="pcqr" shape-rendering="crispEdges" aria-label="Kode QR profil"><rect x="-2" y="-2" width="${n+4}" height="${n+4}" fill="#fff"/><path d="${d}" fill="#1C1E3D"/></svg>`}
@@ -16592,7 +16592,7 @@ function adRepDraw(){const host=$('#adRepList');if(!host||!ADX.rep)return;const 
 function rpBtn(){const fb=$('#feedback');if(!fb)return;let b=$('#fbReport');const ok=!!(window.FBX&&FBX.user&&game&&game.lesson&&game.lesson.kind!=='eval'&&!(window.examActive&&examActive())&&!(P&&P.cls==='tk'));
   if(!b){const t=$('#fbTitle');if(!t)return;t.insertAdjacentHTML('afterend','<button class="fbrep" id="fbReport" type="button" aria-label="Laporkan soal ini" title="Laporkan soal"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 21V4m0 0h11l-2 4 2 4H5"/></svg><span>Laporkan</span></button>');b=$('#fbReport');b.onclick=e=>{e.stopPropagation();rpOpen()}}
   b.hidden=!ok;b.disabled=false}
-function rpOpen(){if(!game)return;const q=game.qs[game.i]||{};const plain=t=>String(t==null?'':t).replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim();let why='kunci';
+function rpOpen(){if(!game)return;const q=game.qs[game.i]||{};const plain=t=>plainTx(t).replace(/\s+/g,' ').trim();let why='kunci';
   openModal(`<h3 style="text-align:center;margin:0">Laporkan soal</h3><p class="note" style="text-align:center;margin:4px 0 10px">Laporanmu dibaca admin untuk memperbaiki soal.</p><div class="rpwhy">${RP_WHY.map(([k,l])=>`<button class="aduchip" data-rw="${k}" aria-pressed="${k===why}">${l}</button>`).join('')}</div><textarea id="rpNote" class="note-area" maxlength="400" placeholder="Ceritakan masalahnya (tidak wajib)"></textarea><div class="acts"><button class="primary press" id="rpGo">Kirim laporan</button><button class="ghost" id="mNo">Batal</button></div>`);
   document.querySelectorAll('#mbox [data-rw]').forEach(b=>b.onclick=()=>{why=b.dataset.rw;document.querySelectorAll('#mbox [data-rw]').forEach(x=>x.setAttribute('aria-pressed',x===b))});$('#mNo').onclick=closeModal;
   $('#rpGo').onclick=()=>{const b=$('#rpGo');b.disabled=true;let sid='';try{sid=q._s||SUBJ().id}catch(e){}
