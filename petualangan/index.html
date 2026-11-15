@@ -791,6 +791,9 @@ function cleanMsg(t){t=String(t||'').replace(/\s+/g,' ').trim().slice(0,40);t=t.
 function sayMine(t){t=cleanMsg(t);if(!t||!NET.on||ME<0||!running)return;const p=P[ME];if(!p)return;if(sayMine.t&&performance.now()-sayMine.t<1200)return;sayMine.t=performance.now();
   p.say={t,until:performance.now()+3500};netEv({t:'say',x:t});beep(880,.06);try{const L=JSON.parse(localStorage.getItem('jk_adv_msgs')||'[]').filter(x=>x!==t);L.unshift(t);localStorage.setItem('jk_adv_msgs',JSON.stringify(L.slice(0,3)))}catch(e){}$('emoIn').value='';$('emo').hidden=true}
 function emoMine(){let L=[];try{L=JSON.parse(localStorage.getItem('jk_adv_msgs')||'[]')}catch(e){}$('emoMine').innerHTML=L.map(t=>`<button data-m="${esc(t)}">💬 ${esc(t)}</button>`).join('');$('emoMine').querySelectorAll('[data-m]').forEach(b=>b.onclick=()=>sayMine(b.dataset.m))}
+/* versi game harus sama di kedua HP, kalau tidak peta yang dibuat berbeda (layar tidak sinkron) */
+const GV=(()=>{const t=genLevel.toString()+vaultLevel.toString()+gemPick.toString()+JSON.stringify(LVCFG)+JSON.stringify(TUTCFG)+JSON.stringify(SMOD);let h=0;for(let i=0;i<t.length;i++)h=(h*31+t.charCodeAt(i))|0;return (h>>>0).toString(36)})();
+function verBad(silent){if(verBad.on)return;verBad.on=1;setTimeout(()=>verBad.on=0,3000);if(!silent)netEv({t:'verbad'});netLost('Versi game kamu dan temanmu berbeda karena ada pembaruan. Supaya layar kalian sama, KALIAN BERDUA tutup lalu buka ulang Petualangan Berdua (atau muat ulang halaman), lalu sambung lagi.',true)}
 function myHatSend(){if(!NET.on||ME<0)return;const r=RM[ME];netEv({t:'hat',h:(prog().eq||{})[r]||''})}
 function emoSend(k){if(!NET.on||ME<0||!running)return;const p=P[ME];if(!p)return;if(emoSend.t&&performance.now()-emoSend.t<700)return;emoSend.t=performance.now();p.say={t:EMOT[k],until:performance.now()+2600};netEv({t:'emo',k});beep(880,.06);$('emo').hidden=true}
 function speech(X,Y,txt){cx.font='bold 8px system-ui,-apple-system,Segoe UI,Roboto,sans-serif';const w=Math.ceil(cx.measureText(txt).width)+8,x0=Math.round(Math.max(2,Math.min(VW-w-2,X-w/2))),y0=Math.round(Math.max(30,Y-14));
@@ -1116,9 +1119,11 @@ function netRx(m){NET.lastRx=performance.now();
   if(m.t==='pick'){if(ME===0)decide(1-(m.r|0));return}
   if(m.t==='start'){if(Array.isArray(m.qb)&&m.qb.length){QBANK=m.qb;QBAG=[];QSUBJ=m.qn||''}if(Array.isArray(m.rm))RM=[m.rm[0]|0,m.rm[1]|0];$('pPick').hidden=true;if(m.sx)SX.peer=m.sx;if(m.g!=null)GRADE_ON=m.g;if(m.n!=null){totCoins=0;TUT=!!m.tut;STG=m.st|0;MOD=STG===SECRET?SMOD[m.n|0]:'';LIVES=5;loadLevel(m.n|0,m.seed);if(m.rc){LIVES=m.lives??LIVES;totCoins=m.tot||0;$('pOnline').hidden=true;$('pRc').hidden=true;setTimeout(()=>say('Tersambung lagi! Level diulang dari awal, nyawa dan koin tetap.',4),300)}}NET.peer=m.name||NET.peer;NET.peerUid=m.uid||NET.peerUid;start();return}
   if(m.t==='hat'){NET.peerHat=m.h||'';const p=P[1-ME];if(p)p.hat=NET.peerHat;return}
-  if(m.t==='hi'){if(m.sx)SX.peer=m.sx;NET.peer=m.name||NET.peer;NET.peerUid=m.uid||NET.peerUid;return}
+  if(m.t==='verbad'){verBad(true);return}
+  if(m.t==='gv'){NET.peerGV=m.gv;if(m.gv!==GV)verBad();return}
+  if(m.t==='hi'){NET.peerGV=m.gv||'old';if(NET.peerGV!==GV){verBad();return}if(m.sx)SX.peer=m.sx;NET.peer=m.name||NET.peer;NET.peerUid=m.uid||NET.peerUid;return}
   if(m.t==='mic'){NET.peerMic=!!m.on;return}
-  if(m.t==='bye'){netLost('Temanmu keluar dari permainan.',true)}}
+  if(m.t==='bye'){if(verBad.on)return;netLost('Temanmu keluar dari permainan.',true)}}
 let GRADE_ON=null;
 function padMode(){const on=NET.on&&touch;document.querySelectorAll('.pad .tag').forEach((t,i)=>t.textContent=on?(i?'LOMPAT · TEMBAK':'JALAN'):(i?'PEMAIN 2':'PEMAIN 1'));
   document.querySelectorAll('#padL [data-k="j"],#padL [data-k="f"],#padR [data-k="l"],#padR [data-k="r"]').forEach(b=>b.style.display=on?'none':'')}
@@ -1145,7 +1150,7 @@ function netSetup(pc){pc.__types={};pc.ontrack=e=>{const a=$('rAudio');a.srcObje
 function bothOpen(){return NET.dc&&NET.de&&NET.dc.readyState==='open'&&NET.de.readyState==='open'}
 function onReady(name){if(!bothOpen())return;NET.on=true;if(NET.unsub){NET.unsub();NET.unsub=null}
   clearInterval(NET.sendT);NET.sendT=setInterval(()=>{if(!running||ME<0)return;const p=P[ME];if(!p||NET.dc.readyState!=='open')return;try{NET.dc.send(JSON.stringify({t:'s',x:+p.x.toFixed(1),y:+p.y.toFixed(1),vx:p.vx|0,vy:p.vy|0,f:p.face,g:p.ground?1:0,o:p.on?1:0,ox:p.on?+(p.x-p.on.x).toFixed(1):0,d:p.dead>0?1:0,bu:p.bub?1:0,h:p.hp==null?PHP:p.hp,iv:p.hit>0?1:0,a:+(p.anim||0).toFixed(1),lt:ME===0?+levelT.toFixed(2):undefined,b:RM[ME]===1&&rocks.length?rocks.map(r=>[Math.round(r.x),Math.round(r.y)]):undefined,en:ME===0&&enemies.length?enemies.map(e=>e.dead?-1:Math.round(e.x)):undefined,bo:ME===0&&boss?[Math.round(boss.x),Math.round(boss.y),boss.hp,boss.seen?1:0,boss.dir,boss.tele>0?+boss.tele.toFixed(2):0,boss.sh?1:0,boss.phase||1,boss.stun>0?+boss.stun.toFixed(1):0]:undefined}))}catch(e){}},50);
-  NET.myName=name;PICK.done=false;if(ME===1)netEv({t:'hi',name,uid:NET.myUid,sx:SX.me});setTimeout(myHatSend,400);if(RC){$('bMic').hidden=$('bSpk').hidden=false;$('bEmo').hidden=false;micUI();rcResume();if(ME===0&&NET.code)try{fb().db.doc('duo/'+NET.code).delete().catch(()=>{})}catch(e){}return}pickShow(true);$('bMic').hidden=$('bSpk').hidden=false;$('bEmo').hidden=false;micUI();
+  NET.myName=name;PICK.done=false;NET.peerGV=undefined;if(ME===1)netEv({t:'hi',name,uid:NET.myUid,sx:SX.me,gv:GV});else netEv({t:'gv',gv:GV});setTimeout(()=>{if(NET.on&&ME===1&&NET.peerGV===undefined)verBad()},4000);setTimeout(myHatSend,400);if(RC){$('bMic').hidden=$('bSpk').hidden=false;$('bEmo').hidden=false;micUI();rcResume();if(ME===0&&NET.code)try{fb().db.doc('duo/'+NET.code).delete().catch(()=>{})}catch(e){}return}pickShow(true);$('bMic').hidden=$('bSpk').hidden=false;$('bEmo').hidden=false;micUI();
   // ruang sudah terpakai: hapus dokumennya
   if(ME===0&&NET.code)try{fb().db.doc('duo/'+NET.code).delete().catch(()=>{})}catch(e){}}
 /* sambung ulang otomatis bila sinyal putus sebentar (maks. 35 detik); level diulang dari awal dengan nyawa & koin yang sama */
