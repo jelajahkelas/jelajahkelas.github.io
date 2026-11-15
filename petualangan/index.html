@@ -89,7 +89,7 @@ canvas{image-rendering:pixelated;image-rendering:crisp-edges;display:block}
 .pad .tag{position:absolute;top:-20px;left:0;font:900 11px ui-monospace,monospace;letter-spacing:.08em;color:#fff;text-shadow:1px 1px 0 #000}
 .pad button.fb{color:#f7c548}.pad.l .tag{color:#7fc8ff}.pad.r .tag{color:#ffb15c}
 #top{position:fixed;top:calc(8px + env(safe-area-inset-top,0px));right:10px;z-index:4;display:flex;gap:8px}
-#emo{position:fixed;top:calc(56px + env(safe-area-inset-top,0px));right:10px;z-index:4;display:flex;flex-direction:column;gap:6px}#emo[hidden]{display:none}#emo button{font:800 14px system-ui,sans-serif;color:#fff;background:rgba(43,33,64,.85);border:3px solid #fff8e7;padding:7px 12px;text-align:left;cursor:pointer}#emo button:active{transform:scale(.96)}
+#emo{position:fixed;top:calc(56px + env(safe-area-inset-top,0px));right:10px;z-index:4;display:flex;flex-direction:column;gap:6px}#emo[hidden]{display:none}#emoMine{display:flex;flex-direction:column;gap:6px}#emoMine button{background:rgba(61,139,253,.85)}#emoForm{display:flex;gap:4px;width:220px}#emoIn{flex:1;min-width:0;font:700 14px system-ui,sans-serif;padding:7px 8px;border:3px solid #fff8e7;background:#fff;color:#2b2140}#emoForm button{width:auto;padding:6px 10px;text-align:center}#emo button{font:800 14px system-ui,sans-serif;color:#fff;background:rgba(43,33,64,.85);border:3px solid #fff8e7;padding:7px 12px;text-align:left;cursor:pointer}#emo button:active{transform:scale(.96)}
 #top[hidden]{display:none}#top button.off{opacity:.5;text-decoration:line-through}#top button.live{background:#3fa34d}#top button{width:40px;height:40px;font:900 16px ui-monospace,monospace;color:#fff;background:rgba(43,33,64,.6);border:3px solid rgba(255,255,255,.7);cursor:pointer}
 body.direct #onCode,body.direct #bShare{display:none!important}
 #rot{position:fixed;inset:0;z-index:9;background:#1b1d3a;display:none;place-items:center;text-align:center;padding:30px}
@@ -100,7 +100,8 @@ body.direct #onCode,body.direct #bShare{display:none!important}
 <body>
 <div id="stage">
 <div id="wrap"><canvas id="cv"></canvas><div id="hud"></div><div class="nmtag" id="nm0" hidden></div><div class="nmtag" id="nm1" hidden></div><div id="tip" hidden></div></div>
-<div id="emo" hidden><button data-e="0">👋 Tunggu!</button><button data-e="1">👉 Ke sini!</button><button data-e="2">🦘 Lompat bareng!</button><button data-e="3">🆘 Bantu aku!</button><button data-e="4">👍 Oke!</button></div>
+<div id="emo" hidden><button data-e="0">👋 Tunggu!</button><button data-e="1">👉 Ke sini!</button><button data-e="2">🦘 Lompat bareng!</button><button data-e="3">🆘 Bantu aku!</button><button data-e="4">👍 Oke!</button><div id="emoMine"></div>
+  <form id="emoForm" autocomplete="off"><input id="emoIn" maxlength="40" placeholder="Tulis pesanmu…" enterkeyhint="send"><button type="submit" aria-label="Kirim">➤</button></form></div>
 <div id="top" hidden><button id="bEmo" aria-label="Isyarat cepat" hidden>💬</button><button id="bMic" aria-label="Mikrofon" hidden>🎤</button><button id="bSpk" aria-label="Suara teman" hidden>🔊</button><button id="bSound" aria-label="Musik">♪</button><button id="bPause" aria-label="Jeda">II</button></div>
 <div class="pad l" id="padL" hidden><span class="tag">PEMAIN 1</span><button data-p="0" data-k="l">◀</button><button data-p="0" data-k="r">▶</button><button data-p="0" data-k="j">▲</button><button data-p="0" data-k="f" class="fb">✦</button></div>
 <div class="pad r" id="padR" hidden><span class="tag">PEMAIN 2</span><button data-p="1" data-k="l">◀</button><button data-p="1" data-k="r">▶</button><button data-p="1" data-k="j">▲</button><button data-p="1" data-k="f" class="fb">✦</button></div>
@@ -782,6 +783,14 @@ function bossArt(lv,fr,at){const key='b'+lv+'_'+fr+'_'+(at?1:0);if(MCACHE.has(ke
   MCACHE.set(key,c);return c}
 
 const EMO=['👋 Tunggu!','👉 Ke sini!','🦘 Lompat bareng!','🆘 Bantu aku!','👍 Oke!'],EMOT=['Tunggu!','Ke sini!','Lompat bareng!','Bantu aku!','Oke!'];
+/* pesan sendiri: maks. 40 huruf, kata kasar disensor, nomor HP/tautan disembunyikan; 3 pesan terakhir jadi tombol cepat */
+const BADW=['anjing','anjir','babi','bangsat','goblok','goblog','tolol','bodoh','bego','kontol','memek','ngentot','entot','tai','taik','asu','kampret','jancok','jancuk','cuk','sialan','brengsek','bajingan','idiot','monyet','pantek','puki','lonte','pelacur','setan','keparat','bacot','kntl','mmk','ajg','anj','bgst','tlol','gblk'];
+function cleanMsg(t){t=String(t||'').replace(/\s+/g,' ').trim().slice(0,40);t=t.replace(/(https?:\/\/|www\.)\S+/gi,'***').replace(/\d[\d\s\-]{4,}\d/g,'***');
+  const norm=w=>w.toLowerCase().replace(/[013457@$]/g,c=>({0:'o',1:'i',3:'e',4:'a',5:'s',7:'t','@':'a','$':'s'}[c])).replace(/(.)\1+/g,'$1').replace(/[^a-z]/g,'');
+  return t.split(' ').map(w=>BADW.includes(norm(w))?'*'.repeat(Math.min(5,w.length)):w).join(' ')}
+function sayMine(t){t=cleanMsg(t);if(!t||!NET.on||ME<0||!running)return;const p=P[ME];if(!p)return;if(sayMine.t&&performance.now()-sayMine.t<1200)return;sayMine.t=performance.now();
+  p.say={t,until:performance.now()+3500};netEv({t:'say',x:t});beep(880,.06);try{const L=JSON.parse(localStorage.getItem('jk_adv_msgs')||'[]').filter(x=>x!==t);L.unshift(t);localStorage.setItem('jk_adv_msgs',JSON.stringify(L.slice(0,3)))}catch(e){}$('emoIn').value='';$('emo').hidden=true}
+function emoMine(){let L=[];try{L=JSON.parse(localStorage.getItem('jk_adv_msgs')||'[]')}catch(e){}$('emoMine').innerHTML=L.map(t=>`<button data-m="${esc(t)}">💬 ${esc(t)}</button>`).join('');$('emoMine').querySelectorAll('[data-m]').forEach(b=>b.onclick=()=>sayMine(b.dataset.m))}
 function myHatSend(){if(!NET.on||ME<0)return;const r=RM[ME];netEv({t:'hat',h:(prog().eq||{})[r]||''})}
 function emoSend(k){if(!NET.on||ME<0||!running)return;const p=P[ME];if(!p)return;if(emoSend.t&&performance.now()-emoSend.t<700)return;emoSend.t=performance.now();p.say={t:EMOT[k],until:performance.now()+2600};netEv({t:'emo',k});beep(880,.06);$('emo').hidden=true}
 function speech(X,Y,txt){cx.font='bold 8px system-ui,-apple-system,Segoe UI,Roboto,sans-serif';const w=Math.ceil(cx.measureText(txt).width)+8,x0=Math.round(Math.max(2,Math.min(VW-w-2,X-w/2))),y0=Math.round(Math.max(30,Y-14));
@@ -1095,6 +1104,7 @@ function netRx(m){NET.lastRx=performance.now();
   if(m.t==='win'){$('pRes').hidden=true;win();return}
   if(m.t==='restart'){if(m.lives!=null)LIVES=m.lives;start();return}
   if(m.t==='die'){loseLife();return}
+  if(m.t==='say'){const p=P[1-ME];const t=cleanMsg(m.x);if(p&&t){p.say={t,until:performance.now()+3500};beep(1046,.07);setTimeout(()=>beep(1318,.07),80)}return}
   if(m.t==='emo'){const p=P[1-ME];if(p&&EMOT[m.k]){p.say={t:EMOT[m.k],until:performance.now()+2600};beep(1046,.07);setTimeout(()=>beep(1318,.07),80)}return}
   if(m.t&&m.t.startsWith('q2')){q2Recv(m);return}
   if(m.t==='hdrop'){hearts.push({x:m.x,y:m.y,vy:-150,t:0,id:m.id});return}
@@ -1200,7 +1210,7 @@ function invEnd(del){if(!INV)return;clearInterval(INV.tick);try{INV.un&&INV.un()
 function showWait(t,code){$('pOnline').hidden=false;$('onMenu').hidden=true;$('onWait').hidden=false;$('onTxt').textContent=t;$('onCode').textContent=code||'';$('bShare').hidden=!code}
 function needLogin(){netLost('Masuk ke akun JELAS dulu, lalu buka game ini lagi dari menu Bermain.')}
 $('bOnline').onclick=()=>{$('pStart').hidden=true;$('pOnline').hidden=false;$('onMenu').hidden=false;$('onWait').hidden=true;$('onMsg').textContent='Pilih teman untuk ditantang. Mereka akan mendapat undangan dan tinggal menekan Terima.';ac();loadFriends()};
-$('bEmo').onclick=()=>{$('emo').hidden=!$('emo').hidden};document.querySelectorAll('#emo [data-e]').forEach(b=>b.onclick=()=>emoSend(+b.dataset.e));
+$('bEmo').onclick=()=>{$('emo').hidden=!$('emo').hidden;if(!$('emo').hidden)emoMine()};$('emoForm').onsubmit=e=>{e.preventDefault();sayMine($('emoIn').value)};$('emoIn').addEventListener('keydown',e=>e.stopPropagation());document.querySelectorAll('#emo [data-e]').forEach(b=>b.onclick=()=>emoSend(+b.dataset.e));
 $('rcStop').onclick=()=>{if(RC){clearTimeout(RC.tk);RC=null}$('pRc').hidden=true;netClose();$('pOnline').hidden=false;$('onMenu').hidden=false;$('onWait').hidden=true;$('onMsg').textContent='Kamu berhenti menyambung ulang.';loadFriends()};
 $('bOnBack').onclick=()=>{invEnd(true);netClose();$('pOnline').hidden=true;$('pStart').hidden=false};
 $('bOnCancel').onclick=()=>{invEnd(true);if(document.body.classList.contains('direct')){exit();return}netClose();$('onMenu').hidden=false;$('onWait').hidden=true};
@@ -1309,7 +1319,7 @@ document.querySelectorAll('#pPick .pk').forEach(b=>b.onclick=()=>{const r=+b.dat
   if(!PICK.online){RM=r===0?[0,1]:[1,0];$('pPick').hidden=true;totCoins=0;TUT=!!SEL.tut;STG=SEL.s|0;MOD=STG===SECRET?SMOD[SEL.n]:'';LIVES=5;loadLevel(SEL.n);heroPrev();start();return}
   if(PICK.done)return;b.classList.add('sel');document.querySelectorAll('#pPick .pk').forEach(x=>x.disabled=true);
   if(ME===0)decide(r);else{netEv({t:'pick',r});$('pkMsg').textContent='Pilihan terkirim. Memulai permainan…'}});
-window.__duo={heroCanvas,mobArt,bossArt,bossHit,heal,heartDrop,get hearts(){return hearts},openQuiz,get Q2(){return Q2},pipeDone,prog,get STG(){return STG},get MOD(){return MOD},goLevel,openMap,get running(){return running},get ME(){return ME},get NET(){return NET},emoSend,get RC(){return RC},get totCoins(){return totCoins},get TUT(){return TUT},get RACE(){return RACE},get level(){return level},get bshots(){return bshots},cheatKeys:()=>{keysGot=keysNeed()},get QBANK(){return QBANK},get LIVES(){return LIVES},get keysGot(){return keysGot},get boss(){return boss},get keyItems(){return keyItems},get enemies(){return enemies},get boxes(){return boxes},get failed(){return failed},kill:i=>kill(P[i]),get RM(){return RM},snap:x=>{cam.x=x;draw();return cv.toDataURL()},VW:()=>VW,get LD(){return LD},get rocks(){return rocks},get laserOff(){return laserOff},get pipeT(){return pipeT},get emerge(){return emerge},get latched(){return latched},get level(){return level},enterPipe,get P(){return P},get doors(){return doors},get qDone(){return qDone},get won(){return won},get LV(){return LV},get movers(){return movers},get blueOn(){return blueOn},get checkpoint(){return checkpoint},start,loadLevel,goLevel,step:(n=1)=>{for(let i=0;i<n;i++)step(1/60)},MAP:()=>MAP};
+window.__duo={heroCanvas,mobArt,bossArt,bossHit,heal,heartDrop,get hearts(){return hearts},openQuiz,get Q2(){return Q2},pipeDone,prog,get STG(){return STG},get MOD(){return MOD},goLevel,openMap,get running(){return running},get ME(){return ME},get NET(){return NET},emoSend,sayMine,cleanMsg,get RC(){return RC},get totCoins(){return totCoins},get TUT(){return TUT},get RACE(){return RACE},get level(){return level},get bshots(){return bshots},cheatKeys:()=>{keysGot=keysNeed()},get QBANK(){return QBANK},get LIVES(){return LIVES},get keysGot(){return keysGot},get boss(){return boss},get keyItems(){return keyItems},get enemies(){return enemies},get boxes(){return boxes},get failed(){return failed},kill:i=>kill(P[i]),get RM(){return RM},snap:x=>{cam.x=x;draw();return cv.toDataURL()},VW:()=>VW,get LD(){return LD},get rocks(){return rocks},get laserOff(){return laserOff},get pipeT(){return pipeT},get emerge(){return emerge},get latched(){return latched},get level(){return level},enterPipe,get P(){return P},get doors(){return doors},get qDone(){return qDone},get won(){return won},get LV(){return LV},get movers(){return movers},get blueOn(){return blueOn},get checkpoint(){return checkpoint},start,loadLevel,goLevel,step:(n=1)=>{for(let i=0;i<n;i++)step(1/60)},MAP:()=>MAP};
 })();
 </script>
 </body>
