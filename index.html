@@ -323,12 +323,17 @@ button:focus-visible,input:focus-visible{outline:4px solid var(--yellow);outline
 .overlay .ttl.bad{color:var(--bad)}
 .hint{font-size:13px;color:var(--ink);opacity:.7;margin:0}
 .qcard.arcade{padding:16px;gap:12px}
-/* timer kecil di pojok kanan (tidak memakan satu baris penuh) */
-body:not(.arcfs) .qcard.arcade{position:relative}
-body:not(.arcfs) .qcard.arcade>.timer{position:absolute;top:22px;right:16px;width:min(150px,32%);height:12px;margin:0;z-index:2}
-body:not(.arcfs) .qcard.arcade>.timer:not([hidden])~.q{margin-top:0}
-body:not(.arcfs) .qcard.arcade:has(>.timer:not([hidden])) .qmeta{padding-right:calc(min(150px,32%) + 14px)}
-body:not(.arcfs) .qcard.arcade .qmeta{min-width:0}body:not(.arcfs) .qcard.arcade .qmeta .tag{min-width:0;overflow:hidden;text-overflow:ellipsis}
+/* waktu: lingkaran kecil berangka detik di pojok kanan atas kartu soal */
+.qcard{position:relative}
+.qcard>.timer{position:absolute;top:12px;right:14px;z-index:4;width:48px;height:48px;border-radius:50%;border:0!important;margin:0!important;overflow:visible;background:conic-gradient(var(--lvc,#58CC02) calc(var(--p,1)*1turn),var(--tg,#E5E5E5) 0);box-shadow:0 3px 0 rgba(0,0,0,.12)}
+.qcard>.timer>i{display:none!important}
+.qcard>.timer .tring{position:absolute;inset:5px;border-radius:50%;background:var(--card,#fff);display:grid;place-items:center;font:900 17px/1 var(--display,sans-serif);color:var(--ink);font-variant-numeric:tabular-nums}
+.qcard>.timer.low{background:conic-gradient(#FF4B4B calc(var(--p,1)*1turn),var(--tg,#E5E5E5) 0);animation:tmpulse .6s ease-in-out infinite alternate}.qcard>.timer.low .tring{color:#FF4B4B}
+@keyframes tmpulse{to{transform:scale(1.1)}}
+.qcard:has(>.timer:not([hidden])) .qmeta{padding-right:58px;min-width:0;min-height:36px}.qcard .qmeta .tag{min-width:0;overflow:hidden;text-overflow:ellipsis}
+.qcard:not(.arcade)>.timer{right:124px;top:14px}.qcard:not(.arcade):has(>.timer:not([hidden])) .qmeta{padding-right:178px}
+body.arcfs .qcard:has(>.timer:not([hidden]))>.q{padding-right:44px;min-height:44px;display:flex;align-items:center}
+@media(max-width:640px){.qcard>.timer{width:42px;height:42px;top:8px;right:8px}.qcard>.timer .tring{font-size:15px;inset:4px}.qcard:has(>.timer:not([hidden])) .qmeta{padding-right:48px}.qcard:not(.arcade)>.timer{right:80px;top:4px}.qcard:not(.arcade):has(>.timer:not([hidden])) .qmeta{padding-right:126px}}
 @media(max-width:640px){body:not(.arcfs) .qcard.arcade>.timer{top:17px;right:10px;height:10px;width:64px}body:not(.arcfs) .qcard.arcade:has(>.timer:not([hidden])) .qmeta{padding-right:80px}}
 .arcade .q{font-size:clamp(17px,2.6vw,22px)}
 .arcade .q .big{font-size:clamp(28px,6vw,40px)}
@@ -1532,7 +1537,7 @@ body.arcfs .qcard{flex:1;min-height:0;padding:8px;gap:6px;border-radius:16px;box
 body.arcfs .qcard .q{font-size:clamp(16px,4.6vw,22px);line-height:1.25;margin:0}
 body.arcfs .stage{flex:1;min-height:0;border-radius:14px}
 body.arcfs .qcard>.qmeta{display:none!important}
-body.arcfs .qcard>.timer{height:6px;margin:0}
+body.arcfs .qcard>.timer{height:42px;width:42px;top:6px;right:6px}
 body.arcfs .qcard>#qtext{font-size:clamp(13px,3.6vw,16px)!important;line-height:1.3;max-height:4.1em;overflow:auto;padding:0 2px;font-weight:800}
 body.arcfs .qcard>#qtext *{font-size:inherit!important}
 body.arcfs .qcard{padding:6px;gap:4px}
@@ -1574,7 +1579,7 @@ body.playing .jumpcur,body.teacher .jumpcur{display:none!important}
 body.arcfs #vPlay{padding:0 0 env(safe-area-inset-bottom,0px)!important;gap:0!important;background:var(--card)}
 body.arcfs .playbar{border:0!important;border-radius:0!important;box-shadow:none!important;padding:6px 10px!important;background:var(--card)}
 body.arcfs .qcard{border:0!important;border-radius:0!important;box-shadow:none!important;padding:0!important;gap:0!important;background:var(--card)}
-body.arcfs .qcard>.timer{border-radius:0!important;margin:0!important;height:5px}
+body.arcfs .qcard>.timer{border-radius:50%!important;height:42px;width:42px}
 body.arcfs .qcard>#qtext{padding:6px 12px!important;margin:0!important}
 body.arcfs .stage{border:0!important;border-radius:0!important;box-shadow:none!important;margin:0!important}
 body.arcfs .qwrap{padding:0!important}
@@ -4139,7 +4144,7 @@ html[data-theme=malam] .plstick{background:#0a0f1e}
             <span class="tag" id="qtag"></span>
             <span style="display:flex;gap:10px;align-items:center"><span class="combo" id="combo"></span><button class="speak" id="speakBtn" hidden>Dengarkan</button></span>
           </div>
-          <div class="timer" id="timer" hidden><i id="timerBar"></i></div>
+          <div class="timer" id="timer" hidden role="timer" aria-label="Sisa waktu"><i id="timerBar"></i><b class="tring" id="timerSec"></b></div>
           <div class="q" id="qtext"></div>
           <div class="opts" id="opts"></div>
           <div class="buzz" id="buzz" hidden></div>
@@ -4204,7 +4209,7 @@ html[data-theme=malam] .plstick{background:#0a0f1e}
 <div class="syncpill" id="syncPill" hidden></div>
 <div class="toast" id="toast" hidden></div>
 
-<script src="av.js?v=375"></script>
+<script src="av.js?v=376"></script>
 <script>
 /* ---------- visual assets ---------- */
 const INK='#1B1E3D';
@@ -10354,10 +10359,11 @@ function tkDragMatch(box,L2){const area=box.querySelector('.mtch');if(!area)retu
 function suYoung(c){return c==='tk'||/^k[1-6]$/.test(String(c||''))}
 function startQ(){
   $('#turn').hidden=true;const q=game.qs[game.i];{const sp=qSpeech(q);if(sp)say(sp)}
-  if(L.time&&!game.lesson){$('#timer').hidden=false;game.t0=Date.now();const bar=$('#timerBar');bar.style.width='100%';
-    timerId=setInterval(()=>{if(PAUSE.on)return;const left=1-(Date.now()-game.t0)/(L.time*1000);bar.style.width=Math.max(0,left*100)+'%';if(left<=0){clearInterval(timerId);answer(-1)}},200);
+  if(L.time&&!game.lesson){$('#timer').hidden=false;game.t0=Date.now();tmSet(1,L.time);
+    timerId=setInterval(()=>{if(PAUSE.on)return;const left=1-(Date.now()-game.t0)/(L.time*1000);tmSet(left,left*L.time);if(left<=0){clearInterval(timerId);answer(-1)}},200);
   }else game.t0=Date.now();
 }
+function tmSet(frac,sec){const bar=$('#timerBar');if(bar)bar.style.width=Math.max(0,frac*100)+'%';const t=$('#timer'),r=$('#timerSec');if(!t||!r)return;frac=Math.max(0,Math.min(1,frac));t.style.setProperty('--p',frac);const n=Math.max(0,Math.ceil(sec));if(r.textContent!==String(n))r.textContent=n;t.classList.toggle('low',n<=5&&frac<1)}
 function setOptsEnabled(on){$('#opts').querySelectorAll('.opt').forEach(b=>{b.disabled=!on||b.classList.contains('wrong')})}
 function renderBuzz(){
   const g=game.group,el=$('#buzz');el.hidden=false;const bt=game.buzz!=null?g.teams[game.buzz]:null;
@@ -10531,7 +10537,7 @@ function arcShowQ(){
   const q=game.qs[game.i];renderHUD();showQText(q);
   arc.q=q;arc.labels=q.opts.map(strip);arc.ci=q.opts.indexOf(q.ans);
   arc.t=0;arc.limit=READ[L.id];arc.speed=SPEED[L.id];arc.wait=0;arc.autoNext=false;arc.fbPending=false;
-  $('#timer').hidden=false;$('#timerBar').style.width='100%';
+  $('#timer').hidden=false;tmSet(1,arc.limit||0);
   M.setup();
 }
 function arcLoop(ts){
@@ -10540,7 +10546,7 @@ function arcLoop(ts){
   const dt=arc.last?Math.min(.05,(ts-arc.last)/1000):0;arc.last=ts;
   if(arc.state==='play'){
     arc.t+=dt;M.update(dt);
-    if(arc.state==='play'){$('#timerBar').style.width=Math.max(0,100*(1-arc.t/arc.limit))+'%';if(arc.t>=arc.limit+(M.extra||0))arcResolve(-1)}
+    if(arc.state==='play'){tmSet(1-arc.t/arc.limit,arc.limit-arc.t);if(arc.t>=arc.limit+(M.extra||0))arcResolve(-1)}
   }else if(arc.state==='resolved'){
     arc.wait-=dt;M.idle&&M.idle(dt);
     if(arc.wait<=0){if(arc.autoNext){arc.autoNext=false;arcNext();}else if(arc.fbPending){arc.fbPending=false;showArcFb()}}
@@ -16129,7 +16135,7 @@ function folBind(root,list,after){root.querySelectorAll('[data-follow]').forEach
   try{await folDo(f,on);if(on){try{sfx.ok()}catch(_){}toast('team',`Kamu mengikuti ${f.name}.`)}b.outerHTML=folBtn(f,b.classList.contains('sm'));folBind(root,list,after);after&&after()}catch(err){b.disabled=false;toast('lock',fbErr(err))}})}
 const shareIcon='<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M12 3 V15 M7 8 L12 3 L17 8 M5 13 V19 C5 20 6 21 7 21 H17 C18 21 19 20 19 19 V13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const qrIcon='<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><path d="M14 14h3v3h-3zM18 18h3v3h-3zM18 14h3M14 18v3" stroke-linecap="round"/></svg>';
-let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=375';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
+let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=376';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
 function qrMatrix(text){const Q=window.QRCodeLib,q=new Q(-1,Q.ECL.M);q.addData(text);q.make();const n=q.getModuleCount(),m=[];for(let r=0;r<n;r++){m.push([]);for(let c=0;c<n;c++)m[r].push(q.isDark(r,c))}return m}
 function qrSvgOf(m){const n=m.length;let d='';for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(m[r][c])d+=`M${c} ${r}h1.02v1.02h-1.02z`;
   return `<svg viewBox="-2 -2 ${n+4} ${n+4}" class="pcqr" shape-rendering="crispEdges" aria-label="Kode QR profil"><rect x="-2" y="-2" width="${n+4}" height="${n+4}" fill="#fff"/><path d="${d}" fill="#1C1E3D"/></svg>`}
