@@ -454,15 +454,15 @@ function draw(){cx.imageSmoothingEnabled=false;const now=performance.now()/1000;
   // pemain
   const ord=P.map((p,i)=>i).sort((a,b)=>P[b].y-P[a].y);
   ord.forEach(i=>{const p=P[i];if(p.ent){return}if(p.dead&&dying>0&&Math.floor(now*20)%2)return;
-    const img=aniCanvas(p.pet,p.hat,p.acc),t=now+i*.37,mv=Math.abs(p.vx)>5&&p.ground;let rot=0,bob=0,sx=1,sy=1;
+    const img=aniCanvas(p.pet,p.hat,p.acc),t=now+i*.37,mv=Math.abs(p.vx)>5&&p.ground;let rot=0,bob=0,sx=1,sy=1,leg=0;
     if(!p.ground){rot=Math.max(-.3,Math.min(.3,(p.vx/SPD)*.14+(p.vy/450)*.12*p.face));sy=p.vy<0?1.08:.97;sx=p.vy<0?.93:1.04}
-    else if(mv){const ph=p.anim*14;bob=Math.abs(Math.sin(ph))*2.2;rot=Math.sin(ph)*.1+p.face*.07;sy=1+Math.abs(Math.cos(ph))*.05;sx=1-Math.abs(Math.cos(ph))*.04}
+    else if(mv){const ph=p.anim*14;leg=ph;bob=Math.abs(Math.sin(ph))*2.2;rot=Math.sin(ph)*.1+p.face*.07;sy=1+Math.abs(Math.cos(ph))*.05;sx=1-Math.abs(Math.cos(ph))*.04}
     else{sy=1+Math.sin(t*3)*.035;sx=1-Math.sin(t*3)*.025;rot=Math.sin(t*1.3)*.035}
-    const pb=p.remote?(p.net&&p.net.pb):p.pb;if(pb&&p.ground){rot=(pb[1]||p.face)*.24;sx*=1.05;bob=Math.abs(Math.sin(t*16))*1}
+    const pb=p.remote?(p.net&&p.net.pb):p.pb;if(pb&&p.ground){rot=(pb[1]||p.face)*.24;sx*=1.05;bob=Math.abs(Math.sin(t*8))*1;leg=t*8}
     if(P.some(q=>q!==p&&!q.ent&&Math.abs(q.y+PH-p.y)<=2.5&&Math.min(p.x+PW,q.x+PW)-Math.max(p.x,q.x)>=4)){sy*=.88;sx*=1.1}
     if(p.joyU>now){const k=p.joyU-now;bob+=Math.abs(Math.sin(k*13))*5;rot+=Math.sin(k*18)*.18}
     const sq=p.sq;sx*=sq>0?1+sq*1.4:1-(-sq)*.8;sy*=sq>0?1-sq*1.6:1+(-sq)*1.4;
-    const cxp=Math.round(p.x+PW/2),by=Math.round(p.y+PH);cx.save();cx.translate(cxp,by-Math.round(bob));cx.rotate(rot);cx.scale(p.face<0?-sx:sx,sy);cx.drawImage(img,-14,-27);cx.restore()});
+    const cxp=Math.round(p.x+PW/2),by=Math.round(p.y+PH);cx.save();cx.translate(cxp,by-Math.round(bob));cx.rotate(rot);cx.scale(p.face<0?-sx:sx,sy);drawBody(img,p.ground?(leg?1:0):(p.vy<0?2:3),leg);cx.restore()});
   // kunci yang dibawa
   if(key&&!key.used&&key.car>=0){drawKey(key.x,key.y+Math.sin(now*6))}
   // penanda pemain
@@ -477,6 +477,14 @@ function draw(){cx.imageSmoothingEnabled=false;const now=performance.now()/1000;
   cx.restore();
   if(FX.fl>0){cx.fillStyle=`rgba(255,255,255,${Math.min(.6,FX.fl*4)})`;cx.fillRect(0,0,VW,VH)}
   if(dying>0&&dying<.35){cx.fillStyle=`rgba(27,29,58,${(.35-dying)/.35})`;cx.fillRect(0,0,VW,VH)}}
+/* kaki bergerak: bagian bawah sprite dibelah dua lalu diayun bergantian */
+const CUT=23;
+function drawBody(img,mode,ph){if(!mode){cx.drawImage(img,-14,-27);return}
+  if(mode===1){const a=Math.sin(ph),b=-a;
+    cx.drawImage(img,0,CUT,14,7,-14+a*2.6,-27+CUT-Math.max(0,a)*3.2,14,7);cx.drawImage(img,14,CUT,14,7,b*2.6,-27+CUT-Math.max(0,b)*3.2,14,7);
+    cx.drawImage(img,0,0,28,CUT,-14,-27,28,CUT);return}
+  if(mode===2){cx.drawImage(img,0,CUT,14,7,-13,-27+CUT-2,14,6);cx.drawImage(img,14,CUT,14,7,-1,-27+CUT-2,14,6);cx.drawImage(img,0,0,28,CUT,-14,-27,28,CUT);return}
+  cx.drawImage(img,0,CUT,14,7,-15,-27+CUT+1,14,7);cx.drawImage(img,14,CUT,14,7,1,-27+CUT+1,14,7);cx.drawImage(img,0,0,28,CUT,-14,-27,28,CUT)}
 function speech(X,Y,txt){cx.font='bold 8px system-ui,-apple-system,Segoe UI,Roboto,sans-serif';const w=Math.ceil(cx.measureText(txt).width)+8,x0=Math.round(Math.max(2,Math.min(VW-w-2,X-w/2))),y0=Math.round(Math.max(18,Y-14));
   cx.fillStyle=K;cx.fillRect(x0-1,y0-1,w+2,13);cx.fillStyle='#fff8e7';cx.fillRect(x0,y0,w,11);cx.fillStyle=K;cx.fillRect(Math.round(X)-1,y0+12,3,2);cx.fillStyle='#fff8e7';cx.fillRect(Math.round(X),y0+11,1,2);
   cx.fillStyle=K;cx.textAlign='left';cx.fillText(txt,x0+4,y0+8)}
