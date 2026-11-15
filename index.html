@@ -3903,6 +3903,25 @@ html[data-theme=malam] .aved-tabs button[aria-selected="true"]{background:#eaf0f
 .gfeat .gtags{padding:2px 0 0}.gtags.sm i{font-size:13px;padding:2px 6px}
 .glast{position:absolute;top:8px;left:8px;background:#1B1E3D;color:#fff;font-size:10.5px;font-weight:800;padding:3px 8px;border-radius:999px}
 .gchips{margin-top:12px}
+.gh{position:relative;display:flex;flex-direction:column;gap:14px}
+.ghbg{position:absolute;inset:-10px -10px auto;height:260px;opacity:.06;color:var(--gc);pointer-events:none;overflow:hidden}.ghbg svg{width:260px;height:260px;position:absolute;right:-40px;top:-30px;transform:rotate(-12deg)}
+.ghhero{position:relative;border-radius:22px;overflow:hidden;border:3px solid var(--gc);box-shadow:0 6px 0 color-mix(in srgb,var(--gc) 70%,#000);aspect-ratio:2/1;max-height:300px;background:var(--gc)}
+.ghart,.ghart img,.ghart svg{width:100%;height:100%;display:block;object-fit:cover}
+.ghov{position:absolute;left:0;right:0;bottom:0;display:flex;align-items:flex-end;gap:12px;padding:40px 16px 14px;background:linear-gradient(transparent,rgba(0,0,0,.72));color:#fff}
+.ghov h2{margin:0;font-size:clamp(22px,4vw,30px);color:#fff;text-shadow:0 2px 0 rgba(0,0,0,.35)}.ghov p{margin:2px 0 0;font-weight:600;opacity:.95}
+.ghic{width:52px;height:52px;flex:none;border-radius:14px;background:var(--gc);display:grid;place-items:center;color:#fff;border:3px solid #fff}.ghic svg{width:32px;height:32px}
+.ghplayw{display:flex;flex-direction:column;align-items:stretch;gap:6px}
+.ghplay{display:flex;flex-direction:column;align-items:center;gap:2px;padding:14px;border-radius:18px;border:0;background:var(--gc);color:#fff;box-shadow:0 5px 0 color-mix(in srgb,var(--gc) 65%,#000);font-family:var(--display);font-weight:900;font-size:22px;cursor:pointer;text-transform:uppercase;letter-spacing:.03em}
+.ghplay small{font-family:var(--body,inherit);font-size:13px;font-weight:700;text-transform:none;letter-spacing:0;opacity:.95}
+.ghsub{align-self:center;background:none;border:0;color:var(--gc);font-weight:800;cursor:pointer;text-decoration:underline;font-size:14px;filter:brightness(.8)}
+.ghsec{margin:4px 0 0;font-family:var(--display);font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.ghmodes{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.ghm{display:flex;flex-direction:column;align-items:center;text-align:center;gap:6px;padding:14px 10px;border-radius:18px;border:2px solid var(--line);border-bottom-width:5px;background:var(--card);cursor:pointer;color:var(--ink);font-family:inherit}
+.ghm:hover{border-color:var(--gc)}.ghm b{font-family:var(--display);font-size:15px}.ghm small{color:var(--muted);font-weight:600;font-size:12.5px;line-height:1.3}.ghmi{width:48px;height:48px}.ghmi svg{width:48px;height:48px}
+.ghm.dis{opacity:.55;filter:grayscale(.7)}
+.ghrow{display:grid;grid-template-columns:1fr;gap:12px}@media(min-width:760px){.ghrow{grid-template-columns:1.4fr 1fr}}
+.ghcard{border:2px solid var(--line);border-radius:18px;padding:14px 16px;background:var(--card);border-top:6px solid var(--gc)}.ghcard h3{margin:0 0 8px;font-size:16px}.ghcard ol{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px;font-weight:600;line-height:1.45}
+.ghst{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;text-align:center}.ghst b{display:block;font-family:var(--display);font-size:24px;color:var(--gc);filter:brightness(.85)}.ghst span{font-size:12px;color:var(--muted);font-weight:700}
 .gsh{display:flex;flex-direction:column;gap:8px}.gsh h2{margin:4px 0 0;font-size:22px}.gshd{margin:0;color:var(--muted)}
 .gshart{border-radius:16px;overflow:hidden;border:2px solid var(--line);aspect-ratio:4/3;max-height:220px}.gshart svg{width:100%;height:100%;display:block}
 .gsec{margin:12px 0 0;font-size:14px;font-weight:900;color:var(--muted);letter-spacing:.02em}
@@ -4219,7 +4238,7 @@ html[data-theme=malam] .plstick{background:#0a0f1e}
 <div class="syncpill" id="syncPill" hidden></div>
 <div class="toast" id="toast" hidden></div>
 
-<script src="av.js?v=379"></script>
+<script src="av.js?v=383"></script>
 <script>
 /* ---------- visual assets ---------- */
 const INK='#1B1E3D';
@@ -16158,7 +16177,7 @@ function folBind(root,list,after){root.querySelectorAll('[data-follow]').forEach
   try{await folDo(f,on);if(on){try{sfx.ok()}catch(_){}toast('team',`Kamu mengikuti ${f.name}.`)}b.outerHTML=folBtn(f,b.classList.contains('sm'));folBind(root,list,after);after&&after()}catch(err){b.disabled=false;toast('lock',fbErr(err))}})}
 const shareIcon='<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M12 3 V15 M7 8 L12 3 L17 8 M5 13 V19 C5 20 6 21 7 21 H17 C18 21 19 20 19 19 V13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const qrIcon='<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><path d="M14 14h3v3h-3zM18 18h3v3h-3zM18 14h3M14 18v3" stroke-linecap="round"/></svg>';
-let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=379';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
+let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=383';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
 function qrMatrix(text){const Q=window.QRCodeLib,q=new Q(-1,Q.ECL.M);q.addData(text);q.make();const n=q.getModuleCount(),m=[];for(let r=0;r<n;r++){m.push([]);for(let c=0;c<n;c++)m[r].push(q.isDark(r,c))}return m}
 function qrSvgOf(m){const n=m.length;let d='';for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(m[r][c])d+=`M${c} ${r}h1.02v1.02h-1.02z`;
   return `<svg viewBox="-2 -2 ${n+4} ${n+4}" class="pcqr" shape-rendering="crispEdges" aria-label="Kode QR profil"><rect x="-2" y="-2" width="${n+4}" height="${n+4}" fill="#fff"/><path d="${d}" fill="#1C1E3D"/></svg>`}
@@ -17470,7 +17489,9 @@ const PH_SCREENS={
  online:{t:'Main online',back:'root',opts:[{id:'on2',ic:'duo',t:'Main berdua',d:'Tantang satu teman.'},{id:'onN',ic:'many',t:'Beberapa orang',d:'Sampai 8 pemain dalam satu ruang.'}]},
  offline:{t:'Main offline',back:'root',opts:[{id:'off2',ic:'split',t:'Main berdua',d:'Satu HP dibagi dua layar.'},{id:'teams',ic:'teams',t:'Beberapa tim',d:'Bergantian atau rebutan di satu layar, cocok untuk kelas.'}]},
  teams:{t:'Tim di satu layar',back:'root',opts:[]},
- sendiri:{t:'Main sendiri',back:'root',opts:[]}};
+ sendiri:{t:'Main sendiri',back:'root',opts:[]},
+ game:{t:'Game',back:'root',opts:[]}};
+var GHOME=null;
 function phGo(id){PNAV=id;renderTeam();window.scrollTo(0,0)}
 function phOnline(){const F=window.FBX;return !!(F&&F.user&&P&&!(window.isT&&window.isT()))}
 function phPick(id){
@@ -17480,14 +17501,14 @@ function phPick(id){
   if(id==='adv'){const cid=String((CLS()||{}).id||''),m=cid.match(/(\d+)/),g=/^tk/.test(cid)?0:m?+m[1]:3;advSave(false);location.href='petualangan/?sx='+((P&&P.gender)||'')+'&g='+g;return}
   phGo(id)}
 function playHub(){const v=$('#vTeam');if(!v)return;let hub=$('#phub');if(!hub){(v.querySelector('.pagehead')||v.firstElementChild).insertAdjacentHTML('afterend','<div class="phub" id="phub"></div>');hub=$('#phub')}
-  if(!PH_SCREENS[PNAV])PNAV='root';const sc=Object.assign({},PH_SCREENS[PNAV]);if(PNAV==='root'){GPRE=null;if(window.AJAK)AJAK.lockMode=false}if(PNAV==='teams'&&GPRE)sc.t='Tim di satu layar · '+gName(GPRE)
+  if(!PH_SCREENS[PNAV]||(PNAV==='game'&&!GHOME))PNAV='root';const sc=Object.assign({},PH_SCREENS[PNAV]);if(PNAV==='game')sc.t=gName(GHOME);if(PNAV==='root'){GPRE=null;if(window.AJAK)AJAK.lockMode=false}if(PNAV==='teams'&&GPRE)sc.t='Tim di satu layar · '+gName(GPRE)
   v.classList.add('ph-on');v.dataset.ph=PNAV;
   const opts=sc.opts.map(o=>`<button class="phopt" data-ph="${o.id}"><span class="phic">${PH_ICON[o.ic]}</span><span class="grow"><b>${o.t}</b><small>${o.d}</small></span><span class="phchev" aria-hidden="true">›</span></button>`).join('');
   let extra='';
   if(PNAV==='online')extra=`<div class="card phcode"><b>Punya kode tantangan?</b><div class="roomjoin"><input id="phCode" class="fbcodein" maxlength="6" placeholder="KODE" autocomplete="off" autocapitalize="characters"><button class="ghost" id="phJoin">Gabung</button></div></div>`;
   if(PNAV==='sendiri'){const c=CLS();extra=`<p class="note phnote">${GPRE?`Pilih pelajaran untuk main <b>${esc(gName(GPRE))}</b>.`:`Pilih pelajaran ${esc(c.full)}, lalu pilih game.`}</p><div class="subjects" id="phSubj">${c.subjects.map(s=>`<button class="subj" data-s="${s.id}" style="--sc:${s.color}"><span class="glyph">${s.glyph}</span><span class="nm">${esc(s.name)}</span><span class="gcount">${allGames(FIT[s.fit]).length} game</span></button>`).join('')}</div>`}
   const ph=v.querySelector('.pagehead');if(ph){ph.innerHTML=`${sc.back?`<button class="back phback" id="phBack" aria-label="Kembali">←</button>`:ico('game')}<div><h2>${sc.t}</h2></div>`;hydrate(ph)}
-  hub.innerHTML=PNAV==='root'?`<div id="phInv"></div>${plRoot()}`:`<div id="phInv"></div>${opts?`<div class="phopts">${opts}</div>`:''}${extra}`;if(PNAV==='root')plBind(hub);
+  hub.innerHTML=PNAV==='root'?`<div id="phInv"></div>${plRoot()}`:PNAV==='game'?gHome(GHOME):`<div id="phInv"></div>${opts?`<div class="phopts">${opts}</div>`:''}${extra}`;if(PNAV==='root')plBind(hub);if(PNAV==='game')gHomeBind(hub,GHOME);
   hydrate(hub);
   const bk=$('#phBack');if(bk)bk.onclick=()=>phGo(sc.back);
   hub.querySelectorAll('[data-ph]').forEach(b=>b.onclick=()=>phPick(b.dataset.ph));
@@ -17590,7 +17611,28 @@ function gSolo(id,sb){const c=CLS(),s=sb||gSubj();PLAY='solo';L=lvOf();setLvColo
   S={id:s.id,name:s.name,fit:s.fit,make:()=>shuffle(pool.flatMap(u=>unitQs(u,3)))};
   const ag=allGames(FIT[s.fit]||FIT.long);if(!ag.includes(id)){toast('lock',`Soal ${s.name} berupa gambar, jadi dimainkan sebagai Kuis Klasik.`)}
   MODE=ag.includes(id)?id:ag[0];window.DUEL_RAND=null;store.set('mode',MODE);try{tone([660,990],.06)}catch(e){}launch()}
-function gSheet(id){const m=gModes(id),sb=gSubj(),on=phOnline();
+/* rumah tiap game: tampilan, aturan, rekor, dan cara main khas game itu */
+function gRules(id){const h=(MODE_LIST.find(m=>m.id===id)||{}).help||'';return h.split(/(?<=[.!?])\s+/).filter(x=>x.trim().length>3)}
+function gRec(id){const nm=gName(id),r=(BOARD.solo||[]).filter(x=>x.mode===nm);return {n:r.length,best:r.reduce((a,x)=>Math.max(a,x.score||0),0),nilai:r.reduce((a,x)=>Math.max(a,x.nilai||0),0)}}
+function gHome(id){const m=gModes(id),sb=gSubj(),on=phOnline(),mm=MODE_LIST.find(x=>x.id===id)||{},rec=gRec(id),col=MCOL[id]||'#9B6BFF';
+  const tile=(a,ic,t,d,why)=>`<button class="ghm${why?' dis':''}" data-ga="${a}" ${why?`data-why="${esc(why)}"`:''}><span class="ghmi">${ic}</span><b>${t}</b><small>${why||d}</small></button>`;
+  const tiles=[m.duo?tile('duo-on',PH_ICON.online,'Tantang teman online','Dari HP masing-masing',on?'':'Masuk akun JELAS dulu'):'',m.duo?tile('duo-off',PH_ICON.split,'Satu HP berdua','Layar dibagi dua',m.off2?'':'Butuh layar penuh & dua tangan'):'',
+    m.grp?tile('grp-on',PH_ICON.many,'Ruang kelompok','Sampai 8 pemain online',on?'':'Masuk akun JELAS dulu'):'',m.grp?tile('grp-off',PH_ICON.teams,'Tim di satu layar','Bergantian, cocok untuk kelas',m.offN?'':'Giliran terlalu lama untuk tim'):''].join('');
+  return `<div class="gh" style="--gc:${col}"><div class="ghbg" aria-hidden="true">${(mm.icon||'').repeat(1)}</div>
+   <div class="ghhero"><div class="ghart">${gArt(id,1)}</div><div class="ghov"><span class="ghic">${mm.icon||''}</span><div><h2>${esc(gName(id))}</h2><p>${esc(gDesc(id))}</p></div></div></div>
+   ${m.solo?`<div class="ghplayw"><button class="ghplay press" data-ga="solo"><span>▶ Main sekarang</span><small>Sendiri · Soal ${esc(sb.name)}</small></button><button class="ghsub" data-ga="solo-pick">Ganti pelajaran</button></div>`:''}
+   <h3 class="ghsec">Main bersama</h3><div class="ghmodes">${tiles}</div>
+   <div class="ghrow"><div class="ghcard"><h3>📜 Aturan main</h3><ol>${gRules(id).map(r=>`<li>${esc(r)}</li>`).join('')}</ol></div>
+   <div class="ghcard ghrec"><h3>🏆 Rekor kamu</h3>${rec.n?`<div class="ghst"><div><b>${rec.best}</b><span>Poin terbaik</span></div><div><b>${rec.nilai}</b><span>Nilai terbaik</span></div><div><b>${rec.n}</b><span>Kali main</span></div></div>`:'<p class="note" style="margin:0">Belum ada rekor. Ayo main pertama kali!</p>'}</div></div></div>`}
+function gHomeBind(hub,id){hub.querySelectorAll('[data-ga]').forEach(b=>b.onclick=()=>{if(b.dataset.why){toast('lock',b.dataset.why);return}try{tone([620],.03)}catch(e){}gAct(id,b.dataset.ga)})}
+function gAct(id,a){if((a==='duo-on'||a==='grp-on')&&!phOnline()){toast('lock','Masuk ke akun JELAS dulu untuk main online.');return}
+    GPRE=id;AJAK.lockMode=false;
+    if(a==='solo'){GPRE=null;gSolo(id);return}
+    if(a==='solo-pick'){phGo('sendiri');return}
+    if(a==='duo-on'||a==='grp-on'){GPRE=null;AJAK.max=a==='duo-on'?2:8;AJAK.mode=id;AJAK.lockMode=true;ajakWizard();return}
+    if(a==='duo-off'){duoWizard();return}
+    if(a==='grp-off'){GROUP.format='giliran';store.set('group',GROUP);phGo('teams');return}}
+function gSheet(id){if(id==='adv'){phPick('adv');return}GHOME=id;phGo('game');return;const m=gModes(id),sb=gSubj(),on=phOnline();
   const row=(act,ic,t,d,dis)=>`<button class="gopt${dis?' dis':''}" data-ga="${act}"><span class="goic">${ic}</span><span class="grow"><b>${t}</b><small>${d}</small></span><span class="phchev">›</span></button>`;
   let h=`<div class="gsh"><div class="gshart" style="--gc:${MCOL[id]||'#9B6BFF'}">${gArt(id,id==='adv')}</div><h2>${esc(gName(id))}</h2><p class="gshd">${esc(gDesc(id))}</p>`;
   if(m.solo)h+=`<h3 class="gsec">👤 Main sendiri</h3>${row('solo',PH_ICON.sendiri,'Main sekarang',`Soal: ${esc(sb.name)}`)}<button class="linkbtn gchg" data-ga="solo-pick">Ganti pelajaran</button>`;
@@ -17609,7 +17651,7 @@ function gSheet(id){const m=gModes(id),sb=gSubj(),on=phOnline();
     if(a==='duo-off'){duoWizard();return}
     if(a==='grp-off'){GROUP.format='giliran';store.set('group',GROUP);phGo('teams');return}})}
 /* kembali dari permainan: murid kembali ke galeri Bermain; guru tetap ke daftar game lama */
-function backToPicker(){if(window.isT&&isT()){openGames();return}GPRE=null;window.DUEL_RAND=null;PNAV='root';go('team');window.scrollTo(0,0)}
+function backToPicker(){if(window.isT&&isT()){openGames();return}GPRE=null;window.DUEL_RAND=null;const g=typeof MODE==='string'&&MODE_LIST.some(x=>x.id===MODE&&!x.hidden)?MODE:null;GHOME=g;PNAV=g?'game':'root';go('team');window.scrollTo(0,0)}
 function gBind(hub){hub.querySelectorAll('[data-g]').forEach(b=>b.onclick=()=>{try{tone([620],.03)}catch(e){}gSheet(b.dataset.g)})}
 
 function plRoot(){const on=typeof phOnline==='function'&&phOnline();const s=P.stats||{},hist=(P.mhist||[]);

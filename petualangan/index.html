@@ -23,6 +23,13 @@ canvas{image-rendering:pixelated;image-rendering:crisp-edges;display:block}
 .px{font-weight:900;letter-spacing:.06em;text-transform:uppercase}
 .panel{position:fixed;inset:0;display:grid;place-items:center;background:rgba(15,16,38,.72);z-index:5;padding:16px}
 .panel[hidden]{display:none}
+.box.home h1{margin-bottom:4px}.hstat{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin:4px 0 2px;font-weight:900}.hstat span{background:#fff;border:3px solid #2b2140;padding:3px 9px;font-size:14px}
+.hgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.hgrid .btn{margin:10px 0 0;font-size:13px;padding:10px 4px}.btn.b4{background:#e98b2a}.btn.b5{background:#d94f8c}.btn.b6{background:#7a5fe0}
+.box.shop,.box.help{max-height:94vh;overflow:auto}.sgem{font-weight:900;margin:2px 0 8px}.stabs{display:flex;gap:6px;justify-content:center}.stabs button{font:800 13px system-ui,sans-serif;border:3px solid #2b2140;background:#fff;padding:6px 12px;cursor:pointer}.stabs button.on{background:#7be07f}
+.sprev{margin:8px auto;width:72px;height:90px;background:#bfe7ff;border:3px solid #2b2140;display:grid;place-items:center}.sprev canvas{width:62px;height:80px;image-rendering:pixelated}
+.sgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(118px,1fr));gap:8px}.sit{border:3px solid #2b2140;background:#fff;padding:6px;cursor:pointer;font:800 12px/1.25 system-ui,sans-serif;color:#2b2140;display:flex;flex-direction:column;align-items:center;gap:3px}
+.sit canvas{width:46px;height:60px;image-rendering:pixelated;background:#e8f6ff}.sit small{color:#b07a00;font-size:12px}.sit.own small{color:#2e7d3a}.sit.eq{background:#d8ffd9;outline:3px solid #3fa34d}.sit.no{opacity:.6}.smsg{min-height:1.2em;font-weight:800;margin:6px 0 0}
+.box.help ol{text-align:left;padding-left:20px;margin:6px 0;display:flex;flex-direction:column;gap:7px;font-weight:600;line-height:1.45}
 .rcspin{width:44px;height:44px;margin:8px auto;border:6px solid #e8e2f4;border-top-color:#3d8bfd;border-radius:50%;animation:rcs 1s linear infinite}@keyframes rcs{to{transform:rotate(360deg)}}
 .rstars{font-size:36px;letter-spacing:6px;line-height:1;margin:4px 0 6px;color:#f7c548;text-shadow:0 3px 0 #2b2140}.rstars .off{color:#d8cfe8;text-shadow:none}.rstars span{display:inline-block;animation:stpop .45s cubic-bezier(.3,1.6,.5,1) both}
 @keyframes stpop{from{transform:scale(0) rotate(-40deg)}to{transform:none}}
@@ -72,7 +79,7 @@ canvas{image-rendering:pixelated;image-rendering:crisp-edges;display:block}
 .codebox{margin-top:10px;text-align:left}.codebox summary{cursor:pointer;font-weight:900;font-size:13px;color:#4b3f6b;padding:6px 0}
 .box{max-height:calc(100vh - 32px);overflow:auto}
 .heroes{display:flex;justify-content:center;gap:28px;margin:6px 0 4px}
-.heroes canvas{width:72px;height:80px;image-rendering:pixelated}
+.heroes canvas{width:70px;height:91px;image-rendering:pixelated}
 /* kontrol sentuh */
 .pad{position:fixed;bottom:calc(10px + env(safe-area-inset-bottom,0px));display:flex;gap:8px;z-index:3}
 .pad[hidden]{display:none}
@@ -87,7 +94,7 @@ canvas{image-rendering:pixelated;image-rendering:crisp-edges;display:block}
 body.direct #onCode,body.direct #bShare{display:none!important}
 #rot{position:fixed;inset:0;z-index:9;background:#1b1d3a;display:none;place-items:center;text-align:center;padding:30px}
 
-.pick{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:6px}.pk{display:flex;flex-direction:column;align-items:center;gap:6px;padding:14px 8px;border:4px solid #2b2140;background:#fff;color:#2b2140;font:inherit;cursor:pointer;box-shadow:inset -4px -4px 0 rgba(0,0,0,.12)}.pk canvas{width:72px;height:80px;image-rendering:pixelated}.pk b{font-size:16px}.pk small{font:600 13px/1.35 system-ui,-apple-system,'Segoe UI',Roboto,sans-serif}.pk.sel{background:#fff3b0;border-color:#3fa34d}.pk:disabled{cursor:default}
+.pick{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:6px}.pk{display:flex;flex-direction:column;align-items:center;gap:6px;padding:14px 8px;border:4px solid #2b2140;background:#fff;color:#2b2140;font:inherit;cursor:pointer;box-shadow:inset -4px -4px 0 rgba(0,0,0,.12)}.pk canvas{width:62px;height:80px;image-rendering:pixelated}.pk b{font-size:16px}.pk small{font:600 13px/1.35 system-ui,-apple-system,'Segoe UI',Roboto,sans-serif}.pk.sel{background:#fff3b0;border-color:#3fa34d}.pk:disabled{cursor:default}
 </style>
 </head>
 <body>
@@ -98,13 +105,36 @@ body.direct #onCode,body.direct #bShare{display:none!important}
 <div class="pad l" id="padL" hidden><span class="tag">PEMAIN 1</span><button data-p="0" data-k="l">◀</button><button data-p="0" data-k="r">▶</button><button data-p="0" data-k="j">▲</button><button data-p="0" data-k="f" class="fb">✦</button></div>
 <div class="pad r" id="padR" hidden><span class="tag">PEMAIN 2</span><button data-p="1" data-k="l">◀</button><button data-p="1" data-k="r">▶</button><button data-p="1" data-k="j">▲</button><button data-p="1" data-k="f" class="fb">✦</button></div>
 
-<div class="panel" id="pStart"><div class="box">
+<div class="panel" id="pStart"><div class="box home">
   <h1 class="px">Petualangan Berdua</h1>
-  <div class="heroes"><canvas id="h1" width="18" height="20"></canvas><canvas id="h2" width="18" height="20"></canvas></div>
-  <p>Kalian berdua harus saling membantu. <b>Si Lincah</b> bisa lompat 2× dan membawa lentera. <b>Si Kuat</b> bisa mendorong batu dan kebal laser. Jelajahi <b>5 dunia</b> di peta: tiap dunia punya 3 tahap, sarang bos, gua rahasia <b>?</b>, dan peti misteri. Rintangannya berubah setiap kali main!</p>
-  <button class="btn" id="bLocal">Main berdua di perangkat ini</button>
-  <button class="btn b2" id="bOnline">Main online dengan teman</button>
-  <div class="keys">Pemain 1: A D jalan, W lompat, S tembak<br>Pemain 2: ◀ ▶ jalan, ▲ lompat, ▼ tembak<br>Di HP: tombol kiri untuk pemain 1, kanan untuk pemain 2</div>
+  <div class="heroes"><canvas id="h1" width="20" height="26"></canvas><canvas id="h2" width="20" height="26"></canvas></div>
+  <div class="hstat" id="hStat"></div>
+  <button class="btn" id="bLocal">▶ Main berdua di satu layar</button>
+  <button class="btn b2" id="bOnline">🌐 Main online dengan teman</button>
+  <div class="hgrid"><button class="btn b4" id="bMapH">🗺️ Peta</button><button class="btn b5" id="bShop">🛍️ Toko</button><button class="btn b6" id="bHelp">📜 Cara main</button></div>
+  <button class="btn b3" id="bHome">← Kembali ke JELAS</button>
+</div></div>
+<div class="panel" id="pShop" hidden><div class="box shop">
+  <h2 class="px">🛍️ Toko Kostum</h2><p class="sgem" id="shGem"></p>
+  <div class="stabs"><button data-r="0" class="on">Si Lincah</button><button data-r="1">Si Kuat</button></div>
+  <div class="sprev"><canvas id="shPrev" width="20" height="26"></canvas></div>
+  <div class="sgrid" id="shGrid"></div><p class="smsg" id="shMsg"></p>
+  <button class="btn b3" id="shBack">← Kembali</button>
+</div></div>
+<div class="panel" id="pHelp" hidden><div class="box help">
+  <h2 class="px">📜 Cara Main</h2>
+  <ol>
+   <li><b>Dua peran:</b> Si Lincah 🔵 bisa lompat 2× dan membawa lentera. Si Kuat 🟠 bisa mendorong batu dan kebal laser. Kalian harus saling membantu!</li>
+   <li><b>Tujuan:</b> kumpulkan semua 🔑 kunci, kalahkan bos di Sarang Bos, lalu masuk ke gerbang bersama.</li>
+   <li><b>Batu Ajaib & Kotak Misteri:</b> jawab soal pelajaran untuk memunculkan jembatan atau mendapat senjata (jarak jauh & jarak dekat).</li>
+   <li><b>Darah:</b> tiap pemain punya 3 ♥. Kena serangan = terpental dan kebal sebentar. Jawaban benar & hati dari penjahat memulihkan ♥.</li>
+   <li><b>Gelembung:</b> kalau temanmu jatuh, ia masuk gelembung. Sentuh gelembungnya untuk menyelamatkan.</li>
+   <li><b>Bintang:</b> ★ selesai · ★ semua 💎 permata · ★ di bawah waktu target. Permata BIRU hanya untuk Si Lincah, JINGGA hanya untuk Si Kuat.</li>
+   <li><b>Misteri:</b> kumpulkan semua permata di satu dunia untuk membuka Gua Rahasia ❓. Kumpulkan bintang untuk membuka 🧰 Peti Misteri di peta.</li>
+   <li><b>Toko:</b> permata yang terkumpul bisa ditukar dengan kostum.</li>
+  </ol>
+  <div class="keys">Pemain 1: A D jalan, W lompat, S tembak<br>Pemain 2: ◀ ▶ jalan, ▲ lompat, ▼ tembak<br>Online: tombol 💬 atau angka 1–5 untuk isyarat<br>Di HP: tombol kiri untuk pemain 1, kanan untuk pemain 2</div>
+  <button class="btn b3" id="hpBack">← Kembali</button>
 </div></div>
 <div class="panel" id="pOnline" hidden><div class="box">
   <h2 class="px">Main online</h2>
@@ -128,7 +158,7 @@ body.direct #onCode,body.direct #bShare{display:none!important}
 </div></div>
 <div class="panel" id="pPick" hidden><div class="box">
   <h2 class="px">Pilih karakter</h2><div class="lvmap" id="lvMap"></div><p id="pkMsg"></p>
-  <div class="pick"><button class="pk" data-r="0"><canvas width="18" height="20"></canvas><b>Si Lincah</b><small>Lompat 2× dan membawa lentera</small></button><button class="pk" data-r="1"><canvas width="18" height="20"></canvas><b>Si Kuat</b><small>Mendorong batu dan kebal laser</small></button></div>
+  <div class="pick"><button class="pk" data-r="0"><canvas width="20" height="26"></canvas><b>Si Lincah</b><small>Lompat 2× dan membawa lentera</small></button><button class="pk" data-r="1"><canvas width="20" height="26"></canvas><b>Si Kuat</b><small>Mendorong batu dan kebal laser</small></button></div>
 </div></div>
 <div class="panel" id="pMap" hidden><div class="mapbox">
   <div class="maphd"><h2 class="px">🗺️ Peta Petualangan</h2><span id="mapStar"></span><button id="mapClose" aria-label="Tutup peta">✕</button></div>
@@ -372,6 +402,7 @@ function drawHero(p,ox,now,yo){const f=heroFrame(p,now);const img=heroCanvas(f);
   // napas: bagian atas turun 1 piksel
   if(idle){cx.drawImage(img,0,0,16,9,Math.round(-8*sxk),Math.round(-Hh+1),Math.round(W),Math.round(9*syk));cx.drawImage(img,0,9,16,img.height-9,Math.round(-8*sxk),Math.round(-Hh+9*syk),Math.round(W),Math.round((img.height-9)*syk))}
   else cx.drawImage(img,Math.round(-8*sxk),Math.round(-Hh),Math.round(W),Math.round(Hh));
+  if(p.hat&&!(p.bub))drawHat(cx,p.hat,Math.round(-8*sxk),Math.round(-Hh+(idle?1:0)));
   if(p.weapon&&!(p.dead>0)){const id=(p.weapon==='m'?'m':'r')+LV,wi=wartCanvas(id);
     if(p.weapon==='m'){let ang=-.75;if(p.swing>0){const k=1-p.swing/.18;ang=-2.3+k*3.3}else if(Math.abs(p.vx)>1)ang=-.75+Math.sin(now/90)*.15;
       cx.save();cx.translate(Math.round(4*sxk),Math.round(-5*syk));cx.rotate(ang);cx.drawImage(wi,-4,-wi.height+2);cx.restore()}
@@ -379,7 +410,18 @@ function drawHero(p,ox,now,yo){const f=heroFrame(p,now);const img=heroCanvas(f);
       if(p.rec>.06){cx.fillStyle='#fff3b0';cx.fillRect(Math.round(14*sxk),Math.round(-9*syk),3,3);cx.fillStyle='#ffffff';cx.fillRect(Math.round(15*sxk),Math.round(-8*syk),1,1)}}}
   cx.restore();
   cx.fillStyle=ROLEC[RM[p.i]].c;cx.fillRect(Math.round(fx-2),Math.round(fy-Hh-5),4,3)}
-function heroThumb(cv,i,sx,role){const c=cv.getContext('2d');c.clearRect(0,0,cv.width,cv.height);c.imageSmoothingEnabled=false;const img=heroCanvas({sx,role,leg:0,arm:0,blink:false,mouth:'s',scarf:0});c.drawImage(img,Math.floor((cv.width-img.width)/2),cv.height-img.height)}
+/* kostum (topi/aksesori) digambar piksel di atas kepala; x0,y0 = pojok kiri atas sprite 16 px */
+const SHOP=[{id:'caping',n:'Caping Petani',c:6},{id:'peci',n:'Peci Hitam',c:6},{id:'bandana',n:'Bandana Merah',c:8},{id:'bunga',n:'Pita Bunga',c:8},{id:'kacamata',n:'Kacamata Keren',c:12},{id:'wisuda',n:'Topi Wisuda',c:15},{id:'tanduk',n:'Bando Rusa',c:18},{id:'helm',n:'Helm Antariksa',c:25}];
+function drawHat(c,id,x0,y0){const R=(col,x,y,w,h)=>{c.fillStyle=col;c.fillRect(x0+x,y0+y,w,h)},K='#2b2140';
+  if(id==='caping'){R(K,5,-4,6,1);R(K,2,-3,12,1);R(K,-1,-2,18,2);R('#e3bd6b',6,-3,4,1);R('#e3bd6b',3,-2,10,1);R('#c99a45',0,-1,16,1);R('#f3d792',7,-3,1,1)}
+  else if(id==='peci'){R(K,3,-4,10,5);R('#1b1b1b',4,-3,8,3);R('#4a4a4a',4,-3,8,1)}
+  else if(id==='bandana'){R(K,2,0,13,4);R('#e2483d',3,1,11,2);R('#ff8a7a',4,1,2,1);R(K,-2,1,4,3);R('#e2483d',-1,2,2,1)}
+  else if(id==='bunga'){R(K,1,-3,7,7);R('#ff8fc0',2,-2,2,2);R('#ff8fc0',5,-2,2,2);R('#ff8fc0',2,1,2,2);R('#ff8fc0',5,1,2,2);R('#ffd23f',4,0,1,1);R('#ff8fc0',3,-1,3,3);R('#ffd23f',4,0,1,1)}
+  else if(id==='kacamata'){R(K,6,5,10,4);R('#1b1b2f',7,6,3,2);R('#1b1b2f',12,6,3,2);R('#7fb4ff',7,6,1,1);R('#7fb4ff',12,6,1,1)}
+  else if(id==='wisuda'){R(K,0,-4,16,3);R('#2b2b3a',1,-3,14,1);R(K,4,-2,8,3);R('#2b2b3a',5,-1,6,1);R('#ffd23f',14,-3,1,4);R('#ffd23f',13,1,3,2)}
+  else if(id==='tanduk'){R(K,3,-6,3,7);R(K,10,-6,3,7);R(K,1,-5,3,2);R(K,12,-5,3,2);R('#a0612b',4,-5,1,6);R('#a0612b',11,-5,1,6);R('#a0612b',2,-4,2,1);R('#a0612b',12,-4,2,1);R(K,3,0,10,2);R('#a0612b',4,0,8,1)}
+  else if(id==='helm'){c.globalAlpha=.35;R('#bfe7ff',-1,-3,18,13);c.globalAlpha=1;R('#e6f4ff',0,-4,16,1);R('#e6f4ff',-2,-2,1,10);R('#e6f4ff',17,-2,1,10);R('#ffffff',2,-2,2,2);R('#c9cbe0',-1,9,18,2)}}
+function heroThumb(cv,i,sx,role,hat){const c=cv.getContext('2d');c.clearRect(0,0,cv.width,cv.height);c.imageSmoothingEnabled=false;const img=heroCanvas({sx,role,leg:0,arm:0,blink:false,mouth:'s',scarf:0});const x0=Math.floor((cv.width-img.width)/2),y0=cv.height-img.height;c.drawImage(img,x0,y0);const h=hat===undefined?(prog().eq||{})[role]:hat;if(h)drawHat(c,h,x0,y0)}
 
 function heroPrev(){['h1','h2'].forEach((id,i)=>heroThumb($(id),i,sxOf(i),RM[i]))}
 
@@ -422,6 +464,7 @@ function reset(){coins=0;won=false;failed=false;doors={};latched={};timers={};bl
   rocks=LD.rocks.map(r=>({x:r.x,y:r.y,hx:r.x,hy:r.y,vy:0}));
   movers=(LD.movers||[]).map(d=>({...d,X:d.x*T,Y:d.y*T,dxp:0,dyp:0}));moverUpdate(0);
   const sx=LD.start*T;P=[0,1].map(i=>({x:sx+3+i*16,y:10*T-PH,i,vx:0,vy:0,ground:true,face:1,anim:0,on:null,onM:null,inp:{l:0,r:0,j:0},jq:0,coy:0,dead:0,dj:true,hang:false}));
+  {const eq=prog().eq||{};P.forEach(p=>{p.hat=NET.on&&p.i!==ME?(NET.peerHat||''):(eq[RM[p.i]]||'')})}
   if(NET.on){P[1-ME].remote=true;P[1-ME].net={x:P[1-ME].x,y:P[1-ME].y}}checkpoint={x:sx+3,y:10*T-PH};cam.x=0;fxReset();
   setTheme(LD.theme);
   const role=NET.on?` Kamu Si ${ROLE[RM[ME]]}.`:'';
@@ -739,6 +782,7 @@ function bossArt(lv,fr,at){const key='b'+lv+'_'+fr+'_'+(at?1:0);if(MCACHE.has(ke
   MCACHE.set(key,c);return c}
 
 const EMO=['👋 Tunggu!','👉 Ke sini!','🦘 Lompat bareng!','🆘 Bantu aku!','👍 Oke!'],EMOT=['Tunggu!','Ke sini!','Lompat bareng!','Bantu aku!','Oke!'];
+function myHatSend(){if(!NET.on||ME<0)return;const r=RM[ME];netEv({t:'hat',h:(prog().eq||{})[r]||''})}
 function emoSend(k){if(!NET.on||ME<0||!running)return;const p=P[ME];if(!p)return;if(emoSend.t&&performance.now()-emoSend.t<700)return;emoSend.t=performance.now();p.say={t:EMOT[k],until:performance.now()+2600};netEv({t:'emo',k});beep(880,.06);$('emo').hidden=true}
 function speech(X,Y,txt){cx.font='bold 8px system-ui,-apple-system,Segoe UI,Roboto,sans-serif';const w=Math.ceil(cx.measureText(txt).width)+8,x0=Math.round(Math.max(2,Math.min(VW-w-2,X-w/2))),y0=Math.round(Math.max(30,Y-14));
   cx.fillStyle='#2b2140';cx.fillRect(x0-1,y0-1,w+2,13);cx.fillStyle='#fff8e7';cx.fillRect(x0,y0,w,11);cx.fillStyle='#2b2140';cx.fillRect(Math.round(X)-1,y0+12,3,2);cx.fillStyle='#fff8e7';cx.fillRect(Math.round(X),y0+11,1,2);
@@ -768,7 +812,7 @@ function pipeDone(){totCoins+=coins;running=false;if(NET.on&&ME!==0)return;
   const pk={t:'lres',st,gg,gt,tm,par,tut:TUT?1:0,lv:LV,s:STG,fact:STG===SECRET?FACTS[(5+LV)%FACTS.length]:'',race:{q:rq.q,o:rq.opts.map(String),a:String(rq.ans)}};netEv(pk);showRes(pk)}
 /* kemajuan tersimpan: level terbuka & bintang terbaik */
 function prog(){let p;try{p=Object.assign({s:{},g:{},tut:0,ch:{}},JSON.parse(localStorage.getItem('jk_adv_prog')||'{}'))}catch(e){p={s:{},g:{},tut:0,ch:{}}}p.g=p.g||{};p.ch=p.ch||{};if(p.v!==2){const o=p.s||{},n={};Object.keys(o).forEach(k=>{if(k==='t')n.t=o.t;else if(/^\d$/.test(k))n[stKey(+k,0)]=o[k]});if(o.t)n.t=o.t;p.s=n;p.v=2}return p}
-function progSave(pk){try{const p=prog(),k=pk.tut?'t':stKey(pk.lv,pk.s|0);p.s[k]=Math.max(p.s[k]||0,pk.st);if(pk.gt&&pk.gg>=pk.gt)p.g[k]=1;if(pk.tut)p.tut=1;localStorage.setItem('jk_adv_prog',JSON.stringify(p));advLog({lv:pk.tut?0:pk.lv+1})}catch(e){}}
+function progSave(pk){try{const p=prog(),k=pk.tut?'t':stKey(pk.lv,pk.s|0);p.s[k]=Math.max(p.s[k]||0,pk.st);if(pk.gt&&pk.gg>=pk.gt)p.g[k]=1;p.gem=(p.gem||0)+(pk.gg|0);if(pk.tut)p.tut=1;localStorage.setItem('jk_adv_prog',JSON.stringify(p));advLog({lv:pk.tut?0:pk.lv+1})}catch(e){}}
 function stUnlocked(p,w,s){if(s===SECRET)return [0,1,2,3].every(k=>p.g[stKey(w,k)]);if(w===0&&s===0)return true;if(s>0)return !!p.s[stKey(w,s-1)];return !!p.s[stKey(w-1,NST-1)]}
 function totStars(p){return Object.keys(p.s).reduce((a,k)=>a+(k==='t'?0:p.s[k]||0),0)}
 function nextStage(){const p=prog();if(STG===SECRET){if(p.s[stKey(LV,NST-1)])return LV<LVCFG.length-1?{w:LV+1,s:0}:null;for(let k=0;k<NST;k++)if(!p.s[stKey(LV,k)])return {w:LV,s:k};return null}
@@ -1018,7 +1062,7 @@ addEventListener('resize',fit);fit();
 /* ====== putaran utama ====== */
 let last=0,acc=0;function loop(ts){requestAnimationFrame(loop);const dt=Math.min(.05,(ts-last)/1000||0);last=ts;
   if(FX.sh>0)FX.sh-=dt;if(FX.fl>0)FX.fl-=dt;if(running&&!paused&&!quizOpen&&!window.__duoManual){if(FX.hs>0){FX.hs-=dt}else{acc+=dt;elapsed+=dt;while(acc>=1/60){step(1/60);acc-=1/60}}}draw()}
-function start(){if(!MAP.length)loadLevel(0);reset();running=true;paused=false;quizOpen=false;['pStart','pWin','pPause','pQuiz','pOnline','pPick','pRes'].forEach(i=>$(i).hidden=true);$('top').hidden=false;$('padL').hidden=$('padR').hidden=!touch;padMode();document.body.classList.add('playing');ac();music(true);
+function start(){if(!MAP.length)loadLevel(0);if(NET.on)setTimeout(myHatSend,300);reset();running=true;paused=false;quizOpen=false;['pStart','pWin','pPause','pQuiz','pOnline','pPick','pRes'].forEach(i=>$(i).hidden=true);$('top').hidden=false;$('padL').hidden=$('padR').hidden=!touch;padMode();document.body.classList.add('playing');ac();music(true);
   try{if(touch&&document.documentElement.requestFullscreen&&!document.fullscreenElement)document.documentElement.requestFullscreen().catch(()=>{})}catch(e){}}
 function togglePause(){paused=!paused;$('pPause').hidden=!paused;if(!paused)P.forEach(p=>p.inp={l:0,r:0,j:0})}
 const exit=()=>{try{netClose()}catch(e){}try{if(document.fullscreenElement)document.exitFullscreen()}catch(e){}location.href='../'};
@@ -1061,6 +1105,7 @@ function netRx(m){NET.lastRx=performance.now();
   if(m.t==='fail'){levelFail(m.why||'');return}
   if(m.t==='pick'){if(ME===0)decide(1-(m.r|0));return}
   if(m.t==='start'){if(Array.isArray(m.qb)&&m.qb.length){QBANK=m.qb;QBAG=[];QSUBJ=m.qn||''}if(Array.isArray(m.rm))RM=[m.rm[0]|0,m.rm[1]|0];$('pPick').hidden=true;if(m.sx)SX.peer=m.sx;if(m.g!=null)GRADE_ON=m.g;if(m.n!=null){totCoins=0;TUT=!!m.tut;STG=m.st|0;MOD=STG===SECRET?SMOD[m.n|0]:'';LIVES=5;loadLevel(m.n|0,m.seed);if(m.rc){LIVES=m.lives??LIVES;totCoins=m.tot||0;$('pOnline').hidden=true;$('pRc').hidden=true;setTimeout(()=>say('Tersambung lagi! Level diulang dari awal, nyawa dan koin tetap.',4),300)}}NET.peer=m.name||NET.peer;NET.peerUid=m.uid||NET.peerUid;start();return}
+  if(m.t==='hat'){NET.peerHat=m.h||'';const p=P[1-ME];if(p)p.hat=NET.peerHat;return}
   if(m.t==='hi'){if(m.sx)SX.peer=m.sx;NET.peer=m.name||NET.peer;NET.peerUid=m.uid||NET.peerUid;return}
   if(m.t==='mic'){NET.peerMic=!!m.on;return}
   if(m.t==='bye'){netLost('Temanmu keluar dari permainan.',true)}}
@@ -1090,7 +1135,7 @@ function netSetup(pc){pc.__types={};pc.ontrack=e=>{const a=$('rAudio');a.srcObje
 function bothOpen(){return NET.dc&&NET.de&&NET.dc.readyState==='open'&&NET.de.readyState==='open'}
 function onReady(name){if(!bothOpen())return;NET.on=true;if(NET.unsub){NET.unsub();NET.unsub=null}
   clearInterval(NET.sendT);NET.sendT=setInterval(()=>{if(!running||ME<0)return;const p=P[ME];if(!p||NET.dc.readyState!=='open')return;try{NET.dc.send(JSON.stringify({t:'s',x:+p.x.toFixed(1),y:+p.y.toFixed(1),vx:p.vx|0,vy:p.vy|0,f:p.face,g:p.ground?1:0,o:p.on?1:0,ox:p.on?+(p.x-p.on.x).toFixed(1):0,d:p.dead>0?1:0,bu:p.bub?1:0,h:p.hp==null?PHP:p.hp,iv:p.hit>0?1:0,a:+(p.anim||0).toFixed(1),lt:ME===0?+levelT.toFixed(2):undefined,b:RM[ME]===1&&rocks.length?rocks.map(r=>[Math.round(r.x),Math.round(r.y)]):undefined,en:ME===0&&enemies.length?enemies.map(e=>e.dead?-1:Math.round(e.x)):undefined,bo:ME===0&&boss?[Math.round(boss.x),Math.round(boss.y),boss.hp,boss.seen?1:0,boss.dir,boss.tele>0?+boss.tele.toFixed(2):0,boss.sh?1:0,boss.phase||1,boss.stun>0?+boss.stun.toFixed(1):0]:undefined}))}catch(e){}},50);
-  NET.myName=name;PICK.done=false;if(ME===1)netEv({t:'hi',name,uid:NET.myUid,sx:SX.me});if(RC){$('bMic').hidden=$('bSpk').hidden=false;$('bEmo').hidden=false;micUI();rcResume();if(ME===0&&NET.code)try{fb().db.doc('duo/'+NET.code).delete().catch(()=>{})}catch(e){}return}pickShow(true);$('bMic').hidden=$('bSpk').hidden=false;$('bEmo').hidden=false;micUI();
+  NET.myName=name;PICK.done=false;if(ME===1)netEv({t:'hi',name,uid:NET.myUid,sx:SX.me});setTimeout(myHatSend,400);if(RC){$('bMic').hidden=$('bSpk').hidden=false;$('bEmo').hidden=false;micUI();rcResume();if(ME===0&&NET.code)try{fb().db.doc('duo/'+NET.code).delete().catch(()=>{})}catch(e){}return}pickShow(true);$('bMic').hidden=$('bSpk').hidden=false;$('bEmo').hidden=false;micUI();
   // ruang sudah terpakai: hapus dokumennya
   if(ME===0&&NET.code)try{fb().db.doc('duo/'+NET.code).delete().catch(()=>{})}catch(e){}}
 /* sambung ulang otomatis bila sinyal putus sebentar (maks. 35 detik); level diulang dari awal dengan nyawa & koin yang sama */
@@ -1208,7 +1253,7 @@ const PICK={done:false};
 let SEL={tut:false,n:0};
 function selLabel(){return SEL.tut?'Latihan':SEL.s===SECRET?`Gua Rahasia Dunia ${SEL.n+1}`:`Dunia ${SEL.n+1}-${SEL.s+1} · ${LVCFG[SEL.n].name}`}
 function defaultSel(p){if(!p.tut&&!Object.keys(p.s).length)return {tut:true,n:0,s:0};for(let w=0;w<LVCFG.length;w++)for(let k=0;k<NST;k++)if(stUnlocked(p,w,k)&&!p.s[stKey(w,k)])return {tut:false,n:w,s:k};return {tut:false,n:0,s:0}}
-function lvMap(online){const el=$('lvMap');if(!el)return;if(online&&ME===1){el.innerHTML='<p>Level dipilih oleh temanmu.</p>';return}const p=prog();SEL=defaultSel(p);lvSum()}
+function lvMap(online){const el=$('lvMap');if(!el)return;if(online&&ME===1){el.innerHTML='<p>Level dipilih oleh temanmu.</p>';return}const p=prog();if(!(SEL&&SEL.pick))SEL=defaultSel(p);lvSum()}
 function lvSum(){const el=$('lvMap');if(!el)return;el.innerHTML=`<div class="lvsum"><span>Mulai dari: <b>${esc(selLabel())}</b></span><button class="btn b2" id="bMap">🗺️ Buka peta</button></div>`;$('bMap').onclick=()=>{ac();openMap()}}
 /* peta dunia: jalur berliku, kabut di wilayah yang belum terbuka, gua rahasia "?", dan peti fakta unik */
 const MDEC=[['🌳','🌲','🍄','🌼','🐇','🌳','🦋'],['🌊','🛶','🐟','🌿','🦆','🌊','🪨'],['💎','🦇','🕯️','💎','🪨','🍄','🕸️'],['☁️','🎈','🌈','☁️','🪁','🕊️','☁️'],['🏰','🌈','✨','👑','🦄','✨','🎆']];
@@ -1234,11 +1279,27 @@ function openMap(){$('pMap').hidden=false;const p=prog(),WW=440,H=Math.max(200,(
     const nm=n.k==='t'?'Latihan':n.sec?`Gua Rahasia · ${MODS[SMOD[n.w]].n}`:`Dunia ${n.w+1}-${n.s+1} · ${LVCFG[n.w].name}${n.boss?' · Sarang Bos '+BOSS[n.w].n:''}`;
     const desc=n.k==='t'?'Kenali kemampuan Si Lincah dan Si Kuat, tanpa bos.':n.sec?(n.un?MODS[SMOD[n.w]].d+' Di ujungnya ada peti berisi fakta unik!':`Masih tersegel. Kumpulkan <b>semua permata</b> di 4 tahap Dunia ${n.w+1} (${n.gc}/4 tahap lengkap).`):n.un?`Tantangan khas: ${LVCFG[n.w].sigN}.${n.boss?' Kalahkan bos untuk membuka dunia berikutnya!':''}${p.g[n.k]?' 💎 Semua permata sudah terkumpul.':''}`:'Selesaikan tahap sebelumnya dulu.';
     $('mapInfo').innerHTML=`<span class="grow"><b>${esc(nm)}</b>${n.st?' '+'★'.repeat(n.st)+'☆'.repeat(3-n.st):''}<br>${desc}</span>${n.un?'<button class="btn" id="mapGo">▶ Pilih</button>':''}`;
-    if(n.un)$('mapGo').onclick=()=>{SEL=n.k==='t'?{tut:true,n:0,s:0}:{tut:false,n:n.w,s:n.s};$('pMap').hidden=true;lvSum();ac()}};
+    if(n.un)$('mapGo').onclick=()=>{SEL=n.k==='t'?{tut:true,n:0,s:0,pick:1}:{tut:false,n:n.w,s:n.s,pick:1};$('pMap').hidden=true;lvSum();ac();if(!$('pStart').hidden)say(`Level dipilih: ${selLabel()}. Tekan Main untuk mulai!`,3)}};
   $('mapW').querySelectorAll('.mn').forEach(b=>b.onclick=()=>{const n=nodes[+b.dataset.i];$('mapW').querySelectorAll('.mn').forEach(x=>x.classList.toggle('sel',x===b));beep(n.un?660:220,.06);info(n)});
   $('pMap').hidden=false;const fs=nodes.find(n=>(n.k==='t'&&SEL.tut)||(!SEL.tut&&n.w===SEL.n&&n.s===SEL.s&&n.chest==null))||nodes[0];info(fs);requestAnimationFrame(()=>{$('mapSc').scrollLeft=Math.max(0,fs.x-$('mapSc').clientWidth/2)})}
 function openMapKeep(n){const sc=$('mapSc').scrollLeft;openMap();$('mapSc').scrollLeft=sc}
-$('mapClose').onclick=()=>{$('pMap').hidden=true}
+$('mapClose').onclick=()=>{$('pMap').hidden=true;homeStat()}
+/* menu utama game */
+function homeStat(){const p=prog(),wo=LVCFG.filter((c,w)=>stUnlocked(p,w,0)).length;$('hStat').innerHTML=`<span>⭐ ${totStars(p)}</span><span>💎 ${p.gem||0}</span><span>🗺️ Dunia ${wo}/${LVCFG.length}</span>`;heroPrev()}
+$('bMapH').onclick=()=>{ac();SEL=SEL&&SEL.pick?SEL:defaultSel(prog());openMap()};
+$('bHelp').onclick=()=>{ac();$('pStart').hidden=true;$('pHelp').hidden=false};$('hpBack').onclick=()=>{$('pHelp').hidden=true;$('pStart').hidden=false};
+$('bHome').onclick=exit;
+let SHR=0;
+function shopDraw(){const p=prog(),own=p.own||{},eq=p.eq||{};$('shGem').textContent=`💎 Permata kamu: ${p.gem||0}`;
+  document.querySelectorAll('#pShop .stabs button').forEach(b=>b.classList.toggle('on',+b.dataset.r===SHR));heroThumb($('shPrev'),0,sxOf(SHR===RM[0]?0:1),SHR,eq[SHR]||'');
+  $('shGrid').innerHTML=`<button class="sit ${!eq[SHR]?'eq':''}" data-id=""><canvas width="20" height="26"></canvas>Tanpa kostum<small>${!eq[SHR]?'Dipakai':'Pakai'}</small></button>`+SHOP.map(it=>{const o=own[it.id],e=eq[SHR]===it.id;return `<button class="sit ${o?'own':''} ${e?'eq':''} ${!o&&(p.gem||0)<it.c?'no':''}" data-id="${it.id}"><canvas width="20" height="26"></canvas>${esc(it.n)}<small>${e?'Dipakai':o?'Pakai':'💎 '+it.c}</small></button>`}).join('');
+  $('shGrid').querySelectorAll('.sit').forEach(b=>{heroThumb(b.querySelector('canvas'),0,sxOf(SHR===RM[0]?0:1),SHR,b.dataset.id);b.onclick=()=>{const id=b.dataset.id,pp=prog();pp.own=pp.own||{};pp.eq=pp.eq||{};
+    if(id&&!pp.own[id]){const it=SHOP.find(x=>x.id===id);if((pp.gem||0)<it.c){$('shMsg').textContent=`Permata belum cukup. Butuh 💎 ${it.c}, kamu punya ${pp.gem||0}. Kumpulkan permata di setiap tahap!`;SFX.bad();return}pp.gem-=it.c;pp.own[id]=1;SFX.win();$('shMsg').textContent=`${it.n} berhasil dibeli dan dipakai Si ${ROLE[SHR]}!`}else{SFX.coin();$('shMsg').textContent=id?`Si ${ROLE[SHR]} memakai ${SHOP.find(x=>x.id===id).n}.`:`Si ${ROLE[SHR]} tanpa kostum.`}
+    pp.eq[SHR]=id;localStorage.setItem('jk_adv_prog',JSON.stringify(pp));shopDraw()}})}
+$('bShop').onclick=()=>{ac();$('pStart').hidden=true;$('pShop').hidden=false;$('shMsg').textContent='';shopDraw()};
+document.querySelectorAll('#pShop .stabs button').forEach(b=>b.onclick=()=>{SHR=+b.dataset.r;shopDraw()});
+$('shBack').onclick=()=>{$('pShop').hidden=true;$('pStart').hidden=false;homeStat()};
+homeStat();
 function pickShow(online){['pStart','pOnline','pWin','pPause','pRes'].forEach(i=>$(i).hidden=true);$('pPick').hidden=false;PICK.online=online;PICK.done=false;lvMap(online);
   $('pkMsg').textContent=online?`Pilih karaktermu. ${NET.peer||'Temanmu'} mendapat karakter yang satunya.`:'Pemain 1 (tombol kiri) pilih karakter. Pemain 2 (tombol kanan) mendapat yang satunya.';
   document.querySelectorAll('#pPick .pk').forEach(b=>{b.disabled=false;b.classList.remove('sel');const r=+b.dataset.r,c=b.querySelector('canvas').getContext('2d');heroThumb(b.querySelector('canvas'),0,online?(SX.me||'L'):sxOf(0),r)})}
