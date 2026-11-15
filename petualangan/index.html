@@ -345,7 +345,7 @@ function stepPlayer(p,dt){const ox=p.x,oy=p.y;p.ign=barsOverlapping(prect(p));
   for(const s of SPIKES){if(ov(prect(p),{x:s.x*T+3,y:s.y*T+9,w:10,h:7})){die(p);return}}
   if(p.y>ROWS*T+20){die(p);return}
   if(p.sq>0)p.sq=Math.max(0,p.sq-dt);else if(p.sq<0)p.sq=Math.min(0,p.sq+dt);
-  p.anim+=dt*(Math.abs(p.vx)>5&&p.ground?1:0);p.blink-=dt;if(p.blink<-.12)p.blink=2+Math.random()*3;
+  p.anim+=dt*(Math.abs(p.vx)>5&&p.ground?1:0);if(Math.abs(p.vx)>60&&p.ground&&Math.random()<dt*5)dust(p,1);p.blink-=dt;if(p.blink<-.12)p.blink=2+Math.random()*3;
   p.dx=p.x-ox;p.dy=p.y-oy}
 function moveX(p,dx,carry){if(!dx)return;p.x+=dx;const r=prect(p);for(const s of solidsNear(r,p.ign)){if(!ov(r,s))continue;p.x=dx>0?s.x-PW:s.x+s.w;r.x=p.x;if(!carry)p.vx=0}
   boxes.forEach((b,i)=>{const r2=prect(p);if(!ov(r2,b))return;if(p.y+PH<=b.y+3){return}p.x=dx>0?b.x-PW:b.x+b.w;if(!carry){p.pb=[i,dx>0?1:-1];p.vx=dx>0?Math.min(p.vx,PUSH):Math.max(p.vx,-PUSH)}})}
@@ -373,12 +373,12 @@ function updateSwitches(dt){const was={...barOpen};
   ['X','Y','Z','W'].forEach(t=>{if(was[t]!==barOpen[t]&&BARS.some(b=>b.t===t))SFX.bar()})}
 /* kunci & pintu */
 function updateKeyDoor(dt){if(!key)return;
-  if(key.car<0&&!key.used){for(const p of P){if(p.remote||p.ent)continue;if(ov(prect(p),{x:key.x-1,y:key.y-1,w:14,h:12})){key.car=p.i;SFX.key();ring(key.x+6,key.y+5,'#ffd23f',14);sparks(key.x+6,key.y+5,'#ffd23f',10,120,.4);netEv({t:'kpick',p:p.i});hudKey();
+  if(key.car<0&&!key.used){for(const p of P){if(p.remote||p.ent)continue;if(ov(prect(p),{x:key.x-1,y:key.y-1,w:14,h:12})){key.car=p.i;p.joyU=performance.now()/1000+.7;SFX.key();ring(key.x+6,key.y+5,'#ffd23f',14);sparks(key.x+6,key.y+5,'#ffd23f',10,120,.4);netEv({t:'kpick',p:p.i});hudKey();
         if(!NET.on||p.i===ME)say(NET.on?'Kamu membawa kunci! Bawa ke pintu.':`${petName(p.pet)} membawa kunci! Bawa ke pintu.`,2.5);break}}}
   if(key.car>=0&&!key.used){const p=P[key.car];if(p){const tx=p.x+PW/2-6-p.face*7,ty=p.y-9;key.x+=(tx-key.x)*Math.min(1,dt*12);key.y+=(ty-key.y)*Math.min(1,dt*12);
       if(!p.remote&&!door.open&&!quizOpen&&qCool<=0&&ov(prect(p),{x:door.x+1,y:door.y+4,w:14,h:28})){key.atDoor=true;openQuiz('gate')}}}
   if(door&&door.open){for(const p of P){if(p.remote||p.ent)continue;if(p.ground&&Math.abs(p.x+PW/2-(door.x+8))<7&&Math.abs(p.y+PH-(door.y+32))<3){p.ent=true;p.entT=0;SFX.enter();sparks(door.x+8,door.y+20,'#ffe08a',10,80,.5);hudKey()}}}}
-function unlockDoor(remote){if(!door||door.open)return;door.open=true;if(key){key.used=true;key.car=-1}SFX.ok();shake(2,.2);ring(door.x+8,door.y+16,'#ffe08a',22);sparks(door.x+8,door.y+14,'#ffe08a',18,140,.6);if(!remote)netEv({t:'unlock'});
+function unlockDoor(remote){if(!door||door.open)return;door.open=true;P.forEach(p=>p.joyU=performance.now()/1000+.9);if(key){key.used=true;key.car=-1}SFX.ok();shake(2,.2);ring(door.x+8,door.y+16,'#ffe08a',22);sparks(door.x+8,door.y+14,'#ffe08a',18,140,.6);if(!remote)netEv({t:'unlock'});
   say(NET.on?'Gembok terbuka! Masuk ke pintu bersama.':'Gembok terbuka! Semua pemain masuk ke pintu.',3);hudKey()}
 function die(p){if(dying>0||won)return;dying=.7;SFX.hurt();shake(4,.3);flash(.15);sparks(p.x+6,p.y+7,'#ffffff',14,170,.5,2);sparks(p.x+6,p.y+7,PCOL[p.i],10,140,.5,2);p.dead=1;if(NET.on&&!p.remote)netEv({t:'restart'})}
 function restartLevel(manual){if(manual){netEv({t:'restart',man:1});SFX.click()}loadLevel(LV);running=true;paused=false;['pPause','pQuiz'].forEach(i=>$(i).hidden=true);quizOpen=false;Q2=null;if(NET.on)setTimeout(myHatSend,200)}
@@ -454,8 +454,15 @@ function draw(){cx.imageSmoothingEnabled=false;const now=performance.now()/1000;
   // pemain
   const ord=P.map((p,i)=>i).sort((a,b)=>P[b].y-P[a].y);
   ord.forEach(i=>{const p=P[i];if(p.ent){return}if(p.dead&&dying>0&&Math.floor(now*20)%2)return;
-    const fr=!p.ground?3:Math.abs(p.vx)>5?(Math.floor(p.anim*9)%2?1:2):0;const img=aniCanvas(p.pet,p.hat,p.acc);const wob=fr===1?-.07:fr===2?.07:0,hop=(fr===1||fr===2)?1:0;
-    const sq=p.sq,sx=sq>0?1+sq*1.4:1-(-sq)*.8,sy=sq>0?1-sq*1.6:1+(-sq)*1.4;    const cxp=Math.round(p.x+PW/2),by=Math.round(p.y+PH);cx.save();cx.translate(cxp,by-hop);cx.rotate(wob);cx.scale(p.face<0?-sx:sx,sy);cx.drawImage(img,-14,-27);cx.restore()});
+    const img=aniCanvas(p.pet,p.hat,p.acc),t=now+i*.37,mv=Math.abs(p.vx)>5&&p.ground;let rot=0,bob=0,sx=1,sy=1;
+    if(!p.ground){rot=Math.max(-.3,Math.min(.3,(p.vx/SPD)*.14+(p.vy/450)*.12*p.face));sy=p.vy<0?1.08:.97;sx=p.vy<0?.93:1.04}
+    else if(mv){const ph=p.anim*14;bob=Math.abs(Math.sin(ph))*2.2;rot=Math.sin(ph)*.1+p.face*.07;sy=1+Math.abs(Math.cos(ph))*.05;sx=1-Math.abs(Math.cos(ph))*.04}
+    else{sy=1+Math.sin(t*3)*.035;sx=1-Math.sin(t*3)*.025;rot=Math.sin(t*1.3)*.035}
+    const pb=p.remote?(p.net&&p.net.pb):p.pb;if(pb&&p.ground){rot=(pb[1]||p.face)*.24;sx*=1.05;bob=Math.abs(Math.sin(t*16))*1}
+    if(P.some(q=>q!==p&&!q.ent&&Math.abs(q.y+PH-p.y)<=2.5&&Math.min(p.x+PW,q.x+PW)-Math.max(p.x,q.x)>=4)){sy*=.88;sx*=1.1}
+    if(p.joyU>now){const k=p.joyU-now;bob+=Math.abs(Math.sin(k*13))*5;rot+=Math.sin(k*18)*.18}
+    const sq=p.sq;sx*=sq>0?1+sq*1.4:1-(-sq)*.8;sy*=sq>0?1-sq*1.6:1+(-sq)*1.4;
+    const cxp=Math.round(p.x+PW/2),by=Math.round(p.y+PH);cx.save();cx.translate(cxp,by-Math.round(bob));cx.rotate(rot);cx.scale(p.face<0?-sx:sx,sy);cx.drawImage(img,-14,-27);cx.restore()});
   // kunci yang dibawa
   if(key&&!key.used&&key.car>=0){drawKey(key.x,key.y+Math.sin(now*6))}
   // penanda pemain
