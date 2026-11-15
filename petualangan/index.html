@@ -135,6 +135,10 @@ body.direct #onCode,body.direct #bShare{display:none!important}
 .short #pQuiz p{margin:2px 0 6px;font-size:13px}.short .frlist{max-height:34vh}
 @media (max-width:640px){.cwrap{grid-template-columns:1fr}.cright .cgrid{grid-template-columns:repeat(5,1fr)}.hcards{grid-template-columns:1fr 1fr}}
 #qOpts[hidden],#qLater[hidden]{display:none}
+/* tombol tutup di pojok */
+.box{position:relative}.xbtn{position:absolute;top:10px;right:10px;width:34px;height:34px;border:0;border-radius:50%;background:#efe7f7;color:#2b2140;font:900 16px/1 system-ui,sans-serif;cursor:pointer;box-shadow:0 3px 0 rgba(43,33,64,.2);z-index:2}.xbtn:active{transform:translateY(2px)}
+#cBack,#hpBack,#lvBack,#ptBack,#bOnBack,#qLater{display:none!important}
+.short .xbtn{top:6px;right:6px;width:30px;height:30px;font-size:14px}
 /* ====== gaya halus (bukan piksel) ====== */
 html,body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
 canvas{image-rendering:auto}
@@ -852,6 +856,14 @@ function netRx(m){const from=P[m.fi];
   if(m.t==='verbad'){verBad(true);return}
   if(m.t==='mic'){NET.peerMic=!!m.on;return}
   if(m.t==='bye'){if(verBad.on)return;if(m.fi===0)netLost(`${nameOf(0)} (tuan rumah) keluar dari permainan.`,true);return}}
+
+/* jendela bisa ditutup dengan tombol ✕ di pojok atau mengetuk area di luarnya */
+const CLOSERS={pCos:()=>$('cBack').onclick(),pHelp:()=>$('hpBack').onclick(),pLv:()=>$('lvBack').onclick(),pPets:()=>$('ptBack').onclick(),pPause:()=>togglePause(),
+  pQuiz:()=>$('qLater').onclick(),
+  pOnline:()=>{if(!$('onMenu').hidden)$('bOnBack').onclick();else $('bOnCancel').onclick()},
+  pVoice:()=>{const b=['pgNo','sfNo','mBack','vOk','dBack'].map(i=>$(i)).find(x=>x);if(b)b.click();else $('pVoice').hidden=true}};
+Object.keys(CLOSERS).forEach(id=>{const p=$(id),bx=p.querySelector('.box');const x=document.createElement('button');x.className='xbtn';x.setAttribute('aria-label','Tutup');x.textContent='✕';x.onclick=e=>{e.stopPropagation();SFX.click();CLOSERS[id]()};bx.appendChild(x);
+  p.addEventListener('click',e=>{if(e.target===p)CLOSERS[id]()})});
 const FBOK=()=>!!(window.firebase&&window.FB_CONFIG);let FBI=null;
 function fb(){if(FBI)return FBI;if(!FBOK())return null;try{if(!firebase.apps.length)firebase.initializeApp(window.FB_CONFIG)}catch(e){}FBI={auth:firebase.auth(),db:firebase.firestore()};return FBI}
 function me(){return new Promise(res=>{const f=fb();if(!f)return res(null);const u=f.auth.currentUser;if(u)return res(u);const off=f.auth.onAuthStateChanged(x=>{off();res(x)});setTimeout(()=>res(f.auth.currentUser),4000)})}
