@@ -122,7 +122,7 @@ body.direct #onCode,body.direct #bShare{display:none!important}
 /* ====== gaya halus (bukan piksel) ====== */
 html,body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
 canvas{image-rendering:auto}
-#cv{border-radius:18px;box-shadow:0 14px 40px rgba(0,0,0,.45)}
+#cv{border-radius:0;box-shadow:none}
 .px{font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-weight:900;letter-spacing:.01em;text-transform:none}
 .box{background:#fffaf0;border:0;border-radius:26px;box-shadow:0 18px 50px rgba(0,0,0,.4),inset 0 -5px 0 rgba(43,33,64,.08);padding:22px 24px}
 .box h1{font-size:28px;color:#ff7a3d;text-shadow:0 3px 0 #ffd9a8}.box h2{font-size:21px;color:#2b2140}
@@ -514,7 +514,8 @@ function hudKey(){if(!LEVELS[LV])return;$('kcLv').textContent=(LV+1)+' · '+LEVE
 
 /* ====== gambar ====== */
 /* ====== gambar halus (resolusi layar) ====== */
-let RS=2;
+let RS=3,SCW=960,SCH=448;const VIEW={w:VW,h:VH};
+function viewMax(){const a=SCW/SCH,h=Math.min(VH,VW/a);return {a,h,w:h*a}}
 function bake(){const c=document.createElement('canvas');c.width=Math.round(VW*RS);c.height=Math.round(VH*RS);const g=c.getContext('2d');g.scale(RS,RS);const th=thOf(LV),m=LEVELS[LV].m;
   const gr=g.createLinearGradient(0,0,0,VH);gr.addColorStop(0,th.sky[0]);gr.addColorStop(1,th.sky[1]);g.fillStyle=gr;g.fillRect(0,0,VW,VH);
   let sd=LV*977+13;const rnd=()=>{sd=(sd*16807)%2147483647;return sd/2147483647};
@@ -554,12 +555,12 @@ function drawKey(x,y,a){cx.save();cx.globalAlpha=a==null?1:a;cx.translate(x+6,y+
 function tag(x,y,txt,col,alpha){cx.font='800 6.5px system-ui,-apple-system,Segoe UI,Roboto,sans-serif';const w=cx.measureText(txt).width+6;cx.globalAlpha=alpha;rr(cx,x-w/2,y-9,w,7.5,3.5,col,.7);cx.beginPath();cx.moveTo(x-1.8,y-1.6);cx.lineTo(x,y+.6);cx.lineTo(x+1.8,y-1.6);cx.closePath();shp(cx,col,0);cx.fillStyle=OL;cx.textAlign='center';cx.fillText(txt,x,y-3);cx.textAlign='left';cx.globalAlpha=1}
 /* kamera: dekat (jarak pandang kecil), mengikuti pemain; satu layar ramai → sedikit menjauh supaya semua tetap terlihat */
 const CAM={x:0,y:0,z:1,init:false},ZMAX=1.75;
-function camTarget(){let L=P.filter(p=>!p.ent&&!p.gone);if(!L.length)L=P.filter(p=>!p.gone);if(!L.length)return {x:VW/2,y:VH/2,z:1};
+function camTarget(){const vm=viewMax();let L=P.filter(p=>!p.ent&&!p.gone);if(!L.length)L=P.filter(p=>!p.gone);if(!L.length)return {x:VW/2,y:VH/2,z:1};
   let x0=1e9,x1=-1e9,y0=1e9,y1=-1e9;L.forEach(p=>{x0=Math.min(x0,p.x);x1=Math.max(x1,p.x+PW);y0=Math.min(y0,p.y-10);y1=Math.max(y1,p.y+PH)});
-  const z=Math.max(1,Math.min(ZMAX,VW/(x1-x0+170),VH/(y1-y0+110)));return {x:(x0+x1)/2,y:(y0+y1)/2-8,z}}
-function camStep(snap){const t=camTarget(),k=snap?1:.08;CAM.z+=(t.z-CAM.z)*k;const vw=VW/CAM.z,vh=VH/CAM.z;let tx=t.x-vw/2,ty=t.y-vh/2;tx=Math.max(0,Math.min(VW-vw,tx));ty=Math.max(0,Math.min(VH-vh,ty));
+  const z=Math.max(1,Math.min(ZMAX,vm.w/(x1-x0+170),vm.h/(y1-y0+110)));return {x:(x0+x1)/2,y:(y0+y1)/2-8,z}}
+function camStep(snap){const t=camTarget(),k=snap?1:.08;CAM.z+=(t.z-CAM.z)*k;const vm=viewMax(),vh=vm.h/CAM.z,vw=vh*vm.a;VIEW.w=vw;VIEW.h=vh;let tx=t.x-vw/2,ty=t.y-vh/2;tx=Math.max(0,Math.min(VW-vw,tx));ty=Math.max(0,Math.min(VH-vh,ty));
   if(snap||!CAM.init){CAM.x=tx;CAM.y=ty;CAM.init=true}else{CAM.x+=(tx-CAM.x)*.12;CAM.y+=(ty-CAM.y)*.12}CAM.x=Math.max(0,Math.min(VW-vw,CAM.x));CAM.y=Math.max(0,Math.min(VH-vh,CAM.y))}
-function draw(){const now=performance.now()/1000;if(running||won)camStep(false);else if(!CAM.init)camStep(true);const Z=RS*CAM.z;cx.setTransform(Z,0,0,Z,-CAM.x*Z,-CAM.y*Z);cx.imageSmoothingEnabled=true;
+function draw(){const now=performance.now()/1000;if(running||won)camStep(false);else camStep(!CAM.init);const Z=SCH/VIEW.h;cx.setTransform(Z,0,0,Z,-CAM.x*Z,-CAM.y*Z);cx.imageSmoothingEnabled=true;
   cx.save();if(FX.sh>0){const m=FX.sm*Math.min(1,FX.sh*6);cx.translate((Math.random()-.5)*m*2,(Math.random()-.5)*m*2)}else FX.sm=0;
   if(BG)cx.drawImage(BG,0,0,VW,VH);
   // pintu
@@ -598,7 +599,7 @@ function draw(){const now=performance.now()/1000;if(running||won)camStep(false);
       if(b.cnt===1){cx.globalAlpha=.55+Math.sin(now*8)*.35;tag(x+8,y-2,'Butuh 2!','#ffe08a',cx.globalAlpha)}}
     else{rr(cx,x,y,16,16,2,'#d39555',.9);cx.strokeStyle='#a0672f';cx.lineWidth=1.2;cx.beginPath();cx.rect(x+2,y+2,12,12);cx.moveTo(x+2.5,y+2.5);cx.lineTo(x+13.5,y+13.5);cx.stroke();rr(cx,x+1,y+1,14,1.2,.6,'rgba(255,255,255,.35)',0)}});
   // kunci di tempatnya
-  KEYS.forEach(K_=>{if(K_.got){const f=now-K_.fly;if(f<.7){const k=f/.7,e=k*k*(3-2*k),hx=CAM.x+VW/CAM.z/2-6,hy=CAM.y-12/CAM.z,x=K_.x+(hx-K_.x)*e,y=K_.y+(hy-K_.y)*e-Math.sin(k*Math.PI)*30;cx.save();cx.translate(x+6,y+3);cx.scale(1+k*.6,1+k*.6);drawKey(-6,-3);cx.restore()}return}
+  KEYS.forEach(K_=>{if(K_.got){const f=now-K_.fly;if(f<.7){const k=f/.7,e=k*k*(3-2*k),hx=CAM.x+VIEW.w/2-6,hy=CAM.y-12*VIEW.h/VH,x=K_.x+(hx-K_.x)*e,y=K_.y+(hy-K_.y)*e-Math.sin(k*Math.PI)*30;cx.save();cx.translate(x+6,y+3);cx.scale(1+k*.6,1+k*.6);drawKey(-6,-3);cx.restore()}return}
     const by=Math.sin(now*3+K_.x)*1.5;const gg=cx.createRadialGradient(K_.x+6,K_.y+3+by,1,K_.x+6,K_.y+3+by,11);gg.addColorStop(0,'rgba(255,230,140,.75)');gg.addColorStop(1,'rgba(255,230,140,0)');cx.fillStyle=gg;cx.fillRect(K_.x-6,K_.y-9+by,24,24);drawKey(K_.x,K_.y+by);
     cx.globalAlpha=.6+Math.sin(now*5+K_.y)*.4;cx.fillStyle='#fff';[[-3,-4],[14,0],[4,8]].forEach(([dx,dy],q)=>{const s=.6+((Math.floor(now*3)+q)%3)*.4;cx.beginPath();cx.moveTo(K_.x+dx,K_.y+dy-s*1.6+by);cx.lineTo(K_.x+dx+s*.5,K_.y+dy+by);cx.lineTo(K_.x+dx,K_.y+dy+s*1.6+by);cx.lineTo(K_.x+dx-s*.5,K_.y+dy+by);cx.closePath();cx.fill()});cx.globalAlpha=1});
   // gelembung kostum
@@ -633,17 +634,17 @@ function draw(){const now=performance.now()/1000;if(running||won)camStep(false);
   parts.forEach(q=>{if(q.ring){const k=1-q.t/q.t0;cx.strokeStyle=q.col;cx.globalAlpha=1-k;cx.lineWidth=1.5;cx.beginPath();cx.arc(q.x,q.y,q.ring*k+2,0,7);cx.stroke();cx.globalAlpha=1;return}cx.globalAlpha=Math.min(1,q.t*3);ell(cx,q.x,q.y,(q.sz||2)*.6,(q.sz||2)*.6,q.col,0);cx.globalAlpha=1});
   cx.font='900 8px system-ui,sans-serif';cx.textAlign='center';FX.txt.forEach(t=>{cx.globalAlpha=Math.min(1,t.t*2);cx.lineWidth=2;cx.strokeStyle=OL;cx.strokeText(t.txt,t.x,t.y);cx.fillStyle=t.col;cx.fillText(t.txt,t.x,t.y)});cx.globalAlpha=1;cx.textAlign='left';
   // penunjuk arah: teman & kunci di luar layar
-  {const vx0=CAM.x,vy0=CAM.y,vw=VW/CAM.z,vh=VH/CAM.z,m=7/CAM.z;const ind=(x,y,col,kind)=>{if(x>vx0&&x<vx0+vw&&y>vy0&&y<vy0+vh)return;const cxv=vx0+vw/2,cyv=vy0+vh/2,dx=x-cxv,dy=y-cyv;const s=Math.min((vw/2-m)/Math.abs(dx||1e-6),(vh/2-m)/Math.abs(dy||1e-6));const ax=cxv+dx*s,ay=cyv+dy*s,a=Math.atan2(dy,dx);
-      cx.save();cx.translate(ax,ay);cx.scale(1/CAM.z*1.4,1/CAM.z*1.4);cx.globalAlpha=.85+Math.sin(now*6)*.15;ell(cx,0,0,4.6,4.6,'#fff',.8);cx.rotate(a);cx.beginPath();cx.moveTo(7,0);cx.lineTo(4,-2.6);cx.lineTo(4,2.6);cx.closePath();shp(cx,col,.6);cx.rotate(-a);
+  {const vx0=CAM.x,vy0=CAM.y,vw=VIEW.w,vh=VIEW.h,m=7*VIEW.h/VH;const ind=(x,y,col,kind)=>{if(x>vx0&&x<vx0+vw&&y>vy0&&y<vy0+vh)return;const cxv=vx0+vw/2,cyv=vy0+vh/2,dx=x-cxv,dy=y-cyv;const s=Math.min((vw/2-m)/Math.abs(dx||1e-6),(vh/2-m)/Math.abs(dy||1e-6));const ax=cxv+dx*s,ay=cyv+dy*s,a=Math.atan2(dy,dx);
+      cx.save();cx.translate(ax,ay);cx.scale(VIEW.h/VH*1.4,VIEW.h/VH*1.4);cx.globalAlpha=.85+Math.sin(now*6)*.15;ell(cx,0,0,4.6,4.6,'#fff',.8);cx.rotate(a);cx.beginPath();cx.moveTo(7,0);cx.lineTo(4,-2.6);cx.lineTo(4,2.6);cx.closePath();shp(cx,col,.6);cx.rotate(-a);
       if(kind==='k'){ell(cx,-1,0,1.6,1.6,'#ffd23f',.6);rr(cx,0,-.5,3,1,.4,'#ffd23f',0)}else ell(cx,0,0,2.4,2.4,col,.6);cx.restore();cx.globalAlpha=1};
     if(running){P.forEach(p=>{if(p.ent||p.gone)return;ind(p.x+PW/2,p.y+PH/2,PCOL[p.i],'p')});KEYS.forEach(K_=>{if(!K_.got&&(K_.seen||levelT>12))ind(K_.x+6,K_.y+3,'#ffd23f','k')});BUBS.forEach(b=>{if(!b.pop&&b.seen)ind(b.x,b.y,'#7fd0ff','p')});BUBS.forEach(b=>{if(b.x>vx0&&b.x<vx0+vw&&b.y>vy0&&b.y<vy0+vh)b.seen=1});
       KEYS.forEach(K_=>{if(!K_.seen&&K_.x+6>vx0&&K_.x<vx0+vw&&K_.y>vy0&&K_.y<vy0+vh)K_.seen=1})}}
   // gelembung bicara
   P.forEach(p=>{if(p.say&&!p.ent)speech(p.x+PW/2,p.y-6-(p.hat?7:0)-(p.pet==='kiki'?6:0),p.say.t)});
-  cx.restore();cx.setTransform(RS,0,0,RS,0,0);
-  if(FX.fl>0){cx.fillStyle=`rgba(255,255,255,${Math.min(.6,FX.fl*4)})`;cx.fillRect(0,0,VW,VH)}
-  if(dying>0&&dying<.35){cx.fillStyle=`rgba(27,29,58,${(.35-dying)/.35})`;cx.fillRect(0,0,VW,VH)}}
-function speech(X,Y,txt){cx.font='700 7.5px system-ui,-apple-system,Segoe UI,Roboto,sans-serif';const w=cx.measureText(txt).width+9,x0=Math.max(CAM.x+2,Math.min(CAM.x+VW/CAM.z-w-2,X-w/2)),y0=Math.max(CAM.y+6,Y-14);
+  cx.restore();cx.setTransform(1,0,0,1,0,0);
+  if(FX.fl>0){cx.fillStyle=`rgba(255,255,255,${Math.min(.6,FX.fl*4)})`;cx.fillRect(0,0,cv.width,cv.height)}
+  if(dying>0&&dying<.35){cx.fillStyle=`rgba(27,29,58,${(.35-dying)/.35})`;cx.fillRect(0,0,cv.width,cv.height)}}
+function speech(X,Y,txt){cx.font='700 7.5px system-ui,-apple-system,Segoe UI,Roboto,sans-serif';const w=cx.measureText(txt).width+9,x0=Math.max(CAM.x+2,Math.min(CAM.x+VIEW.w-w-2,X-w/2)),y0=Math.max(CAM.y+6,Y-14);
   rr(cx,x0,y0,w,11,5,'#fff8e7',.8);cx.beginPath();cx.moveTo(X-2.5,y0+10.6);cx.lineTo(X,y0+14);cx.lineTo(X+2.5,y0+10.6);cx.closePath();cx.fillStyle='#fff8e7';cx.fill();cx.strokeStyle=OL;cx.lineWidth=.8;cx.beginPath();cx.moveTo(X-2.5,y0+11);cx.lineTo(X,y0+14);cx.lineTo(X+2.5,y0+11);cx.stroke();
   cx.fillStyle=OL;cx.textAlign='left';cx.fillText(txt,x0+4.5,y0+7.8)}
 
@@ -727,8 +728,9 @@ function tilt(left){document.body.classList.toggle('rotR',!!left)}
 addEventListener('devicemotion',e=>{const a=e.accelerationIncludingGravity;if(!a||a.x==null)return;ROT.motion=true;const x=ROT.ios?-a.x:a.x;if(x>5.5)tilt(true);else if(x<-5.5)tilt(false)});
 addEventListener('deviceorientation',e=>{if(ROT.motion)return;const g=e.gamma;if(g==null)return;if(g<-35)tilt(true);else if(g>35)tilt(false)});
 addEventListener('pointerdown',()=>{if(ROT.asked)return;ROT.asked=true;try{if(typeof DeviceMotionEvent!=='undefined'&&DeviceMotionEvent.requestPermission)DeviceMotionEvent.requestPermission().catch(()=>{})}catch(e){}});
-function fit(){const rot=orient();const w=rot?innerHeight:innerWidth,h=rot?innerWidth:innerHeight;document.body.classList.toggle('short',h<520);const res=(h>=560&&!touch)?60:0;
-  const s=Math.max(.5,Math.min((w-12)/VW,(h-res-12)/VH));cv.style.width=Math.floor(VW*s)+'px';cv.style.height=Math.floor(VH*s)+'px';const dpr=Math.min(2.5,window.devicePixelRatio||1);const nr=Math.max(1,s*dpr);if(Math.abs(nr-RS)>.01||cv.width!==Math.round(VW*nr)){RS=nr;cv.width=Math.round(VW*RS);cv.height=Math.round(VH*RS);if(SOL)BG=bake()}$('wrap').style.paddingTop=res+'px'}
+function fit(){const rot=orient();const w=rot?innerHeight:innerWidth,h=rot?innerWidth:innerHeight;document.body.classList.toggle('short',h<520);
+  cv.style.width=w+'px';cv.style.height=h+'px';const dpr=Math.min(2,window.devicePixelRatio||1);SCW=Math.round(w*dpr);SCH=Math.round(h*dpr);if(cv.width!==SCW||cv.height!==SCH){cv.width=SCW;cv.height=SCH}
+  const nb=Math.min(5,Math.max(2,Math.ceil(SCH/viewMax().h*ZMAX)));if(nb!==RS){RS=nb;if(SOL)BG=bake()}$('wrap').style.paddingTop='0px'}
 addEventListener('resize',fit);fit();
 
 /* ====== putaran utama ====== */
