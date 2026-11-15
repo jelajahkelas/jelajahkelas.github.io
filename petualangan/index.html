@@ -95,7 +95,10 @@ body.rot{--vh:var(--rh)}body.rot .mapbox{width:calc(var(--rw) - 24px)!important;
 .pad .tag{position:absolute;top:-20px;left:0;font:900 11px ui-monospace,monospace;letter-spacing:.08em;color:#fff;text-shadow:1px 1px 0 #000}
 .pad button.fb{color:#f7c548}.pad.l .tag{color:#7fc8ff}.pad.r .tag{color:#ffb15c}
 #top{position:fixed;top:calc(8px + env(safe-area-inset-top,0px));right:10px;z-index:4;display:flex;gap:8px}
-#emo{position:fixed;top:calc(56px + env(safe-area-inset-top,0px));right:10px;z-index:4;display:flex;flex-direction:column;gap:6px}#emo[hidden]{display:none}#emoMine{display:flex;flex-direction:column;gap:6px}#emoMine button{background:rgba(61,139,253,.85)}#emoForm{display:flex;gap:4px;width:220px}#emoIn{flex:1;min-width:0;font:700 14px system-ui,sans-serif;padding:7px 8px;border:3px solid #fff8e7;background:#fff;color:#2b2140}#emoForm button{width:auto;padding:6px 10px;text-align:center}#emo button{font:800 14px system-ui,sans-serif;color:#fff;background:rgba(43,33,64,.85);border:3px solid #fff8e7;padding:7px 12px;text-align:left;cursor:pointer}#emo button:active{transform:scale(.96)}
+#emo{position:fixed;top:calc(56px + env(safe-area-inset-top,0px));right:10px;z-index:4;display:flex;flex-direction:column;gap:6px}#emo[hidden]{display:none}#emoMine{display:flex;flex-direction:column;gap:6px}#emoMine button{background:rgba(61,139,253,.85)}#emoForm{display:flex;gap:4px;width:220px}#emoIn{flex:1;min-width:0;font:700 14px system-ui,sans-serif;padding:7px 8px;border:3px solid #fff8e7;background:#fff;color:#2b2140}#emoForm button{width:auto;padding:6px 10px;text-align:center}#emo button{font:800 13px system-ui,sans-serif;color:#fff;background:rgba(43,33,64,.85);border:3px solid #fff8e7;padding:6px 10px;text-align:left;cursor:pointer}
+#emo .emog{display:grid;grid-template-columns:repeat(3,auto);gap:6px}#emo .emog button{position:relative;background:#fff;color:#2b2140;border:3px solid #2b2140;border-radius:14px;box-shadow:0 3px 0 #2b2140}#emo .emog button::after{content:'';position:absolute;left:14px;bottom:-8px;border:5px solid transparent;border-top-color:#2b2140}
+#emo{max-height:calc(var(--vh,100vh) - 70px);overflow:auto;background:rgba(27,29,58,.78);padding:8px;border:2px solid rgba(255,255,255,.5)}
+.touch #emoForm{display:none}#emo button:active{transform:scale(.96)}
 #top[hidden]{display:none}#top button.off{opacity:.5;text-decoration:line-through}#top button.live{background:#3fa34d}#top button{width:40px;height:40px;font:900 16px ui-monospace,monospace;color:#fff;background:rgba(43,33,64,.6);border:3px solid rgba(255,255,255,.7);cursor:pointer}
 body.direct #onCode,body.direct #bShare{display:none!important}
 #rot{position:fixed;inset:0;z-index:9;background:#1b1d3a;display:none;place-items:center;text-align:center;padding:30px}
@@ -106,7 +109,7 @@ body.direct #onCode,body.direct #bShare{display:none!important}
 <body>
 <div id="stage">
 <div id="wrap"><canvas id="cv"></canvas><div id="hud"></div><div class="nmtag" id="nm0" hidden></div><div class="nmtag" id="nm1" hidden></div><div id="tip" hidden></div></div>
-<div id="emo" hidden><button data-e="0">👋 Tunggu!</button><button data-e="1">👉 Ke sini!</button><button data-e="2">🦘 Lompat bareng!</button><button data-e="3">🆘 Bantu aku!</button><button data-e="4">👍 Oke!</button><div id="emoMine"></div>
+<div id="emo" hidden><div class="emog"><button data-e="0">👋 Tunggu!</button><button data-e="1">👉 Ke sini!</button><button data-e="2">🦘 Lompat bareng!</button><button data-e="3">🆘 Bantu aku!</button><button data-e="4">👍 Oke!</button><button data-e="5">⚡ Ayo cepat!</button><button data-e="6">⚠️ Hati-hati!</button><button data-e="7">🙋 Kamu duluan</button><button data-e="8">🏃 Aku duluan</button><button data-e="9">🔑 Ambil kuncinya!</button><button data-e="10">🪨 Dorong batunya!</button><button data-e="11">🟢 Injak tombolnya!</button><button data-e="12">❓ Jawab soalnya!</button><button data-e="13">👏 Hebat!</button><button data-e="14">🙏 Maaf!</button><button data-e="15">💛 Terima kasih!</button><button data-e="16">😄 Haha!</button><button data-e="17">✅ Siap!</button></div><div id="emoMine"></div>
   <form id="emoForm" autocomplete="off"><input id="emoIn" maxlength="40" placeholder="Tulis pesanmu…" enterkeyhint="send"><button type="submit" aria-label="Kirim">➤</button></form></div>
 <div id="top" hidden><button id="bEmo" aria-label="Isyarat cepat" hidden>💬</button><button id="bMic" aria-label="Mikrofon" hidden>🎤</button><button id="bSpk" aria-label="Suara teman" hidden>🔊</button><button id="bSound" aria-label="Musik">♪</button><button id="bPause" aria-label="Jeda">II</button></div>
 <div class="pad l" id="padL" hidden><span class="tag">PEMAIN 1</span><button data-p="0" data-k="l">◀</button><button data-p="0" data-k="r">▶</button><button data-p="0" data-k="j">▲</button><button data-p="0" data-k="f" class="fb">✦</button></div>
@@ -813,7 +816,7 @@ function bossArt(lv,fr,at){const key='b'+lv+'_'+fr+'_'+(at?1:0);if(MCACHE.has(ke
     A.rect(31,8,2,22,'#9a8fb0');A.ell(32,7,3,3,'#7fe3ff');A.px(31,6,'#ffffff');A.rect(12,30,5,5,'#2b2140');A.rect(19,30,5,5,'#2b2140')});
   MCACHE.set(key,c);return c}
 
-const EMO=['👋 Tunggu!','👉 Ke sini!','🦘 Lompat bareng!','🆘 Bantu aku!','👍 Oke!'],EMOT=['Tunggu!','Ke sini!','Lompat bareng!','Bantu aku!','Oke!'];
+const EMOT=['Tunggu!','Ke sini!','Lompat bareng!','Bantu aku!','Oke!','Ayo cepat!','Hati-hati!','Kamu duluan','Aku duluan','Ambil kuncinya!','Dorong batunya!','Injak tombolnya!','Jawab soalnya!','Hebat!','Maaf!','Terima kasih!','Haha!','Siap!'];
 /* pesan sendiri: maks. 40 huruf, kata kasar disensor, nomor HP/tautan disembunyikan; 3 pesan terakhir jadi tombol cepat */
 const BADW=['anjing','anjir','babi','bangsat','goblok','goblog','tolol','bodoh','bego','kontol','memek','ngentot','entot','tai','taik','asu','kampret','jancok','jancuk','cuk','sialan','brengsek','bajingan','idiot','monyet','pantek','puki','lonte','pelacur','setan','keparat','bacot','kntl','mmk','ajg','anj','bgst','tlol','gblk'];
 function cleanMsg(t){t=String(t||'').replace(/\s+/g,' ').trim().slice(0,40);t=t.replace(/(https?:\/\/|www\.)\S+/gi,'***').replace(/\d[\d\s\-]{4,}\d/g,'***');
@@ -1100,7 +1103,7 @@ addEventListener('keydown',e=>{if(e.key==='Escape'||e.key==='p'){if(running)togg
 addEventListener('keyup',e=>{const k=KEYS[e.code];if(!k||!P.length)return;P[ME>=0?ME:k[0]].inp[k[1]]=0});
 document.querySelectorAll('.pad button').forEach(b=>{const set=v=>{if(!P.length)return;P[ME>=0?ME:+b.dataset.p].inp[b.dataset.k]=v;b.classList.toggle('on',!!v)};
   b.addEventListener('pointerdown',e=>{e.preventDefault();b.setPointerCapture(e.pointerId);set(1);ac()});['pointerup','pointercancel','lostpointercapture'].forEach(ev=>b.addEventListener(ev,()=>set(0)))});
-const touch=matchMedia('(pointer:coarse)').matches;
+const touch=matchMedia('(pointer:coarse)').matches;document.body.classList.toggle('touch',touch);
 
 /* ====== ukuran layar ====== */
 const ROT={motion:false,ios:/iPad|iPhone|iPod/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1)};
