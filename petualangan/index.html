@@ -394,7 +394,7 @@ function loadLevel(i){LV=Math.max(0,Math.min(LEVELS.length-1,i|0));const m=LEVEL
     else if(ch>='1'&&ch<='4')sp[+ch-1]={x:x*T+2,y:(y+1)*T-PH}}}
   const n=NET.on?Math.max(2,NET.roster.length):NPL;P=[];for(let i=0;i<n;i++){const s=sp[i]||sp[0];P.push(mkP(i,s.x,s.y))}
   if(NET.on&&ME>=0){P.forEach(p=>{const r=NET.roster[p.i];if(p.i===ME){p.pet=selPets(1)[0];const e=costOf(p.pet);p.hat=e.h;p.acc=e.a;return}p.remote=true;if(!r||!r.on){p.gone=true;p.ent=true;return}p.pet=r.pet||PETIDS[p.i];p.hat=r.hat||'';p.acc=r.acc||''})}else{const s=selPets(n);P.forEach(p=>{p.pet=s[p.i];const e=costOf(p.pet);p.hat=e.h;p.acc=e.a})}
-  levelT=0;won=false;wonT=0;dying=0;qCool=0;loadAt=performance.now();CAM.init=false;BG=bake();hudKey()}
+  levelT=0;won=false;wonT=0;dying=0;qCool=0;loadAt=performance.now();CAM.init=false;CAM.zt=null;BG=bake();hudKey()}
 function mkP(i,x,y){return {i,x,y,vx:0,vy:0,face:i%2?-1:1,ground:true,coy:0,jb:0,jh:0,inp:{l:0,r:0,j:0,d:0},on:null,anim:0,ent:false,entT:0,hat:'',remote:false,dx:0,dy:0,say:null,sq:0,blink:2+Math.random()*3,pb:null,ign:null,net:null,lastG:true}}
 
 /* ====== tabrakan ====== */
@@ -555,11 +555,17 @@ function drawKey(x,y,a){cx.save();cx.globalAlpha=a==null?1:a;cx.translate(x+6,y+
 function tag(x,y,txt,col,alpha){cx.font='800 6.5px system-ui,-apple-system,Segoe UI,Roboto,sans-serif';const w=cx.measureText(txt).width+6;cx.globalAlpha=alpha;rr(cx,x-w/2,y-9,w,7.5,3.5,col,.7);cx.beginPath();cx.moveTo(x-1.8,y-1.6);cx.lineTo(x,y+.6);cx.lineTo(x+1.8,y-1.6);cx.closePath();shp(cx,col,0);cx.fillStyle=OL;cx.textAlign='center';cx.fillText(txt,x,y-3);cx.textAlign='left';cx.globalAlpha=1}
 /* kamera: dekat (jarak pandang kecil), mengikuti pemain; satu layar ramai → sedikit menjauh supaya semua tetap terlihat */
 const CAM={x:0,y:0,z:1,init:false},ZMAX=1.75;
+/* kamera tenang: tidak ikut naik-turun saat melompat (pakai tinggi pijakan terakhir), zoom pelan dengan ambang supaya tidak berdenyut */
+function camY(p){if(p.camY==null)p.camY=p.y;if(p.ground)p.camY=p.y;else if(p.y<p.camY-48)p.camY=p.y+48;else if(p.y>p.camY+24)p.camY=p.y-24;return p.camY}
 function camTarget(){const vm=viewMax();let L=P.filter(p=>!p.ent&&!p.gone);if(!L.length)L=P.filter(p=>!p.gone);if(!L.length)return {x:VW/2,y:VH/2,z:1};
-  let x0=1e9,x1=-1e9,y0=1e9,y1=-1e9;L.forEach(p=>{x0=Math.min(x0,p.x);x1=Math.max(x1,p.x+PW);y0=Math.min(y0,p.y-10);y1=Math.max(y1,p.y+PH)});
-  const z=Math.max(1,Math.min(ZMAX,vm.w/(x1-x0+170),vm.h/(y1-y0+110)));return {x:(x0+x1)/2,y:(y0+y1)/2-8,z}}
-function camStep(snap){const t=camTarget(),k=snap?1:.08;CAM.z+=(t.z-CAM.z)*k;const vm=viewMax(),vh=vm.h/CAM.z,vw=vh*vm.a;VIEW.w=vw;VIEW.h=vh;let tx=t.x-vw/2,ty=t.y-vh/2;tx=Math.max(0,Math.min(VW-vw,tx));ty=Math.max(0,Math.min(VH-vh,ty));
-  if(snap||!CAM.init){CAM.x=tx;CAM.y=ty;CAM.init=true}else{CAM.x+=(tx-CAM.x)*.12;CAM.y+=(ty-CAM.y)*.12}CAM.x=Math.max(0,Math.min(VW-vw,CAM.x));CAM.y=Math.max(0,Math.min(VH-vh,CAM.y))}
+  let x0=1e9,x1=-1e9,y0=1e9,y1=-1e9;L.forEach(p=>{const y=camY(p);x0=Math.min(x0,p.x);x1=Math.max(x1,p.x+PW);y0=Math.min(y0,y-10);y1=Math.max(y1,y+PH)});
+  const z=Math.max(1,Math.min(ZMAX,vm.w/(x1-x0+190),vm.h/(y1-y0+130)));return {x:(x0+x1)/2,y:(y0+y1)/2-14,z}}
+function camStep(snap){const t=camTarget();if(snap||CAM.zt==null)CAM.zt=t.z;else if(Math.abs(t.z-CAM.zt)>.14||t.z<CAM.zt-.03)CAM.zt=t.z;
+  CAM.z+=(CAM.zt-CAM.z)*(snap?1:.025);const vm=viewMax(),vh=vm.h/CAM.z,vw=vh*vm.a;VIEW.w=vw;VIEW.h=vh;
+  let tx=t.x-vw/2,ty=t.y-vh/2;
+  if(!snap&&CAM.init){const cxv=CAM.x+vw/2,cyv=CAM.y+vh/2,dzx=vw*.08,dzy=vh*.12;tx=CAM.x+(Math.abs(t.x-cxv)>dzx?(t.x-cxv-Math.sign(t.x-cxv)*dzx):0);ty=CAM.y+(Math.abs(t.y-cyv)>dzy?(t.y-cyv-Math.sign(t.y-cyv)*dzy):0)}
+  tx=Math.max(0,Math.min(VW-vw,tx));ty=Math.max(0,Math.min(VH-vh,ty));
+  if(snap||!CAM.init){CAM.x=tx;CAM.y=ty;CAM.init=true}else{CAM.x+=(tx-CAM.x)*.07;CAM.y+=(ty-CAM.y)*.05}CAM.x=Math.max(0,Math.min(VW-vw,CAM.x));CAM.y=Math.max(0,Math.min(VH-vh,CAM.y))}
 function draw(){const now=performance.now()/1000;if(running||won)camStep(false);else camStep(!CAM.init);const Z=SCH/VIEW.h;cx.setTransform(Z,0,0,Z,-CAM.x*Z,-CAM.y*Z);cx.imageSmoothingEnabled=true;
   cx.save();if(FX.sh>0){const m=FX.sm*Math.min(1,FX.sh*6);cx.translate((Math.random()-.5)*m*2,(Math.random()-.5)*m*2)}else FX.sm=0;
   if(BG)cx.drawImage(BG,0,0,VW,VH);
