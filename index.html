@@ -5,6 +5,7 @@
 <title>JELAS · Belajar Gratis TK sampai SMA/SMK sambil Main Game | Kurikulum Merdeka</title>
 <link rel="canonical" href="https://jelajahkelas.github.io/">
 <meta name="robots" content="index,follow,max-image-preview:large">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"JELAS","alternateName":["Jelajah Kelas","JELAS · Jelajah Kelas"],"url":"https://jelajahkelas.github.io/"}</script>
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebApplication", "name": "JELAS (Jelajah Kelas)", "alternateName": ["JELAS", "Jelajah Kelas"], "url": "https://jelajahkelas.github.io/", "applicationCategory": "EducationalApplication", "operatingSystem": "Android, iOS, Windows, macOS, ChromeOS", "inLanguage": "id", "isAccessibleForFree": true, "offers": {"@type": "Offer", "price": 0, "priceCurrency": "IDR"}, "description": "Aplikasi belajar Kurikulum Merdeka berbentuk game untuk TK sampai SMA/SMK, lengkap dengan mode guru.", "image": "https://jelajahkelas.github.io/icons/og.png?v=2"}</script>
 <meta name="description" content="JELAS (Jelajah Kelas): aplikasi belajar gratis Kurikulum Merdeka untuk TK, SD, SMP, dan SMA/SMK. Pelajaran singkat dan 16 game edukatif, plus mode guru untuk kelas, absensi, dan evaluasi di TV.">
 <meta name="theme-color" content="#3D8BFF">
@@ -23,8 +24,10 @@
 <link rel="preconnect" href="https://firestore.googleapis.com" crossorigin>
 <link rel="preconnect" href="https://identitytoolkit.googleapis.com" crossorigin>
 <link rel="manifest" href="manifest.webmanifest">
-<link rel="icon" type="image/png" href="icons/icon-192.png">
-<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" type="image/png" sizes="96x96" href="/icons/favicon-96.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
+<link rel="apple-touch-icon" href="/icons/icon-192.png">
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
@@ -4238,7 +4241,7 @@ html[data-theme=malam] .plstick{background:#0a0f1e}
 <div class="syncpill" id="syncPill" hidden></div>
 <div class="toast" id="toast" hidden></div>
 
-<script src="av.js?v=406"></script>
+<script src="av.js?v=407"></script>
 <script>
 /* ---------- visual assets ---------- */
 const INK='#1B1E3D';
@@ -12341,7 +12344,7 @@ function openPets(){if(!P)return;P.pets=P.pets||['uli'];const gem=`<span style="
 /* simpan teman belajar terakhir supaya layar memuat & ikon memakai hewan yang sama sebelum data dimuat */
 function petCache(){try{if(typeof P!=='undefined'&&P){localStorage.setItem('jk_pet',P.pet||'uli');localStorage.setItem('jk_pets',JSON.stringify([...new Set((P.pets||['uli']).concat([P.pet||'uli']))]));if(P.outfit)localStorage.setItem('jk_out',JSON.stringify(P.outfit))}}catch(e){}petIcon()}
 let PETICON_K='';
-function petIcon(){const id=curPet();let o='';try{o=localStorage.getItem('jk_out')||''}catch(e){}const k=id+o;if(k===PETICON_K)return;PETICON_K=k;
+function petIcon(){if(/bot|crawl|spider|slurp|google|bing|lighthouse|headless/i.test(navigator.userAgent||'')||navigator.webdriver)return;const id=curPet();let o='';try{o=localStorage.getItem('jk_out')||''}catch(e){}const k=id+o;if(k===PETICON_K)return;PETICON_K=k;
   try{const svg=mascotSVG().replace('<svg ','<svg xmlns="http://www.w3.org/2000/svg" width="150" height="155" ');const img=new Image();
     img.onload=()=>{const draw=S=>{const c=document.createElement('canvas');c.width=c.height=S;const x=c.getContext('2d');const g=x.createLinearGradient(0,0,0,S);g.addColorStop(0,'#5CC8FF');g.addColorStop(1,'#3D8BFF');
         x.fillStyle=g;const r=S*.22;x.beginPath();x.moveTo(r,0);x.arcTo(S,0,S,S,r);x.arcTo(S,S,0,S,r);x.arcTo(0,S,0,0,r);x.arcTo(0,0,S,0,r);x.fill();if(img.naturalWidth&&img.naturalWidth===img.naturalHeight){const w=S*.8;x.drawImage(img,(S-w)/2,S*.14,w,w)}else{const w=S*.8;x.drawImage(img,(S-w)/2,S*.12,w,w*124/120)}return c.toDataURL('image/png')};
@@ -16177,7 +16180,7 @@ function folBind(root,list,after){root.querySelectorAll('[data-follow]').forEach
   try{await folDo(f,on);if(on){try{sfx.ok()}catch(_){}toast('team',`Kamu mengikuti ${f.name}.`)}b.outerHTML=folBtn(f,b.classList.contains('sm'));folBind(root,list,after);after&&after()}catch(err){b.disabled=false;toast('lock',fbErr(err))}})}
 const shareIcon='<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M12 3 V15 M7 8 L12 3 L17 8 M5 13 V19 C5 20 6 21 7 21 H17 C18 21 19 20 19 19 V13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const qrIcon='<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><path d="M14 14h3v3h-3zM18 18h3v3h-3zM18 14h3M14 18v3" stroke-linecap="round"/></svg>';
-let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=406';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
+let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=407';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
 function qrMatrix(text){const Q=window.QRCodeLib,q=new Q(-1,Q.ECL.M);q.addData(text);q.make();const n=q.getModuleCount(),m=[];for(let r=0;r<n;r++){m.push([]);for(let c=0;c<n;c++)m[r].push(q.isDark(r,c))}return m}
 function qrSvgOf(m){const n=m.length;let d='';for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(m[r][c])d+=`M${c} ${r}h1.02v1.02h-1.02z`;
   return `<svg viewBox="-2 -2 ${n+4} ${n+4}" class="pcqr" shape-rendering="crispEdges" aria-label="Kode QR profil"><rect x="-2" y="-2" width="${n+4}" height="${n+4}" fill="#fff"/><path d="${d}" fill="#1C1E3D"/></svg>`}
