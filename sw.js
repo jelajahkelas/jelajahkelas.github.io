@@ -1,5 +1,5 @@
 // Selalu ambil versi terbaru dari internet; pakai salinan tersimpan hanya saat offline.
-const CACHE = 'jelajah-kelas-v408';
+const CACHE = 'jelajah-kelas-v409';
 self.addEventListener('install', e => self.skipWaiting());
 // Hapus salinan versi lama supaya penyimpanan di HP tidak menumpuk setiap kali aplikasi diperbarui.
 self.addEventListener('activate', e => e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k !== CACHE).map(k => caches.delete(k)))).then(() => self.clients.claim())));
@@ -51,7 +51,7 @@ self.addEventListener('notificationclick', e => {
 self.addEventListener('push', e => {
   let d = {};
   try { const j = e.data ? e.data.json() : {}; d = j.data || j; } catch (_) {}
-  const opt = { body: d.body || '', icon: 'icons/icon-192.png', badge: 'icons/icon-192.png', tag: d.inv ? 'inv-' + d.inv : (d.type || 'jelas'),
+  const opt = { body: d.body || '', icon: 'icons/icon-192.png', badge: 'icons/badge-96.png', tag: d.inv ? 'inv-' + d.inv : (d.type || 'jelas'),
     renotify: true, vibrate: [200, 100, 200], data: d };
   if (d.type === 'invite') {
     if (d.exp && Date.now() > +d.exp) return;
@@ -60,7 +60,7 @@ self.addEventListener('push', e => {
       const nm = d.title.replace(/ menantangmu!$/, ''), sj = String(d.body || '').split(' · ')[0].replace(/\. Terima tantangannya\?$/, '');
       d.title = `${nm} menantangmu tanding${sj ? ' ' + sj : ''}!`; d.body = 'Kamu punya 2 menit untuk menerima tantangan'; opt.body = d.body;
     }
-    opt.requireInteraction = true; opt.icon = 'icons/duel.png'; opt.badge = 'icons/badge-72.png'; opt.timestamp = Date.now();
+    opt.requireInteraction = true; opt.icon = 'icons/duel.png'; opt.badge = 'icons/badge-96.png'; opt.timestamp = Date.now();
     opt.actions = [{ action: 'accept', title: 'Terima' }, { action: 'decline', title: 'Tolak' }];
     // tantangan berlaku 2 menit: tutup sendiri setelah habis
     e.waitUntil(new Promise(r => setTimeout(r, Math.max(0, Math.min(125000, (+d.exp || Date.now() + 120000) - Date.now())))).then(() =>
