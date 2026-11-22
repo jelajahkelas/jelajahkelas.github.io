@@ -3468,6 +3468,7 @@ html body #vQuest .mqhead{position:sticky;top:calc(8px + env(safe-area-inset-top
 @media (prefers-reduced-motion:reduce){.bcmic.on{animation:none}}
 .bcst{margin:0;font-weight:700;text-align:center;font-size:18px}.bchear{margin:0;min-height:1.3em;color:var(--muted,#6B6480);text-align:center}
 .bcrow{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.bcmi{flex-direction:row;flex-wrap:wrap;justify-content:center;gap:6px 12px;padding:0 0 6px}.bcmi .bcmic{width:64px;height:64px;font-size:30px;box-shadow:0 5px 0 #5A35C9}.bcmi .bcst{font-size:16px;flex:1 1 160px;text-align:left}.bcmi .bchear{flex-basis:100%}
 .agpick{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0}
 .agb{display:flex;align-items:center;gap:10px;min-height:56px;padding:10px 14px;border-radius:14px;border:2px solid var(--line,#E5E5E5);background:var(--card,#fff);color:var(--ink);font:800 16px var(--display,sans-serif);box-shadow:0 4px 0 var(--line,#E5E5E5)}
 .agb span{font-size:22px;width:28px;text-align:center}
@@ -4271,7 +4272,7 @@ html[data-theme=malam] .tkact{background:#1e2235;color:#eef}html[data-theme=mala
 <div class="syncpill" id="syncPill" hidden></div>
 <div class="toast" id="toast" hidden></div>
 
-<script src="av.js?v=413"></script>
+<script src="av.js?v=414"></script>
 <script>
 /* ---------- visual assets ---------- */
 const INK='#1B1E3D';
@@ -4492,7 +4493,7 @@ const tkSuku=()=>{const c=pick(SUKU_K),v=pick(SUKU_V),t=c+v;const r=Math.random(
   if(r<.5){const o=new Set([t]);while(o.size<4)o.add(Math.random()<.5?c+pick(SUKU_V):pick(SUKU_K)+v);return Q(`🔊 Mana bunyi <b>${t.toLowerCase()}</b>?`,{opts:shuffle([...o]),ans:t},`${c} dan ${v} dibaca ${t.toLowerCase()}.`,{say:`Mana bunyi, ${t.toLowerCase()}?`,pic:true,noOptSay:true})}
   const o=new Set([t]);while(o.size<4)o.add(pick(SUKU_K)+pick(SUKU_V));return Q(`🔊 Huruf <b>${c}</b> dan <b>${v}</b> jika digabung menjadi …`,{opts:shuffle([...o]),ans:t},`${c} + ${v} = ${t}.`,{say:`Huruf ${c} dan huruf ${v} digabung menjadi apa?`,pic:true,noOptSay:true})};
 const TK_BACA=[['BOLA','⚽'],['SAPI','🐄'],['BUKU','📖'],['KUDA','🐴'],['TOPI','🎩'],['ROTI','🍞'],['SUSU','🥛'],['BATU','🪨'],['PITA','🎀'],['KAKI','🦶'],['GIGI','🦷'],['NASI','🍚'],['IKAN','🐟'],['KUE','🍰'],['MATA','👁️'],['BEBEK','🦆'],['RUSA','🦌'],['LAMPU','💡'],['MOBIL','🚗'],['BUNGA','🌸']];
-const tkBaca=()=>{const t=pick(TK_BACA),o=[t,...shuffle(TK_BACA.filter(x=>x!==t)).slice(0,3)];return Q(`🔊 Baca kata ini:<span class="big tkword">${t[0]}</span>`,{opts:shuffle(o.map(x=>x[1])),ans:t[1]},`${t[0]} dibaca ${t[0].toLowerCase().split('').join(' ')}… ${t[0].toLowerCase()}!`,{say:'Baca kata ini pelan-pelan. Lalu ketuk gambarnya.',pic:true,noOptSay:true})};
+const tkBaca=()=>{const t=pick(TK_BACA),o=[t,...shuffle(TK_BACA.filter(x=>x!==t)).slice(0,3)];return Q(`🔊 Baca kata ini:<span class="big tkword">${t[0]}</span>`,{opts:shuffle(o.map(x=>x[1])),ans:t[1]},`${t[0]} dibaca ${t[0].toLowerCase().split('').join(' ')}… ${t[0].toLowerCase()}!`,{say:'Baca kata ini dengan suaramu, atau ketuk gambarnya.',pic:true,noOptSay:true,bacaMic:{w:t[0],pic:t[1]}})};
 /* --- Menebalkan (tracing) --- */
 const tkTrace=(ch,kind)=>Q(`<span class="qtag">Tebalkan ${kind}</span>🔊 Tebalkan ${kind} <b>${ch}</b> dengan jarimu!`,{opts:['Selesai','Belum'],ans:'Selesai'},`Hebat! Kamu menebalkan ${kind} ${ch}.`,{trace:ch,html:true,say:`Tebalkan ${kind} ${/[0-9]/.test(ch)?ch:ch.toLowerCase()===ch?'kecil '+ch:ch} dengan jarimu. Ikuti garisnya.`});
 const SPEECH_REC=window.SpeechRecognition||window.webkitSpeechRecognition;let micOff=false;
@@ -10345,6 +10346,7 @@ function renderQ(){
   const chk=!!(game.lesson&&game.mode==='kuis');
   $('#opts').classList.toggle('picopts',!!q.pic);$('#opts').classList.toggle('bsopts',!!q.bs);
   if(q.ketik||q.match||q.trace||q.warna||q.baca)setTimeout(()=>qSpecial(q),0);
+  if(q.bacaMic&&SPEECH_REC&&!micOff&&!isRebutan())setTimeout(()=>{if(game&&game.qs[game.i]===q)tkBacaUI({baca:q.bacaMic,opts:q.opts,ans:q.ans,_q:q},$('#opts'),true)},0);
   $('#opts').querySelectorAll('.opt').forEach(b=>b.onclick=()=>{const k=+b.dataset.k;if(L.id==='tk'&&chk){if(game.sel===k&&!game.locked){$('#checkBtn').click();return}if(!q.noOptSay){const t=optSpeech(q,k);if(t)say(t)}}else if(chk&&earlyReader()&&!q.noOptSay){const t=optSpeech(q,k);if(t)say(spokenTx(t))}chk?selectOpt(k):answer(k)});
   $('#checkBar').hidden=!chk;$('#checkBtn').disabled=true;
   const card=$('#qcard');card.classList.remove('pop','shake');void card.offsetWidth;card.classList.add('pop');
@@ -10377,33 +10379,38 @@ function bacaMirip(a,b){if(!a||!b)return 0;const m=a.length,n=b.length;const d=A
   for(let i=1;i<=m;i++)for(let j=1;j<=n;j++)d[i][j]=Math.min(d[i-1][j]+1,d[i][j-1]+1,d[i-1][j-1]+(a[i-1]===b[j-1]?0:1));return 1-d[m][n]/Math.max(m,n)}
 function bacaCocok(alts,w){const t=bacaNorm(w);for(const a of alts){const all=bacaNorm(a);if(!all)continue;if(all===t||all.includes(t))return true;
   for(const tok of String(a).toLowerCase().split(/\s+/)){const x=bacaNorm(tok);if(x&&(x===t||(t.length>=5&&bacaMirip(x,t)>=.8)))return true}}return false}
-function tkBacaUI(q,box){$('#checkBar').hidden=true;const w=q.baca.w;let tries=0,rec=null,busy=false,done=false;
-  box.insertAdjacentHTML('beforeend',`<div class="bcm"><button class="bcmic press" id="bcMic" aria-label="Tekan lalu baca kata ${esc(w)}"><span aria-hidden="true">🎤</span></button>
-    <p class="bcst" id="bcSt" aria-live="polite">Tekan mic, lalu baca dengan keras</p><p class="bchear" id="bcHear"></p>
-    <div class="bcrow"><button class="ghost press" id="bcHelp">🔊 Contoh bacaan</button><button class="ghost press" id="bcSkip" hidden>Lewati</button></div></div>`);
-  const mic=$('#bcMic'),st=$('#bcSt'),hear=$('#bcHear'),skip=$('#bcSkip');
-  const still=()=>game&&game.qs[game.i]===q&&!done;
+function tkBacaUI(q,box,inline){const w=q.baca.w;let tries=0,rec=null,busy=false,done=false;if(!inline)$('#checkBar').hidden=true;
+  box.insertAdjacentHTML(inline?'afterbegin':'beforeend',`<div class="bcm${inline?' bcmi':''}"><button class="bcmic press" id="bcMic" aria-label="Tekan lalu baca kata ${esc(w)}"><span aria-hidden="true">🎤</span></button>
+    <p class="bcst" id="bcSt" aria-live="polite">${inline?'Tekan mic lalu baca, atau ketuk gambarnya':'Tekan mic, lalu baca dengan keras'}</p><p class="bchear" id="bcHear"></p>
+    ${inline?'':`<div class="bcrow"><button class="ghost press" id="bcHelp">🔊 Contoh bacaan</button><button class="ghost press" id="bcSkip" hidden>Lewati</button></div>`}</div>`);
+  const wrap=box.querySelector('.bcm'),mic=$('#bcMic'),st=$('#bcSt'),hear=$('#bcHear'),skip=$('#bcSkip');
+  const idle=inline?'Tekan mic lalu baca, atau ketuk gambarnya':'Tekan mic, lalu baca dengan keras';
+  const still=()=>game&&game.qs[game.i]===(q._q||q)&&!done&&!game.locked;
   const stop=()=>{try{rec&&rec.abort()}catch(e){}rec=null;busy=false;mic.classList.remove('on')};
-  const finish=ok=>{if(!still())return;done=true;stop();game.sel=ok?0:1;answer(game.sel)};
-  const fallback=msg=>{micOff=true;stop();st.textContent=msg;mic.disabled=true;setTimeout(()=>{if(!still())return;const nq=tkBaca();game.qs[game.i]=nq;renderQ()},1600)};
+  const finish=ok=>{if(!still())return;done=true;stop();if(inline){const k=q.opts.indexOf(q.ans);const b=box.querySelector(`.opt[data-k="${k}"]`);if(b)b.classList.add('sel');game.sel=k;answer(k);return}game.sel=ok?0:1;answer(game.sel)};
+  const fallback=msg=>{micOff=true;stop();st.textContent=msg;mic.disabled=true;
+    if(inline){setTimeout(()=>{if(wrap)wrap.remove()},1800);return}
+    setTimeout(()=>{if(!still())return;game.qs[game.i]=tkBaca();renderQ()},1600)};
   const salah=heard=>{tries++;mic.classList.add('bad');setTimeout(()=>mic.classList.remove('bad'),450);try{sfx.bad()}catch(e){}
     hear.textContent=heard?`Terdengar: “${heard}”`:'';
+    if(inline){st.textContent=tries>=2?'Tidak apa-apa. Ketuk gambar yang cocok, ya.':'Hampir! Coba baca lagi pelan-pelan.';try{say(tries>=2?'Ketuk gambarnya, ya.':'Hampir! Coba lagi, ya.')}catch(e){}return}
     if(tries>=3){st.textContent='Tidak apa-apa. Dengarkan dulu, lalu coba lagi atau lewati.';skip.hidden=false;try{say(`Dengarkan, ya. ${w.toLowerCase()}.`)}catch(e){}}
     else{st.textContent='Hampir! Coba baca lagi pelan-pelan.';try{say('Hampir! Coba lagi, ya.')}catch(e){}}};
-  mic.onclick=()=>{if(done)return;if(busy){stop();st.textContent='Tekan mic, lalu baca dengan keras';return}
+  mic.onclick=()=>{if(!still())return;if(busy){stop();st.textContent=idle;return}
     try{window.speechSynthesis&&speechSynthesis.cancel()}catch(e){}
-    try{rec=new SPEECH_REC()}catch(e){fallback('Mic tidak tersedia. Kita pilih gambarnya saja, ya.');return}
+    try{rec=new SPEECH_REC()}catch(e){fallback(inline?'Mic tidak tersedia. Ketuk gambarnya, ya.':'Mic tidak tersedia. Kita pilih gambarnya saja, ya.');return}
     rec.lang='id-ID';rec.interimResults=true;rec.maxAlternatives=5;rec.continuous=false;let heard='',got=false;
     rec.onresult=e=>{const alts=[];for(let i=e.resultIndex;i<e.results.length;i++){const r=e.results[i];for(let k=0;k<r.length;k++)alts.push(r[k].transcript);if(r.isFinal)got=true}
       heard=(e.results[e.results.length-1][0]||{}).transcript||heard;hear.textContent=heard?`Terdengar: “${heard}”`:'';
-      if(bacaCocok(alts,w)){got=true;mic.classList.add('ok');st.textContent=`Benar! ${w} ${q.baca.pic}`;try{sfx.ok()}catch(e){}try{popFx(mic,q.baca.pic)}catch(e){}setTimeout(()=>finish(true),900);stop()}};
-    rec.onerror=e=>{const er=e&&e.error;if(er==='not-allowed'||er==='service-not-allowed'){fallback('Mic belum diizinkan. Kita pilih gambarnya saja, ya.');return}
+      if(bacaCocok(alts,w)){got=true;mic.classList.add('ok');st.textContent=`Benar! ${w} ${q.baca.pic}`;try{sfx.ok()}catch(e){}try{popFx(mic,q.baca.pic)}catch(e){}stop();setTimeout(()=>finish(true),900)}};
+    rec.onerror=e=>{const er=e&&e.error;const alt=inline?'Ketuk gambarnya, ya.':'Kita pilih gambarnya saja, ya.';
+      if(er==='not-allowed'||er==='service-not-allowed'){fallback('Mic belum diizinkan. '+alt);return}
       if(er==='no-speech'){stop();st.textContent='Suaramu belum terdengar. Tekan mic, lalu baca lebih keras.';return}
-      if(er==='network'){fallback('Mic butuh internet. Kita pilih gambarnya saja, ya.');return}if(er!=='aborted'){stop();st.textContent='Coba tekan mic sekali lagi.'}};
+      if(er==='network'){fallback('Mic butuh internet. '+alt);return}if(er!=='aborted'){stop();st.textContent='Coba tekan mic sekali lagi.'}};
     rec.onend=()=>{const was=busy;busy=false;mic.classList.remove('on');if(done||!was)return;if(got&&!mic.classList.contains('ok'))salah(heard)};
-    try{rec.start();busy=true;mic.classList.add('on');st.textContent='Aku mendengarkan… baca sekarang!';hear.textContent=''}catch(e){fallback('Mic tidak tersedia. Kita pilih gambarnya saja, ya.')}};
-  $('#bcHelp').onclick=()=>{if(busy)stop();try{say(w.toLowerCase().split('').join(' ')+'. '+w.toLowerCase())}catch(e){}};
-  skip.onclick=()=>finish(false)}
+    try{rec.start();busy=true;mic.classList.add('on');st.textContent='Aku mendengarkan… baca sekarang!';hear.textContent=''}catch(e){fallback(inline?'Mic tidak tersedia. Ketuk gambarnya, ya.':'Mic tidak tersedia. Kita pilih gambarnya saja, ya.')}};
+  const help=$('#bcHelp');if(help)help.onclick=()=>{if(busy)stop();try{say(w.toLowerCase().split('').join(' ')+'. '+w.toLowerCase())}catch(e){}};
+  if(skip)skip.onclick=()=>finish(false)}
 /* ===== TK: menebalkan huruf/angka dengan jari ===== */
 function tkTraceUI(q,box){$('#checkBar').hidden=true;
   const W=Math.max(220,Math.min(320,(box.clientWidth||320)-4)),dpr=Math.min(3,window.devicePixelRatio||1);
@@ -16277,7 +16284,7 @@ function folBind(root,list,after){root.querySelectorAll('[data-follow]').forEach
   try{await folDo(f,on);if(on){try{sfx.ok()}catch(_){}toast('team',`Kamu mengikuti ${f.name}.`)}b.outerHTML=folBtn(f,b.classList.contains('sm'));folBind(root,list,after);after&&after()}catch(err){b.disabled=false;toast('lock',fbErr(err))}})}
 const shareIcon='<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M12 3 V15 M7 8 L12 3 L17 8 M5 13 V19 C5 20 6 21 7 21 H17 C18 21 19 20 19 19 V13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const qrIcon='<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><path d="M14 14h3v3h-3zM18 18h3v3h-3zM18 14h3M14 18v3" stroke-linecap="round"/></svg>';
-let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=413';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
+let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=414';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
 function qrMatrix(text){const Q=window.QRCodeLib,q=new Q(-1,Q.ECL.M);q.addData(text);q.make();const n=q.getModuleCount(),m=[];for(let r=0;r<n;r++){m.push([]);for(let c=0;c<n;c++)m[r].push(q.isDark(r,c))}return m}
 function qrSvgOf(m){const n=m.length;let d='';for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(m[r][c])d+=`M${c} ${r}h1.02v1.02h-1.02z`;
   return `<svg viewBox="-2 -2 ${n+4} ${n+4}" class="pcqr" shape-rendering="crispEdges" aria-label="Kode QR profil"><rect x="-2" y="-2" width="${n+4}" height="${n+4}" fill="#fff"/><path d="${d}" fill="#1C1E3D"/></svg>`}
