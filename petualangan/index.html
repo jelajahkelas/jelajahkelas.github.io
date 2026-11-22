@@ -50,7 +50,7 @@ canvas{image-rendering:pixelated;image-rendering:crisp-edges;display:block}
 .np{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}
 .np .btn{margin:0;padding:12px 4px 10px;font-size:14px;display:flex;flex-direction:column;align-items:center;gap:2px}
 .np .btn big{font-size:28px;line-height:1}.np .btn small{font:700 11px system-ui,sans-serif;letter-spacing:0;text-transform:none;opacity:.9}
-.hsub{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.hsub .btn{font-size:13px;padding:10px 4px}
+.hsub{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.hsub .btn{font-size:13px;padding:10px 4px}
 .hstat{font:800 13px system-ui,sans-serif;color:#6b5b84;margin-top:8px}
 .short .box{padding:12px 16px}.short .box.home{max-width:720px;display:grid;grid-template-columns:230px 1fr;column-gap:18px;align-items:center}
 .short .box.home h1{grid-column:1/-1;font-size:20px;margin:0}.short .heroes canvas{width:42px;height:45px}.short .heroes{gap:6px}
@@ -152,6 +152,15 @@ body.direct #onCode,body.direct #bShare{display:none!important}
 .pad.l.solo [data-k="l"],.pad.l.solo [data-k="r"]{grid-row:1}
 .pad.r.solo{grid-template-columns:calc(var(--pb)*1.35);grid-template-rows:calc(var(--pb)*1.35)}.pad.r.solo .pj{grid-row:1;grid-column:1;width:calc(var(--pb)*1.35)!important;height:calc(var(--pb)*1.35)!important;font-size:38px!important}
 @media (max-height:380px){.pad{--pb:58px;gap:8px;padding:10px}}
+
+/* atur tombol */
+#pCtl{background:transparent;pointer-events:none;align-items:flex-start;padding-top:calc(8px + env(safe-area-inset-top,0px));z-index:7}
+#pCtl .box{pointer-events:auto;max-width:440px;padding:12px 16px 14px}#pCtl h2{margin:0 0 2px}.ctlh{margin:0 0 8px;font:600 13px/1.3 system-ui,sans-serif;color:#5a4f73}
+.ctlr{display:flex;gap:10px;align-items:center;justify-content:center;margin-top:6px}.ctlr label{flex:1;display:flex;flex-direction:column;gap:2px;font:800 12px system-ui,sans-serif;color:#2b2140;text-align:left}.ctlr input{width:100%;accent-color:#3fa34d}
+.ctlr .btn{width:auto;margin:0;padding:8px 12px;font-size:13px}.ctab{display:flex;border:3px solid #2b2140;border-radius:12px;overflow:hidden}.ctab button{font:800 12px system-ui,sans-serif;border:0;background:#fff;color:#2b2140;padding:7px 9px;cursor:pointer}.ctab button.on{background:#2b2140;color:#fff}
+body.cedit .pad{outline:3px dashed #ffe08a;outline-offset:-4px;border-radius:24px;background:rgba(43,33,64,.25);cursor:move;z-index:6}
+body.cdrag #pCtl .box{opacity:.3;pointer-events:none;transition:opacity .15s}
+.short #pCtl .box{padding:8px 12px 10px}.short .ctlh{font-size:11px;margin:0 0 2px}.short #pCtl h2{font-size:15px}
 /* ====== gaya halus (bukan piksel) ====== */
 html,body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
 canvas{image-rendering:auto}
@@ -200,7 +209,7 @@ canvas{image-rendering:auto}
   <div class="hr">
     <div class="np"><button class="btn" data-n="2"><big>2</big>Pemain<small>satu layar</small></button><button class="btn b4" data-n="3"><big>3</big>Pemain<small>satu layar</small></button><button class="btn b5" data-n="4"><big>4</big>Pemain<small>satu layar</small></button></div>
     <button class="btn b2" id="bOnline">🌐 Main online (2–4 pemain)</button>
-    <div class="hsub"><button class="btn b6" id="bCos">👤 Kostum</button><button class="btn b4" id="bHelp">❓ Cara main</button><button class="btn b3" id="bHome">← JELAS</button></div>
+    <div class="hsub"><button class="btn b6" id="bCos">👤 Kostum</button><button class="btn b5" id="bCtl">🎮 Tombol</button><button class="btn b4" id="bHelp">❓ Cara main</button><button class="btn b3" id="bHome">← JELAS</button></div>
   </div>
 </div></div>
 <div class="panel" id="pPets" hidden><div class="box"><h2 class="px" id="ptTitle">Pilih karakter</h2><div id="ptRows"></div><p class="pnote" id="ptNote"></p><button class="btn" id="ptGo">Lanjut ▶</button><button class="btn b3" id="ptBack">← Kembali</button></div></div>
@@ -247,7 +256,12 @@ canvas{image-rendering:auto}
   <div class="qtxt" id="qTxt"></div><div class="opts" id="qOpts"></div><button class="btn b3" id="qLater">Nanti saja</button>
 </div></div>
 <div class="panel" id="pPause" hidden><div class="box">
-  <h2 class="px">Jeda</h2><button class="btn" id="bResume">▶ Lanjut</button><button class="btn b2" id="bRestart">↻ Ulang level</button><button class="btn b4" id="bLvSel">▦ Pilih level</button><button class="btn b3" id="bExit">← Keluar</button>
+  <h2 class="px">Jeda</h2><button class="btn" id="bResume">▶ Lanjut</button><button class="btn b2" id="bRestart">↻ Ulang level</button><button class="btn b4" id="bLvSel">▦ Pilih level</button><button class="btn b5" id="bCtlP">🎮 Atur tombol</button><button class="btn b3" id="bExit">← Keluar</button>
+</div></div>
+<div class="panel" id="pCtl" hidden><div class="box">
+  <h2 class="px">Atur Tombol</h2><p class="ctlh">Seret tombol ke tempat yang nyaman.</p>
+  <div class="ctlr"><label>Ukuran<input type="range" id="ctSz" min="44" max="112" step="2"></label><label>Kejelasan<input type="range" id="ctOp" min="25" max="100" step="5"></label></div>
+  <div class="ctlr"><div class="ctab"><button id="ctDuo">Satu layar</button><button id="ctSolo">Online</button></div><button class="btn b3" id="ctReset">↺ Awal</button><button class="btn" id="ctDone">✓ Selesai</button></div>
 </div></div>
 <div class="panel" id="pRc" hidden><div class="box"><h2 class="px">Menyambung ulang…</h2><div class="rcspin"></div><p id="rcTxt"></p><button class="btn b3" id="rcStop">Berhenti</button></div></div>
 <div class="panel" id="pRes" hidden><div class="conf" id="conf"></div><div class="box">
@@ -463,20 +477,20 @@ function stepPlayer(p,dt){const ox=p.x,oy=p.y;p.ign=barsOverlapping(prect(p));
   if(p.vx<tgt)p.vx=Math.min(tgt,p.vx+acc*dt);else if(p.vx>tgt)p.vx=Math.max(tgt,p.vx-acc*dt);if(dir)p.face=dir;
   if((p.inp.j&&!p.jh)||p.jq)p.jb=.13;p.jq=false;p.jh=p.inp.j;if(p.jb>0)p.jb-=dt;
   p.coy=p.ground?.1:p.coy-dt;
-  p.load=P.some(q=>q!==p&&!q.ent&&!q.dead&&Math.abs(q.y+PH-p.y)<=2.5&&Math.min(p.x+PW,q.x+PW)-Math.max(p.x,q.x)>=4&&(q.remote?q.ground:q.on===p));
+  p.load=P.some(q=>q!==p&&!q.ent&&!q.dead&&Math.abs(q.y+PH-p.y)<=2.5&&Math.min(p.x+PW,q.x+PW)-Math.max(p.x,q.x)>=4&&(q.remote?q.ground&&q.onI===p.i:q.on===p));
   if(p.load&&p.jb>0&&p.coy>0){p.vy=-85;p.jb=0;p.coy=0;p.ground=false;p.on=null;p.sq=-.06;beep(300,.05,'square',.03,80)}
   if(!p.load&&p.jb>0&&p.coy>0){p.mx=p.on&&p.on.mov?p.on.dx/dt:p.on&&p.on.on&&p.on.on.mov?p.on.on.dx/dt:0;p.vy=-JUMP;p.jb=0;p.coy=0;p.ground=false;p.on=null;p.sq=-.12;SFX.jump();dust(p,4)}
   if(p.vy>=0)p.spr=false;
   p.vy=Math.min(MAXF,p.vy+GRAV*dt);
   // ikut tumpangan (teman atau kotak)
-  const base=p.on;if(base&&!(base.ent)){moveX(p,base.dx||0,true);if((base.dy||0)<0)p.y+=base.dy}
+  let base=p.on;if(base&&(onChain(base.on,p)||(base.remote&&base.onI===p.i&&p.i>base.i))){p.on=base=null;p.ground=false}if(base&&!(base.ent)){moveX(p,Math.max(-8,Math.min(8,base.dx||0)),true);if((base.dy||0)<0)p.y+=Math.max(-8,base.dy)}
   p.pb=null;moveX(p,p.vx*dt,false);if(p.mx){moveX(p,p.mx*dt,true)}
   const wasG=p.ground,wasOn=p.on;p.ground=false;p.on=null;moveY(p,p.vy*dt);
   // pijakan bergerak (lift), hanya padat dari atas
   if(p.vy>=0)for(const m of MOV){const oxl=Math.min(p.x+PW,m.x+m.w)-Math.max(p.x,m.x);if(oxl<3)continue;const b=p.y+PH,st=wasOn===m?3+Math.abs(m.dy):0;
     if(b>=m.y-st&&b<=m.y+5+p.vy*dt+Math.max(0,-m.dy)&&b-p.vy*dt<=m.y-m.dy+2+st){p.y=m.y-PH;if(!wasG&&p.vy>120){p.sq=.12;dust(p,3)}p.vy=0;p.ground=true;p.on=m;p.mx=0;break}}
   // berdiri di kepala teman
-  if(p.vy>=0)for(const q of P){if(q===p||q.ent||(q.dying))continue;const oxl=Math.min(p.x+PW,q.x+PW)-Math.max(p.x,q.x);if(oxl<4)continue;const b=p.y+PH,lim=6+Math.max(0,-(q.dy||0))+p.vy*dt;
+  if(p.vy>=0)for(const q of P){if(q===p||q.ent||(q.dying))continue;if(onChain(q.on,p)||(q.remote&&q.onI===p.i&&p.i>q.i))continue;const oxl=Math.min(p.x+PW,q.x+PW)-Math.max(p.x,q.x);if(oxl<4)continue;const b=p.y+PH,lim=6+Math.max(0,-(q.dy||0))+p.vy*dt;
     const stick=wasOn===q&&!p.ground?3+Math.abs(q.dy||0):0;if(b>=q.y-stick&&b<=q.y+lim){let r={x:p.x,y:q.y-PH,w:PW,h:PH};if(solidsNear(r,p.ign).some(s=>ov(r,s)))continue;p.y=q.y-PH;if(!wasG&&p.vy>120){p.sq=.14;SFX.stack()}p.vy=stick&&b<q.y?Math.max(0,q.vy||0):0;p.ground=true;p.on=q;break}}
   if(p.ground){p.mx=0}if(p.ground&&!wasG&&p.vy===0&&!p.on){p.sq=.12;dust(p,3)}
   // pegas
@@ -486,6 +500,7 @@ function stepPlayer(p,dt){const ox=p.x,oy=p.y;p.ign=barsOverlapping(prect(p));
   if(p.y>ROWS*T+20){die(p);return}
   if(p.sq>0)p.sq=Math.max(0,p.sq-dt);else if(p.sq<0)p.sq=Math.min(0,p.sq+dt);
   p.anim+=dt*(Math.abs(p.vx)>5&&p.ground?1:0);if(Math.abs(p.vx)>60&&p.ground&&Math.random()<dt*5)dust(p,1);p.blink-=dt;if(p.blink<-.12)p.blink=2+Math.random()*3;
+  if(p.y<0){p.y=0;if(p.vy<0)p.vy=0}
   p.dx=p.x-ox;p.dy=p.y-oy}
 function moveX(p,dx,carry){if(!dx)return;p.x+=dx;const r=prect(p);for(const s of solidsNear(r,p.ign)){if(!ov(r,s))continue;p.x=dx>0?s.x-PW:s.x+s.w;r.x=p.x;if(!carry)p.vx=0}
   boxes.forEach((b,i)=>{const r2=prect(p);if(!ov(r2,b))return;if(p.y+PH<=b.y+3){return}p.x=dx>0?b.x-PW:b.x+b.w;if(!carry){p.pb=[i,dx>0?1:-1];p.vx=dx>0?Math.min(p.vx,PUSH):Math.max(p.vx,-PUSH)}})}
@@ -503,6 +518,7 @@ function stepBoxes(dt){const cnt=boxes.map(()=>({'1':0,'-1':0}));
 /* tombol, lempeng & palang (dihitung oleh tuan rumah, dikirim ke tamu) */
 function standsOn(e,x,y){const bot=e.y+(e.h||PH),w=e.w||PW;if(Math.abs(bot-(y+1)*T)>2.5)return false;return Math.min(e.x+w,x*T+14)-Math.max(e.x,x*T+2)>=3}
 function pressedAt(x,y){return P.some(p=>!p.ent&&standsOn(p,x,y))||boxes.some(b=>standsOn(b,x,y))}
+function onChain(q,p){for(let k=0;q&&k<6;k++){if(q===p)return true;q=q.on}return false}
 function movUpdate(dt){MOV.forEach(m=>{let s;if(m.trig){const gOn=BTNS.some(b=>b.t===m.trig&&b.on);m.s=Math.max(0,Math.min(1,m.s+(gOn?1:-1)*(dt||0)/(m.per/2)));s=m.s*m.s*(3-2*m.s)}else s=.5-.5*Math.cos(levelT*2*Math.PI/m.per);const nx=m.x0+(m.x1-m.x0)*s,ny=m.y0+(m.y1-m.y0)*s;m.dx=nx-m.x;m.dy=ny-m.y;m.x=nx;m.y=ny})}
 function updateSwitches(dt){const was={...barOpen};
   BTNS.forEach(b=>{const on=pressedAt(b.x,b.y);if(on&&!b.on)SFX.btn();else if(!on&&b.on)SFX.btnUp();b.on=on});
@@ -751,7 +767,7 @@ function myHatSend(){if(!NET.on||ME<0)return;const pet=selPets(1)[0],e=costOf(pe
 /* ====== kontrol ====== */
 const touch=matchMedia('(pointer:coarse)').matches;document.body.classList.toggle('touch',touch);
 const KMAP={KeyW:[0,'j'],KeyA:[0,'l'],KeyD:[0,'r'],KeyS:[0,'d'],Space:[0,'j'],ArrowUp:[1,'j'],ArrowLeft:[1,'l'],ArrowRight:[1,'r'],ArrowDown:[1,'d'],KeyT:[2,'j'],KeyF:[2,'l'],KeyH:[2,'r'],KeyG:[2,'d'],KeyI:[3,'j'],KeyJ:[3,'l'],KeyL:[3,'r'],KeyK:[3,'d']};
-addEventListener('keydown',e=>{if(e.target&&e.target.tagName==='INPUT')return;if(e.key==='Escape'){if(running&&$('pRes').hidden)togglePause();return}
+addEventListener('keydown',e=>{if(e.target&&e.target.tagName==='INPUT')return;if(e.key==='Escape'){if(CTL.on){ctlClose();return}if(running&&$('pRes').hidden)togglePause();return}
   if(running&&!paused&&!quizOpen&&e.code==='KeyR'){restartLevel(true);return}
   if(NET.on&&running&&/^Digit[1-9]$/.test(e.code)){emoSend(+e.code.slice(5)-1);return}
   const k=KMAP[e.code];if(!k||!running)return;e.preventDefault();if(quizOpen||paused)return;const p=P[ME>=0?ME:k[0]];if(p&&!p.remote){if(k[1]==='j'&&!p.inp.j)p.jq=true;p.inp[k[1]]=1}});
@@ -761,13 +777,35 @@ document.querySelectorAll('.pad').forEach(pad=>{const ptr=new Map();
   const sync=()=>{if(!P.length)return;const keys={l:0,r:0,j:0};ptr.forEach(k=>{if(k)keys[k]=1});const p=P[ME>=0?ME:+pad.dataset.p];const block=quizOpen||paused;
     pad.querySelectorAll('button').forEach(b=>{const v=!block&&keys[b.dataset.k];b.classList.toggle('on',!!v);if(p&&!p.remote&&b.offsetParent){if(v&&b.dataset.k==='j'&&!p.inp.j)p.jq=true;p.inp[b.dataset.k]=v?1:0}})};
   const hit=(x,y)=>{let best=null,bd=1e9;pad.querySelectorAll('button').forEach(b=>{if(!b.offsetParent)return;const r=b.getBoundingClientRect(),cx=(r.left+r.right)/2,cy=(r.top+r.bottom)/2,d=Math.hypot(x-cx,y-cy);if(d<bd&&d<r.width*1.05){bd=d;best=b.dataset.k}});return best};
-  pad.addEventListener('pointerdown',e=>{e.preventDefault();try{pad.setPointerCapture(e.pointerId)}catch(_){}const k=hit(e.clientX,e.clientY);ptr.set(e.pointerId,k);if(k)haptic&&haptic(8);sync();ac()});
-  pad.addEventListener('pointermove',e=>{if(!ptr.has(e.pointerId))return;const k=hit(e.clientX,e.clientY);if(k!==ptr.get(e.pointerId)){ptr.set(e.pointerId,k);sync()}});
-  ['pointerup','pointercancel','lostpointercapture'].forEach(ev=>pad.addEventListener(ev,e=>{if(ptr.delete(e.pointerId))sync()}));
+  pad.addEventListener('pointerdown',e=>{e.preventDefault();try{pad.setPointerCapture(e.pointerId)}catch(_){}if(CTL.on){ctlDown(pad,e);return}const k=hit(e.clientX,e.clientY);ptr.set(e.pointerId,k);if(k)haptic&&haptic(8);sync();ac()});
+  pad.addEventListener('pointermove',e=>{if(CTL.dg){ctlMove(pad,e);return}if(!ptr.has(e.pointerId))return;const k=hit(e.clientX,e.clientY);if(k!==ptr.get(e.pointerId)){ptr.set(e.pointerId,k);sync()}});
+  ['pointerup','pointercancel','lostpointercapture'].forEach(ev=>pad.addEventListener(ev,e=>{if(CTL.dg&&CTL.dg.id===e.pointerId){ctlUp(pad);return}if(ptr.delete(e.pointerId))sync()}));
   pad.clearAll=()=>{ptr.clear();sync()}});
+
+/* atur tombol: ukuran, kejelasan, dan posisi (disimpan per perangkat) */
+const CTL={on:false,solo:false,dg:null,from:null};let PADS={};try{PADS=JSON.parse(localStorage.getItem('jk_pad')||'{}')||{}}catch(e){PADS={}}
+function padSave(){try{localStorage.setItem('jk_pad',JSON.stringify(PADS))}catch(e){}}
+function stageWH(){const s=$('stage');return [s.offsetWidth||innerWidth,s.offsetHeight||innerHeight]}
+function toLocal(x,y){const b=document.body;if(!b.classList.contains('rot'))return [x,y];return b.classList.contains('rotR')?[y,innerWidth-x]:[innerHeight-y,x]}
+function padKey(pad){return pad.id+(pad.classList.contains('solo')?'s':'d')}
+function padApply(){document.querySelectorAll('.pad').forEach(pad=>{if(PADS.pb)pad.style.setProperty('--pb',PADS.pb+'px');else pad.style.removeProperty('--pb');pad.style.opacity=PADS.op?String(PADS.op/100):'';
+  const pos=(PADS.pos||{})[padKey(pad)];if(pos&&!pad.hidden){const [W,H]=stageWH(),w=pad.offsetWidth,h=pad.offsetHeight;const x=Math.max(0,Math.min(W-w,pos[0]*W-w/2)),y=Math.max(0,Math.min(H-h,pos[1]*H-h/2));Object.assign(pad.style,{left:x+'px',top:y+'px',right:'auto',bottom:'auto'})}else Object.assign(pad.style,{left:'',top:'',right:'',bottom:''})})}
+function ctlDown(pad,e){const [lx,ly]=toLocal(e.clientX,e.clientY);CTL.dg={id:e.pointerId,ox:lx-pad.offsetLeft,oy:ly-pad.offsetTop};document.body.classList.add('cdrag');haptic(8)}
+function ctlMove(pad,e){if(!CTL.dg||CTL.dg.id!==e.pointerId)return;const [lx,ly]=toLocal(e.clientX,e.clientY),[W,H]=stageWH(),w=pad.offsetWidth,h=pad.offsetHeight;
+  const x=Math.max(0,Math.min(W-w,lx-CTL.dg.ox)),y=Math.max(0,Math.min(H-h,ly-CTL.dg.oy));Object.assign(pad.style,{left:x+'px',top:y+'px',right:'auto',bottom:'auto'})}
+function ctlUp(pad){CTL.dg=null;document.body.classList.remove('cdrag');const [W,H]=stageWH();PADS.pos=PADS.pos||{};PADS.pos[padKey(pad)]=[+((pad.offsetLeft+pad.offsetWidth/2)/W).toFixed(4),+((pad.offsetTop+pad.offsetHeight/2)/H).toFixed(4)];padSave()}
+function ctlTabs(){$('ctDuo').classList.toggle('on',!CTL.solo);$('ctSolo').classList.toggle('on',CTL.solo)}
+function ctlOpen(from){CTL.on=true;CTL.from=from;CTL.solo=NET.on&&touch;hideAll();$('pCtl').hidden=false;document.body.classList.add('cedit');ctlTabs();padMode();
+  const pb=parseFloat(getComputedStyle($('padL')).getPropertyValue('--pb'))||68;$('ctSz').value=PADS.pb||pb;$('ctOp').value=PADS.op||100}
+function ctlClose(){if(!CTL.on)return;CTL.on=false;CTL.dg=null;$('pCtl').hidden=true;document.body.classList.remove('cedit');padSave();padMode();if(CTL.from==='pause'&&running){$('pPause').hidden=false}else if(!running){$('pStart').hidden=false}}
+$('bCtl').onclick=()=>{ac();SFX.click();ctlOpen('home')};$('bCtlP').onclick=()=>{SFX.click();ctlOpen('pause')};$('ctDone').onclick=()=>{SFX.click();ctlClose()};
+$('ctSz').oninput=e=>{PADS.pb=+e.target.value;padApply()};$('ctOp').oninput=e=>{PADS.op=+e.target.value;padApply()};
+$('ctDuo').onclick=()=>{CTL.solo=false;ctlTabs();padMode()};$('ctSolo').onclick=()=>{CTL.solo=true;ctlTabs();padMode()};
+$('ctReset').onclick=()=>{SFX.click();PADS={};padSave();padApply();$('ctSz').value=parseFloat(getComputedStyle($('padL')).getPropertyValue('--pb'))||68;$('ctOp').value=100};
+addEventListener('resize',()=>setTimeout(padApply,60));
 function haptic(ms){try{navigator.vibrate&&navigator.vibrate(ms)}catch(e){}}
-function padMode(){const on=NET.on&&touch;document.querySelectorAll('.pad .tag').forEach((t,i)=>t.textContent=on?(i?'LOMPAT':'JALAN'):(i?'PEMAIN 2':'PEMAIN 1'));
-  document.querySelectorAll('#padL [data-k="j"],#padR [data-k="l"],#padR [data-k="r"]').forEach(b=>b.style.display=on?'none':'');$('padL').classList.toggle('solo',on);$('padR').classList.toggle('solo',on);$('padL').hidden=$('padR').hidden=!(touch&&running)}
+function padMode(){const on=CTL.on?CTL.solo:NET.on&&touch;document.querySelectorAll('.pad .tag').forEach((t,i)=>t.textContent=on?(i?'LOMPAT':'JALAN'):(i?'PEMAIN 2':'PEMAIN 1'));
+  document.querySelectorAll('#padL [data-k="j"],#padR [data-k="l"],#padR [data-k="r"]').forEach(b=>b.style.display=on?'none':'');$('padL').classList.toggle('solo',on);$('padR').classList.toggle('solo',on);$('padL').hidden=$('padR').hidden=!(CTL.on||(touch&&running));padApply()}
 
 /* ====== ukuran layar & putar otomatis di HP ====== */
 const ROT={motion:false,ios:/iPad|iPhone|iPod/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1)};
@@ -784,7 +822,7 @@ addEventListener('resize',fit);fit();
 /* ====== putaran utama ====== */
 let last=0,acc=0;function loop(ts){requestAnimationFrame(loop);const dt=Math.min(.05,(ts-last)/1000||0);last=ts;if(FX.sh>0)FX.sh-=dt;if(FX.fl>0)FX.fl-=dt;
   if(running&&!paused&&!(quizOpen&&!NET.on)&&!window.__duoManual){acc+=dt;while(acc>=1/60){step(1/60);acc-=1/60}}else acc=0;draw()}
-const PANELS=['pStart','pPets','pLv','pCos','pHelp','pOnline','pPause','pQuiz','pRes','pRc','pVoice'];
+const PANELS=['pCtl','pStart','pPets','pLv','pCos','pHelp','pOnline','pPause','pQuiz','pRes','pRc','pVoice'];
 function hideAll(){PANELS.forEach(i=>$(i).hidden=true)}
 function uiStop(){running=false;paused=false;quizOpen=false;Q2=null;music(false);$('hud').hidden=true;$('padL').hidden=$('padR').hidden=true;$('emo').hidden=true;$('tip').hidden=true;$('banner').hidden=true;document.body.classList.remove('playing')}
 function startLevel(lv,o={}){const fresh=lv!==LV||!running||o.fresh;hideAll();$('tip').hidden=true;loadLevel(lv);running=true;paused=false;quizOpen=false;Q2=null;$('hud').hidden=false;padMode();document.body.classList.add('playing');ac();music(true);
@@ -859,9 +897,9 @@ $('rsNext').onclick=()=>{SFX.click();startLevel(LV+1,{fresh:true})};$('rsAgain')
 /* ====== jaringan: terima & kirim ====== */
 var ME=-1;const NET={on:false,host:false,peers:{},up:null,roster:[],code:'',rcode:'',unsubJ:null,sendT:null,lastRx:0,started:false,myName:'',myUid:''};
 function netLerp(p,dt){const n=p.net;if(!n)return;const ox=p.x,oy=p.y;const k=Math.min(1,dt*15);p.x+=(n.x-p.x)*k;p.y+=(n.y-p.y)*k;if(Math.abs(n.x-p.x)>40||Math.abs(n.y-p.y)>40){p.x=n.x;p.y=n.y}
-  p.vx=n.vx||0;p.vy=n.vy||0;p.face=n.f||1;p.ground=!!n.g;p.anim=n.a||0;const we=p.ent;p.ent=!!n.e;if(p.ent&&!we){SFX.enter();if(door)sparks(door.x+8,door.y+20,'#ffe08a',10,80,.5);hudKey()}
+  p.vx=n.vx||0;p.vy=n.vy||0;p.face=n.f||1;p.ground=!!n.g;p.onI=n.o==null?-1:n.o;p.anim=n.a||0;const we=p.ent;p.ent=!!n.e;if(p.ent&&!we){SFX.enter();if(door)sparks(door.x+8,door.y+20,'#ffe08a',10,80,.5);hudKey()}
   p.blink-=dt;if(p.blink<-.12)p.blink=2+Math.random()*3;p.dx=p.x-ox;p.dy=p.y-oy}
-function netState(){const p=P[ME];if(!p)return null;return {t:'s',lv:LV,x:+p.x.toFixed(1),y:+p.y.toFixed(1),vx:p.vx|0,vy:p.vy|0,f:p.face,g:p.ground?1:0,a:+(p.anim||0).toFixed(2),e:p.ent?1:0,pb:p.pb||0}}
+function netState(){const p=P[ME];if(!p)return null;return {t:'s',lv:LV,x:+p.x.toFixed(1),y:+p.y.toFixed(1),vx:p.vx|0,vy:p.vy|0,f:p.face,g:p.ground?1:0,a:+(p.anim||0).toFixed(2),e:p.ent?1:0,pb:p.pb||0,o:p.on&&P.includes(p.on)?p.on.i:-1}}
 function netRx(m){const from=P[m.fi];
   if(m.t==='kget'){keyGet(m.k,m.fi,true);return}
   if(m.t==='bub'){bubPop(m.k,m.fi,true);return}
@@ -879,7 +917,7 @@ function netRx(m){const from=P[m.fi];
   if(m.t==='bye'){if(verBad.on)return;if(m.fi===0)netLost(`${nameOf(0)} (tuan rumah) keluar dari permainan.`,true);return}}
 
 /* jendela bisa ditutup dengan tombol ✕ di pojok atau mengetuk area di luarnya */
-const CLOSERS={pCos:()=>$('cBack').onclick(),pHelp:()=>$('hpBack').onclick(),pLv:()=>$('lvBack').onclick(),pPets:()=>$('ptBack').onclick(),pPause:()=>togglePause(),
+const CLOSERS={pCtl:()=>ctlClose(),pCos:()=>$('cBack').onclick(),pHelp:()=>$('hpBack').onclick(),pLv:()=>$('lvBack').onclick(),pPets:()=>$('ptBack').onclick(),pPause:()=>togglePause(),
   pQuiz:()=>$('qLater').onclick(),
   pOnline:()=>{if(!$('onMenu').hidden)$('bOnBack').onclick();else $('bOnCancel').onclick()},
   pVoice:()=>{const b=['pgNo','sfNo','mBack','vOk','dBack'].map(i=>$(i)).find(x=>x);if(b)b.click();else $('pVoice').hidden=true}};
