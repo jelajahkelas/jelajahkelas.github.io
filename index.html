@@ -3459,6 +3459,15 @@ html body #vQuest .mqhead{position:sticky;top:calc(8px + env(safe-area-inset-top
 .picopts .opt .tkpos{font-size:40px}
 .big.tkseq{font-size:34px;letter-spacing:2px;display:block;margin-top:10px;line-height:1.4}
 .big.tkword{display:block;font-size:52px;letter-spacing:6px;margin-top:12px;font-family:var(--title)}
+.bcm{display:flex;flex-direction:column;align-items:center;gap:8px;padding:6px 0 4px;grid-column:1/-1;width:100%}
+.bcmic{width:96px;height:96px;border-radius:50%;border:0;background:#7C4DFF;color:#fff;font-size:44px;box-shadow:0 6px 0 #5A35C9;cursor:pointer;display:grid;place-items:center;transition:transform .15s}
+.bcmic:active{transform:translateY(3px);box-shadow:0 3px 0 #5A35C9}.bcmic:disabled{opacity:.5}
+.bcmic.on{background:#FF5A5F;box-shadow:0 6px 0 #C93D42;animation:bcPulse 1s ease-in-out infinite}
+.bcmic.ok{background:#26BF66;box-shadow:0 6px 0 #1B8C4A;animation:none}.bcmic.bad{animation:shake .4s}
+@keyframes bcPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
+@media (prefers-reduced-motion:reduce){.bcmic.on{animation:none}}
+.bcst{margin:0;font-weight:700;text-align:center;font-size:18px}.bchear{margin:0;min-height:1.3em;color:var(--muted,#6B6480);text-align:center}
+.bcrow{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
 .agpick{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0}
 .agb{display:flex;align-items:center;gap:10px;min-height:56px;padding:10px 14px;border-radius:14px;border:2px solid var(--line,#E5E5E5);background:var(--card,#fff);color:var(--ink);font:800 16px var(--display,sans-serif);box-shadow:0 4px 0 var(--line,#E5E5E5)}
 .agb span{font-size:22px;width:28px;text-align:center}
@@ -4262,7 +4271,7 @@ html[data-theme=malam] .tkact{background:#1e2235;color:#eef}html[data-theme=mala
 <div class="syncpill" id="syncPill" hidden></div>
 <div class="toast" id="toast" hidden></div>
 
-<script src="av.js?v=412"></script>
+<script src="av.js?v=413"></script>
 <script>
 /* ---------- visual assets ---------- */
 const INK='#1B1E3D';
@@ -4486,6 +4495,9 @@ const TK_BACA=[['BOLA','⚽'],['SAPI','🐄'],['BUKU','📖'],['KUDA','🐴'],['
 const tkBaca=()=>{const t=pick(TK_BACA),o=[t,...shuffle(TK_BACA.filter(x=>x!==t)).slice(0,3)];return Q(`🔊 Baca kata ini:<span class="big tkword">${t[0]}</span>`,{opts:shuffle(o.map(x=>x[1])),ans:t[1]},`${t[0]} dibaca ${t[0].toLowerCase().split('').join(' ')}… ${t[0].toLowerCase()}!`,{say:'Baca kata ini pelan-pelan. Lalu ketuk gambarnya.',pic:true,noOptSay:true})};
 /* --- Menebalkan (tracing) --- */
 const tkTrace=(ch,kind)=>Q(`<span class="qtag">Tebalkan ${kind}</span>🔊 Tebalkan ${kind} <b>${ch}</b> dengan jarimu!`,{opts:['Selesai','Belum'],ans:'Selesai'},`Hebat! Kamu menebalkan ${kind} ${ch}.`,{trace:ch,html:true,say:`Tebalkan ${kind} ${/[0-9]/.test(ch)?ch:ch.toLowerCase()===ch?'kecil '+ch:ch} dengan jarimu. Ikuti garisnya.`});
+const SPEECH_REC=window.SpeechRecognition||window.webkitSpeechRecognition;let micOff=false;
+/* TK: membaca kata dengan suara (mic). Jika mic tidak tersedia/ditolak, kembali ke soal pilih gambar. */
+const tkBacaMic=()=>{if(!SPEECH_REC||micOff)return tkBaca();const t=pick(TK_BACA);return Q(`<span class="qtag">Membaca dengan suara</span>🎤 Tekan mic, lalu baca kata ini dengan keras:<span class="big tkword">${t[0]}</span>`,{opts:['Benar','Belum'],ans:'Benar'},`Hebat! Kamu membaca ${t[0].toLowerCase()} ${t[1]}`,{baca:{w:t[0],pic:t[1]},html:true,say:'Tekan tombol mic, lalu baca kata ini dengan keras.'})};
 const tkTraceUp=()=>tkTrace(pick(ABC),'huruf');
 const tkTraceLow=()=>tkTrace(pick('abcdefghiklmnoprstuwy'.split('')),'huruf');
 const tkTraceNum=()=>tkTrace(String(R(0,9)),'angka');
@@ -4845,7 +4857,7 @@ const COURSE=[
     U('Menebalkan huruf','Menulis huruf A sampai Z dengan jari',[tkTraceUp,tkTraceUp,tkFirstPic],{fit:'picture',tip:'Tulis dari atas ke bawah dan dari kiri ke kanan.'}),
     U('Huruf kecil','Mengenal dan menulis huruf a sampai z',[tkKecil,tkTraceLow,tkMatchHuruf],{fit:'picture',tip:'Setiap huruf besar punya pasangan huruf kecil: A–a, B–b.'}),
     U('Suku kata','Menggabungkan huruf: ba, bi, bu, be, bo',[tkSuku],{fit:'picture',tip:'B dan A dibaca BA. Ganti hurufnya: BA, BI, BU, BE, BO.'}),
-    U('Membaca kata','Membaca kata pendek lalu memilih gambarnya',[tkBaca],{fit:'picture',tip:'Baca per suku kata: BO-LA, lalu gabungkan: BOLA.'})]},
+    U('Membaca kata','Membaca kata pendek dengan suara dan memilih gambarnya',[tkBaca,tkBacaMic],{fit:'picture',tip:'Baca per suku kata: BO-LA, lalu gabungkan: BOLA. Tekan mic lalu bacakan dengan keras.'})]},
   {id:'warna',name:'Warna & Bentuk',glyph:'●▲',color:'#FF5C9E',fit:'kidSlow',units:[
     U('Mengenal warna','Memilih warna yang disebut',[tkColorPick],{tip:'Cari benda di sekitarmu yang warnanya sama.'}),
     U('Mengenal bentuk','Lingkaran, segitiga, persegi, dan lainnya',[tkShapePick],{tip:'Hitung sudutnya: segitiga punya 3, persegi punya 4, lingkaran tidak punya sudut.'}),
@@ -10107,7 +10119,7 @@ function spokenTx(t){return String(t||'').replace(/[\p{Extended_Pictographic}\uF
 function qSpeech(q){if(!q)return '';if(!earlyReader())return '';if(q.say)return q.say;return spokenTx(plainTx(q.q))}
 function sayLong(t){if(!t)return;try{const s=window.speechSynthesis;s.cancel();if(String(t).includes('«')){speakParts(s,t,.9);return}const parts=String(t).match(/[^.!?\n]+[.!?\n]*/g)||[t];let buf='';const out=[];parts.forEach(p=>{if((buf+p).length>180&&buf){out.push(buf);buf=''}buf+=p});if(buf)out.push(buf);
   out.forEach(x=>{const u=new SpeechSynthesisUtterance(x.trim());u.lang='id-ID';u.rate=.9;s.speak(u)})}catch(e){}}
-function optSpeech(q,k){if(q.trace||q.warna||q.match)return '';const o=q.opts[k];if(q.optSay&&q.optSay[o])return q.optSay[o];const t=plainTx(o).replace(/[^\p{L}\p{N}’' -]/gu,' ').replace(/\s+/g,' ').trim();if(t)return q.optEn?'«'+t+'»':t;const m=String(o).match(/class="objs">([^<]*)</);return m?String([...m[1]].filter(ch=>/\p{Extended_Pictographic}/u.test(ch)).length):''}
+function optSpeech(q,k){if(q.trace||q.warna||q.match||q.baca)return '';const o=q.opts[k];if(q.optSay&&q.optSay[o])return q.optSay[o];const t=plainTx(o).replace(/[^\p{L}\p{N}’' -]/gu,' ').replace(/\s+/g,' ').trim();if(t)return q.optEn?'«'+t+'»':t;const m=String(o).match(/class="objs">([^<]*)</);return m?String([...m[1]].filter(ch=>/\p{Extended_Pictographic}/u.test(ch)).length):''}
 function speakParts(s,t,rate){String(t).split(/(«[^»]*»)/).forEach(p=>{if(!p.trim())return;const en=p[0]==='«';const u=new SpeechSynthesisUtterance(en?p.slice(1,-1):p);u.lang=en?'en-US':'id-ID';u.rate=en?.8:rate;s.speak(u)})}
 function say(t){if(!soundOn||!t)return;try{const s=window.speechSynthesis;s.cancel();speakParts(s,t,.9)}catch(e){}}
 
@@ -10332,7 +10344,7 @@ function renderQ(){
   $('#opts').innerHTML=q.opts.map((o,k)=>`<button class="opt" data-k="${k}"><span class="k">${'ABCD'[k]||k+1}</span><span class="t">${o}</span></button>`).join('');
   const chk=!!(game.lesson&&game.mode==='kuis');
   $('#opts').classList.toggle('picopts',!!q.pic);$('#opts').classList.toggle('bsopts',!!q.bs);
-  if(q.ketik||q.match||q.trace||q.warna)setTimeout(()=>qSpecial(q),0);
+  if(q.ketik||q.match||q.trace||q.warna||q.baca)setTimeout(()=>qSpecial(q),0);
   $('#opts').querySelectorAll('.opt').forEach(b=>b.onclick=()=>{const k=+b.dataset.k;if(L.id==='tk'&&chk){if(game.sel===k&&!game.locked){$('#checkBtn').click();return}if(!q.noOptSay){const t=optSpeech(q,k);if(t)say(t)}}else if(chk&&earlyReader()&&!q.noOptSay){const t=optSpeech(q,k);if(t)say(spokenTx(t))}chk?selectOpt(k):answer(k)});
   $('#checkBar').hidden=!chk;$('#checkBtn').disabled=true;
   const card=$('#qcard');card.classList.remove('pop','shake');void card.offsetWidth;card.classList.add('pop');
@@ -10348,6 +10360,7 @@ function qSpecial(q){const box=$('#opts');if(!box||!game||game.qs[game.i]!==q)re
     const sel=()=>{const v=inp.value.trim();if(!v){game.sel=null;$('#checkBtn').disabled=true;return}const ok=qNorm(v).replace(/−/g,'-')===qNorm(q.ans).replace(/−/g,'-');let k=ok?q.opts.indexOf(q.ans):q.opts.findIndex(o=>o!==q.ans);game.sel=k;$('#checkBtn').disabled=false;q._typed=v};
     inp.oninput=sel;inp.onkeydown=e=>{if(e.key==='Enter'&&game.sel!=null){e.preventDefault();$('#checkBtn').click()}};return}
   if(q.trace){tkTraceUI(q,box);return}
+  if(q.baca){tkBacaUI(q,box);return}
   if(q.warna){tkWarnaUI(q,box);return}
   if(q.match){const L2=shuffle(q.match.map((p,i)=>[i,p[0]])),R2=shuffle(q.match.map((p,i)=>[i,p[1]]));let selL=null,done=0,miss=0;const ms=q.matchSay||null,sayM=t=>{if(ms&&ms[t])try{say(ms[t])}catch(e){}};
     box.insertAdjacentHTML('beforeend',`<div class="mtch${q.pic?' mtk':''}"><div class="mcol">${L2.map(([i,t])=>`<button class="mitem" data-l="${i}">${esc(t)}</button>`).join('')}</div><div class="mcol">${R2.map(([i,t])=>`<button class="mitem" data-r="${i}">${esc(t)}</button>`).join('')}</div></div>`);
@@ -10358,6 +10371,39 @@ function qSpecial(q){const box=$('#opts');if(!box||!game||game.qs[game.i]!==q)re
       if(+b.dataset.r===selL){[lb,b].forEach(x=>{x.classList.remove('on');x.classList.add('ok');x.disabled=true});done++;try{sfx.ok()}catch(e){}selL=null;
         if(done===q.match.length)setTimeout(()=>{game.sel=miss<=1?0:1;if(miss>1)q.exp=`Kamu ${miss} kali salah memasangkan. Ayo teliti lagi!`;answer(game.sel)},350)}
       else{miss++;[lb,b].forEach(x=>{x.classList.add('bad');setTimeout(()=>x.classList.remove('bad'),450)});try{sfx.bad()}catch(e){}}})}}
+/* ===== TK: membaca kata dengan suara ===== */
+function bacaNorm(t){return String(t||'').toLowerCase().normalize('NFKD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z]/g,'')}
+function bacaMirip(a,b){if(!a||!b)return 0;const m=a.length,n=b.length;const d=Array.from({length:m+1},(_,i)=>[i]);for(let j=1;j<=n;j++)d[0][j]=j;
+  for(let i=1;i<=m;i++)for(let j=1;j<=n;j++)d[i][j]=Math.min(d[i-1][j]+1,d[i][j-1]+1,d[i-1][j-1]+(a[i-1]===b[j-1]?0:1));return 1-d[m][n]/Math.max(m,n)}
+function bacaCocok(alts,w){const t=bacaNorm(w);for(const a of alts){const all=bacaNorm(a);if(!all)continue;if(all===t||all.includes(t))return true;
+  for(const tok of String(a).toLowerCase().split(/\s+/)){const x=bacaNorm(tok);if(x&&(x===t||(t.length>=5&&bacaMirip(x,t)>=.8)))return true}}return false}
+function tkBacaUI(q,box){$('#checkBar').hidden=true;const w=q.baca.w;let tries=0,rec=null,busy=false,done=false;
+  box.insertAdjacentHTML('beforeend',`<div class="bcm"><button class="bcmic press" id="bcMic" aria-label="Tekan lalu baca kata ${esc(w)}"><span aria-hidden="true">🎤</span></button>
+    <p class="bcst" id="bcSt" aria-live="polite">Tekan mic, lalu baca dengan keras</p><p class="bchear" id="bcHear"></p>
+    <div class="bcrow"><button class="ghost press" id="bcHelp">🔊 Contoh bacaan</button><button class="ghost press" id="bcSkip" hidden>Lewati</button></div></div>`);
+  const mic=$('#bcMic'),st=$('#bcSt'),hear=$('#bcHear'),skip=$('#bcSkip');
+  const still=()=>game&&game.qs[game.i]===q&&!done;
+  const stop=()=>{try{rec&&rec.abort()}catch(e){}rec=null;busy=false;mic.classList.remove('on')};
+  const finish=ok=>{if(!still())return;done=true;stop();game.sel=ok?0:1;answer(game.sel)};
+  const fallback=msg=>{micOff=true;stop();st.textContent=msg;mic.disabled=true;setTimeout(()=>{if(!still())return;const nq=tkBaca();game.qs[game.i]=nq;renderQ()},1600)};
+  const salah=heard=>{tries++;mic.classList.add('bad');setTimeout(()=>mic.classList.remove('bad'),450);try{sfx.bad()}catch(e){}
+    hear.textContent=heard?`Terdengar: “${heard}”`:'';
+    if(tries>=3){st.textContent='Tidak apa-apa. Dengarkan dulu, lalu coba lagi atau lewati.';skip.hidden=false;try{say(`Dengarkan, ya. ${w.toLowerCase()}.`)}catch(e){}}
+    else{st.textContent='Hampir! Coba baca lagi pelan-pelan.';try{say('Hampir! Coba lagi, ya.')}catch(e){}}};
+  mic.onclick=()=>{if(done)return;if(busy){stop();st.textContent='Tekan mic, lalu baca dengan keras';return}
+    try{window.speechSynthesis&&speechSynthesis.cancel()}catch(e){}
+    try{rec=new SPEECH_REC()}catch(e){fallback('Mic tidak tersedia. Kita pilih gambarnya saja, ya.');return}
+    rec.lang='id-ID';rec.interimResults=true;rec.maxAlternatives=5;rec.continuous=false;let heard='',got=false;
+    rec.onresult=e=>{const alts=[];for(let i=e.resultIndex;i<e.results.length;i++){const r=e.results[i];for(let k=0;k<r.length;k++)alts.push(r[k].transcript);if(r.isFinal)got=true}
+      heard=(e.results[e.results.length-1][0]||{}).transcript||heard;hear.textContent=heard?`Terdengar: “${heard}”`:'';
+      if(bacaCocok(alts,w)){got=true;mic.classList.add('ok');st.textContent=`Benar! ${w} ${q.baca.pic}`;try{sfx.ok()}catch(e){}try{popFx(mic,q.baca.pic)}catch(e){}setTimeout(()=>finish(true),900);stop()}};
+    rec.onerror=e=>{const er=e&&e.error;if(er==='not-allowed'||er==='service-not-allowed'){fallback('Mic belum diizinkan. Kita pilih gambarnya saja, ya.');return}
+      if(er==='no-speech'){stop();st.textContent='Suaramu belum terdengar. Tekan mic, lalu baca lebih keras.';return}
+      if(er==='network'){fallback('Mic butuh internet. Kita pilih gambarnya saja, ya.');return}if(er!=='aborted'){stop();st.textContent='Coba tekan mic sekali lagi.'}};
+    rec.onend=()=>{const was=busy;busy=false;mic.classList.remove('on');if(done||!was)return;if(got&&!mic.classList.contains('ok'))salah(heard)};
+    try{rec.start();busy=true;mic.classList.add('on');st.textContent='Aku mendengarkan… baca sekarang!';hear.textContent=''}catch(e){fallback('Mic tidak tersedia. Kita pilih gambarnya saja, ya.')}};
+  $('#bcHelp').onclick=()=>{if(busy)stop();try{say(w.toLowerCase().split('').join(' ')+'. '+w.toLowerCase())}catch(e){}};
+  skip.onclick=()=>finish(false)}
 /* ===== TK: menebalkan huruf/angka dengan jari ===== */
 function tkTraceUI(q,box){$('#checkBar').hidden=true;
   const W=Math.max(220,Math.min(320,(box.clientWidth||320)-4)),dpr=Math.min(3,window.devicePixelRatio||1);
@@ -10462,7 +10508,7 @@ function answer(k){tmStop();
   if(ok&&!game.lesson)popFx(btns[k],'+'+gained);
   if(ok&&game.lesson)popFx(btns[k],'');
   if(game.lesson){if(!ok)weakAdd(q);else if(q.weak)weakHit(q,true);if(game.lesson.kind!=='eval')try{repAdd(q,ok)}catch(e){}}
-  if(!ok&&game.lesson&&game.lesson.reask&&game.lives>0&&!q.match&&!q.trace&&!q.warna)game.qs.push(Object.assign({},q,{ok:undefined,picked:undefined,opts:shuffle(q.opts.slice()),again:true}));
+  if(!ok&&game.lesson&&game.lesson.reask&&game.lives>0&&!q.match&&!q.trace&&!q.warna&&!q.baca)game.qs.push(Object.assign({},q,{ok:undefined,picked:undefined,opts:shuffle(q.opts.slice()),again:true}));
   if(game.lesson)renderHUD();
   const fb=$('#feedback');fb.hidden=false;fb.className='feedback '+(ok?'ok':'bad');placeFb();
   $('#fbTitle').textContent=ok?(team?`${team.name} benar! +${gained}`:game.lesson?pick(PRAISE):pick(PRAISE)+` +${gained}`):(k<0?(game.lesson?'Dilewati':'Waktu habis'):'Belum tepat');
@@ -10471,7 +10517,7 @@ function answer(k){tmStop();
   $('#nextBtn').textContent=game.lesson?(last?'Selesai':'Lanjut'):last?(team?'Lihat klasemen →':'Lihat rapor →'):'Lanjut →';
   try{rpBtn()}catch(e){}
   if(L.id!=='tk'&&earlyReader()&&soundOn){const ai=q.opts.indexOf(q.ans);const at=ai>=0&&!q.noOptSay?spokenTx(optSpeech(q,ai)):'';say(ok?pick(['Benar!','Hebat, betul!','Pintar!']):'Belum tepat.'+(at?' Jawabannya '+at+'.':''))}
-  if(L.id==='tk'){const ai=q.opts.indexOf(q.ans);const mine=k>=0?optSpeech(q,k):'';say((mine?mine+'. ':'')+(ok?pick(['Hebat, benar!','Pintar sekali!','Hore, betul!']):(q.match||q.warna||q.trace)?'Tidak apa-apa. Ayo lebih teliti lagi, ya.':`Belum tepat. Jawabannya, ${optSpeech(q,ai)||'yang ditandai hijau'}.`))}
+  if(L.id==='tk'){const ai=q.opts.indexOf(q.ans);const mine=k>=0?optSpeech(q,k):'';say((mine?mine+'. ':'')+(ok?pick(['Hebat, benar!','Pintar sekali!','Hore, betul!']):(q.match||q.warna||q.trace||q.baca)?'Tidak apa-apa. Ayo lebih teliti lagi, ya.':`Belum tepat. Jawabannya, ${optSpeech(q,ai)||'yang ditandai hijau'}.`))}
   $('#nextBtn').focus({preventScroll:true});
 }
 const optIdx=k=>/^[1-4]$/.test(k)?+k-1:/^[a-dA-D]$/.test(k)?k.toLowerCase().charCodeAt(0)-97:-1;
@@ -10486,7 +10532,7 @@ function fbHint(q){const r=unitRef(q),M=window.MATERI;if(!r||!M||!M[r.key])retur
   let best=null,bs=0;cand.forEach(c=>{const ct=new Set(fbTok(c)),plain=c.replace(/<[^>]+>/g,'').toLowerCase();let sc=0;qt.forEach(w=>{if(ct.has(w))sc++});
     const hasA=an&&an.length>1&&plain.includes(an);if(hasA)sc+=3;else if(at.length&&at.every(w=>ct.has(w)))sc+=2;sc-=c.length/600;if(sc>bs){bs=sc;best=c}});
   if(bs<1)best=(m.sum||[])[0]||'';if(!best)return '';return `<span class="fbtip">📘 <b>Ingat:</b> ${best}</span>`}
-function wrongInfo(q,k){if(q.ketik&&q._typed)return `<span class="fbpick">Kamu menulis <s>${esc(q._typed)}</s>.</span> `+wrongInfo(Object.assign({},q,{ketik:false,_typed:null,q:q.q.replace(/<span class="qtag">[^<]*<\/span>/,'')}),-1);if(q.match||q.trace||q.warna)return q.exp||'';const pk=k>=0&&q.opts&&q.opts[k]!=null&&!q.html?`<span class="fbpick">Kamu memilih <s>${q.opts[k]}</s>.</span> `:'';
+function wrongInfo(q,k){if(q.ketik&&q._typed)return `<span class="fbpick">Kamu menulis <s>${esc(q._typed)}</s>.</span> `+wrongInfo(Object.assign({},q,{ketik:false,_typed:null,q:q.q.replace(/<span class="qtag">[^<]*<\/span>/,'')}),-1);if(q.match||q.trace||q.warna||q.baca)return q.exp||'';const pk=k>=0&&q.opts&&q.opts[k]!=null&&!q.html?`<span class="fbpick">Kamu memilih <s>${q.opts[k]}</s>.</span> `:'';
   const ans=q.html?'':`<span class="fbx">Jawaban yang benar: <b>${q.ans}</b>.</span> `;const r=unitRef(q);
   return pk+ans+(q.exp?`<span class="fbx">${q.exp}</span>`:'')+fbHint(q)+(r&&r.cur&&game&&game.lesson&&!game.group?`<button class="fbread" data-ui="${r.ui}">Baca materi unit ini</button>`:'')}
 function bindFbRead(){const b=document.querySelector('#fbText .fbread');if(b)b.onclick=e=>{e.stopPropagation();openGuide(+b.dataset.ui)}}
@@ -13438,7 +13484,7 @@ function mixTypes(qs,u){try{if(typeof L!=='undefined'&&L&&L.id==='tk')return qs;
   if(u){const m=mkMatch(unitQs(u,14));if(m){m._u=u.t;try{m._s=SUBJ().id}catch(e){}out.splice(Math.min(out.length,1+Math.floor(Math.random()*(out.length-1))),0,m)}}
   return out}catch(e){console.warn('mix',e);return qs}}
 /* ulang soal yang pernah salah (pengulangan berjarak: 1, 3, 7 hari) */
-function weakAdd(q){try{if(!P||!q||q.match||q.trace||q.warna)return;const base=q.bs||q.ketik?Object.assign({},q,{q:q.q.replace(/<span class="qtag">[^<]*<\/span>/,'').replace(/<div class="bsclaim">[\s\S]*<\/div>$/,''),ans:q._ans!=null?q._ans:q.ans,bs:false,ketik:false}):q;
+function weakAdd(q){try{if(!P||!q||q.match||q.trace||q.warna||q.baca)return;const base=q.bs||q.ketik?Object.assign({},q,{q:q.q.replace(/<span class="qtag">[^<]*<\/span>/,'').replace(/<div class="bsclaim">[\s\S]*<\/div>$/,''),ans:q._ans!=null?q._ans:q.ans,bs:false,ketik:false}):q;
   if(base.bs)return;const key=qNorm(base.q)+'|'+qNorm(base.ans);P.weak=(P.weak||[]).filter(w=>w.k!==key);
   P.weak.unshift({k:key,q:base.q,opts:base.opts,ans:base.ans,exp:base.exp||'',html:!!base.html,_u:base._u,_s:base._s,box:0,due:Date.now()+864e5});P.weak=P.weak.slice(0,60)}catch(e){}}
 function weakHit(q,ok){try{if(!P||!P.weak||!q)return;const key=qNorm(q.q.replace(/<span class="qtag">[^<]*<\/span>/,''))+'|'+qNorm(q._ans!=null?q._ans:q.ans);const w=P.weak.find(x=>x.k===key);if(!w)return;
@@ -16059,7 +16105,7 @@ function advSave(useAjak){try{petCache()}catch(e){}try{let tri=[],name='';
     if(useAjak){tri=ajakTriples();const sp=ajakSpec();name=sp.s?sp.s.name:(sp.c?'Semua pelajaran '+sp.c.name:'Pelajaran acak')}
     else{const sb=SUBJ();tri=sb.units.map((u,i)=>({u,s:sb,i}));name=sb.name}
     const out=[],seen=new Set();let g=0;while(out.length<60&&g<1500&&tri.length){g++;const t=tri[Math.floor(Math.random()*tri.length)];let q=null;try{q=t&&unitQs(t.u,1)[0]}catch(e){}
-      if(!q||q.html||q.pic||q.match||q.trace||q.warna||!Array.isArray(q.opts)||q.opts.length<2||seen.has(q.q))continue;{const vis=x=>/<(?!\/?(b|i|u|em|strong|sup|sub)\b|\/?span class="formula"|\/span)[a-z\/]/i.test(String(x));if(vis(q.q)||q.opts.some(vis)||vis(q.ans))continue}seen.add(q.q);let ex='';try{ex=String(q.exp||fbHint(q)||'').replace(/<[^>]+>/g,' ').replace(/📘\s*Ingat:\s*/,'').replace(/\s+/g,' ').trim().slice(0,220)}catch(e){}out.push({q:String(q.q),ans:String(q.ans),opts:q.opts.map(String),ex})}
+      if(!q||q.html||q.pic||q.match||q.trace||q.warna||q.baca||!Array.isArray(q.opts)||q.opts.length<2||seen.has(q.q))continue;{const vis=x=>/<(?!\/?(b|i|u|em|strong|sup|sub)\b|\/?span class="formula"|\/span)[a-z\/]/i.test(String(x));if(vis(q.q)||q.opts.some(vis)||vis(q.ans))continue}seen.add(q.q);let ex='';try{ex=String(q.exp||fbHint(q)||'').replace(/<[^>]+>/g,' ').replace(/📘\s*Ingat:\s*/,'').replace(/\s+/g,' ').trim().slice(0,220)}catch(e){}out.push({q:String(q.q),ans:String(q.ans),opts:q.opts.map(String),ex})}
     localStorage.setItem('jk_adv_q',JSON.stringify({t:Date.now(),name,qs:out}))}catch(e){}}
 /* hasil Petualangan Berdua (dicatat game di localStorage) masuk ke profil murid → terlihat di rapor guru */
 function advIngest(){try{if(!P)return;const L=JSON.parse(localStorage.getItem('jk_adv_log')||'[]');if(!L.length)return;localStorage.removeItem('jk_adv_log');
@@ -16231,7 +16277,7 @@ function folBind(root,list,after){root.querySelectorAll('[data-follow]').forEach
   try{await folDo(f,on);if(on){try{sfx.ok()}catch(_){}toast('team',`Kamu mengikuti ${f.name}.`)}b.outerHTML=folBtn(f,b.classList.contains('sm'));folBind(root,list,after);after&&after()}catch(err){b.disabled=false;toast('lock',fbErr(err))}})}
 const shareIcon='<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M12 3 V15 M7 8 L12 3 L17 8 M5 13 V19 C5 20 6 21 7 21 H17 C18 21 19 20 19 19 V13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const qrIcon='<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><path d="M14 14h3v3h-3zM18 18h3v3h-3zM18 14h3M14 18v3" stroke-linecap="round"/></svg>';
-let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=412';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
+let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=413';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
 function qrMatrix(text){const Q=window.QRCodeLib,q=new Q(-1,Q.ECL.M);q.addData(text);q.make();const n=q.getModuleCount(),m=[];for(let r=0;r<n;r++){m.push([]);for(let c=0;c<n;c++)m[r].push(q.isDark(r,c))}return m}
 function qrSvgOf(m){const n=m.length;let d='';for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(m[r][c])d+=`M${c} ${r}h1.02v1.02h-1.02z`;
   return `<svg viewBox="-2 -2 ${n+4} ${n+4}" class="pcqr" shape-rendering="crispEdges" aria-label="Kode QR profil"><rect x="-2" y="-2" width="${n+4}" height="${n+4}" fill="#fff"/><path d="${d}" fill="#1C1E3D"/></svg>`}
