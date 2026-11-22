@@ -4057,6 +4057,47 @@ body.tkcards #subjBtn{display:none!important}
 .tkst{display:flex;gap:2px;font-size:22px}.tkst i{font-style:normal;color:#d9dce3}.tkst i.on{color:#FFC800;text-shadow:0 2px 0 #E5A100}
 .tkgo{margin-top:2px;background:var(--kc);color:#fff;font-weight:900;font-size:14px;padding:6px 16px;border-radius:999px}
 html[data-theme=malam] .tkact{background:#1e2235;color:#eef}html[data-theme=malam] .tkact small{color:#b9bfd6}
+
+/* ===== Perangkat ajar & administrasi ===== */
+.pgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+@media(max-width:1000px){.pgrid{grid-template-columns:1fr}}
+.pgcard{border-top:6px solid var(--pc)}.pgtop{display:flex;align-items:center;gap:12px}.pgtop h3{margin:0;font-size:20px}
+.pgic{width:46px;height:46px;border-radius:14px;display:grid;place-items:center;background:color-mix(in srgb,var(--pc) 16%,transparent);flex:none}.pgic i{width:30px;height:30px;display:block}
+.pginc{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:6px;font-size:14px;color:var(--ink);flex:1}.pginc li{display:flex;gap:8px;align-items:flex-start}.pginc li::before{content:'✓';color:var(--pc);font-weight:900}
+.pgcard .primary{margin-top:auto}
+.pgdh{display:flex;align-items:center;justify-content:space-between;gap:10px}.pgdh h3{margin:0;font-size:18px}
+.pgkv{display:grid;grid-template-columns:max-content 1fr;gap:6px 16px;font-size:14px}.pgkv span{color:var(--muted)}
+.pfrm{display:flex;flex-direction:column;gap:10px;text-align:left}.pfrm label{display:flex;flex-direction:column;gap:4px;font-weight:800;font-size:13px;color:var(--muted)}
+.pfrm input,.pfrm select{font:600 15px system-ui,sans-serif;padding:10px 12px;border-radius:12px;border:2px solid var(--line);background:var(--card);color:var(--ink)}.pfrow{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.admtabs{display:grid;grid-template-columns:repeat(3,1fr)}
+.admbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center}.admbar select,.admbar input[type=date]{font:600 14px system-ui,sans-serif;padding:9px 10px;border-radius:12px;border:2px solid var(--line);background:var(--card);color:var(--ink)}
+.admbar .primary{margin-left:auto}.admbar .primary,.admbar .ghost{width:auto;padding:10px 16px}.admsel{display:flex;align-items:center;gap:8px;font-weight:800;font-size:14px}
+@media(max-width:600px){.admbar .primary{margin-left:0;width:100%}.admbar .ghost{flex:1}}
+.jrh{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.jrh b{margin-right:auto}
+.jrf{display:grid;grid-template-columns:1fr 1fr;gap:10px}.jrf .wide{grid-column:1/-1}@media(max-width:700px){.jrf{grid-template-columns:1fr}}
+.jrf label{display:flex;flex-direction:column;gap:4px;font-weight:800;font-size:12px;color:var(--muted)}
+.jrf input,.jrf textarea,.wanum{font:500 15px system-ui,sans-serif;padding:9px 11px;border-radius:12px;border:2px solid var(--line);background:var(--card);color:var(--ink);resize:vertical;min-width:0}
+.sklist,.walist{gap:0;padding:6px 16px}
+.skrow{display:grid;grid-template-columns:minmax(150px,1fr) auto;gap:6px 14px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line)}.skrow:last-child,.warow:last-child{border-bottom:0}
+.skn{display:flex;align-items:center;gap:10px;min-width:0}.skn b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.skn .av,.skn>span:first-child{width:34px;height:34px;flex:none}
+.skc{display:flex;gap:6px}.skb{display:flex;flex-direction:column;align-items:center;min-width:72px;padding:5px 6px;border-radius:12px;border:2px solid var(--line);background:var(--card);cursor:pointer;font:inherit;color:var(--ink)}
+.skb small{font-size:10.5px;color:var(--muted);font-weight:700;white-space:nowrap}.skb b{font-size:16px}
+.sk-SB{background:#E6F8D8;border-color:#58CC02}.sk-B{background:#E3F4FE;border-color:#1CB0F6}.sk-C{background:#FFF3D6;border-color:#FF9600}.sk-PB{background:#FFE3E3;border-color:#FF4B4B}
+html[data-theme=malam] .sk-SB,html[data-theme=malam] .sk-B,html[data-theme=malam] .sk-C,html[data-theme=malam] .sk-PB{background:transparent}
+.skd{grid-column:1/-1;margin:0;font-size:13px;color:var(--muted)}
+@media(max-width:700px){.skrow{grid-template-columns:1fr}.skc{display:grid;grid-template-columns:repeat(4,1fr)}.skb{min-width:0}}
+.warow{display:grid;grid-template-columns:minmax(140px,1fr) 190px auto auto;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)}
+.warow .wago{width:auto;padding:9px 14px;margin:0}
+@media(max-width:700px){.warow{grid-template-columns:1fr 1fr}.warow .skn,.warow .wanum{grid-column:1/-1}}
+
+/* rapikan tampilan guru */
+.kpis .kpi.dk .kl{white-space:normal!important;overflow:visible!important;text-overflow:clip!important;line-height:1.25}
+.bkchips{display:flex;flex-wrap:wrap;gap:8px}
+body.teacher:not(.playing):not(.evtv) .toast{top:auto!important;bottom:calc(64px + env(safe-area-inset-bottom,0px))!important}
+@media (min-width:1000px){body.teacher:not(.playing):not(.evtv) .toast{bottom:calc(24px + env(safe-area-inset-bottom,0px))!important}}
+.admtabs button.on{background:var(--tb);color:#1899D6;box-shadow:inset 0 0 0 2px #84D8FF}
+@media(max-width:700px){.skb small{white-space:normal;line-height:1.1;font-size:10px;min-height:22px;display:flex;align-items:center;text-align:center}}
+@media(max-width:400px){#tBarTitle{font-size:16px!important;letter-spacing:-.2px}}@media(max-width:370px){#tBarTitle{font-size:15px!important}}
 </style>
 <style>html,body{margin:0}</style>
 </head>
@@ -4273,7 +4314,7 @@ html[data-theme=malam] .tkact{background:#1e2235;color:#eef}html[data-theme=mala
 <div class="syncpill" id="syncPill" hidden></div>
 <div class="toast" id="toast" hidden></div>
 
-<script src="av.js?v=417"></script>
+<script src="av.js?v=418"></script>
 <script>
 /* ---------- visual assets ---------- */
 const INK='#1B1E3D';
@@ -14439,9 +14480,11 @@ function parseImport(text){const rows=text.split(/\r?\n/).map(l=>l.split('\t')).
 function renderTBank(){normBank();const c=tCls();const b=BK.id&&APP.bank.find(x=>x.id===BK.id);if(!b){BK.id=null;return renderBankList()}renderBankEditor(b)}
 function renderBankList(){const c=tCls();
   $('#vTBank').innerHTML=thead(['Bank Soal Guru','quiz'],'',`<button class="ghost" id="bkNew" style="color:var(--ink);background:var(--card)">+ Paket soal baru</button>`)+
-   c.subjects.map(s=>{const list=bankOf(s.id);return `<div class="tcard"><h3>${esc(s.name)}</h3>${list.length?`<div class="sessions">${list.map(x=>`<button class="sess" data-bk="${x.id}"><span class="dt">${esc(x.title)}</span><span class="grow">${x.qs.length} soal · cocok untuk ${FIT[bankFit(x)].games.filter(g=>g!=='kuis').map(gameName).join(', ')||'Kuis Klasik'}</span><span class="pill mid">Ubah</span></button>`).join('')}</div>`:'<p class="note" style="margin:0">Belum ada paket soal.</p>'}</div>`}).join('')+
+   c.subjects.filter(s=>bankOf(s.id).length).map(s=>{const list=bankOf(s.id);return `<div class="tcard"><h3>${esc(s.name)}</h3><div class="sessions">${list.map(x=>`<button class="sess" data-bk="${x.id}"><span class="dt">${esc(x.title)}</span><span class="grow">${x.qs.length} soal · cocok untuk ${FIT[bankFit(x)].games.filter(g=>g!=='kuis').map(gameName).join(', ')||'Kuis Klasik'}</span><span class="pill mid">Ubah</span></button>`).join('')}</div></div>`}).join('')+
+   (()=>{const e=c.subjects.filter(s=>!bankOf(s.id).length);if(!e.length)return '';const none=e.length===c.subjects.length;return `<div class="tcard"><h3>${none?'Belum ada paket soal':'Mata pelajaran lain'}</h3><p class="sub" style="margin:0">${none?'Buat paket soalmu sendiri untuk evaluasi, tugas, dan cetak ujian. Ketuk mata pelajaran untuk mulai.':'Belum ada paket. Ketuk untuk membuat.'}</p><div class="bkchips">${e.map(s=>`<button class="smallbtn" data-bknew="${s.id}">+ ${esc(s.name)}</button>`).join('')}</div></div>`})()+
    `<div class="tcard"><h3>${GAS?'Lewat Google Sheet atau Excel':'Salin dari Excel'}</h3><p class="sub" style="margin:0">Di dalam paket soal ada tombol <b>Impor dari Excel</b>. Salin baris dengan urutan kolom: Pertanyaan, A, B, C, D, Kunci (A/B/C/D), Pembahasan.${GAS?' Di Google Sheet juga ada tab <b>Impor Soal</b>: isi barisnya, lalu buka ulang aplikasi.':''}</p></div>`;
   hydrate($('#vTBank'));$('#vTBank').querySelectorAll('[data-bk]').forEach(x=>x.onclick=()=>{BK.id=x.dataset.bk;BK.edit=null;renderTBank();window.scrollTo(0,0)});
+  $('#vTBank').querySelectorAll('[data-bknew]').forEach(b=>b.onclick=()=>{$('#bkNew').onclick();const sel=$('#nbSubj');if(sel)sel.value=b.dataset.bknew;setTimeout(()=>{try{$('#nbTitle').focus()}catch(e){}},50)});
   $('#bkNew').onclick=()=>{openModal(`<h3>Paket soal baru</h3><div class="tfield"><label for="nbSubj">Mata pelajaran</label><select id="nbSubj">${c.subjects.map(s=>`<option value="${s.id}">${esc(s.name)}</option>`).join('')}</select></div><div class="tfield"><label for="nbTitle">Judul paket (materi)</label><input id="nbTitle" maxlength="40" placeholder="Contoh: Ulangan Bab 3 Pecahan"></div><div class="acts"><button class="ghost" id="mNo">Batal</button><button class="primary" id="mYes">Buat</button></div>`);
     $('#mNo').onclick=closeModal;$('#mYes').onclick=()=>{const t=$('#nbTitle').value.trim();if(!t){$('#nbTitle').focus();return}const s=c.subjects.find(x=>x.id===$('#nbSubj').value);const nb={id:'b'+Date.now().toString(36)+R(10,99),subj:s.id,subjName:s.name,title:t,qs:[],upd:Date.now()};APP.bank=APP.bank||[];APP.bank.push(nb);save();closeModal();BK.id=nb.id;renderTBank()}}}
 function renderBankEditor(b){const c=tCls();const e=BK.edit!=null?b.qs.find(q=>q.id===BK.edit):null;const f=e||{q:'',opts:['','','',''],a:0,exp:''};
@@ -15132,7 +15175,7 @@ function fbBindCode(root){if(!root)return;setTimeout(jrPaint,0);root.querySelect
   const v=root.querySelector('#fbVerify');if(v)v.onclick=()=>FBX.user.sendEmailVerification().then(()=>toast('check','Tautan verifikasi dikirim. Periksa email.')).catch(e=>toast('lock',fbErr(e)))}
 licBanner=function(){const out=[];if(FBX.cfg.announce)out.push(`<div class="tcard annc"><b>Pengumuman</b><span>${esc(FBX.cfg.announce)}</span></div>`);
   const u=FBX.user;if(u&&u.email&&!u.emailVerified)out.push(`<div class="tcard annc warn"><b>Verifikasi emailmu</b><span>Kami mengirim tautan ke ${esc(u.email)}. Klik tautan itu supaya kamu bisa membuat sandi baru jika lupa. <button class="smallbtn" id="fbVerify">Kirim ulang</button></span></div>`);
-  if(inTrial())out.push(`<div class="tcard annc"><b>Selamat mencoba semua fitur Pro, gratis ${TRIAL_DAYS} hari!</b><span>Absensi, Evaluasi di TV, Soal, Rapor, tugas, dan murid tanpa batas bisa kamu pakai sampai ${fmtTs(trialUntil())} (${trialLeft()} hari lagi). Setelah itu akunmu kembali ke paket Gratis, dan semua data tetap aman. <button class="smallbtn" data-fb="pro">Lihat paket Pro</button></span></div>`);
+  if(inTrial())out.push(`<div class="tcard annc"><b>Selamat mencoba semua fitur Pro, gratis ${TRIAL_DAYS} hari!</b><span>Perangkat ajar, cetak soal, absensi, evaluasi di TV, rapor, tugas, dan murid tanpa batas bisa kamu pakai sampai ${fmtTs(trialUntil())} (${trialLeft()} hari lagi). Setelah itu akunmu kembali ke paket Gratis, dan semua data tetap aman. <button class="smallbtn" data-fb="pro">Lihat paket Pro</button></span></div>`);
   else if(!isPaid()&&trialUntil())out.push(`<div class="tcard annc warn"><b>Masa coba gratis sudah berakhir</b><span>Menu Absensi, Evaluasi, Soal, dan Rapor kini terkunci. Datamu tetap tersimpan dan langsung terbuka lagi setelah berlangganan Pro. <button class="smallbtn" data-fb="pro">Lihat paket Pro</button></span></div>`);
   out.push(fbCodeCard(true));return out.join('')};
 /* ---------- dasbor guru: yang penting di atas, pengumuman ringkas ---------- */
@@ -16292,7 +16335,7 @@ function folBind(root,list,after){root.querySelectorAll('[data-follow]').forEach
   try{await folDo(f,on);if(on){try{sfx.ok()}catch(_){}toast('team',`Kamu mengikuti ${f.name}.`)}b.outerHTML=folBtn(f,b.classList.contains('sm'));folBind(root,list,after);after&&after()}catch(err){b.disabled=false;toast('lock',fbErr(err))}})}
 const shareIcon='<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M12 3 V15 M7 8 L12 3 L17 8 M5 13 V19 C5 20 6 21 7 21 H17 C18 21 19 20 19 19 V13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const qrIcon='<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><path d="M14 14h3v3h-3zM18 18h3v3h-3zM18 14h3M14 18v3" stroke-linecap="round"/></svg>';
-let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=417';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
+let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=418';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
 function qrMatrix(text){const Q=window.QRCodeLib,q=new Q(-1,Q.ECL.M);q.addData(text);q.make();const n=q.getModuleCount(),m=[];for(let r=0;r<n;r++){m.push([]);for(let c=0;c<n;c++)m[r].push(q.isDark(r,c))}return m}
 function qrSvgOf(m){const n=m.length;let d='';for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(m[r][c])d+=`M${c} ${r}h1.02v1.02h-1.02z`;
   return `<svg viewBox="-2 -2 ${n+4} ${n+4}" class="pcqr" shape-rendering="crispEdges" aria-label="Kode QR profil"><rect x="-2" y="-2" width="${n+4}" height="${n+4}" fill="#fff"/><path d="${d}" fill="#1C1E3D"/></svg>`}
@@ -17129,7 +17172,7 @@ const navLabel=n=>((n.querySelector('span')||n).textContent||'').trim();
 function navItems(){return [...document.querySelectorAll('#sideNav .nav')].filter(n=>n.offsetParent!==null&&n.dataset.tab!=='texit')}
 function renderSideFoot(){try{window.tclsMount&&tclsMount()}catch(e){}try{window.proNavTag&&proNavTag()}catch(e){}const el=$('#sideFoot');if(!el)return;const t=document.body.classList.contains('teacher');
   if(t&&T()){const pi=window.proInfo?proInfo():{paid:false,trial:false};
-    el.innerHTML=`<div class="sfpro ${pi.paid?'on':''}"><div class="sfph"><span class="sfcrown">👑</span><b>${pi.paid?'JELAS Pro aktif':pi.trial?`Coba Pro · ${pi.left} hari lagi`:'Tingkatkan ke Pro'}</b></div><p>${pi.paid?`Semua fitur guru terbuka sampai ${pi.until}.`:'Absensi, Evaluasi di TV, Soal, Rapor, dan murid tanpa batas.'}</p><button class="sfprobtn" data-sf="pro">${pi.paid?'Lihat paket':'Lihat paket Pro'} <span aria-hidden="true">→</span></button></div>`}
+    el.innerHTML=`<div class="sfpro ${pi.paid?'on':''}"><div class="sfph"><span class="sfcrown">👑</span><b>${pi.paid?'JELAS Pro aktif':pi.trial?`Coba Pro · ${pi.left} hari lagi`:'Tingkatkan ke Pro'}</b></div><p>${pi.paid?`Semua fitur guru terbuka sampai ${pi.until}.`:'Perangkat ajar, cetak soal, absensi, evaluasi di TV, rapor, dan murid tanpa batas.'}</p><button class="sfprobtn" data-sf="pro">${pi.paid?'Lihat paket':'Lihat paket Pro'} <span aria-hidden="true">→</span></button></div>`}
   else if(P){el.innerHTML=`<div class="who">${avSpan(P)}<span><b>${esc(P.name)}</b><small>${esc(CLS().full)}${P.user?' · '+esc(P.user):''}</small></span><button class="sfout" data-sf="out" title="Keluar" aria-label="Keluar">${ICONS.exit}</button></div><button class="keys" data-sf="keys">Pintasan keyboard: tekan <kbd>?</kbd></button>`}
   else{el.innerHTML='';return}
   el.querySelectorAll('[data-sf]').forEach(b=>b.onclick=()=>{const k=b.dataset.sf;if(k==='out')openModal(`<h3>Keluar dari akun?</h3><p>Datamu sudah tersimpan. Masuk lagi kapan saja dengan akun yang sama.</p><div class="acts"><button class="ghost" id="mNo">Batal</button><button class="primary" id="mYes" style="background:var(--bad)">Keluar</button></div>`)||($('#mNo').onclick=closeModal,$('#mYes').onclick=()=>{closeModal();logout()});else if(k==='keys')keysHelp();else if(k==='pro'){window.proAsk?proAsk():go('tset')}else go(k)});
@@ -17790,6 +17833,361 @@ function plBind(hub){gBind(hub);hub.querySelectorAll('[data-pl2]').forEach(b=>b.
 const _renderTeamH=renderTeam;
 renderTeam=function(){_renderTeamH();try{playHub()}catch(e){console.warn('hub',e)}};
 document.addEventListener('click',e=>{const n=e.target.closest&&e.target.closest('.nav[data-tab="team"]');if(n)PNAV='root'},true);
+
+/* =====================================================================
+   PERANGKAT AJAR (Modul Ajar, ATP-Prota-Promes, Cetak Soal) dan
+   ADMINISTRASI KELAS (Jurnal mengajar, Nilai sikap, Lapor orang tua).
+   Draf otomatis mengikuti Kurikulum Merdeka dengan Pembelajaran Mendalam
+   (CP: Keputusan Kepala BSKAP No. 046/H/KR/2025; khusus Agama dan Budi
+   Pekerti diubah oleh Keputusan Kepala BKPDM No. 020 Tahun 2026).
+   ===================================================================== */
+(function(){
+if(!document.querySelector('.nav.tnav[data-tab=tbank]'))return;
+const proOK=()=>{try{return typeof isPro==='function'?isPro():true}catch(e){return true}};
+const needPro=()=>{if(proOK())return true;try{proAsk()}catch(e){toast('lock','Fitur ini khusus paket Pro.')}return false};
+const ADMd=()=>{const t=T();t.adm=t.adm||{};['jr','sk','wa','nt'].forEach(k=>t.adm[k]=t.adm[k]||{});return t.adm};
+const DOCd=()=>{const t=T();t.doc=t.doc||{};return t.doc};
+const touchT=()=>{try{T().upd=Date.now()}catch(e){}save()};
+const ucf=s=>String(s||'').charAt(0).toUpperCase()+String(s||'').slice(1);
+const lcf=s=>{s=String(s||'').trim();return /^[A-Z][a-z]/.test(s)&&!/^[A-Z]{2}/.test(s)?s.charAt(0).toLowerCase()+s.slice(1):s};
+const isTK=c=>c&&c.lv==='tk';
+const pdfHead=(doc,title,sub)=>{const W=doc.internal.pageSize.getWidth(),t=T(),d=DOCd();doc.setTextColor(20);doc.setFont('helvetica','bold');doc.setFontSize(12.5);
+  doc.text(pdfT((t.school||'NAMA SEKOLAH').toUpperCase()),W/2,14,{align:'center'});doc.setFont('helvetica','normal');doc.setFontSize(9);doc.setTextColor(90);doc.text(pdfT(`${d.kota?d.kota+' - ':''}Tahun ajaran ${d.ta||taNow()}`),W/2,19,{align:'center'});
+  doc.setDrawColor(40);doc.setLineWidth(.5);doc.line(14,22,W-14,22);doc.setLineWidth(.2);doc.line(14,23,W-14,23);
+  doc.setTextColor(25);doc.setFont('helvetica','bold');doc.setFontSize(15);doc.text(pdfT(title),14,32);doc.setFont('helvetica','normal');doc.setFontSize(9.5);doc.setTextColor(100);doc.text(pdfT(sub),14,37.5);doc.setTextColor(30);return 44};
+const isRel=sb=>!!(typeof relOf==='function'&&relOf(sb));
+
+/* ---------- data dasar dokumen ---------- */
+function faseOf(c){if(isTK(c))return 'Fondasi';const g=+c.grade||0;return g<=2?'A':g<=4?'B':g<=6?'C':g<=9?'D':g===10?'E':'F'}
+function taNow(){const d=new Date(),y=d.getFullYear();return d.getMonth()>=6?`${y}/${y+1}`:`${y-1}/${y}`}
+const semNow=()=>new Date().getMonth()>=6?1:2;
+const semNm=n=>n===1?'1 (Ganjil)':'2 (Genap)';
+function docInfo(){const t=T(),d=DOCd();return {guru:t.name||'',nip:d.nip||'',ks:d.ks||'',nipKs:d.nipKs||'',kota:d.kota||'',ta:d.ta||taNow(),sem:+d.sem||semNow(),school:t.school||''}}
+function subTopics(u){return String(u.d||u.t||'').split(/,\s*|;\s*/).map(x=>x.trim()).filter(Boolean).slice(0,5)}
+const DIM8=['Keimanan dan Ketakwaan terhadap Tuhan YME','Kewargaan','Penalaran Kritis','Kreativitas','Kolaborasi','Kemandirian','Kesehatan','Komunikasi'];
+const DIM_BY={mtk:[2,3,4,5],bindo:[7,2,3,4],pancasila:[1,0,4,7],ipas:[2,4,6,3],ipa:[2,4,6,3],ips:[1,2,4,7],eng:[7,4,3,5],pjok:[6,4,5,1],seni:[3,7,4,5],huruf:[7,5,3,4],hitung:[2,5,3,4],warna:[3,7,5,4],diri:[0,1,5,6],sains:[2,6,4,3],info:[2,3,4,5],tkj:[2,3,5,4]};
+const dimsOf=sb=>(isRel(sb)?[0,1,5,7]:DIM_BY[sb.id]||[2,4,7,5]).map(i=>DIM8[i]);
+const MODEL_BY={mtk:'Problem Based Learning (pembelajaran berbasis masalah)',ipas:'Inkuiri terbimbing',ipa:'Inkuiri terbimbing',sains:'Inkuiri sederhana melalui bermain',bindo:'Discovery Learning dengan diskusi kelompok',eng:'Communicative Language Teaching (bermain peran dan dialog)',pancasila:'Pembelajaran kontekstual (Contextual Teaching and Learning)',ips:'Pembelajaran kontekstual dengan studi kasus',seni:'Project Based Learning (pembelajaran berbasis proyek)',pjok:'Latihan terbimbing dan permainan kelompok',huruf:'Bermain bermakna (main sensori dan main peran)',hitung:'Bermain bermakna dengan benda konkret',warna:'Bermain bermakna (eksplorasi warna dan bentuk)',diri:'Bermain peran dan bercerita'};
+const modelOf=sb=>isRel(sb)?'Pembelajaran kontekstual dan keteladanan':MODEL_BY[sb.id]||'Problem Based Learning (pembelajaran berbasis masalah)';
+const LINTAS_BY={mtk:'IPAS (pengukuran dan data), Bahasa Indonesia (literasi soal cerita)',bindo:'Pendidikan Pancasila (nilai dalam teks), Seni Budaya',ipas:'Matematika (mengolah data), Bahasa Indonesia (laporan pengamatan)',pancasila:'Bahasa Indonesia, IPAS (lingkungan sosial)',eng:'Bahasa Indonesia, Seni Budaya',pjok:'IPAS (kesehatan tubuh), Matematika (menghitung skor)',seni:'Bahasa Indonesia, IPAS'};
+const lintasOf=(sb,c)=>isTK(c)?'Nilai Agama dan Budi Pekerti; Jati Diri; Dasar-dasar Literasi, Matematika, Sains, Teknologi, Rekayasa, dan Seni':isRel(sb)?'Pendidikan Pancasila, Bahasa Indonesia':LINTAS_BY[sb.id]||'Bahasa Indonesia (literasi), Matematika (numerasi)';
+const VERBS=['menjelaskan','mengidentifikasi','menerapkan pemahaman tentang','menyelesaikan masalah yang berkaitan dengan','menyajikan hasil belajar tentang'];
+const VERBS_TK=['mengenal','menyebutkan','menunjukkan','mempraktikkan','menceritakan'];
+function topicTx(x,u){const w=String(x).trim().split(/\s+/).length,ut=lcf(u.t);return w<=3&&!new RegExp(ut.split(' ')[0],'i').test(x)?`${lcf(x)} pada materi ${ut}`:lcf(x)}
+function tpOf(u,c){const v=isTK(c)?VERBS_TK:VERBS;return subTopics(u).map((x,i)=>`${isTK(c)?'Anak':'Peserta didik'} mampu ${v[i%v.length]} ${topicTx(x,u)} dengan tepat.`)}
+
+/* ---------- soal yang bisa dicetak ---------- */
+const VIS=/<(?!\/?(b|i|u|em|strong|sup|sub)\b|\/?span class="formula"|\/span)[a-z\/]/i;
+function printableQs(u,n){const seen=new Set(),out=[],tpl={};
+  for(let k=0;k<8&&out.length<n;k++){const cap=k<5?2:99;let qs=[];try{qs=unitQs(u,Math.max(n*2,14))}catch(e){qs=[]}
+    (qs||[]).forEach(q=>{if(out.length>=n||!q||!Array.isArray(q.opts)||q.opts.length<2)return;
+      if(q.trace||q.match||q.pic||q.warna||q.html||q.svg||q.img||q.ketik||q.draw||q.sort)return;
+      if(VIS.test(String(q.q))||q.opts.some(o=>VIS.test(String(o))))return;
+      const t=plainTx(q.q);if(!t||/dengar|ketuk|seret|geser|warnai|tebalkan/i.test(t)||seen.has(t))return;
+      const opts=q.opts.map(plainTx),ans=plainTx(q.ans);if(!opts.includes(ans)||opts.some(o=>!o))return;
+      const tk=t.replace(/\d[\d.,/]*/g,'#');if((tpl[tk]||0)>=cap)return;tpl[tk]=(tpl[tk]||0)+1;seen.add(t);out.push({q:t,opts,ans,exp:plainTx(q.exp||''),u:u.t})})}
+  return out}
+function bankQs(b){return (b.qs||[]).filter(q=>q&&q.q&&Array.isArray(q.opts)).map(q=>{const opts=q.opts.filter(x=>String(x||'').trim()).map(plainTx);const ans=plainTx(q.opts[q.a]);return {q:plainTx(q.q),opts,ans,exp:plainTx(q.exp||''),u:b.title}}).filter(q=>q.q&&q.opts.length>=2&&q.opts.includes(q.ans))}
+function levelOf(q){const t=q.q;if(/mengapa|jika|apabila|kesimpulan|paling tepat|alasan|seandainya|sebab|akibat/i.test(t))return 'L3';if(t.length<45&&!/\d\s*[x×:+\-−]\s*\d/.test(t))return 'L1';return 'L2'}
+const LVV={L1:'mengidentifikasi',L2:'menentukan',L3:'menganalisis'};
+
+/* ---------- alat bantu PDF ---------- */
+const MG={left:14,right:14,top:20,bottom:18};
+const pdfFoot=doc=>{const n=doc.getNumberOfPages(),k=doc.internal.scaleFactor;for(let i=1;i<=n;i++){doc.setPage(i);const mb=doc.internal.getPageInfo(i).pageContext.mediaBox,W=(mb.topRightX-mb.bottomLeftX)/k,H=(mb.topRightY-mb.bottomLeftY)/k;
+  doc.setFontSize(8);doc.setTextColor(150);doc.setFont('helvetica','normal');doc.text(`Dibuat dengan JELAS - ${pdfT(pdfDate())}`,14,H-8);doc.text(`Halaman ${i} dari ${n}`,W-14,H-8,{align:'right'})}};
+function flow(doc,y0){const W=doc.internal.pageSize.getWidth(),H=doc.internal.pageSize.getHeight();const st={y:y0||20,x:14,w:W-28};
+  st.need=h=>{if(st.y+h>H-16){doc.addPage();st.y=20}};
+  st.h=(t,sz)=>{sz=sz||12;st.need(12);st.y+=1;doc.setFont('helvetica','bold');doc.setFontSize(sz);doc.setTextColor(25,90,40);doc.text(pdfT(t),st.x,st.y);st.y+=sz*.42+2.2;doc.setTextColor(30)};
+  st.p=(t,o)=>{o=o||{};const sz=o.sz||10;if(o.b)st.need(sz*.45+12);doc.setFont('helvetica',o.b?'bold':o.i?'italic':'normal');doc.setFontSize(sz);doc.setTextColor(o.c==null?40:o.c);const ind=o.ind||0;
+    doc.splitTextToSize(pdfT(t),st.w-ind).forEach(l=>{st.need(sz*.45+1);doc.text(l,st.x+ind,st.y);st.y+=sz*.45+.7});st.y+=o.gap==null?1.4:o.gap};
+  st.li=(arr,o)=>{o=o||{};arr.forEach((t,i)=>{const mk=o.num?`${i+1}.`:'-';const sz=o.sz||10;doc.setFont('helvetica','normal');doc.setFontSize(sz);doc.setTextColor(40);
+    const lines=doc.splitTextToSize(pdfT(t),st.w-7-(o.ind||0));lines.forEach((l,k)=>{st.need(sz*.45+1);if(!k)doc.text(mk,st.x+(o.ind||0),st.y);doc.text(l,st.x+6+(o.ind||0),st.y);st.y+=sz*.45+.7});st.y+=.6});st.y+=1};
+  st.kv=rows=>{doc.autoTable(Object.assign({},PDF_TBL,{startY:st.y,theme:'plain',styles:Object.assign({},PDF_TBL.styles,{fontSize:10,cellPadding:1.1}),columnStyles:{0:{cellWidth:46,textColor:[100,100,100]},1:{fontStyle:'bold'}},body:rows.map(r=>[pdfT(r[0]),pdfT(r[1])])}));st.y=doc.lastAutoTable.finalY+4};
+  st.tbl=(head,body,opt)=>{doc.autoTable(Object.assign({},PDF_TBL,{startY:st.y,margin:MG,head:head?[head.map(pdfT)]:undefined,body:body.map(r=>r.map(x=>typeof x==='string'?pdfT(x):x))},opt||{}));st.y=doc.lastAutoTable.finalY+5};
+  return st}
+function sign2(doc,st,leftRole){const di=docInfo(),W=doc.internal.pageSize.getWidth();st.need(46);const y=st.y+4,x=W-80;
+  doc.setFont('helvetica','normal');doc.setFontSize(10);doc.setTextColor(30);
+  doc.text(pdfT(`${di.kota?di.kota+', ':''}${pdfDate()}`),x,y);doc.text(isTK(tCls())?'Guru Kelompok':'Guru Kelas/Mata Pelajaran',x,y+6);
+  doc.setFont('helvetica','bold');doc.text(pdfT(di.guru||'..............................'),x,y+28);doc.setFont('helvetica','normal');doc.text(pdfT('NIP. '+(di.nip||'-')),x,y+33);
+  doc.text('Mengetahui,',14,y);doc.text(pdfT(leftRole||'Kepala Sekolah'),14,y+6);doc.setFont('helvetica','bold');doc.text(pdfT(di.ks||'..............................'),14,y+28);doc.setFont('helvetica','normal');doc.text(pdfT('NIP. '+(di.nipKs||'-')),14,y+33);st.y=y+40}
+function classStats(sid){const ps=students();if(!ps.length)return null;const sc=ps.map(p=>({p,v:studentAvg(p.id,sid)})).filter(x=>x.v!=null);const kkm=T().kkm||75;
+  return {n:ps.length,dinilai:sc.length,avg:av(sc.map(x=>x.v)),low:sc.filter(x=>x.v<kkm).sort((a,b)=>a.v-b.v),kkm}}
+
+/* ---------- 1) MODUL AJAR ---------- */
+function pdfModul(J,st){const c=tCls(),sb=c.subjects.find(x=>x.id===st.sid),u=sb.units[st.ui],di=docInfo(),tk=isTK(c);
+  const doc=new J({unit:'mm',format:'a4'});const npt=st.npt,jp=st.jp,tops=subTopics(u),tps=tpOf(u,c),model=modelOf(sb),pd=tk?'anak':'peserta didik',PD=tk?'Anak':'Peserta didik';
+  let y=pdfHead(doc,'Modul Ajar',`${sb.name} - ${c.full} - Bab ${st.ui+1}: ${u.t}`);const f=flow(doc,y);
+  f.p('Pendekatan Pembelajaran Mendalam: berkesadaran, bermakna, dan menggembirakan.',{i:1,c:110,sz:9,gap:2});
+  f.h('Informasi Umum');
+  f.kv([['Nama penyusun',di.guru],['NIP',di.nip||'-'],['Satuan pendidikan',di.school||'-'],['Mata pelajaran',sb.name],['Fase / Kelas / Semester',`${faseOf(c)} / ${c.full} / ${semNm(di.sem)}`],['Tahun ajaran',di.ta],['Topik / Bab',`Bab ${st.ui+1}: ${u.t}`],['Alokasi waktu',`${npt} pertemuan x ${jp} JP (${npt*jp} JP)`]]);
+  f.h('A. Identifikasi');
+  f.p('Kesiapan peserta didik',{b:1});
+  const cs=classStats(sb.id);
+  f.p(cs&&cs.dinilai?`Data kelas di JELAS: ${cs.n} ${pd}, ${cs.dinilai} sudah dinilai pada mata pelajaran ini dengan rata-rata ${cs.avg} (KKM ${cs.kkm}). ${cs.low.length?`${cs.low.length} ${pd} belum mencapai KKM sehingga perlu pendampingan lebih (${cs.low.slice(0,5).map(x=>x.p.name.split(' ').slice(0,2).join(' ')).join(', ')}${cs.low.length>5?', dll.':''}).`:'Semua yang sudah dinilai telah mencapai KKM.'}`
+    :`${PD} sudah mengenal sebagian konsep dasar yang mendukung materi ini. Kesiapan awal diukur melalui asesmen diagnostik singkat di awal pertemuan, lalu kelompok belajar disusun sesuai hasilnya.`);
+  f.p('Karakteristik materi',{b:1});
+  f.p(`Materi ${u.t} mencakup: ${tops.join('; ')}. Materi ini bersifat ${/hitung|mtk|ipas|ipa|sains/.test(sb.id)?'konseptual dan prosedural':'konseptual dan kontekstual'}, dekat dengan kehidupan sehari-hari ${pd}, serta menjadi dasar untuk materi berikutnya.`);
+  if(u.tip)f.p(`Inti materi: ${plainTx(u.tip)}`);
+  f.p('Dimensi profil lulusan',{b:1});f.li(dimsOf(sb));
+  f.h('B. Desain Pembelajaran');
+  f.p('Capaian Pembelajaran',{b:1});
+  f.p(`Mengacu pada CP ${sb.name} Fase ${faseOf(c)} dalam Keputusan Kepala BSKAP Nomor 046/H/KR/2025${isRel(sb)?' sebagaimana diubah dengan Keputusan Kepala BKPDM Nomor 020 Tahun 2026':''}, khususnya elemen yang berkaitan dengan ${lcf(u.t)}. Salin rumusan CP resmi untuk fase ini dari dokumen tersebut.`);
+  f.p('Lintas disiplin ilmu',{b:1});f.p(lintasOf(sb,c));
+  f.p('Tujuan pembelajaran',{b:1});f.li(tps,{num:1});
+  f.p('Praktik pedagogis',{b:1});f.p(`Model: ${model}. Metode: diskusi, tanya jawab, ${tk?'bermain, bernyanyi, ':''}latihan terbimbing, dan kuis interaktif.`);
+  f.p('Kemitraan pembelajaran',{b:1});f.p(`Orang tua/wali mendampingi latihan di rumah melalui aplikasi JELAS dan menerima laporan perkembangan dari guru. ${tk?'Lingkungan sekitar sekolah dimanfaatkan sebagai sumber belajar.':'Teman sejawat atau narasumber dapat dilibatkan bila relevan.'}`);
+  f.p('Lingkungan pembelajaran',{b:1});f.p(`Ruang kelas yang aman dan nyaman dengan pengaturan tempat duduk berkelompok; budaya belajar saling menghargai, berani bertanya, dan tidak takut salah.`);
+  f.p('Pemanfaatan digital',{b:1});f.p(`Aplikasi JELAS: absensi, kuis interaktif di layar (menu Evaluasi), latihan mandiri dan tugas yang terpantau guru, serta rapor otomatis.`);
+  f.h('C. Pengalaman Belajar');
+  for(let i=0;i<npt;i++){const tp=tops[i%Math.max(1,tops.length)]||u.t,last=i===npt-1,mn=jp*(tk?30:c.lv==='sd'?35:c.lv==='smp'?40:45);
+    f.p(`Pertemuan ${i+1} (${jp} JP, +- ${mn} menit): ${ucf(tp)}`,{b:1,c:30,sz:10.5});
+    f.p('Kegiatan awal (berkesadaran)',{b:1,c:80,sz:9.5,gap:.6});
+    f.li([`Salam, doa bersama, dan presensi (dicatat di menu Absensi JELAS).`,`Apersepsi dan pertanyaan pemantik: "Pernahkah kamu menjumpai ${lcf(tp)} dalam kehidupan sehari-hari? Di mana?"`,`Guru menyampaikan tujuan pembelajaran dan kegiatan hari ini dengan bahasa yang mudah dipahami.`]);
+    f.p('Kegiatan inti',{b:1,c:80,sz:9.5,gap:.6});
+    f.li([`Memahami (bermakna): ${PD.toLowerCase()} mengamati contoh nyata tentang ${lcf(tp)}, lalu berdiskusi dalam kelompok kecil dengan pertanyaan penuntun dari guru.`,
+      `Mengaplikasi (menggembirakan): ${PD.toLowerCase()} mengerjakan lembar kerja secara berkelompok${last?', kemudian mengikuti kuis interaktif di layar (menu Evaluasi JELAS) sebagai asesmen formatif':', guru berkeliling memberi umpan balik'}.`,
+      `Merefleksi: setiap kelompok menyampaikan hasil kerja; guru meluruskan miskonsepsi dan menguatkan konsep.`]);
+    f.p('Kegiatan penutup',{b:1,c:80,sz:9.5,gap:.6});
+    f.li([`Refleksi bersama: hal yang dipelajari, bagian yang masih sulit, dan cara mengatasinya.`,last?`Guru memberikan tugas latihan mandiri melalui menu Tugas JELAS.`:`Guru menyampaikan rencana pertemuan berikutnya.`,`Doa dan salam penutup.`])}
+  f.h('D. Asesmen');
+  const pool=printableQs(u,8);
+  f.li([`Asesmen awal (diagnostik): tanya jawab pemantik dan 2-3 soal singkat untuk memetakan pemahaman awal.`,`Asesmen proses (formatif): observasi keaktifan dan kerja sama (rubrik di lampiran), serta kuis interaktif di JELAS.`,`Asesmen akhir (sumatif): ${Math.min(5,pool.length)||5} soal pilihan ganda (lampiran) dan/atau unjuk kerja sesuai materi.`]);
+  f.p('Kriteria ketercapaian tujuan pembelajaran (KKTP)',{b:1});
+  f.tbl(['Rentang nilai','Keterangan','Tindak lanjut'],[['0 - 60','Belum mencapai, perlu bimbingan','Remedial seluruh bagian'],['61 - 70','Belum mencapai, sebagian kecil','Remedial bagian yang belum dikuasai'],['71 - 85','Sudah mencapai','Penguatan dan latihan variasi'],['86 - 100','Sudah mencapai, melampaui','Pengayaan']],{columnStyles:{0:{cellWidth:28}}});
+  f.h('E. Pengayaan dan Remedial');
+  f.li([`Pengayaan: ${pd} yang sudah mencapai tujuan mengerjakan soal penalaran tingkat lanjut dan menjadi tutor sebaya.`,`Remedial: ${pd} yang belum mencapai tujuan mendapat penjelasan ulang dengan contoh konkret, lalu latihan terbimbing di JELAS sampai tuntas.`]);
+  /* lampiran */
+  doc.addPage();const g=flow(doc,20);g.h('Lampiran 1. Rangkuman Materi',13);g.p(`${u.t}: ${u.d||''}.`);if(u.tip)g.p(plainTx(u.tip));
+  g.h('Lampiran 2. Lembar Kerja Peserta Didik (LKPD)',13);g.kv([['Nama',' ..............................................'],['Kelas',` ${c.full}`]]);
+  const sm=pool.slice(0,5);if(sm.length){g.p('Kerjakan soal berikut dengan teliti!',{b:1});
+    sm.forEach((q,i)=>{g.p(`${i+1}. ${q.q}`,{gap:.6});g.p(q.opts.map((o,k)=>`${'ABCDE'[k]}. ${o}`).join('     '),{ind:5,c:60})})}
+  else g.p('Tuliskan tiga hal penting yang kamu pelajari hari ini, lalu buat satu contoh dari kehidupan sehari-hari.');
+  if(sm.length){g.h('Lampiran 3. Kunci Jawaban dan Pembahasan',13);g.li(sm.map((q,i)=>`${'ABCDE'[q.opts.indexOf(q.ans)]}. ${q.ans}${q.exp?' - '+q.exp:''}`),{num:1})}
+  g.h(`Lampiran ${sm.length?4:3}. Rubrik Observasi`,13);
+  g.tbl(['Aspek','4 (Sangat baik)','3 (Baik)','2 (Cukup)','1 (Perlu bimbingan)'],[['Keaktifan','Selalu aktif bertanya dan menjawab','Sering aktif','Kadang aktif','Belum aktif'],['Kerja sama','Selalu membantu kelompok','Sering membantu','Kadang membantu','Belum mau bekerja sama'],['Ketepatan','Hampir semua jawaban tepat','Sebagian besar tepat','Sebagian tepat','Sebagian besar belum tepat']],{styles:Object.assign({},PDF_TBL.styles,{fontSize:8.5})});
+  sign2(doc,g);pdfFoot(doc);doc.save(`Modul-Ajar-${pdfSlug(sb.name)}-${pdfSlug(c.full)}-Bab-${st.ui+1}.pdf`)}
+
+/* ---------- 2) ATP, PROTA, PROMES ---------- */
+function semSplit(sb){const n=sb.units.length,h=Math.ceil(n/2);return sb.units.map((u,i)=>({u,i,sem:i<h?1:2}))}
+function jpPlan(sb,jpw,wk){const rows=semSplit(sb);[1,2].forEach(sm=>{const r=rows.filter(x=>x.sem===sm);if(!r.length)return;const teach=jpw*Math.max(1,wk-2);let per=Math.max(jpw,Math.round(teach/r.length/jpw)*jpw);
+    r.forEach(x=>x.jp=per);let tot=per*r.length;let k=0;while(tot>teach&&k<50){const z=r[r.length-1-(k%r.length)];if(z.jp>jpw){z.jp-=jpw;tot-=jpw}k++}});return rows}
+function pdfAtp(J,st){const c=tCls(),sb=c.subjects.find(x=>x.id===st.sid),di=docInfo(),rows=jpPlan(sb,st.jpw,st.wk);
+  const doc=new J({unit:'mm',format:'a4'});let y=pdfHead(doc,'Alur Tujuan Pembelajaran (ATP)',`${sb.name} - ${c.full} - Fase ${faseOf(c)} - Tahun ajaran ${di.ta}`);const f=flow(doc,y);
+  f.p(`Disusun dari bab pada jalur belajar JELAS. CP mengacu pada Keputusan Kepala BSKAP Nomor 046/H/KR/2025${isRel(sb)?' sebagaimana diubah dengan Keputusan Kepala BKPDM Nomor 020 Tahun 2026':''}.`,{sz:9,c:110,gap:3});
+  f.tbl(['No','Bab / Materi','Tujuan pembelajaran','JP','Smt'],rows.map(r=>[String(r.i+1),r.u.t,tpOf(r.u,c).join('\n'),String(r.jp),String(r.sem)]),{columnStyles:{0:{cellWidth:9,halign:'center'},1:{cellWidth:38,fontStyle:'bold'},3:{cellWidth:11,halign:'center'},4:{cellWidth:11,halign:'center'}}});
+  sign2(doc,f);
+  /* PROTA */
+  doc.addPage();y=pdfHead(doc,'Program Tahunan (Prota)',`${sb.name} - ${c.full} - Tahun ajaran ${di.ta}`);const g=flow(doc,y);
+  const body=[];[1,2].forEach(sm=>{const r=rows.filter(x=>x.sem===sm);r.forEach((x,k)=>body.push([k?'':semNm(sm),String(x.i+1),x.u.t,String(x.jp)]));if(r.length)body.push(['','','Asesmen sumatif akhir semester',String(st.jpw*2)])});
+  const tot=rows.reduce((a,x)=>a+x.jp,0)+st.jpw*4;body.push(['','','Jumlah',String(tot)]);
+  g.tbl(['Semester','No','Bab / Materi','JP'],body,{columnStyles:{0:{cellWidth:30},1:{cellWidth:10,halign:'center'},3:{cellWidth:16,halign:'center'}},didParseCell:d=>{if(d.section==='body'&&/Jumlah|Asesmen/.test(String(d.row.raw[2])))d.cell.styles.fontStyle='bold'}});
+  g.p(`Asumsi: ${st.jpw} JP per minggu, ${st.wk} minggu efektif per semester (2 minggu terakhir untuk asesmen sumatif).`,{sz:9,c:110});sign2(doc,g);
+  /* PROMES per semester */
+  [1,2].forEach(sm=>{const r=rows.filter(x=>x.sem===sm);if(!r.length)return;doc.addPage('a4','landscape');
+    const months=sm===1?['Juli','Agustus','September','Oktober','November','Desember']:['Januari','Februari','Maret','April','Mei','Juni'];
+    let yy=pdfHead(doc,`Program Semester (Promes) Semester ${sm}`,`${sb.name} - ${c.full} - Tahun ajaran ${di.ta}`);
+    /* minggu ke-2 bulan pertama sampai akhir; 2 minggu efektif terakhir = asesmen */
+    const slots=24,start=1,eff=Math.min(st.wk,slots-start),grid=r.map(()=>Array(slots).fill(''));let w=start;
+    r.forEach((x,k)=>{let need=Math.ceil(x.jp/st.jpw);while(need>0&&w<start+eff-2){grid[k][w]=String(Math.min(st.jpw,x.jp-(Math.ceil(x.jp/st.jpw)-need)*st.jpw));w++;need--}});
+    const asm=Array(slots).fill('');for(let q=start+eff-2;q<start+eff;q++)asm[q]='AS';
+    const head=[[{content:'No',rowSpan:2},{content:'Bab / Materi',rowSpan:2},{content:'JP',rowSpan:2},...months.map(m=>({content:m,colSpan:4}))],Array.from({length:24},(_,i)=>String(i%4+1))];
+    const body=r.map((x,k)=>[String(x.i+1),pdfT(x.u.t),String(x.jp),...grid[k]]).concat([['','Asesmen sumatif','',...asm]]);
+    doc.autoTable(Object.assign({},PDF_TBL,{startY:yy,margin:MG,head,body,styles:Object.assign({},PDF_TBL.styles,{fontSize:7.5,cellPadding:1,halign:'center'}),headStyles:Object.assign({},PDF_TBL.headStyles,{halign:'center'}),columnStyles:{0:{cellWidth:8},1:{cellWidth:56,halign:'left'},2:{cellWidth:9}},
+      didParseCell:d=>{if(d.section==='body'&&d.column.index>2&&d.cell.raw){d.cell.styles.fillColor=d.cell.raw==='AS'?[255,224,160]:[200,240,190];d.cell.styles.fontStyle='bold'}}}));
+    const ff=flow(doc,doc.lastAutoTable.finalY+5);ff.p('Angka di kotak = JP pada minggu tersebut. AS = asesmen sumatif. Sesuaikan dengan kalender pendidikan sekolah (libur dan kegiatan).',{sz:8.5,c:110});sign2(doc,ff)});
+  pdfFoot(doc);doc.save(`ATP-Prota-Promes-${pdfSlug(sb.name)}-${pdfSlug(c.full)}.pdf`)}
+
+/* ---------- 3) CETAK SOAL / UJIAN ---------- */
+const JENIS={lk:'Lembar Kerja',uh:'Ulangan Harian',sts:'Asesmen Sumatif Tengah Semester (STS)',sas:'Asesmen Sumatif Akhir Semester (SAS)'};
+function buildSoal(st){const c=tCls(),sb=c.subjects.find(x=>x.id===st.sid);const srcs=st.babs.map(v=>String(v).startsWith('bk:')?{bank:(APP.bank||[]).find(b=>b.id===String(v).slice(3))}:{u:sb.units[+v]}).filter(x=>x.u||x.bank);
+  const per=Math.ceil(st.n/srcs.length)+2;let lists=srcs.map(s=>shuffle(s.u?printableQs(s.u,per):bankQs(s.bank)));const out=[];let k=0;
+  while(out.length<st.n&&lists.some(l=>l.length)){const l=lists[k%lists.length];if(l.length)out.push(l.shift());k++}
+  return out.map(q=>{const o=shuffle(q.opts.slice()).slice(0,Math.max(2,Math.min(st.nopt||4,q.opts.length)));if(!o.includes(q.ans))o[o.length-1]=q.ans;const opts=shuffle(o);return Object.assign({},q,{opts,lv:levelOf(q)})})}
+function soalHeader(doc,st,paket){const c=tCls(),sb=c.subjects.find(x=>x.id===st.sid),di=docInfo(),W=doc.internal.pageSize.getWidth();
+  doc.setDrawColor(40);doc.setLineWidth(.5);doc.setTextColor(20);doc.setFont('helvetica','bold');doc.setFontSize(13);doc.text(pdfT((di.school||'NAMA SEKOLAH').toUpperCase()),W/2,16,{align:'center'});
+  doc.setFontSize(11.5);doc.text(pdfT(JENIS[st.jenis].toUpperCase()),W/2,22.5,{align:'center'});doc.setFont('helvetica','normal');doc.setFontSize(10);doc.text(pdfT(`Tahun ajaran ${di.ta}${paket?'  -  Paket '+paket:''}`),W/2,28,{align:'center'});doc.line(14,31,W-14,31);doc.setLineWidth(.2);doc.line(14,32,W-14,32);
+  doc.autoTable({startY:35,theme:'plain',styles:{font:'helvetica',fontSize:10,cellPadding:1,textColor:[30,30,30]},margin:{left:14,right:14},
+    body:[['Mata pelajaran',': '+pdfT(sb.name),'Nama',': ..................................'],['Kelas',': '+pdfT(c.full),'No. absen',': ........'],['Waktu',': '+(st.n<=15?'45':st.n<=25?'60':'90')+' menit','Tanggal',': ..................'],],columnStyles:{0:{cellWidth:30},2:{cellWidth:22}}});
+  return doc.lastAutoTable.finalY+5}
+function writeQs(doc,qs,st,paket){let y=soalHeader(doc,st,paket);const f=flow(doc,y);
+  f.p('Petunjuk: Berilah tanda silang (X) pada huruf A, B, C, atau D di depan jawaban yang paling tepat!',{b:1,sz:9.5,gap:3});
+  qs.forEach((q,i)=>{const lines=doc.splitTextToSize(pdfT(q.q),f.w-8);const short=q.opts.every(o=>o.length<=16)&&q.opts.length<=4;f.need(lines.length*5+(short?7:q.opts.length*5.2)+2);
+    doc.setFont('helvetica','normal');doc.setFontSize(10.5);doc.setTextColor(25);doc.text(`${i+1}.`,f.x,f.y);lines.forEach((l,k)=>doc.text(l,f.x+8,f.y+k*4.9));f.y+=lines.length*4.9+1;
+    if(short){const cw=(f.w-8)/4;q.opts.forEach((o,k)=>doc.text(pdfT(`${'ABCD'[k]}. ${o}`),f.x+8+k*cw,f.y));f.y+=6.5}
+    else{q.opts.forEach((o,k)=>{const ls=doc.splitTextToSize(pdfT(`${'ABCDE'[k]}. ${o}`),f.w-14);ls.forEach((l,j)=>{doc.text(l,f.x+(j?13:8),f.y);f.y+=4.8})});f.y+=1.6}});
+  return f}
+function pdfSoal(J,st){const c=tCls(),sb=c.subjects.find(x=>x.id===st.sid),di=docInfo();const A=buildSoal(st);if(A.length<3)throw new Error('Soal yang bisa dicetak dari bab ini belum cukup. Pilih bab lain atau tambah paket di Bank Soal.');
+  const pk=st.paket==='ab'?[['A',A],['B',shuffle(A).map(q=>Object.assign({},q,{opts:shuffle(q.opts)}))]]:[['',A]];
+  const doc=new J({unit:'mm',format:'a4'});
+  pk.forEach(([p,qs],pi)=>{if(pi)doc.addPage();writeQs(doc,qs,st,p);
+    if(st.ljk){doc.addPage();const yy=soalHeader(doc,st,p);const f=flow(doc,yy);f.h('Lembar Jawaban',12);f.p('Hitamkan atau silang huruf jawaban yang paling tepat.',{sz:9,c:100,gap:3});
+      const cols=Math.ceil(qs.length/20),rows=[];for(let r=0;r<Math.min(20,qs.length);r++){const row=[];for(let k=0;k<cols;k++){const n=k*20+r+1;row.push(n<=qs.length?String(n):'',n<=qs.length?q4(qs[n-1]):'')}rows.push(row)}
+      doc.autoTable({startY:f.y,theme:'grid',styles:{font:'helvetica',fontSize:10,cellPadding:1.6,halign:'center',lineColor:[180,180,180],lineWidth:.2,textColor:[40,40,40]},margin:MG,body:rows,columnStyles:Object.fromEntries(Array.from({length:cols*2},(_,i)=>[i,i%2?{}:{fontStyle:'bold',cellWidth:12,fillColor:[245,247,250]}]))})}});
+  function q4(q){return q.opts.map((_,k)=>`( ${'ABCDE'[k]} )`).join('   ')}
+  /* kunci */
+  doc.addPage();let y=pdfHead(doc,'Kunci Jawaban dan Pembahasan',`${JENIS[st.jenis]} - ${sb.name} - ${c.full}`);let f=flow(doc,y);
+  pk.forEach(([p,qs])=>{if(p)f.h('Paket '+p,11);const cols=5,rows=[];for(let i=0;i<qs.length;i+=cols)rows.push(Array.from({length:cols},(_,k)=>{const q=qs[i+k];return q?`${i+k+1}. ${'ABCDE'[q.opts.indexOf(q.ans)]}`:''}));
+    f.tbl(null,rows,{theme:'grid',styles:Object.assign({},PDF_TBL.styles,{fontSize:10,halign:'center',fontStyle:'bold'})})});
+  f.h('Pembahasan',11);f.li(A.map(q=>`${'ABCDE'[q.opts.indexOf(q.ans)]}. ${q.ans}${q.exp?' - '+q.exp:''}${pk.length>1?'':''}`),{num:1,sz:9});if(pk.length>1)f.p('Pembahasan mengikuti urutan Paket A.',{sz:8.5,c:110});
+  f.p(`Penilaian: skor = (jumlah benar / ${A.length}) x 100. KKM ${T().kkm||75}.`,{b:1,sz:9.5});
+  /* kisi-kisi */
+  doc.addPage();y=pdfHead(doc,'Kisi-kisi Soal',`${JENIS[st.jenis]} - ${sb.name} - ${c.full} - Fase ${faseOf(c)} - ${di.ta}`);f=flow(doc,y);
+  f.tbl(['No','Materi','Indikator soal','Level','Bentuk','Kunci'],A.map((q,i)=>[String(i+1),q.u,`Disajikan soal tentang ${lcf(q.u)}, peserta didik dapat ${LVV[q.lv]} jawaban yang tepat.`,q.lv,'PG','ABCDE'[q.opts.indexOf(q.ans)]]),{columnStyles:{0:{cellWidth:9,halign:'center'},1:{cellWidth:38},3:{cellWidth:13,halign:'center'},4:{cellWidth:15,halign:'center'},5:{cellWidth:13,halign:'center'}}});
+  const lv=['L1','L2','L3'].map(l=>`${l} (${l==='L1'?'pengetahuan':l==='L2'?'aplikasi':'penalaran'}): ${A.filter(q=>q.lv===l).length} soal`).join('   ');f.p(lv,{sz:9,c:90});
+  sign2(doc,f);pdfFoot(doc);doc.save(`Soal-${pdfSlug(JENIS[st.jenis].split(' (')[0])}-${pdfSlug(sb.name)}-${pdfSlug(c.full)}.pdf`)}
+
+/* ---------- wizard ---------- */
+const subjOpts=c=>c.subjects.map(x=>({v:x.id,l:x.name,g:x.glyph,c:x.color}));
+function wzModul(){const c=tCls(),st={sid:c.subjects[0].id,ui:'0',npt:2,jp:2};const SB=()=>c.subjects.find(x=>x.id===st.sid);
+  wizard({title:'Modul Ajar',state:st,steps:[
+    {t:'Mata pelajaran apa?',html:s=>wzOpts(subjOpts(c),s.sid),pick:(s,v)=>{if(s.sid!==v){s.sid=v;s.ui='0'}}},
+    {t:'Bab yang mana?',html:s=>wzOpts(SB().units.map((u,i)=>({v:String(i),l:`Bab ${i+1}: ${u.t}`,s:u.d||''})),s.ui),pick:(s,v)=>s.ui=v},
+    {t:'Berapa pertemuan?',html:s=>wzOpts([1,2,3,4,5,6].map(n=>({v:n,l:`${n} pertemuan`})),s.npt,1),pick:(s,v)=>s.npt=+v},
+    {t:'Berapa JP tiap pertemuan?',sub:'1 JP SD = 35 menit, SMP = 40 menit, SMA/SMK = 45 menit.',html:s=>wzOpts([1,2,3,4].map(n=>({v:n,l:`${n} JP`})),s.jp,1),pick:(s,v)=>s.jp=+v}],
+    summary:s=>`<b>${esc(SB().name)}</b> · Bab ${+s.ui+1}: ${esc(SB().units[+s.ui].t)} · ${s.npt} pertemuan × ${s.jp} JP`,
+    finish:{label:'Buat PDF Modul Ajar',run:async(s,b,close)=>{st.ui=+s.ui;await pdfRun(b,J=>pdfModul(J,st));close()}}})}
+function wzAtp(){const c=tCls(),st={sid:c.subjects[0].id,jpw:4,wk:18};
+  wizard({title:'ATP, Prota, dan Promes',state:st,steps:[
+    {t:'Mata pelajaran apa?',html:s=>wzOpts(subjOpts(c),s.sid),pick:(s,v)=>s.sid=v},
+    {t:'Berapa JP per minggu?',sub:'Lihat struktur kurikulum sekolahmu.',html:s=>wzOpts([2,3,4,5,6,8].map(n=>({v:n,l:`${n} JP per minggu`})),s.jpw,1),pick:(s,v)=>s.jpw=+v},
+    {t:'Berapa minggu efektif per semester?',html:s=>wzOpts([16,17,18,19,20].map(n=>({v:n,l:`${n} minggu`})),s.wk,1),pick:(s,v)=>s.wk=+v}],
+    summary:s=>`<b>${esc(c.subjects.find(x=>x.id===s.sid).name)}</b> · ${s.jpw} JP/minggu · ${s.wk} minggu efektif`,
+    finish:{label:'Buat PDF ATP, Prota, Promes',run:async(s,b,close)=>{await pdfRun(b,J=>pdfAtp(J,st));close()}}})}
+function wzSoal(){const c=tCls(),st={jenis:'uh',sid:c.subjects[0].id,babs:[0],n:20,paket:'a',ljk:true,nopt:4};const SB=()=>c.subjects.find(x=>x.id===st.sid);
+  const srcs=()=>(typeof bankOf==='function'?bankOf(SB().id):[]).filter(b=>bankQs(b).length>=3).map(b=>({v:'bk:'+b.id,l:`Paket saya: ${b.title}`,s:`${b.qs.length} soal`})).concat(SB().units.map((u,i)=>({v:i,l:`Bab ${i+1}: ${u.t}`,s:u.d||''})));
+  wizard({title:'Cetak soal',state:st,steps:[
+    {t:'Untuk apa soalnya?',html:s=>wzOpts(Object.entries(JENIS).map(([v,l])=>({v,l})),s.jenis),pick:(s,v)=>{s.jenis=v;s.n=v==='lk'?10:v==='uh'?20:v==='sts'?30:40}},
+    {t:'Mata pelajaran apa?',html:s=>wzOpts(subjOpts(c),s.sid),pick:(s,v)=>{if(s.sid!==v){s.sid=v;s.babs=[0]}}},
+    {t:'Bab mana saja?',sub:'Boleh pilih lebih dari satu. Soal dibagi rata ke tiap bab.',auto:false,
+      html:s=>`<div class="wzopts">${srcs().map(x=>`<button class="onbopt wzopt press" data-mb="${esc(String(x.v))}" aria-pressed="${s.babs.map(String).includes(String(x.v))}"><span class="wzol">${esc(x.l)}<small>${esc(x.s)}</small></span></button>`).join('')}</div><button class="ghost press" data-mball style="margin-top:10px;background:var(--card)">Pilih semua bab</button>`,
+      bind:(el,s,re)=>{el.querySelectorAll('[data-mb]').forEach(b=>b.onclick=()=>{const v=/^\d+$/.test(b.dataset.mb)?+b.dataset.mb:b.dataset.mb;const k=s.babs.map(String).indexOf(String(v));if(k>=0)s.babs.splice(k,1);else s.babs.push(v);b.setAttribute('aria-pressed',k<0);try{tone([620],.03)}catch(e){}});
+        const a=el.querySelector('[data-mball]');if(a)a.onclick=()=>{s.babs=SB().units.map((_,i)=>i);re()}},
+      ok:s=>s.babs.length?true:'Pilih minimal satu bab.'},
+    {t:'Berapa soal?',html:s=>wzOpts([10,15,20,25,30,40,50].map(n=>({v:n,l:`${n} soal pilihan ganda`})),s.n,1),pick:(s,v)=>s.n=+v},
+    {t:'Berapa paket?',sub:'Paket B berisi soal yang sama dengan urutan soal dan pilihan diacak, supaya murid tidak menyontek.',html:s=>wzOpts([{v:'a',l:'Satu paket'},{v:'ab',l:'Paket A dan B'}],s.paket),pick:(s,v)=>s.paket=v}],
+    summary:s=>`<b>${esc(JENIS[s.jenis])}</b> · ${esc(SB().name)} · ${s.babs.length} bab · ${s.n} soal${s.paket==='ab'?' · Paket A dan B':''}<br><small>Isi PDF: soal, lembar jawaban, kunci dan pembahasan, kisi-kisi.</small>`,
+    finish:{label:'Buat PDF soal',run:async(s,b,close)=>{await pdfRun(b,J=>pdfSoal(J,st));close()}}})}
+
+/* ---------- data dokumen ---------- */
+function docForm(after){const d=DOCd(),di=docInfo();
+  openModal(`<h3>Data dokumen</h3><p class="note" style="margin-top:-4px">Dipakai di kop dan tanda tangan semua dokumen.</p>
+   <div class="pfrm"><label>NIP guru<input id="dfNip" value="${esc(d.nip||'')}" inputmode="numeric" placeholder="Boleh dikosongkan"></label>
+   <label>Nama kepala sekolah<input id="dfKs" value="${esc(d.ks||'')}" placeholder="Contoh: Drs. Ahmad, M.Pd."></label>
+   <label>NIP kepala sekolah<input id="dfNipKs" value="${esc(d.nipKs||'')}" inputmode="numeric"></label>
+   <label>Kota/kabupaten<input id="dfKota" value="${esc(d.kota||'')}" placeholder="Contoh: Bima"></label>
+   <div class="pfrow"><label>Tahun ajaran<input id="dfTa" value="${esc(di.ta)}"></label><label>Semester<select id="dfSem"><option value="1" ${di.sem===1?'selected':''}>1 (Ganjil)</option><option value="2" ${di.sem===2?'selected':''}>2 (Genap)</option></select></label></div></div>
+   <div class="acts"><button class="ghost" id="mNo">Batal</button><button class="primary" id="mYes">Simpan</button></div>`);
+  $('#mNo').onclick=closeModal;$('#mYes').onclick=()=>{Object.assign(d,{nip:$('#dfNip').value.trim(),ks:$('#dfKs').value.trim(),nipKs:$('#dfNipKs').value.trim(),kota:$('#dfKota').value.trim(),ta:$('#dfTa').value.trim()||taNow(),sem:+$('#dfSem').value});touchT();closeModal();toast('check','Data dokumen tersimpan.');if(after)after()}}
+
+/* ---------- halaman Perangkat Ajar ---------- */
+const TOOLS=[
+ {id:'modul',ic:'book',c:'#1CB0F6',t:'Modul Ajar',d:'Modul ajar Pembelajaran Mendalam untuk satu bab, lengkap sampai lampiran.',inc:['Identifikasi murid dari data kelasmu','8 dimensi profil lulusan','Kegiatan tiap pertemuan','Asesmen, KKTP, LKPD, kunci, rubrik'],go:wzModul},
+ {id:'atp',ic:'cal',c:'#58CC02',t:'ATP, Prota, Promes',d:'Alur tujuan pembelajaran dan program tahunan/semester untuk satu mata pelajaran.',inc:['Tujuan pembelajaran tiap bab','Pembagian JP otomatis','Promes per minggu, siap diisi kalender'],go:wzAtp},
+ {id:'soal',ic:'quiz',c:'#FF9600',t:'Cetak Soal Ujian',d:'Lembar kerja, ulangan harian, STS, atau SAS dari bab pilihan dan Bank Soal-mu.',inc:['Paket A dan B (diacak)','Lembar jawaban','Kunci dan pembahasan','Kisi-kisi dengan level kognitif'],go:wzSoal}];
+function renderTPer(){const v=$('#vTPer');if(!v)return;const c=tCls(),di=docInfo(),pro=proOK();
+  v.innerHTML=thead(['Perangkat Ajar','teach'],`Draf otomatis Kurikulum Merdeka untuk ${esc(c.full)}. Periksa dan sesuaikan sebelum dipakai.`,`<button class="ghost press" id="pgDoc" style="color:var(--ink);background:var(--card)">Data dokumen</button>`)+
+   `<div class="pgrid">${TOOLS.map(x=>`<div class="tcard pgcard" style="--pc:${x.c}"><div class="pgtop"><span class="pgic"><i data-icon="${x.ic}"></i></span><h3>${x.t}</h3></div><p class="sub">${x.d}</p><ul class="pginc">${x.inc.map(i=>`<li>${i}</li>`).join('')}</ul><button class="primary press" data-pg="${x.id}">${pro?'Buat sekarang':'🔒 Buat sekarang'}</button></div>`).join('')}</div>
+   <div class="tcard pgdoc"><div class="pgdh"><h3>Kop dan tanda tangan</h3><button class="smallbtn" id="pgDoc2">Ubah</button></div>
+   <div class="pgkv"><span>Guru</span><b>${esc(di.guru||'-')}${di.nip?' · NIP '+esc(di.nip):''}</b><span>Sekolah</span><b>${esc(di.school||'-')}${di.kota?', '+esc(di.kota):''}</b><span>Kepala sekolah</span><b>${di.ks?esc(di.ks):'<i class="note">belum diisi</i>'}</b><span>Tahun ajaran</span><b>${esc(di.ta)} · Semester ${semNm(di.sem)}</b></div></div>
+   ${pro?'':`<div class="tcard"><p class="note" style="margin:0">Perangkat ajar termasuk paket Pro. <button class="smallbtn" data-pgpro>Lihat paket Pro</button></p></div>`}`;
+  hydrate(v);$('#pgDoc').onclick=$('#pgDoc2').onclick=()=>docForm(renderTPer);
+  const pp=v.querySelector('[data-pgpro]');if(pp)pp.onclick=()=>proAsk();
+  v.querySelectorAll('[data-pg]').forEach(b=>b.onclick=()=>{if(!needPro())return;const t=TOOLS.find(x=>x.id===b.dataset.pg);
+    if(!DOCd().asked&&!DOCd().ks){DOCd().asked=1;touchT();docForm(()=>t.go());return}t.go()})}
+
+/* =================== ADMINISTRASI KELAS =================== */
+const ADMV={tab:'jr',month:dayKey().slice(0,7),per:'bulan'};
+const ASP=[['d','Disiplin'],['t','Tanggung jawab'],['k','Kerja sama'],['s','Sopan santun']];
+const SKV=['SB','B','C','PB'],SKN={SB:'sangat baik',B:'baik',C:'cukup',PB:'perlu bimbingan'};
+const skOf=pid=>Object.assign({d:'B',t:'B',k:'B',s:'B'},ADMd().sk[pid]||{});
+function skDesc(p){const s=skOf(p.id),nm=String(p.name||'').split(' ')[0];const grp={};ASP.forEach(([k,l])=>{(grp[s[k]]=grp[s[k]]||[]).push(l.toLowerCase())});
+  const j=a=>a.length>1?a.slice(0,-1).join(', ')+' dan '+a[a.length-1]:a[0];
+  const parts=[];if(grp.SB)parts.push(`sangat baik dalam ${j(grp.SB)}`);if(grp.B)parts.push(`baik dalam ${j(grp.B)}`);if(grp.C)parts.push(`cukup dalam ${j(grp.C)}`);
+  let t=`Ananda ${nm} menunjukkan sikap ${parts.join(', ')}.`;if(grp.PB)t+=` Ananda masih perlu bimbingan dalam ${j(grp.PB)}.`;if(!parts.length)t=`Ananda ${nm} masih perlu bimbingan dalam ${j(grp.PB)}.`;return t}
+function teachDates(){const set=new Set((APP.sessions||[]).map(s=>s.date));Object.keys(ADMd().jr).forEach(d=>set.add(d));if(isTeachDay())set.add(dayKey());return [...set].sort().reverse()}
+function jrAuto(d){const s=sessionOf(d,false),ps=students();const h=s?Object.values(s.att).filter(v=>v==='H').length:0;const units=s?[...new Set(s.evals.map(e=>e.unit).filter(Boolean))]:[];
+  return {hadir:s&&Object.keys(s.att).length?`${h}/${ps.length}`:'',units,subj:s?[...new Set(s.evals.map(e=>e.subjName).filter(Boolean))]:[]}}
+function admTabs(){return `<div class="rptabs admtabs" role="tablist">${[['jr','Jurnal mengajar'],['sk','Nilai sikap'],['wa','Lapor orang tua']].map(([k,l])=>`<button class="${ADMV.tab===k?'on':''}" data-at="${k}" role="tab" aria-selected="${ADMV.tab===k}">${l}</button>`).join('')}</div>`}
+function renderTAdm(){const v=$('#vTAdm');if(!v)return;const c=tCls();
+  v.innerHTML=thead(['Administrasi Kelas','check'],`${esc(c.full)} · jurnal, sikap, dan laporan untuk orang tua.`,'')+admTabs()+`<div id="admBody" style="display:flex;flex-direction:column;gap:16px"></div>`;hydrate(v);
+  v.querySelectorAll('[data-at]').forEach(b=>b.onclick=()=>{ADMV.tab=b.dataset.at;renderTAdm()});
+  ({jr:admJr,sk:admSk,wa:admWa})[ADMV.tab]($('#admBody'))}
+let jrT=null;
+function admJr(host){const months=[...new Set(teachDates().map(d=>d.slice(0,7)).concat([dayKey().slice(0,7)]))].sort().reverse();if(!months.includes(ADMV.month))ADMV.month=months[0];
+  const ds=teachDates().filter(d=>d.startsWith(ADMV.month)),jr=ADMd().jr;const mName=m=>new Date(+m.slice(0,4),+m.slice(5,7)-1,1).toLocaleDateString('id-ID',{month:'long',year:'numeric'});
+  host.innerHTML=`<div class="tcard"><div class="admbar"><select id="jrMon" aria-label="Bulan">${months.map(m=>`<option value="${m}" ${m===ADMV.month?'selected':''}>${mName(m)}</option>`).join('')}</select><input type="date" id="jrDate" value="${dayKey()}" aria-label="Tanggal"><button class="ghost press" id="jrAdd" style="background:var(--card)">+ Tambah tanggal</button><button class="primary press" id="jrPdf">${proOK()?'':'🔒 '}Unduh PDF jurnal</button></div>
+     <p class="note" style="margin:0">Kehadiran dan materi evaluasi terisi otomatis dari Absensi dan Evaluasi. Tinggal lengkapi kegiatan dan catatan.</p></div>`+
+   (ds.length?ds.map(d=>{const a=jrAuto(d),j=jr[d]||{};return `<div class="tcard jrcard" data-d="${d}"><div class="jrh"><b>${esc(fmtD(d))}</b>${a.hadir?`<span class="pill ok">Hadir ${a.hadir}</span>`:''}${j.m||j.k?'<span class="pill">Terisi</span>':''}</div>
+     <div class="jrf"><label>Materi<input data-f="m" value="${esc(j.m||'')}" placeholder="${esc(a.units.join(', ')||'Contoh: Pecahan senilai')}"></label><label>Kegiatan dan metode<input data-f="k" value="${esc(j.k||'')}" placeholder="Contoh: Diskusi kelompok, kuis di TV"></label>
+     <label class="wide">Catatan kejadian<textarea data-f="c" rows="2" placeholder="Contoh: Budi belum membawa buku; kelas antusias">${esc(j.c||'')}</textarea></label></div></div>`}).join('')
+    :`<div class="tcard" style="text-align:center;align-items:center"><p class="sub" style="margin:0">Belum ada pertemuan di bulan ini. Isi absensi atau tambahkan tanggal.</p></div>`);
+  $('#jrMon').onchange=e=>{ADMV.month=e.target.value;renderTAdm()};
+  $('#jrAdd').onclick=()=>{const d=$('#jrDate').value;if(!d)return;jr[d]=jr[d]||{m:'',k:'',c:''};touchT();ADMV.month=d.slice(0,7);renderTAdm()};
+  $('#jrPdf').onclick=e=>{if(!needPro())return;pdfRun(e.currentTarget,J=>pdfJr(J,ds.slice().reverse()))};
+  host.querySelectorAll('.jrcard').forEach(card=>card.querySelectorAll('[data-f]').forEach(inp=>inp.oninput=()=>{const d=card.dataset.d;jr[d]=jr[d]||{};jr[d][inp.dataset.f]=inp.value;clearTimeout(jrT);jrT=setTimeout(touchT,700)}))}
+function pdfJr(J,ds){if(!ds.length)throw new Error('Belum ada pertemuan di bulan ini.');const c=tCls(),jr=ADMd().jr,di=docInfo();const doc=new J({unit:'mm',format:'a4',orientation:'landscape'});
+  const m=new Date(+ADMV.month.slice(0,4),+ADMV.month.slice(5,7)-1,1).toLocaleDateString('id-ID',{month:'long',year:'numeric'});
+  let y=pdfHead(doc,'Jurnal Mengajar',`${c.full} · ${m} · Guru: ${di.guru}`);const f=flow(doc,y);
+  f.tbl(['No','Hari, tanggal','Materi','Kegiatan dan metode','Kehadiran','Catatan'],ds.map((d,i)=>{const a=jrAuto(d),j=jr[d]||{};return [String(i+1),fmtD(d),j.m||a.units.join(', ')||'-',j.k||'-',a.hadir||'-',j.c||'-']}),{columnStyles:{0:{cellWidth:10,halign:'center'},1:{cellWidth:46},4:{cellWidth:22,halign:'center'}}});
+  sign2(doc,f);pdfFoot(doc);doc.save(`Jurnal-Mengajar-${pdfSlug(c.full)}-${ADMV.month}.pdf`)}
+function admSk(host){const ps=students();
+  host.innerHTML=`<div class="tcard"><div class="admbar"><button class="ghost press" id="skAll" style="background:var(--card)">Isi semua "Baik"</button><button class="primary press" id="skPdf">${proOK()?'':'🔒 '}Unduh PDF nilai sikap</button></div><p class="note" style="margin:0">Ketuk nilai untuk mengganti: SB (sangat baik) → B → C → PB (perlu bimbingan). Deskripsi terbentuk otomatis dan ikut di laporan orang tua.</p></div>`+
+   (ps.length?`<div class="tcard sklist">${ps.map(p=>{const s=skOf(p.id);return `<div class="skrow" data-p="${p.id}"><div class="skn">${avatarOf(p)}<b>${esc(p.name)}</b></div><div class="skc">${ASP.map(([k,l])=>`<button class="skb sk-${s[k]}" data-k="${k}" aria-label="${l}: ${SKN[s[k]]}"><small>${l}</small><b>${s[k]}</b></button>`).join('')}</div><p class="skd">${esc(skDesc(p))}</p></div>`}).join('')}</div>`
+    :`<div class="tcard"><p class="sub" style="margin:0">Belum ada murid. Tambahkan di menu Murid.</p></div>`);
+  hydrate(host);
+  host.querySelectorAll('.skrow').forEach(r=>r.querySelectorAll('.skb').forEach(b=>b.onclick=()=>{const pid=r.dataset.p,sk=ADMd().sk;const s=skOf(pid);const k=b.dataset.k;s[k]=SKV[(SKV.indexOf(s[k])+1)%4];sk[pid]=s;touchT();
+    b.className='skb sk-'+s[k];b.querySelector('b').textContent=s[k];r.querySelector('.skd').textContent=skDesc(students().find(p=>p.id===pid)||{name:''})}));
+  $('#skAll').onclick=()=>{ps.forEach(p=>ADMd().sk[p.id]={d:'B',t:'B',k:'B',s:'B'});touchT();renderTAdm()};
+  $('#skPdf').onclick=e=>{if(!needPro())return;pdfRun(e.currentTarget,pdfSk)}}
+function pdfSk(J){const ps=students();if(!ps.length)throw new Error('Belum ada murid.');const c=tCls(),di=docInfo();const doc=new J({unit:'mm',format:'a4',orientation:'landscape'});
+  let y=pdfHead(doc,'Penilaian Sikap',`${c.full} · Semester ${semNm(di.sem)} · ${di.ta}`);const f=flow(doc,y);
+  f.tbl(['No','Nama',...ASP.map(a=>a[1]),'Deskripsi'],ps.map((p,i)=>{const s=skOf(p.id);return [String(p.no||i+1),p.name,...ASP.map(([k])=>s[k]),skDesc(p)]}),{columnStyles:{0:{cellWidth:10,halign:'center'},1:{cellWidth:44},2:{cellWidth:18,halign:'center'},3:{cellWidth:22,halign:'center'},4:{cellWidth:20,halign:'center'},5:{cellWidth:22,halign:'center'}}});
+  f.p('SB = sangat baik, B = baik, C = cukup, PB = perlu bimbingan.',{sz:8.5,c:110});sign2(doc,f);pdfFoot(doc);doc.save(`Nilai-Sikap-${pdfSlug(c.full)}.pdf`)}
+/* lapor orang tua */
+function perRange(){const now=new Date(),k=ADMV.per;if(k==='minggu'){const d=new Date(now);d.setDate(d.getDate()-6);return [dayKey(d),dayKey(now),'7 hari terakhir']}
+  if(k==='bulan'){return [dayKey(new Date(now.getFullYear(),now.getMonth(),1)),dayKey(now),now.toLocaleDateString('id-ID',{month:'long',year:'numeric'})]}
+  const sem=semNow(),y=now.getFullYear();return [sem===1?`${y}-07-01`:`${y}-01-01`,dayKey(now),`semester ${semNm(sem).toLowerCase()} ${docInfo().ta}`]}
+function waMsg(p){const t=T(),c=tCls(),[a,b,lbl]=perRange(),kkm=t.kkm||75;const at={H:0,I:0,S:0,A:0,n:0};(APP.sessions||[]).forEach(s=>{if(s.date<a||s.date>b)return;const v=s.att[p.id];if(v){at[v]++;at.n++}});
+  const ev=evalEntries(p.id).filter(e=>e.date>=a&&e.date<=b);const avg=av(ev.map(e=>e.score));const bySub={};ev.forEach(e=>(bySub[e.subjName||subjNm(e.subj)]=bySub[e.subjName||subjNm(e.subj)]||[]).push(e.score));
+  const L=[`Yth. Bapak/Ibu wali dari ${p.name},`,``,`Berikut laporan belajar ananda di ${c.full}${t.school?' '+t.school:''} untuk ${lbl}:`];
+  L.push(`• Kehadiran: ${at.n?`${Math.round(at.H/at.n*100)}% (hadir ${at.H}, izin ${at.I}, sakit ${at.S}, alpa ${at.A})`:'belum ada catatan'}`);
+  L.push(`• Rata-rata nilai: ${avg==null?'belum ada penilaian':`${avg} (${avg>=kkm?'tuntas':'belum tuntas'}, KKM ${kkm})`}`);
+  Object.entries(bySub).slice(0,6).forEach(([k,v])=>L.push(`   - ${k}: ${av(v)}`));
+  const xp=(p.week&&p.week.xp)||0,ls=(p.stats&&p.stats.lessons)||0;if(xp||ls)L.push(`• Latihan di aplikasi JELAS: ${ls} pelajaran selesai, ${xp} XP minggu ini`);
+  if(ADMd().sk[p.id])L.push(`• Sikap: ${skDesc(p)}`);
+  const nt=ADMd().nt[p.id];if(nt)L.push(``,`Catatan guru: ${nt}`);
+  L.push(``,avg!=null&&avg<kkm?`Mohon dukungan Bapak/Ibu untuk mendampingi ananda berlatih di rumah, misalnya 10 menit sehari di aplikasi JELAS.`:`Terima kasih atas dukungan Bapak/Ibu. Mari terus dampingi ananda belajar di rumah.`,``,`Salam,`,`${t.name||'Guru kelas'}`);
+  return L.join('\n')}
+const waNum=v=>{let n=String(v||'').replace(/\D/g,'');if(n.startsWith('0'))n='62'+n.slice(1);if(n.startsWith('8'))n='62'+n;return n.length>=10?n:''};
+function admWa(host){const ps=students(),wa=ADMd().wa;
+  host.innerHTML=`<div class="tcard"><div class="admbar"><label class="admsel">Periode <select id="waPer">${[['minggu','7 hari terakhir'],['bulan','Bulan ini'],['semester','Semester ini']].map(([k,l])=>`<option value="${k}" ${ADMV.per===k?'selected':''}>${l}</option>`).join('')}</select></label></div>
+     <p class="note" style="margin:0">Isi nomor WhatsApp orang tua sekali saja. Tombol Kirim membuka WhatsApp dengan pesan siap kirim; kamu yang menekan kirim.</p></div>`+
+   (ps.length?`<div class="tcard walist">${ps.map(p=>`<div class="warow" data-p="${p.id}"><div class="skn">${avatarOf(p)}<b>${esc(p.name)}</b></div><input class="wanum" inputmode="tel" placeholder="No. WA orang tua" value="${esc(wa[p.id]||'')}" aria-label="Nomor WhatsApp orang tua ${esc(p.name)}"><button class="smallbtn" data-prev>Lihat pesan</button><button class="primary press wago" data-send ${waNum(wa[p.id])?'':'disabled'}>Kirim WA</button></div>`).join('')}</div>`
+    :`<div class="tcard"><p class="sub" style="margin:0">Belum ada murid. Tambahkan di menu Murid.</p></div>`);
+  hydrate(host);$('#waPer').onchange=e=>{ADMV.per=e.target.value};
+  host.querySelectorAll('.warow').forEach(r=>{const pid=r.dataset.p;const inp=r.querySelector('.wanum');
+    inp.oninput=()=>{wa[pid]=inp.value.trim();r.querySelector('[data-send]').disabled=!waNum(wa[pid]);clearTimeout(jrT);jrT=setTimeout(touchT,700)};
+    r.querySelector('[data-prev]').onclick=()=>waPreview(pid);
+    r.querySelector('[data-send]').onclick=()=>{const p=students().find(x=>x.id===pid);window.open(`https://wa.me/${waNum(wa[pid])}?text=${encodeURIComponent(waMsg(p))}`,'_blank','noopener')}})}
+function waPreview(pid){const ps=students(),i=ps.findIndex(x=>x.id===pid),p=ps[i];if(!p)return;const nt=ADMd().nt;
+  openModal(`<h3>Pesan untuk orang tua ${esc(p.name)}</h3><label class="note" style="display:block">Catatan guru (opsional)<textarea id="waNt" rows="2" style="width:100%;margin-top:4px">${esc(nt[pid]||'')}</textarea></label>
+   <textarea id="waTx" rows="12" style="width:100%;font:14px/1.45 system-ui,sans-serif;border:2px solid var(--line);border-radius:14px;padding:10px">${esc(waMsg(p))}</textarea>
+   <div class="acts"><button class="ghost" id="waCp">Salin</button>${i<ps.length-1?`<button class="ghost" id="waNx">Murid berikutnya →</button>`:''}<button class="primary" id="waGo" ${waNum(ADMd().wa[pid])?'':'disabled title="Isi nomor WA dulu"'}>Kirim WA</button></div>`);
+  $('#waNt').oninput=e=>{nt[pid]=e.target.value.trim();$('#waTx').value=waMsg(p);clearTimeout(jrT);jrT=setTimeout(touchT,700)};
+  $('#waCp').onclick=()=>{copyText($('#waTx').value)};
+  const nx=$('#waNx');if(nx)nx.onclick=()=>waPreview(ps[i+1].id);
+  $('#waGo').onclick=()=>window.open(`https://wa.me/${waNum(ADMd().wa[pid])}?text=${encodeURIComponent($('#waTx').value)}`,'_blank','noopener')}
+
+/* ---------- pasang menu ---------- */
+document.querySelector('.nav.tnav[data-tab=tbank]').insertAdjacentHTML('afterend','<button class="nav tnav" data-tab="tper"><i data-icon="teach"></i><span>Perangkat</span></button>');
+document.querySelector('.nav.tnav[data-tab=trapor]').insertAdjacentHTML('afterend','<button class="nav tnav" data-tab="tadm"><i data-icon="check"></i><span>Administrasi</span></button>');
+$('#vTBank').insertAdjacentHTML('afterend','<section id="vTPer" class="view" hidden style="flex-direction:column;gap:16px"></section><section id="vTAdm" class="view" hidden style="flex-direction:column;gap:16px"></section>');
+TEACH_R.tper=renderTPer;TEACH_R.tadm=renderTAdm;TAB_VIEW.tper='vTPer';TAB_VIEW.tadm='vTAdm';views.push('vTPer','vTAdm');
+try{hydrate(document.querySelector('.nav.tnav[data-tab=tper]').parentElement)}catch(e){}
+document.querySelectorAll('.nav.tnav[data-tab=tper],.nav.tnav[data-tab=tadm]').forEach(n=>n.addEventListener('click',()=>go(n.dataset.tab)));
+try{PRO_LIST.splice(4,0,['teach','Perangkat ajar: Modul Ajar, ATP, Prota, Promes'],['quiz','Cetak soal ujian dengan kunci dan kisi-kisi'],['check','Jurnal mengajar dan nilai sikap (PDF)'])}catch(e){}
+window.renderTPer=renderTPer;window.renderTAdm=renderTAdm;window.__perangkat={printableQs,buildSoal,waMsg,skDesc,jpPlan};
+})();
 </script>
 
 <script>if("serviceWorker" in navigator)window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}))</script>
