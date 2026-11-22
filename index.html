@@ -4025,6 +4025,27 @@ html[data-theme=malam] .plstick{background:#0a0f1e}
 .pzk-top .pzbody{animation:pzNod 2.6s ease-in-out infinite}
 .pzk-side .pzbody{animation:pzSway 2.2s ease-in-out infinite}
 .pzk-top>svg.pzt{bottom:100%!important}.pzk-top>svg.pz-hai{bottom:86%!important}
+
+/* ===== TK: kartu pilihan ===== */
+body.tkcards #subjBtn{display:none!important}
+.tkhead{display:flex;align-items:center;gap:14px;padding:6px 4px 2px}.tkhead h2{margin:0;font-size:24px;line-height:1.2}.tkhead p{margin:4px 0 0;color:var(--muted,#6b7280);font-size:15px}
+.tkhead .tkm{width:78px;height:78px;flex:none}
+.tkgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;padding:8px 2px 24px}
+@media(min-width:720px){.tkgrid{grid-template-columns:repeat(3,1fr);gap:18px}}
+.tkcard,.tkact{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;min-height:168px;padding:16px 10px 18px;border:0;border-radius:24px;cursor:pointer;color:#fff;
+ background:var(--kc);box-shadow:0 6px 0 color-mix(in srgb,var(--kc) 70%,#000),0 10px 18px rgba(0,0,0,.12);font:inherit;text-align:center;-webkit-tap-highlight-color:transparent;transition:transform .08s}
+.tkcard:active,.tkact:active{transform:translateY(4px);box-shadow:0 2px 0 color-mix(in srgb,var(--kc) 70%,#000)}
+.tke{font-size:52px;line-height:1;filter:drop-shadow(0 3px 0 rgba(0,0,0,.15))}.tke b{font-size:38px;font-weight:900}.tke.sm{font-size:34px}
+.tkn{font-weight:900;font-size:20px;letter-spacing:.2px;text-shadow:0 2px 0 rgba(0,0,0,.15)}.tkcard small,.tkact small{font-size:13px;line-height:1.3;opacity:.95;font-weight:600}
+.tkp{width:70%;height:8px;border-radius:8px;background:rgba(255,255,255,.35);overflow:hidden;margin-top:4px}.tkp i{display:block;height:100%;background:#fff;border-radius:8px}
+.tkhead2{display:flex;align-items:center;gap:12px;padding:4px 2px}.tkhead2 h2{margin:0;font-size:24px}
+.tkback{width:52px;height:52px;border-radius:50%;border:0;background:var(--kc);color:#fff;font-size:26px;font-weight:900;cursor:pointer;box-shadow:0 4px 0 color-mix(in srgb,var(--kc) 70%,#000)}
+.tkact{min-height:150px;background:#fff;color:var(--ink,#1f2937);box-shadow:0 0 0 3px var(--kc) inset,0 6px 0 var(--kc)}
+.tkact:active{box-shadow:0 0 0 3px var(--kc) inset,0 2px 0 var(--kc)}
+.tkan{font-weight:900;font-size:18px;line-height:1.2}.tkact small{color:#6b7280;font-weight:600}
+.tkst{display:flex;gap:2px;font-size:22px}.tkst i{font-style:normal;color:#d9dce3}.tkst i.on{color:#FFC800;text-shadow:0 2px 0 #E5A100}
+.tkgo{margin-top:2px;background:var(--kc);color:#fff;font-weight:900;font-size:14px;padding:6px 16px;border-radius:999px}
+html[data-theme=malam] .tkact{background:#1e2235;color:#eef}html[data-theme=malam] .tkact small{color:#b9bfd6}
 </style>
 <style>html,body{margin:0}</style>
 </head>
@@ -4241,7 +4262,7 @@ html[data-theme=malam] .plstick{background:#0a0f1e}
 <div class="syncpill" id="syncPill" hidden></div>
 <div class="toast" id="toast" hidden></div>
 
-<script src="av.js?v=408"></script>
+<script src="av.js?v=412"></script>
 <script>
 /* ---------- visual assets ---------- */
 const INK='#1B1E3D';
@@ -13036,7 +13057,37 @@ function decoPose(ui){let key='',u=null;try{const sb=SUBJ();key=String(sb.id).re
   const x=PZX[id];if(x)return `<div class="pz pose-${id} pzk-${x.cls}">${x.cls==='top'?x.svg:''}<div class="pzbody"><div class="mascot" data-mascot data-mood="${x.mood}"></div></div>${x.cls!=='top'?x.svg:''}</div>`;
   const p=POSES.find(q=>q.id===id)||POSES[0];
   return `<div class="pz pose-${p.id}">${p.top||''}<div class="pzbody"><div class="mascot" data-mascot data-mood="${p.mood}"></div></div>${p.side||''}${p.front||''}</div>`}
-function renderPath(){const s=SUBJ(),pr=progOf(),done=pr.done;let h='';
+
+/* ===== TK: kartu pilihan bebas (tanpa jalur, tanpa kunci, tanpa nyawa) ===== */
+const TK_CARDS=[
+ {id:'tulis',name:'Menulis',emo:'✏️',color:'#FF8A3D',d:'Menebalkan angka dan huruf',it:[['hitung','Menebalkan angka'],['huruf','Menebalkan huruf'],['huruf','Huruf kecil']]},
+ {id:'baca',name:'Membaca',emo:'📖',color:'#3D8BFF',d:'Huruf, suku kata, dan kata',it:[['huruf','Huruf awal'],['huruf','Urutan huruf'],['huruf','Suku kata'],['huruf','Membaca kata']],sub:'huruf'},
+ {id:'hitung',name:'Berhitung',emo:'🔢',color:'#22B85C',d:'Angka, banyak-sedikit, pola',it:[],sub:'hitung'},
+ {id:'warna',name:'Warna & Bentuk',emo:'🎨',color:'#FF5C9E',d:'Warna, bentuk, mewarnai',it:[],sub:'warna'},
+ {id:'diri',name:'Aku & Sekitarku',emo:'😊',color:'#7C4DFF',d:'Perasaan, tubuh, keluarga',it:[],sub:'diri'},
+ {id:'alam',name:'Alam Sekitar',emo:'🌱',color:'#14B8A6',d:'Hewan, tumbuhan, cuaca',it:[],sub:'sains'}];
+const TKV={cat:null};
+const isTkCards=()=>{try{return CLS().lv==='tk'}catch(e){return false}};
+function tkCardList(){const c=CLS(),subs=subjVisible(c),used=new Set(),cards=[];
+  const ref=(sid,t)=>{const sb=subs.find(x=>x.id===sid);if(!sb)return null;const ui=sb.units.findIndex(u=>u.t===t);return ui<0?null:{sb,ui}};
+  TK_CARDS.forEach(k=>{const items=[];k.it.forEach(([sid,t])=>{const r=ref(sid,t);if(r){items.push(r);used.add(sid+'/'+r.ui)}});cards.push(Object.assign({},k,{items}))});
+  subs.forEach(sb=>{let k=cards.find(x=>x.sub===sb.id);if(!k){k={id:'s_'+sb.id,name:sb.name,emo:(typeof relOf==='function'&&relOf(sb))?'🙏':'',glyph:sb.glyph,color:sb.color||'#3D8BFF',d:sb.units.slice(0,2).map(u=>u.t).join(', '),items:[]};cards.push(k)}
+    sb.units.forEach((u,ui)=>{if(!used.has(sb.id+'/'+ui)){k.items.push({sb,ui});used.add(sb.id+'/'+ui)}})});
+  return cards.filter(k=>k.items.length)}
+function tkStars(sb,ui){const n=((P.tkc||{})[CLS().id+'/'+sb.id+'/'+ui])||0;return Math.min(3,n)}
+function tkStarRow(n){return `<span class="tkst" aria-label="${n} bintang">${[0,1,2].map(i=>`<i class="${i<n?'on':''}">★</i>`).join('')}</span>`}
+function renderTk(){const cards=tkCardList();document.body.classList.add('tkcards');let h='';const cat=TKV.cat&&cards.find(k=>k.id===TKV.cat);
+  if(!cat){h=`<div class="tkhead"><div class="mascot tkm" data-mascot data-mood="happy"></div><div><h2>Mau belajar apa hari ini?</h2><p>Pilih kartu yang kamu suka. Boleh yang mana saja!</p></div></div><div class="tkgrid">`+
+    cards.map(k=>{const st=k.items.reduce((a,r)=>a+tkStars(r.sb,r.ui),0),max=k.items.length*3;return `<button class="tkcard press" data-c="${k.id}" style="--kc:${k.color}"><span class="tke">${k.emo||`<b>${esc(k.glyph||'')}</b>`}</span><span class="tkn">${esc(k.name)}</span><small>${esc(k.d)}</small><span class="tkp"><i style="width:${Math.round(st/max*100)}%"></i></span></button>`}).join('')+`</div>`}
+  else{h=`<div class="tkhead2" style="--kc:${cat.color}"><button class="tkback press" id="tkBack" aria-label="Kembali ke semua kartu">←</button><span class="tke sm">${cat.emo||`<b>${esc(cat.glyph||'')}</b>`}</span><h2>${esc(cat.name)}</h2></div><div class="tkgrid act">`+
+    cat.items.map((r,i)=>{const u=r.sb.units[r.ui];return `<button class="tkact press" data-i="${i}" style="--kc:${cat.color}"><span class="tkan">${esc(u.t)}</span><small>${esc(u.d||'')}</small>${tkStarRow(tkStars(r.sb,r.ui))}<span class="tkgo">Main ▶</span></button>`}).join('')+`</div>`}
+  $('#path').innerHTML=h;hydrate($('#path'));
+  $('#path').querySelectorAll('.tkcard').forEach(b=>b.onclick=()=>{TKV.cat=b.dataset.c;try{tone([660],.05)}catch(e){}renderTk();window.scrollTo({top:0})});
+  const bk=$('#tkBack');if(bk)bk.onclick=()=>{TKV.cat=null;renderTk();window.scrollTo({top:0})};
+  if(cat)$('#path').querySelectorAll('.tkact').forEach(b=>b.onclick=()=>{const r=cat.items[+b.dataset.i];tkStart(r.sb,r.ui)})}
+function tkStart(sb,ui){const u=sb.units[ui];let qs=[];try{qs=mixTypes(unitQs(u,5),u)}catch(e){qs=unitQs(u,5)}if(!qs||!qs.length)return;
+  beginRun({kind:'lesson',ui,ni:0,idx:-1,replay:false,qs,mode:'kuis',title:u.t,subj:sb,noHearts:true,tkKey:CLS().id+'/'+sb.id+'/'+ui})}
+function renderPath(){if(isTkCards())return renderTk();document.body.classList.remove('tkcards');const s=SUBJ(),pr=progOf(),done=pr.done;let h='';
   s.units.forEach((u,ui)=>{const base=ui*NODES.length,locked=done<base,sign=ui%2?-1:1;
     h+=`<div class="unit ${locked?'locked':''}" style="--uc:${unitColor(ui)}" id="unit${ui}"><div class="uhead"><div><div class="ue">Unit ${ui+1} · ${esc(s.name)}</div><h2>${esc(u.t)}</h2><p>${esc(u.d)}</p></div><button class="guide" data-guide="${ui}" aria-label="Panduan">${ico('book')}<span class="gl">Panduan</span></button></div><div class="nodes">`;
     const spP=spPending(ui),spD=spDone(ui);
@@ -13399,7 +13450,7 @@ function startPractice(){const s=SUBJ(),doneUnits=Math.max(1,Math.floor(progOf()
   if(wk.length)setTimeout(()=>{try{toast('target',`${wk.length} soal yang dulu salah muncul lagi di latihan ini.`)}catch(e){}},600);
   beginRun({kind:'practice',qs:mixTypes(shuffle([...wk,...fresh]),pick(pool)),mode:'kuis',title:`Latihan · ${s.name}`})}
 function beginRun(o){PLAY='solo';{const rr=document.getElementById('roomRace');if(rr&&!o.room)rr.hidden=true}L=o.cls?LEVELS.find(l=>l.id===COURSE.find(c=>c.id===o.cls).lv):lvOf();const s=o.subj||SUBJ();S={id:s.id,name:o.title||s.name,make:()=>o.qs};MODE=o.mode;setLvColor(L);document.documentElement.style.setProperty('--lvc',s.color);
-  const usesHearts=o.kind==='lesson'||o.kind==='test';
+  const usesHearts=(o.kind==='lesson'||o.kind==='test')&&!o.noHearts;
   game={qs:o.qs,i:0,score:0,correct:0,lives:o.kind==='game'?(L&&L.id==='tk'||o.mode==='katak'?999:3):(usesHearts&&!HUNL()?P.hearts:999),streak:0,best:0,results:[],locked:false,mode:o.mode,buzz:null,group:null,
     lesson:Object.assign({},o,{target:o.qs.length,reask:(o.kind==='lesson'||o.kind==='practice')&&!o.noReask,answers:0,wrong:0,start:Date.now(),usesHearts})};
   show('vPlay');document.body.classList.toggle('lessonmode',o.mode==='kuis');try{loadMateri().catch(()=>{})}catch(e){}
@@ -13426,7 +13477,7 @@ function finishRun(){clearInterval(timerId);if(arc.running)arcStop();const g=gam
   let xp={lesson:10,game:10,test:15,practice:8}[o.kind]+(perfect&&o.kind!=='practice'?5:0);if(o.replay)xp=Math.ceil(xp/2);
   const gems=(perfect&&!o.replay?5:0)+(o.kind==='test'&&!o.replay?10:0);
   let heartGain=false;if(o.kind==='practice'&&!HUNL()&&P.hearts<5){P.hearts++;heartGain=true;if(P.hearts>=5)P.heartsAt=null}
-  if(o.kind!=='practice'&&!o.replay){const pr=progOf();if(pr.done===o.idx)pr.done++}
+  if(o.kind!=='practice'&&!o.replay){const pr=progOf();if(pr.done===o.idx)pr.done++}if(o.tkKey){P.tkc=P.tkc||{};P.tkc[o.tkKey]=(P.tkc[o.tkKey]||0)+1}
   const badgeBefore=BADGES.map(b=>blevel(b));const goalBefore=P.today.xp>=P.goal;
   P.stats.lessons++;if(perfect)P.stats.perfect++;if(o.kind==='test')P.stats.tests++;if(o.kind==='game'&&!P.stats.games.includes(g.mode))P.stats.games.push(g.mode);P.stats.correct+=g.correct;
   const streakUp=addXp(xp);P.gems+=gems;
@@ -16180,7 +16231,7 @@ function folBind(root,list,after){root.querySelectorAll('[data-follow]').forEach
   try{await folDo(f,on);if(on){try{sfx.ok()}catch(_){}toast('team',`Kamu mengikuti ${f.name}.`)}b.outerHTML=folBtn(f,b.classList.contains('sm'));folBind(root,list,after);after&&after()}catch(err){b.disabled=false;toast('lock',fbErr(err))}})}
 const shareIcon='<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M12 3 V15 M7 8 L12 3 L17 8 M5 13 V19 C5 20 6 21 7 21 H17 C18 21 19 20 19 19 V13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const qrIcon='<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><path d="M14 14h3v3h-3zM18 18h3v3h-3zM18 14h3M14 18v3" stroke-linecap="round"/></svg>';
-let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=408';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
+let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=412';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
 function qrMatrix(text){const Q=window.QRCodeLib,q=new Q(-1,Q.ECL.M);q.addData(text);q.make();const n=q.getModuleCount(),m=[];for(let r=0;r<n;r++){m.push([]);for(let c=0;c<n;c++)m[r].push(q.isDark(r,c))}return m}
 function qrSvgOf(m){const n=m.length;let d='';for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(m[r][c])d+=`M${c} ${r}h1.02v1.02h-1.02z`;
   return `<svg viewBox="-2 -2 ${n+4} ${n+4}" class="pcqr" shape-rendering="crispEdges" aria-label="Kode QR profil"><rect x="-2" y="-2" width="${n+4}" height="${n+4}" fill="#fff"/><path d="${d}" fill="#1C1E3D"/></svg>`}
