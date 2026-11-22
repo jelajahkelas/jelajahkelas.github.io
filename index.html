@@ -3458,6 +3458,7 @@ html body #vQuest .mqhead{position:sticky;top:calc(8px + env(safe-area-inset-top
 .tkpos i{position:absolute;font-style:normal;line-height:1}
 .picopts .opt .tkpos{font-size:40px}
 .big.tkseq{font-size:34px;letter-spacing:2px;display:block;margin-top:10px;line-height:1.4}
+.sfxrow{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:12px}.sfxbtn{border:0;border-radius:16px;padding:12px 20px;background:#FFC23D;color:#3B2A00;font:inherit;font-weight:800;font-size:20px;box-shadow:0 5px 0 #D99A00;cursor:pointer}.sfxbtn:active{transform:translateY(3px);box-shadow:0 2px 0 #D99A00}.sfxbtn.on{animation:sfxPulse .6s}@keyframes sfxPulse{0%{transform:scale(1)}40%{transform:scale(1.12)}100%{transform:scale(1)}}.sfxtx{color:var(--muted,#6B6480);font-weight:700}
 .big.tkword{display:block;font-size:52px;letter-spacing:6px;margin-top:12px;font-family:var(--title)}
 .bcm{display:flex;flex-direction:column;align-items:center;gap:8px;padding:6px 0 4px;grid-column:1/-1;width:100%}
 .bcmic{width:96px;height:96px;border-radius:50%;border:0;background:#7C4DFF;color:#fff;font-size:44px;box-shadow:0 6px 0 #5A35C9;cursor:pointer;display:grid;place-items:center;transition:transform .15s}
@@ -4272,7 +4273,7 @@ html[data-theme=malam] .tkact{background:#1e2235;color:#eef}html[data-theme=mala
 <div class="syncpill" id="syncPill" hidden></div>
 <div class="toast" id="toast" hidden></div>
 
-<script src="av.js?v=416"></script>
+<script src="av.js?v=417"></script>
 <script>
 /* ---------- visual assets ---------- */
 const INK='#1B1E3D';
@@ -4435,8 +4436,9 @@ const TK_KERJA=[
  ['Siapa yang mengatur lalu lintas?',['👮','polisi'],['👨‍🍳','koki'],['👩‍🏫','guru'],['👨‍🌾','petani'],'']];
 const TK_KERJA_PAIR=[['👨‍🚒','pemadam kebakaran','🚒','mobil pemadam'],['👩‍⚕️','dokter','🩺','stetoskop'],['👨‍🍳','koki','🍳','wajan'],['👨‍🌾','petani','🌾','padi'],['👮','polisi','🚓','mobil polisi'],['🧑‍✈️','pilot','✈️','pesawat'],['👩‍🏫','guru','📚','buku'],['🧑‍🔧','montir','🔧','kunci pas']];
 /* --- Sains --- */
-const TK_SUARA=[['🐱','kucing','meong meong'],['🐶','anjing','guk guk'],['🐄','sapi','mooo'],['🐓','ayam jago','kukuruyuk'],['🦆','bebek','kwek kwek'],['🐐','kambing','mbeek'],['🦁','singa','auum'],['🐦','burung','cuit cuit'],['🐝','lebah','nguuung'],['🐸','katak','kwak kwak']];
-const tkSuara=()=>{const t=pick(TK_SUARA),o=[t,...shuffle(TK_SUARA.filter(x=>x!==t)).slice(0,3)];return tkPQ(`Hewan apa yang bersuara <b>“${t[2]}”</b>?`,`Hewan apa yang bersuara, ${t[2]}?`,o.map(x=>[x[0],x[1]]),`${t[1][0].toUpperCase()+t[1].slice(1)} bersuara ${t[2]}.`)};
+const TK_SUARA=[['🐱','kucing','meong meong','kucing'],['🐶','anjing','guk guk','anjing'],['🐄','sapi','mooo','sapi'],['🐓','ayam jago','kukuruyuk','ayam'],['🦆','bebek','kwek kwek','bebek'],['🐐','kambing','mbeek','kambing'],['🦁','singa','auum','singa'],['🐦','burung','cuit cuit','burung'],['🐝','lebah','nguuung','lebah'],['🐸','katak','kwak kwak','katak']];
+/* suara hewan asli (sounds/hewan/*.mp3); jika gagal diputar, suara ditirukan dengan pembaca teks */
+const tkSuara=()=>{const t=pick(TK_SUARA),o=[t,...shuffle(TK_SUARA.filter(x=>x!==t)).slice(0,3)];return tkPQ(`Dengarkan suaranya! Hewan apa ini?<span class="sfxrow"><button class="sfxbtn press" type="button" aria-label="Putar suara hewan">🔊 Putar suara</button><span class="sfxtx">“${t[2]}”</span></span>`,'Dengarkan suaranya. Hewan apa ini?',o.map(x=>[x[0],x[1]]),`${t[1][0].toUpperCase()+t[1].slice(1)} bersuara ${t[2]}.`,{sfx:'sounds/hewan/'+t[3]+'.mp3',sfxSay:t[2]})};
 const TK_MAKAN_PAIR=[['🐰','kelinci','🥕','wortel'],['🐒','monyet','🍌','pisang'],['🐄','sapi','🌿','rumput'],['🐱','kucing','🐟','ikan'],['🐝','lebah','🌸','bunga'],['🐼','panda','🎋','bambu'],['🐿️','tupai','🥜','kacang'],['🐔','ayam','🌽','jagung']];
 const tkMakan=()=>{const t=pick(TK_MAKAN_PAIR),o=[t,...shuffle(TK_MAKAN_PAIR.filter(x=>x!==t)).slice(0,3)];return tkPQ(`${t[1][0].toUpperCase()+t[1].slice(1)} suka makan apa?<span class="big">${t[0]}</span>`,`${t[1]} suka makan apa?`,o.map(x=>[x[2],x[3]]),`${t[1][0].toUpperCase()+t[1].slice(1)} suka makan ${t[3]}.`)};
 const TK_TUMBUH=[
@@ -10117,6 +10119,12 @@ function spokenTx(t){return String(t||'').replace(/[\p{Extended_Pictographic}\uF
   .replace(/(\d)\s*×\s*(?=\d|…|\?|x)/g,'$1 kali ').replace(/(\d)\s*:\s*(?=\d|…|\?)/g,'$1 bagi ').replace(/(\d)\s*[−-]\s*(?=\d|…|\?)/g,'$1 kurang ').replace(/\+/g,' tambah ').replace(/=/g,' sama dengan ')
   .replace(/(\d)\/(\d)/g,'$1 per $2').replace(/%/g,' persen').replace(/°/g,' derajat').replace(/cm²/g,' sentimeter persegi').replace(/m²/g,' meter persegi').replace(/cm³/g,' sentimeter kubik').replace(/&gt;|>/g,' lebih dari ').replace(/&lt;|</g,' kurang dari ')
   .replace(/\s*…\s*/g,' apa? ').replace(/\?\s*$/,' berapa?').replace(/\s+/g,' ').trim()}
+let sfxAud=null;const sfxCache={};
+function playSfx(q){if(!q||!q.sfx||!soundOn)return;try{window.speechSynthesis&&speechSynthesis.cancel()}catch(e){}
+  try{if(sfxAud){sfxAud.pause();sfxAud.currentTime=0}const a=sfxCache[q.sfx]||(sfxCache[q.sfx]=new Audio(q.sfx));sfxAud=a;a.currentTime=0;
+    const p=a.play();if(p&&p.catch)p.catch(()=>{if(q.sfxSay)say(q.sfxSay)})}catch(e){if(q.sfxSay)say(q.sfxSay)}
+  const b=document.querySelector('#qtext .sfxbtn');if(b){b.classList.remove('on');void b.offsetWidth;b.classList.add('on')}}
+function sfxAfterSay(q){if(!q||!q.sfx)return;const sp=qSpeech(q);const ms=sp?Math.min(4000,600+sp.length*65):200;clearTimeout(sfxAfterSay.t);sfxAfterSay.t=setTimeout(()=>{if(game&&game.qs[game.i]===q&&!game.locked)playSfx(q)},ms)}
 function qSpeech(q){if(!q)return '';if(!earlyReader())return '';if(q.say)return q.say;return spokenTx(plainTx(q.q))}
 function sayLong(t){if(!t)return;try{const s=window.speechSynthesis;s.cancel();if(String(t).includes('«')){speakParts(s,t,.9);return}const parts=String(t).match(/[^.!?\n]+[.!?\n]*/g)||[t];let buf='';const out=[];parts.forEach(p=>{if((buf+p).length>180&&buf){out.push(buf);buf=''}buf+=p});if(buf)out.push(buf);
   out.forEach(x=>{const u=new SpeechSynthesisUtterance(x.trim());u.lang='id-ID';u.rate=.9;s.speak(u)})}catch(e){}}
@@ -10464,7 +10472,7 @@ function tkDragMatch(box,L2){const area=box.querySelector('.mtch');if(!area)retu
 /* murid TK–SD kelas 6 (umumnya di bawah 13 tahun) perlu persetujuan orang tua/wali saat daftar */
 function suYoung(c){return c==='tk'||/^k[1-6]$/.test(String(c||''))}
 function startQ(){
-  $('#turn').hidden=true;const q=game.qs[game.i];{const sp=qSpeech(q);if(sp)say(sp)}
+  $('#turn').hidden=true;const q=game.qs[game.i];{const sp=qSpeech(q);if(sp)say(sp)}sfxAfterSay(q);
   if(L.time&&!game.lesson){$('#timer').hidden=false;game.t0=Date.now();tmSet(1,L.time);
     timerId=setInterval(()=>{if(PAUSE.on)return;const left=1-(Date.now()-game.t0)/(L.time*1000);tmSet(left,left*L.time);if(left<=0){clearInterval(timerId);answer(-1)}},200);
   }else game.t0=Date.now();
@@ -16284,7 +16292,7 @@ function folBind(root,list,after){root.querySelectorAll('[data-follow]').forEach
   try{await folDo(f,on);if(on){try{sfx.ok()}catch(_){}toast('team',`Kamu mengikuti ${f.name}.`)}b.outerHTML=folBtn(f,b.classList.contains('sm'));folBind(root,list,after);after&&after()}catch(err){b.disabled=false;toast('lock',fbErr(err))}})}
 const shareIcon='<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M12 3 V15 M7 8 L12 3 L17 8 M5 13 V19 C5 20 6 21 7 21 H17 C18 21 19 20 19 19 V13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const qrIcon='<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><path d="M14 14h3v3h-3zM18 18h3v3h-3zM18 14h3M14 18v3" stroke-linecap="round"/></svg>';
-let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=416';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
+let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=417';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
 function qrMatrix(text){const Q=window.QRCodeLib,q=new Q(-1,Q.ECL.M);q.addData(text);q.make();const n=q.getModuleCount(),m=[];for(let r=0;r<n;r++){m.push([]);for(let c=0;c<n;c++)m[r].push(q.isDark(r,c))}return m}
 function qrSvgOf(m){const n=m.length;let d='';for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(m[r][c])d+=`M${c} ${r}h1.02v1.02h-1.02z`;
   return `<svg viewBox="-2 -2 ${n+4} ${n+4}" class="pcqr" shape-rendering="crispEdges" aria-label="Kode QR profil"><rect x="-2" y="-2" width="${n+4}" height="${n+4}" fill="#fff"/><path d="${d}" fill="#1C1E3D"/></svg>`}
@@ -17471,7 +17479,8 @@ $('#afNext').onclick=arcNext;
 $('#pauseBtn').onclick=()=>pauseGame(false);$('#duelPause').onclick=()=>pauseGame(false);
 $('#quitBtn').onclick=()=>{if(game&&game.lesson){quitAsk();return}clearInterval(timerId);arcStop();backToPicker()};
 $('#nextBtn').onclick=next;
-$('#speakBtn').onclick=()=>say(qSpeech(game.qs[game.i]));
+$('#speakBtn').onclick=()=>{const q=game.qs[game.i];say(qSpeech(q));sfxAfterSay(q)};
+$('#qtext').addEventListener('click',e=>{const b=e.target.closest&&e.target.closest('.sfxbtn');if(!b||!game)return;e.preventDefault();clearTimeout(sfxAfterSay.t);playSfx(game.qs[game.i])});
 $('#againBtn').onclick=()=>launch();
 $('#toGameBtn').onclick=()=>backToPicker(true);
 $('#backSubj').onclick=()=>go('team');
