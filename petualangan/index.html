@@ -139,6 +139,19 @@ body.direct #onCode,body.direct #bShare{display:none!important}
 .box{position:relative}.xbtn{position:absolute;top:10px;right:10px;width:34px;height:34px;border:0;border-radius:50%;background:#efe7f7;color:#2b2140;font:900 16px/1 system-ui,sans-serif;cursor:pointer;box-shadow:0 3px 0 rgba(43,33,64,.2);z-index:2}.xbtn:active{transform:translateY(2px)}
 #cBack,#hpBack,#lvBack,#ptBack,#bOnBack,#qLater{display:none!important}
 .short .xbtn{top:6px;right:6px;width:30px;height:30px;font-size:14px}
+/* kontrol sentuh v2: tombol besar, bisa digeser jari, area sentuh lebar */
+.pad{display:grid!important;grid-template-columns:var(--pb) var(--pb);grid-template-rows:var(--pb) var(--pb);gap:10px;--pb:68px;padding:14px;touch-action:none;bottom:calc(4px + env(safe-area-inset-bottom,0px))}
+.pad[hidden]{display:none!important}
+.pad.l{left:calc(4px + env(safe-area-inset-left,0px))}.pad.r{right:calc(4px + env(safe-area-inset-right,0px))}
+.pad button{width:var(--pb)!important;height:var(--pb)!important;pointer-events:none;font-size:28px!important;color:#fff!important;background:rgba(255,255,255,.2)!important;border:3px solid rgba(255,255,255,.7)!important;border-radius:50%!important;box-shadow:0 4px 0 rgba(0,0,0,.25)!important;transition:transform .05s;text-shadow:0 2px 0 rgba(0,0,0,.35)}
+.pad button.on{background:rgba(255,224,138,.9)!important;color:#2b2140!important;transform:scale(.92)}
+.pad.l .pj{grid-column:2;grid-row:1}.pad.r .pj{grid-column:1;grid-row:1}
+.pad [data-k="l"]{grid-column:1;grid-row:2}.pad [data-k="r"]{grid-column:2;grid-row:2}
+.pad .tag{top:-4px;left:16px}
+.pad.solo{grid-template-columns:var(--pb) var(--pb);grid-template-rows:var(--pb)}
+.pad.l.solo [data-k="l"],.pad.l.solo [data-k="r"]{grid-row:1}
+.pad.r.solo{grid-template-columns:calc(var(--pb)*1.35);grid-template-rows:calc(var(--pb)*1.35)}.pad.r.solo .pj{grid-row:1;grid-column:1;width:calc(var(--pb)*1.35)!important;height:calc(var(--pb)*1.35)!important;font-size:38px!important}
+@media (max-height:380px){.pad{--pb:58px;gap:8px;padding:10px}}
 /* ====== gaya halus (bukan piksel) ====== */
 html,body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
 canvas{image-rendering:auto}
@@ -178,8 +191,8 @@ canvas{image-rendering:auto}
 <div id="tip" hidden></div>
 <div id="emo" hidden><div class="emog"><button data-e="0">👋 Tunggu!</button><button data-e="1">👉 Ke sini!</button><button data-e="2">🦘 Lompat bareng!</button><button data-e="3">🆘 Bantu aku!</button><button data-e="4">👍 Oke!</button><button data-e="5">⚡ Ayo cepat!</button><button data-e="6">⚠️ Hati-hati!</button><button data-e="7">🙋 Kamu duluan</button><button data-e="8">🏃 Aku duluan</button><button data-e="9">🔑 Ambil kuncinya!</button><button data-e="10">📦 Dorong kotaknya!</button><button data-e="11">🔴 Injak tombolnya!</button><button data-e="12">🧍 Naik ke kepalaku!</button><button data-e="13">🌟 Hebat!</button><button data-e="14">🙏 Maaf!</button><button data-e="15">💖 Terima kasih!</button><button data-e="16">😂 Haha!</button><button data-e="17">✋ Siap!</button></div>
   <div id="emoMine"></div><form id="emoForm" autocomplete="off"><input id="emoIn" maxlength="40" placeholder="Tulis pesanmu…" enterkeyhint="send"><button type="submit" aria-label="Kirim">➤</button></form></div>
-<div class="pad l" id="padL" hidden><span class="tag">PEMAIN 1</span><button data-p="0" data-k="l">◀</button><button data-p="0" data-k="r">▶</button><button data-p="0" data-k="j">▲</button></div>
-<div class="pad r" id="padR" hidden><span class="tag">PEMAIN 2</span><button data-p="1" data-k="l">◀</button><button data-p="1" data-k="r">▶</button><button data-p="1" data-k="j">▲</button></div>
+<div class="pad l" id="padL" data-p="0" hidden><span class="tag">PEMAIN 1</span><button data-k="j" class="pj">▲</button><button data-k="l">◀</button><button data-k="r">▶</button></div>
+<div class="pad r" id="padR" data-p="1" hidden><span class="tag">PEMAIN 2</span><button data-k="j" class="pj">▲</button><button data-k="l">◀</button><button data-k="r">▶</button></div>
 
 <div class="panel" id="pStart"><div class="box home">
   <h1 class="px">Petualangan Berdua</h1>
@@ -448,12 +461,12 @@ function step(dt){if(!running||won&&wonT>1.2)return;
 function stepPlayer(p,dt){const ox=p.x,oy=p.y;p.ign=barsOverlapping(prect(p));
   const dir=(p.inp.r?1:0)-(p.inp.l?1:0);const tgt=dir*SPD,acc=p.ground?1500:950;
   if(p.vx<tgt)p.vx=Math.min(tgt,p.vx+acc*dt);else if(p.vx>tgt)p.vx=Math.max(tgt,p.vx-acc*dt);if(dir)p.face=dir;
-  if(p.inp.j&&!p.jh)p.jb=.13;p.jh=p.inp.j;if(p.jb>0)p.jb-=dt;
+  if((p.inp.j&&!p.jh)||p.jq)p.jb=.13;p.jq=false;p.jh=p.inp.j;if(p.jb>0)p.jb-=dt;
   p.coy=p.ground?.1:p.coy-dt;
-  p.load=P.some(q=>q!==p&&!q.ent&&!q.dead&&Math.abs(q.y+PH-p.y)<=2.5&&Math.min(p.x+PW,q.x+PW)-Math.max(p.x,q.x)>=4&&(q.ground||q.on===p));
+  p.load=P.some(q=>q!==p&&!q.ent&&!q.dead&&Math.abs(q.y+PH-p.y)<=2.5&&Math.min(p.x+PW,q.x+PW)-Math.max(p.x,q.x)>=4&&(q.remote?q.ground:q.on===p));
   if(p.load&&p.jb>0&&p.coy>0){p.vy=-85;p.jb=0;p.coy=0;p.ground=false;p.on=null;p.sq=-.06;beep(300,.05,'square',.03,80)}
   if(!p.load&&p.jb>0&&p.coy>0){p.mx=p.on&&p.on.mov?p.on.dx/dt:p.on&&p.on.on&&p.on.on.mov?p.on.on.dx/dt:0;p.vy=-JUMP;p.jb=0;p.coy=0;p.ground=false;p.on=null;p.sq=-.12;SFX.jump();dust(p,4)}
-  if(p.vy>=0)p.spr=false;if(!p.inp.j&&p.vy<0&&!p.spr)p.vy+=GRAV*dt*1.3;
+  if(p.vy>=0)p.spr=false;
   p.vy=Math.min(MAXF,p.vy+GRAV*dt);
   // ikut tumpangan (teman atau kotak)
   const base=p.on;if(base&&!(base.ent)){moveX(p,base.dx||0,true);if((base.dy||0)<0)p.y+=base.dy}
@@ -698,7 +711,7 @@ function quizUI(title,hint,q,opts,onPick,none){document.querySelectorAll('#pQuiz
   const long=opts.some(o=>String(o).length>8);$('qTxt').textContent=q;$('qTxt').classList.toggle('sm',String(q).length>24);$('qOpts').classList.toggle('long',long);$('qTitle').textContent=title;$('qHint').innerHTML=hint;
   const box=$('qOpts');box.innerHTML='';opts.forEach(v=>{const b=document.createElement('button');b.className='btn';b.textContent=v;b.onclick=()=>onPick(v,b);box.appendChild(b)});
   if(none){const b=document.createElement('button');b.className='btn b3 qnone';b.textContent='🙅 Jawabannya tidak ada di layarku';b.onclick=()=>onPick('',b);box.appendChild(b)}
-  $('pQuiz').hidden=false;quizOpen=true;P.forEach(p=>{if(!p.remote){p.inp={l:0,r:0,j:0,d:0};p.vx=0}});document.querySelectorAll('.pad button.on').forEach(b=>b.classList.remove('on'))}
+  $('pQuiz').hidden=false;quizOpen=true;P.forEach(p=>{if(!p.remote){p.inp={l:0,r:0,j:0,d:0};p.vx=0}});document.querySelectorAll('.pad').forEach(p=>p.clearAll&&p.clearAll())}
 function q2Pick(v,b){const box=$('qOpts');box.querySelectorAll('button').forEach(x=>x.disabled=true);b.classList.add('picked');$('qHint').innerHTML='Menunggu jawaban temanmu…'}
 function openQuiz(arg,solo){quizOpen=true;let it=null;for(let k=0;k<5&&!it;k++)it=bankQ();if(!it)it=makeQ();const sub=(QSUBJ?esc(QSUBJ)+' · ':'');const mates=P.filter(q=>q.i!==ME&&!q.gone&&q.remote),mate=mates[Math.floor(Math.random()*mates.length)];
   /* Soal Berdua (online): pilihan jawaban dibagi ke dua layar; jawaban benar hanya ada di salah satunya */
@@ -741,12 +754,20 @@ const KMAP={KeyW:[0,'j'],KeyA:[0,'l'],KeyD:[0,'r'],KeyS:[0,'d'],Space:[0,'j'],Ar
 addEventListener('keydown',e=>{if(e.target&&e.target.tagName==='INPUT')return;if(e.key==='Escape'){if(running&&$('pRes').hidden)togglePause();return}
   if(running&&!paused&&!quizOpen&&e.code==='KeyR'){restartLevel(true);return}
   if(NET.on&&running&&/^Digit[1-9]$/.test(e.code)){emoSend(+e.code.slice(5)-1);return}
-  const k=KMAP[e.code];if(!k||!running)return;e.preventDefault();if(quizOpen||paused)return;const p=P[ME>=0?ME:k[0]];if(p&&!p.remote)p.inp[k[1]]=1});
+  const k=KMAP[e.code];if(!k||!running)return;e.preventDefault();if(quizOpen||paused)return;const p=P[ME>=0?ME:k[0]];if(p&&!p.remote){if(k[1]==='j'&&!p.inp.j)p.jq=true;p.inp[k[1]]=1}});
 addEventListener('keyup',e=>{const k=KMAP[e.code];if(!k||!P.length)return;const p=P[ME>=0?ME:k[0]];if(p&&!p.remote)p.inp[k[1]]=0});
-document.querySelectorAll('.pad button').forEach(b=>{const set=v=>{if(!P.length)return;if(v&&(quizOpen||paused))return;const p=P[ME>=0?ME:+b.dataset.p];if(p&&!p.remote)p.inp[b.dataset.k]=v;b.classList.toggle('on',!!v)};
-  b.addEventListener('pointerdown',e=>{e.preventDefault();try{b.setPointerCapture(e.pointerId)}catch(_){}set(1);ac()});['pointerup','pointercancel','lostpointercapture'].forEach(ev=>b.addEventListener(ev,()=>set(0)))});
+/* kontrol sentuh: setiap jari dipetakan ke tombol terdekat, jadi jari bisa digeser dari ◀ ke ▶ tanpa diangkat */
+document.querySelectorAll('.pad').forEach(pad=>{const ptr=new Map();
+  const sync=()=>{if(!P.length)return;const keys={l:0,r:0,j:0};ptr.forEach(k=>{if(k)keys[k]=1});const p=P[ME>=0?ME:+pad.dataset.p];const block=quizOpen||paused;
+    pad.querySelectorAll('button').forEach(b=>{const v=!block&&keys[b.dataset.k];b.classList.toggle('on',!!v);if(p&&!p.remote&&b.offsetParent){if(v&&b.dataset.k==='j'&&!p.inp.j)p.jq=true;p.inp[b.dataset.k]=v?1:0}})};
+  const hit=(x,y)=>{let best=null,bd=1e9;pad.querySelectorAll('button').forEach(b=>{if(!b.offsetParent)return;const r=b.getBoundingClientRect(),cx=(r.left+r.right)/2,cy=(r.top+r.bottom)/2,d=Math.hypot(x-cx,y-cy);if(d<bd&&d<r.width*1.05){bd=d;best=b.dataset.k}});return best};
+  pad.addEventListener('pointerdown',e=>{e.preventDefault();try{pad.setPointerCapture(e.pointerId)}catch(_){}const k=hit(e.clientX,e.clientY);ptr.set(e.pointerId,k);if(k)haptic&&haptic(8);sync();ac()});
+  pad.addEventListener('pointermove',e=>{if(!ptr.has(e.pointerId))return;const k=hit(e.clientX,e.clientY);if(k!==ptr.get(e.pointerId)){ptr.set(e.pointerId,k);sync()}});
+  ['pointerup','pointercancel','lostpointercapture'].forEach(ev=>pad.addEventListener(ev,e=>{if(ptr.delete(e.pointerId))sync()}));
+  pad.clearAll=()=>{ptr.clear();sync()}});
+function haptic(ms){try{navigator.vibrate&&navigator.vibrate(ms)}catch(e){}}
 function padMode(){const on=NET.on&&touch;document.querySelectorAll('.pad .tag').forEach((t,i)=>t.textContent=on?(i?'LOMPAT':'JALAN'):(i?'PEMAIN 2':'PEMAIN 1'));
-  document.querySelectorAll('#padL [data-k="j"],#padR [data-k="l"],#padR [data-k="r"]').forEach(b=>b.style.display=on?'none':'');$('padL').hidden=$('padR').hidden=!(touch&&running)}
+  document.querySelectorAll('#padL [data-k="j"],#padR [data-k="l"],#padR [data-k="r"]').forEach(b=>b.style.display=on?'none':'');$('padL').classList.toggle('solo',on);$('padR').classList.toggle('solo',on);$('padL').hidden=$('padR').hidden=!(touch&&running)}
 
 /* ====== ukuran layar & putar otomatis di HP ====== */
 const ROT={motion:false,ios:/iPad|iPhone|iPod/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1)};
@@ -770,7 +791,7 @@ function startLevel(lv,o={}){const fresh=lv!==LV||!running||o.fresh;hideAll();$(
   $('bLvSel').hidden=NET.on&&ME>0;banner('Level '+(LV+1),LEVELS[LV].n);if(fresh)setTimeout(()=>{if(running&&LV===lv)say(LEVELS[LV].h,4.5)},700);
   if(NET.on){setTimeout(myHatSend,300);if(ME===0&&!o.remote)netEv({t:'start',lv:LV,g:GRADE,qb:QBANK.length?QBANK:undefined,qn:QSUBJ,name:NET.myName,uid:NET.myUid,rc:o.rc?1:0})}
   try{if(touch&&document.documentElement.requestFullscreen&&!document.fullscreenElement)document.documentElement.requestFullscreen().catch(()=>{})}catch(e){}}
-function togglePause(){if(!running)return;paused=!paused;$('pPause').hidden=!paused;P.forEach(p=>{if(!p.remote)p.inp={l:0,r:0,j:0,d:0}});document.querySelectorAll('.pad button.on').forEach(b=>b.classList.remove('on'))}
+function togglePause(){if(!running)return;paused=!paused;$('pPause').hidden=!paused;P.forEach(p=>{if(!p.remote)p.inp={l:0,r:0,j:0,d:0}});document.querySelectorAll('.pad').forEach(p=>p.clearAll&&p.clearAll())}
 const exit=()=>{try{netClose()}catch(e){}try{if(document.fullscreenElement)document.exitFullscreen()}catch(e){}location.href='../'};
 
 /* ====== beranda ====== */
