@@ -4316,7 +4316,7 @@ body.teacher:not(.playing):not(.evtv) .toast{top:auto!important;bottom:calc(64px
 <div class="syncpill" id="syncPill" hidden></div>
 <div class="toast" id="toast" hidden></div>
 
-<script src="av.js?v=419"></script>
+<script src="av.js?v=420"></script>
 <script>
 /* ---------- visual assets ---------- */
 const INK='#1B1E3D';
@@ -10509,8 +10509,8 @@ function tkTraceUI(q,box){$('#checkBar').hidden=true;
   cv.onpointermove=e=>{if(!last||done)return;const p=pt(e);line(last,p);last=p};
   const up=()=>{if(!last)return;last=null;check()};cv.onpointerup=up;cv.onpointercancel=up;cv.onpointerleave=up;
   $('#trcClr').onclick=()=>{if(done)return;ug.clearRect(0,0,W,W);base();fill.style.width='0%';try{tone([440],.04)}catch(e){}}}
-/* ===== TK: mewarnai gambar sesuai perintah (coret dengan jari atau ketuk) ===== */
-function tkWarnaUI(q,box){$('#checkBar').hidden=true;const w=q.warna;let cur=null,miss=0,fin=false,nag=0;const id='w'+Math.random().toString(36).slice(2,7);
+/* ===== TK: mewarnai gambar sesuai perintah (harus dicoret dengan jari) ===== */
+function tkWarnaUI(q,box){$('#checkBar').hidden=true;const w=q.warna;let cur=null,miss=0,fin=false,nag=0,taps=0;const id='w'+Math.random().toString(36).slice(2,7);
   box.insertAdjacentHTML('beforeend',`<div class="wrn"><svg class="wrnsvg" viewBox="0 0 200 200" role="img" aria-label="Gambar untuk diwarnai"><defs><pattern id="${id}H" width="9" height="9" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="9" height="9" fill="#fff"/><rect width="3.5" height="9" fill="#E6E0F2"/></pattern></defs><g class="wbase">${w.svg}</g><g class="wink"></g><g class="wtop">${w.svg}</g></svg>
     <div class="wbar" aria-hidden="true"><i></i></div>
     <div class="wrnpal">${w.pal.map(n=>`<button class="wpc press" data-c="${n}" style="--c:${CHEX[n]||'#ccc'}" aria-label="${n}"></button>`).join('')}</div>
@@ -10550,8 +10550,7 @@ function tkWarnaUI(q,box){$('#checkBar').hidden=true;const w=q.warna;let cur=nul
     if(st.k==null){const k=partAt(p.x,p.y);if(k==null){st.last=p;return}startPath(k,p);st.last=p;return}
     st.d+=` L${p.x.toFixed(1)} ${p.y.toFixed(1)}`;st.el.setAttribute('d',st.d);const n=Math.ceil(dd/4);for(let i=1;i<=n;i++)mark(st.k,st.last.x+dx*i/n,st.last.y+dy*i/n,BR);st.last=p;upd()});
   const end=e=>{if(!st||st.id!==e.pointerId)return;const s=st;st=null;
-    if(!s.moved){const k=partAt(s.p0.x,s.p0.y);if(k==null)return;if(s.el)s.el.remove();const r=document.createElementNS(NS,'rect');r.setAttribute('width','200');r.setAttribute('height','200');r.setAttribute('fill',CHEX[cur]);groups[k].appendChild(r);(S[k]||[]).forEach(x=>x.c=cur);
-      const el=base.find(x=>x.dataset.p===k);const t=sv.querySelector(`.wtop [data-p="${k}"]`);if(t){t.classList.remove('wpop');void t.getBoundingClientRect();t.classList.add('wpop')}try{tone([660],.04)}catch(_){}}
+    if(!s.moved){if(s.el){s.d+=' l0 0';s.el.setAttribute('d',s.d)}if(++taps%3===0){try{say('Coret gambarnya dengan jari, ya. Gosok terus sampai penuh.')}catch(_){}}try{tone([600],.02)}catch(_){}}
     else{try{tone([520+Math.random()*120],.03)}catch(_){}}
     upd();check()};
   sv.addEventListener('pointerup',end);sv.addEventListener('pointercancel',end);
@@ -16395,7 +16394,7 @@ function folBind(root,list,after){root.querySelectorAll('[data-follow]').forEach
   try{await folDo(f,on);if(on){try{sfx.ok()}catch(_){}toast('team',`Kamu mengikuti ${f.name}.`)}b.outerHTML=folBtn(f,b.classList.contains('sm'));folBind(root,list,after);after&&after()}catch(err){b.disabled=false;toast('lock',fbErr(err))}})}
 const shareIcon='<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M12 3 V15 M7 8 L12 3 L17 8 M5 13 V19 C5 20 6 21 7 21 H17 C18 21 19 20 19 19 V13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const qrIcon='<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><path d="M14 14h3v3h-3zM18 18h3v3h-3zM18 14h3M14 18v3" stroke-linecap="round"/></svg>';
-let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=419';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
+let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=420';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
 function qrMatrix(text){const Q=window.QRCodeLib,q=new Q(-1,Q.ECL.M);q.addData(text);q.make();const n=q.getModuleCount(),m=[];for(let r=0;r<n;r++){m.push([]);for(let c=0;c<n;c++)m[r].push(q.isDark(r,c))}return m}
 function qrSvgOf(m){const n=m.length;let d='';for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(m[r][c])d+=`M${c} ${r}h1.02v1.02h-1.02z`;
   return `<svg viewBox="-2 -2 ${n+4} ${n+4}" class="pcqr" shape-rendering="crispEdges" aria-label="Kode QR profil"><rect x="-2" y="-2" width="${n+4}" height="${n+4}" fill="#fff"/><path d="${d}" fill="#1C1E3D"/></svg>`}
