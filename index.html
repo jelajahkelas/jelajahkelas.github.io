@@ -4061,7 +4061,7 @@ body.tkcards #subjBtn{display:none!important}
 html[data-theme=malam] .tkact{background:#1e2235;color:#eef}html[data-theme=malam] .tkact small{color:#b9bfd6}
 
 /* ===== Perangkat ajar & administrasi ===== */
-.pgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.pgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
 @media(max-width:1000px){.pgrid{grid-template-columns:1fr}}
 .pgcard{border-top:6px solid var(--pc)}.pgtop{display:flex;align-items:center;gap:12px}.pgtop h3{margin:0;font-size:20px}
 .pgic{width:46px;height:46px;border-radius:14px;display:grid;place-items:center;background:color-mix(in srgb,var(--pc) 16%,transparent);flex:none}.pgic i{width:30px;height:30px;display:block}
@@ -4107,6 +4107,16 @@ body.teacher:not(.playing):not(.evtv) .toast{top:auto!important;bottom:calc(64px
 .ayat{display:block;margin-top:10px;padding:12px 14px;border-radius:16px;background:#ECFDF5;color:#065F46;font-weight:800;font-size:clamp(18px,4.6vw,24px);line-height:1.4;font-style:italic}
 html[data-theme=malam] .ayat{background:#063F2E;color:#A7F3D0}
 .tke b.ar{font-size:38px;line-height:1.2;white-space:nowrap}.tke.sm b.ar{font-size:28px}
+
+.sstudio{position:fixed;inset:0;z-index:300;background:var(--bg,#F7F7FB);display:flex;flex-direction:column}
+.sshead{display:flex;gap:12px;align-items:flex-start;padding:14px 16px;background:#0E9F6E;color:#fff}.sshead h2{margin:0;font-size:20px}.sshead p{margin:4px 0 0;font-size:14px;opacity:.95}
+.sshead .xbtn{position:static;flex:none;background:rgba(255,255,255,.2);color:#fff;border:0;width:42px;height:42px;border-radius:50%;font-size:20px}
+.ssbody{flex:1;overflow:auto;padding:12px 14px 40px;max-width:900px;width:100%;margin:0 auto}.ssbody h3{margin:16px 4px 8px;font-size:17px}
+.ssgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px}
+.sscard{background:var(--card,#fff);border-radius:18px;padding:8px 8px 10px;text-align:center;border:3px solid var(--line,#E5E5E5);display:flex;flex-direction:column;align-items:center;gap:2px}
+.sscard.ok{border-color:#0E9F6E}.sscard.rec{border-color:#E53935;animation:wBad .6s infinite}.sscard .ar{font-size:44px;line-height:1.4}.sscard small{color:var(--muted);font-size:12px;min-height:16px}
+.ssrow{display:flex;gap:6px;margin-top:4px}.ssrow button{border:0;border-radius:12px;padding:8px 10px;font:800 13px system-ui,sans-serif;cursor:pointer;background:#EDE7FB;color:#4B3C7A}
+.ssrow .ssrec{background:#E53935;color:#fff}.ssrow button:disabled{opacity:.35}
 </style>
 <style>html,body{margin:0}</style>
 </head>
@@ -4323,7 +4333,7 @@ html[data-theme=malam] .ayat{background:#063F2E;color:#A7F3D0}
 <div class="syncpill" id="syncPill" hidden></div>
 <div class="toast" id="toast" hidden></div>
 
-<script src="av.js?v=423"></script>
+<script src="av.js?v=424"></script>
 <script>
 /* ---------- visual assets ---------- */
 const INK='#1B1E3D';
@@ -5113,35 +5123,94 @@ const PAI_SMA=[
 /* ===== TK: huruf hijaiyah, angka Arab, dan Al-Qur'an ===== */
 const HJ=[['ا','Alif',0],['ب','Ba',1],['ت','Ta',2],['ث','Tsa',3],['ج','Jim',1],['ح','Ha',0],['خ','Kho',1],['د','Dal',0],['ذ','Dzal',1],['ر','Ro',0],['ز','Za',1],['س','Sin',0],['ش','Syin',3],['ص','Shod',0],['ض','Dhod',1],['ط','Tho',0],['ظ','Zho',1],['ع','‘Ain',0],['غ','Ghoin',1],['ف','Fa',1],['ق','Qof',2],['ك','Kaf',0],['ل','Lam',0],['م','Mim',0],['ن','Nun',1],['و','Wau',0],['ه','Ha',0],['ء','Hamzah',0],['ي','Ya',2]];
 const HJG=[[0,7],[7,14],[14,21],[21,29]];
+/* ===== Suara huruf hijaiyah & bilangan Arab: bawaan, admin (semua pengguna), atau guru (murid kelasnya) ===== */
+const HJ_ID=['alif','ba','ta','tsa','jim','ha_h','kho','dal','dzal','ro','za','sin','syin','shod','dhod','tho','zho','ain','ghoin','fa','qof','kaf','lam','mim','nun','wau','ha_kecil','hamzah','ya'];
+const HAR_LIST=[['ب','b'],['ت','t'],['ج','j'],['د','d'],['ر','r'],['ز','z'],['س','s'],['ف','f'],['ك','k'],['ل','l'],['م','m'],['ن','n'],['ه','h'],['ي','y'],['و','w']];
+const ARW_NM=['','Wahid','Itsnan','Tsalatsah','Arba‘ah','Khamsah','Sittah','Sab‘ah','Tsamaniyah','Tis‘ah','‘Asyarah'];
+const SUARA_ITEMS=(()=>{const L=[];const nm=['Alif','Ba','Ta','Tsa','Jim','Ha (ح)','Kho','Dal','Dzal','Ro','Za','Sin','Syin','Shod','Dhod','Tho','Zho','‘Ain','Ghoin','Fa','Qof','Kaf','Lam','Mim','Nun','Wau','Ha (ه)','Hamzah','Ya'];
+  const ch='ا ب ت ث ج ح خ د ذ ر ز س ش ص ض ط ظ ع غ ف ق ك ل م ن و ه ء ي'.split(' ');
+  HJ_ID.forEach((id,i)=>L.push({id:'huruf_'+id,g:'huruf',ar:ch[i],nm:nm[i]}));
+  '١ ٢ ٣ ٤ ٥ ٦ ٧ ٨ ٩ ١٠'.split(' ').forEach((c,i)=>L.push({id:'angka_'+(i+1),g:'angka',ar:c,nm:ARW_NM[i+1]+' ('+(i+1)+')'}));
+  HAR_LIST.forEach(([c,l])=>['َ','ِ','ُ'].forEach((m,k)=>L.push({id:`harakat_${l}${'aiu'[k]}`,g:'harakat',ar:c+m,nm:l+'aiu'[k]})));return L})();
+const SUARA_BUNDLED=new Set(HJ_ID.map(x=>'huruf_'+x));
+const SUARA={t:{},a:{},tOwner:null,busy:false,at:0};
+function suaraUrl(id){return SUARA.t[id]||SUARA.a[id]||(SUARA_BUNDLED.has(id)?`sounds/hijaiyah/${id}.mp3`:null)}
+const suaraTok=id=>{const u=suaraUrl(id);return u?`⟦${u}⟧`:''};
+const hjTok=h=>suaraTok('huruf_'+HJ_ID[HJ.indexOf(h)]);
+function suaraCacheGet(owner){try{return JSON.parse(localStorage.getItem('jk_suara_'+owner)||'null')}catch(e){return null}}
+function suaraCacheSet(owner,v){try{localStorage.setItem('jk_suara_'+owner,JSON.stringify(v))}catch(e){}}
+async function suaraFetch(owner){const c=suaraCacheGet(owner)||{upd:0,clips:{}};
+  try{const m=await FB.db.doc('suara/'+owner).get();if(!m.exists){suaraCacheSet(owner,{upd:0,clips:{}});return {}}const md=m.data()||{};
+    if((md.upd||0)>(c.upd||0)){const clips={};for(const g of ['huruf','angka','harakat']){if(!(md.g||{})[g])continue;try{const d=await FB.db.doc(`suara/${owner}/g/${g}`).get();if(d.exists)Object.assign(clips,(d.data()||{}).c||{})}catch(e){}}
+      suaraCacheSet(owner,{upd:md.upd||0,clips});return clips}}catch(e){}
+  return c.clips||{}}
+function suaraTeacherUid(){try{if(SESSION&&SESSION.role==='teacher')return FBX.user&&FBX.user.uid;return FBX.me&&FBX.me.teacherUid||null}catch(e){return null}}
+async function suaraInit(force){if(typeof FB==='undefined'||!FB.db||!window.FBX||!FBX.user)return;if(SUARA.busy||(!force&&Date.now()-SUARA.at<10*60000))return;SUARA.busy=true;SUARA.at=Date.now();
+  try{const ac=suaraCacheGet('admin');if(ac)SUARA.a=ac.clips||{};const tu=suaraTeacherUid();if(tu){const tc=suaraCacheGet(tu);if(tc)SUARA.t=tc.clips||{}}
+    SUARA.a=await suaraFetch('admin');SUARA.tOwner=tu;SUARA.t=tu?await suaraFetch(tu):{}}finally{SUARA.busy=false}}
+/* --- perekam (guru & admin) --- */
+function blobToData(b){return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result);r.onerror=rej;r.readAsDataURL(b)})}
+async function suaraSave(owner,id,dataUrl){const it=SUARA_ITEMS.find(x=>x.id===id);const g=it.g,now=Date.now();
+  await FB.db.doc(`suara/${owner}/g/${g}`).set({c:{[id]:dataUrl===null?firebase.firestore.FieldValue.delete():dataUrl},upd:now},{merge:true});
+  await FB.db.doc('suara/'+owner).set({upd:now,by:FBX.user.uid,g:{[g]:now}},{merge:true})}
+function suaraStudio(owner){const isAdm=owner==='admin';let mine={},cur=null,mr=null,chunks=[],stream=null,tmo=null;
+  const mime=['audio/webm;codecs=opus','audio/ogg;codecs=opus','audio/mp4','audio/webm'].find(t=>window.MediaRecorder&&MediaRecorder.isTypeSupported&&MediaRecorder.isTypeSupported(t))||'';
+  const ov=document.createElement('div');ov.className='sstudio';ov.setAttribute('role','dialog');ov.setAttribute('aria-label','Rekam suara hijaiyah');
+  ov.innerHTML=`<div class="sshead"><div class="grow"><h2>Suara Hijaiyah dan Angka Arab</h2><p>${isAdm?'Suara admin: menggantikan suara bawaan untuk <b>semua pengguna</b>.':'Suaramu dipakai untuk <b>murid di kelasmu</b>.'} Ucapkan dengan makhraj yang benar. Setiap rekaman maksimal 3 detik.</p></div><button class="xbtn press" aria-label="Tutup">✕</button></div>
+   <div class="ssbody"><p class="note" id="ssMsg">Memuat rekaman…</p>${[['huruf','Nama huruf (29)'],['angka','Bilangan Arab 1–10'],['harakat','Bunyi berharakat (opsional)']].map(([g,l])=>`<h3>${l}</h3><div class="ssgrid">${SUARA_ITEMS.filter(x=>x.g===g).map(x=>`<div class="sscard" data-id="${x.id}"><div class="ar">${x.ar}</div><b>${esc(x.nm)}</b><small class="sssrc"></small><div class="ssrow"><button class="ssrec press">● Rekam</button><button class="ssplay press" aria-label="Dengarkan">▶</button><button class="ssdel press" aria-label="Hapus rekaman">🗑</button></div></div>`).join('')}</div>`).join('')}</div>`;
+  document.body.appendChild(ov);
+  const close=()=>{try{if(mr&&mr.state==='recording')mr.stop()}catch(e){}try{stream&&stream.getTracks().forEach(t=>t.stop())}catch(e){}ov.remove();SUARA.at=0;suaraInit(true)};
+  ov.querySelector('.xbtn').onclick=close;
+  const draw=()=>ov.querySelectorAll('.sscard').forEach(c=>{const id=c.dataset.id,has=!!mine[id];c.classList.toggle('ok',has);c.classList.toggle('rec',cur===id);
+    c.querySelector('.ssrec').textContent=cur===id?'■ Stop':has?'↺ Ulang':'● Rekam';c.querySelector('.ssdel').hidden=!has;
+    const def=!has&&(isAdm?SUARA_BUNDLED.has(id):(SUARA.a[id]||SUARA_BUNDLED.has(id)));c.querySelector('.ssplay').disabled=!(has||def);
+    c.querySelector('.sssrc').textContent=cur===id?'Merekam…':has?(isAdm?'Suara admin':'Suaramu'):def?'Suara bawaan':'Belum ada suara'});
+  const play=id=>{const u=mine[id]||(isAdm?(SUARA_BUNDLED.has(id)?`sounds/hijaiyah/${id}.mp3`:null):(SUARA.a[id]||(SUARA_BUNDLED.has(id)?`sounds/hijaiyah/${id}.mp3`:null)));if(!u)return;try{AUD.pause();AUD.src=u;AUD.play()}catch(e){}};
+  const stop=()=>{clearTimeout(tmo);if(mr&&mr.state==='recording')mr.stop()};
+  const start=async id=>{if(cur){stop();return}
+    try{stream=stream||await navigator.mediaDevices.getUserMedia({audio:{noiseSuppression:true,echoCancellation:false,autoGainControl:true}})}catch(e){toast('lock','Izinkan mikrofon untuk merekam.');return}
+    chunks=[];try{mr=new MediaRecorder(stream,Object.assign({audioBitsPerSecond:32000},mime?{mimeType:mime}:{}))}catch(e){mr=new MediaRecorder(stream)}
+    mr.ondataavailable=e=>e.data.size&&chunks.push(e.data);
+    mr.onstop=async()=>{const rid=cur;cur=null;draw();const blob=new Blob(chunks,{type:mr.mimeType||mime||'audio/webm'});if(blob.size<800){toast('lock','Rekaman terlalu pendek. Coba lagi.');return}
+      const d=await blobToData(blob);if(d.length>150000){toast('lock','Rekaman terlalu panjang. Coba lebih singkat.');return}
+      const card=ov.querySelector(`[data-id="${rid}"] .sssrc`);if(card)card.textContent='Menyimpan…';
+      try{await suaraSave(owner,rid,d);mine[rid]=d;draw();play(rid)}catch(e){toast('lock','Gagal menyimpan. Periksa koneksi.');draw()}};
+    cur=id;mr.start();draw();tmo=setTimeout(stop,3000)};
+  ov.querySelectorAll('.sscard').forEach(c=>{const id=c.dataset.id;c.querySelector('.ssrec').onclick=()=>cur&&cur!==id?null:start(id);c.querySelector('.ssplay').onclick=()=>play(id);
+    c.querySelector('.ssdel').onclick=async()=>{if(!confirmDel())return;try{await suaraSave(owner,id,null);delete mine[id];draw()}catch(e){toast('lock','Gagal menghapus.')}}});
+  function confirmDel(){return window.confirm?window.confirm('Hapus rekaman ini? Suara bawaan akan dipakai lagi.'):true}
+  (async()=>{try{const m=await FB.db.doc('suara/'+owner).get();if(m.exists)for(const g of ['huruf','angka','harakat']){const d=await FB.db.doc(`suara/${owner}/g/${g}`).get();if(d.exists)Object.assign(mine,(d.data()||{}).c||{})}
+    ov.querySelector('#ssMsg').textContent=`${Object.keys(mine).length} dari ${SUARA_ITEMS.length} sudah direkam. Ketuk ▶ untuk mendengar suara yang sedang dipakai.`}catch(e){console.warn('suara',e);ov.querySelector('#ssMsg').textContent='Gagal memuat. Periksa koneksi internet.'}draw()})();draw()}
+
 const AR=t=>`<span class="ar">${t}</span>`;
 const arFont=()=>{try{document.fonts&&document.fonts.load('700 40px JNaskh','ب')}catch(e){}};
 const hjSet=g=>{arFont();const [a,b]=g==null?[0,29]:HJG[g];return HJ.slice(a,b)};
 const hjOthers=(h,pool,n)=>shuffle(pool.filter(x=>x[1]!==h[1])).filter((x,i,a)=>a.findIndex(y=>y[1]===x[1])===i).slice(0,n);
 const hjName=g=>()=>{const set=hjSet(g),h=pick(set);const o=[h,...hjOthers(h,set.length>=4?set:HJ,3)];
-  return Q(`🔊 Huruf apa ini?<span class="arbig">${h[0]}</span>`,{opts:shuffle(o.map(x=>x[1])),ans:h[1]},`Ini huruf ${h[1]}.`,{say:'Huruf apa ini?',html:true,noOptSay:true})};
+  return Q(`🔊 Huruf apa ini?<span class="arbig">${h[0]}</span>`,{opts:shuffle(o.map(x=>x[1])),ans:h[1]},`Ini huruf ${h[1]}.`,{say:'Huruf apa ini? Ketuk pilihan untuk mendengar.',html:true,optSay:Object.fromEntries(o.map(x=>[x[1],hjTok(x)])),noOptSay:!o.every(x=>hjTok(x))})};
 const hjPick=g=>()=>{const set=hjSet(g),h=pick(set);const o=[h,...hjOthers(h,set.length>=4?set:HJ,3)];
-  return Q(`🔊 Mana huruf <b>${h[1]}</b>?`,{opts:shuffle(o.map(x=>AR(x[0]))),ans:AR(h[0])},`Huruf ${h[1]} bentuknya ${AR(h[0])}.`,{say:'Cari huruf yang ditanyakan, ya.',pic:true,ar:true,html:true,noOptSay:true})};
+  return Q(`🔊 Mana huruf <b>${h[1]}</b>?`,{opts:shuffle(o.map(x=>AR(x[0]))),ans:AR(h[0])},`Huruf ${h[1]} bentuknya ${AR(h[0])}.`,{say:hjTok(h)?`Mana huruf ${hjTok(h)}?`:'Cari huruf yang ditanyakan, ya.',pic:true,ar:true,html:true,noOptSay:true})};
 const hjDots=g=>()=>{const set=hjSet(g),h=pick(set);const n=h[2];
   return Q(`🔊 Huruf ${h[1]} titiknya ada berapa?<span class="arbig">${h[0]}</span>`,{opts:['0','1','2','3'],ans:String(n)},n?`Huruf ${h[1]} punya ${n} titik.`:`Huruf ${h[1]} tidak punya titik.`,{say:'Huruf ini titiknya ada berapa?',html:true,pic:true})};
 const hjNext=g=>()=>{const [a,b]=g==null?[0,28]:[HJG[g][0],Math.min(28,HJG[g][1])];const i=R(a,b-1),h=HJ[i],nx=HJ[i+1];const o=[nx,...hjOthers(nx,HJ.filter(x=>x!==h),3)];
-  return Q(`🔊 Sesudah huruf ${h[1]} ${AR(h[0])} adalah huruf …`,{opts:shuffle(o.map(x=>AR(x[0]))),ans:AR(nx[0])},`Urutannya: ${h[1]}, lalu ${nx[1]}.`,{say:'Huruf apa yang datang sesudahnya?',pic:true,ar:true,html:true,noOptSay:true})};
+  return Q(`🔊 Sesudah huruf ${h[1]} ${AR(h[0])} adalah huruf …`,{opts:shuffle(o.map(x=>AR(x[0]))),ans:AR(nx[0])},`Urutannya: ${h[1]}, lalu ${nx[1]}.`,{say:hjTok(h)?`Sesudah huruf ${hjTok(h)}, huruf apa?`:'Huruf apa yang datang sesudahnya?',pic:true,ar:true,html:true,noOptSay:true})};
 const HJ_HAR=[['ب','b'],['ت','t'],['ج','j'],['د','d'],['ر','r'],['ز','z'],['س','s'],['ف','f'],['ك','k'],['ل','l'],['م','m'],['ن','n'],['ه','h'],['ي','y'],['و','w']];
 const hjHarakat=()=>{arFont();const [c,l]=pick(HJ_HAR),k=R(0,2),mk=['َ','ِ','ُ'][k],v='aiu'[k],nm=['fathah','kasrah','dhommah'][k];
-  return Q(`🔊 Ini dibaca apa?<span class="arbig">${c+mk}</span>`,{opts:shuffle([l+'a',l+'i',l+'u']),ans:l+v},`Tanda ${nm} dibaca "${v}", jadi ${l+v}.`,{say:'Ini dibaca apa?',html:true,pic:true,noOptSay:true})};
+  return Q(`🔊 Ini dibaca apa?<span class="arbig">${c+mk}</span>`,{opts:shuffle([l+'a',l+'i',l+'u']),ans:l+v},`Tanda ${nm} dibaca "${v}", jadi ${l+v}.`,{say:'Ini dibaca apa?',html:true,pic:true,optSay:Object.fromEntries('aiu'.split('').map(x=>[l+x,suaraTok('harakat_'+l+x)])),noOptSay:!'aiu'.split('').every(x=>suaraTok('harakat_'+l+x))})};
 const hjMark=()=>{arFont();const k=R(0,2),[c]=pick(HJ_HAR),nm=['fathah','kasrah','dhommah'];const desc=['garis kecil di atas huruf','garis kecil di bawah huruf','seperti angka 9 kecil di atas huruf'][k];
   return Q(`🔊 Tanda baca ini namanya …<span class="arbig">${c+['َ','ِ','ُ'][k]}</span>`,{opts:shuffle(nm.concat(['sukun'])),ans:nm[k]},`${nm[k][0].toUpperCase()+nm[k].slice(1)}: ${desc}.`,{say:'Tanda baca ini namanya apa?',html:true})};
-const tkTraceAr=g=>()=>{const h=pick(hjSet(g));return Q(`<span class="qtag">Tebalkan huruf hijaiyah</span>🔊 Tebalkan huruf <b>${h[1]}</b> dengan jarimu!`,{opts:['Selesai','Belum'],ans:'Selesai'},`Hebat! Kamu menebalkan huruf ${h[1]}.`,{trace:h[0],traceFont:'JNaskh',html:true,say:'Tebalkan huruf ini dengan jarimu. Ikuti garisnya.'})};
+const tkTraceAr=g=>()=>{const h=pick(hjSet(g));return Q(`<span class="qtag">Tebalkan huruf hijaiyah</span>🔊 Tebalkan huruf <b>${h[1]}</b> dengan jarimu!`,{opts:['Selesai','Belum'],ans:'Selesai'},`Hebat! Kamu menebalkan huruf ${h[1]}.`,{trace:h[0],traceFont:'JNaskh',html:true,say:`Tebalkan huruf ${hjTok(h)||'ini'} dengan jarimu. Ikuti garisnya.`})};
 /* angka Arab */
 const ARD='٠١٢٣٤٥٦٧٨٩',arNum=n=>String(n).split('').map(d=>ARD[+d]).join('');
 const ARW=['','wahid','itsnan','tsalatsah','arba‘ah','khamsah','sittah','sab‘ah','tsamaniyah','tis‘ah','‘asyarah'];
 const arRange=g=>{arFont();return g===0?[1,5]:g===1?[6,10]:[1,10]};
-const arTrace=g=>()=>{const [a,b]=arRange(g),n=R(a,b);return Q(`<span class="qtag">Tebalkan angka Arab</span>🔊 Tebalkan angka <b>${n}</b> dalam angka Arab!`,{opts:['Selesai','Belum'],ans:'Selesai'},`Hebat! Angka ${n} ditulis ${AR(arNum(n))}.`,{trace:arNum(n),traceFont:'JNaskh',html:true,say:`Tebalkan angka ${n} dalam angka Arab. Ikuti garisnya.`})};
+const arTrace=g=>()=>{const [a,b]=arRange(g),n=R(a,b);return Q(`<span class="qtag">Tebalkan angka Arab</span>🔊 Tebalkan angka <b>${n}</b> dalam angka Arab!`,{opts:['Selesai','Belum'],ans:'Selesai'},`Hebat! Angka ${n} ditulis ${AR(arNum(n))}.`,{trace:arNum(n),traceFont:'JNaskh',html:true,say:`Tebalkan angka ${n} dalam angka Arab.${suaraTok('angka_'+n)?' Dibaca '+suaraTok('angka_'+n)+'.':''} Ikuti garisnya.`})};
 const arRead=g=>()=>{const [a,b]=arRange(g),n=R(a,b),o=new Set([n]);while(o.size<4){const v=R(1,10);o.add(v)}
   return Q(`🔊 Angka Arab ini berapa?<span class="arbig">${arNum(n)}</span>`,{opts:shuffle([...o].map(String)),ans:String(n)},`${AR(arNum(n))} adalah angka ${n} (${ARW[n]}).`,{say:'Angka Arab ini berapa?',html:true,pic:true})};
 const arPick=g=>()=>{const [a,b]=arRange(g),n=R(a,b),o=new Set([n]);while(o.size<4)o.add(R(1,10));const t=pick(THINGS);
   return Q(`🔊 Ada berapa ${t[1]}? Pilih angka Arabnya.<div class="objs">${t[0].repeat(n)}</div>`,{opts:shuffle([...o].map(v=>AR(arNum(v)))),ans:AR(arNum(n))},`Ada ${n} ${t[1]}, angka Arabnya ${AR(arNum(n))}.`,{say:`Ada berapa ${t[1]}? Pilih angka Arabnya.`,pic:true,ar:true,html:true,optSay:Object.fromEntries([...o].map(v=>[AR(arNum(v)),'angka '+v]))})};
 const arWord=g=>()=>{const [a,b]=arRange(g),n=R(a,b),o=new Set([n]);while(o.size<4)o.add(R(1,10));
-  return Q(`🔊 Dalam bahasa Arab, angka <b>${n}</b> ${AR(arNum(n))} dibaca …`,{opts:shuffle([...o].map(v=>ARW[v])),ans:ARW[n]},`${n} dalam bahasa Arab: ${ARW[n]}.`,{say:`Dalam bahasa Arab, angka ${n} dibaca apa?`,html:true,noOptSay:true})};
+  return Q(`🔊 Dalam bahasa Arab, angka <b>${n}</b> ${AR(arNum(n))} dibaca …`,{opts:shuffle([...o].map(v=>ARW[v])),ans:ARW[n]},`${n} dalam bahasa Arab: ${ARW[n]}.`,{say:`Dalam bahasa Arab, angka ${n} dibaca apa? Ketuk pilihan untuk mendengar.`,html:true,optSay:Object.fromEntries([...o].map(v=>[ARW[v],suaraTok('angka_'+v)])),noOptSay:![...o].every(v=>suaraTok('angka_'+v))})};
 /* Al-Qur'an: surah pendek (bacaan latin) */
 const SURAH=[
  ['Al-Fatihah',['Bismillahir rahmanir rahim','Alhamdu lillahi rabbil ‘alamin','Ar-rahmanir rahim','Maliki yaumid din','Iyyaka na‘budu wa iyyaka nasta‘in','Ihdinash shirathal mustaqim','Shirathal ladzina an‘amta ‘alaihim ghairil maghdhubi ‘alaihim wa ladh dhallin'],'Pembuka Al-Qur’an, dibaca di setiap rakaat shalat'],
@@ -13346,7 +13415,7 @@ function tkCardList(){const c=CLS(),subs=subjVisible(c),used=new Set(),cards=[];
   return cards.filter(k=>k.items.length)}
 function tkStars(sb,ui){const n=((P.tkc||{})[CLS().id+'/'+sb.id+'/'+ui])||0;return Math.min(3,n)}
 function tkStarRow(n){return `<span class="tkst" aria-label="${n} bintang">${[0,1,2].map(i=>`<i class="${i<n?'on':''}">★</i>`).join('')}</span>`}
-function renderTk(){const cards=tkCardList();document.body.classList.add('tkcards');let h='';const cat=TKV.cat&&cards.find(k=>k.id===TKV.cat);
+function renderTk(){try{suaraInit()}catch(e){}const cards=tkCardList();document.body.classList.add('tkcards');let h='';const cat=TKV.cat&&cards.find(k=>k.id===TKV.cat);
   if(!cat){h=`<div class="tkhead"><div class="mascot tkm" data-mascot data-mood="happy"></div><div><h2>Mau belajar apa hari ini?</h2><p>Pilih kartu yang kamu suka. Boleh yang mana saja!</p></div></div><div class="tkgrid">`+
     cards.map(k=>{const st=k.items.reduce((a,r)=>a+tkStars(r.sb,r.ui),0),max=k.items.length*3;return `<button class="tkcard press" data-c="${k.id}" style="--kc:${k.color}"><span class="tke">${k.emo||`<b class="${k.ar?'ar':''}">${esc(k.glyph||'')}</b>`}</span><span class="tkn">${esc(k.name)}</span><small>${esc(k.d)}</small><span class="tkp"><i style="width:${Math.round(st/max*100)}%"></i></span></button>`}).join('')+`</div>`}
   else{h=`<div class="tkhead2" style="--kc:${cat.color}"><button class="tkback press" id="tkBack" aria-label="Kembali ke semua kartu">←</button><span class="tke sm">${cat.emo||`<b class="${cat.ar?'ar':''}">${esc(cat.glyph||'')}</b>`}</span><h2>${esc(cat.name)}</h2></div><div class="tkgrid act">`+
@@ -14957,7 +15026,7 @@ const _save=save;
 save=function(){_save();fbQueue()};
 function fbQueue(){if(!FBX.user||FBX.busy||!SESSION)return;clearTimeout(FBX.t);if(isT())syncPill('wait','Menyimpan…');FBX.t=setTimeout(fbFlush,1200)}
 function fbClassData(){return {teacher:APP.teacher,sessions:APP.sessions||[],bank:APP.bank||[],deleted:APP.deleted||[],roster:(APP.profiles||[]).filter(p=>!p._remote)}}
-function fbFlush(){const u=FBX.user;if(!u||!SESSION)return Promise.resolve();let pr;
+function fbFlush(){const u=FBX.user;if(!u||!SESSION)return Promise.resolve();let pr;try{suaraInit()}catch(e){}
   if(SESSION.role==='student'&&P){const p=Object.assign({},P);delete p._remote;delete p._uid;delete p._pin;
     pr=FB.db.doc('users/'+u.uid).set({name:P.name,cls:P.cls,xp:P.xp||0,lastDay:P.lastDay||null,p:JSON.stringify(p),upd:Date.now()},{merge:true});try{fbBoardPush()}catch(e){}try{lgSync()}catch(e){}try{fbHandleSync()}catch(e){}try{fbPubSync()}catch(e){}}
   else if(SESSION.role==='teacher'&&APP.teacher){const t=APP.teacher;
@@ -16503,7 +16572,7 @@ function folBind(root,list,after){root.querySelectorAll('[data-follow]').forEach
   try{await folDo(f,on);if(on){try{sfx.ok()}catch(_){}toast('team',`Kamu mengikuti ${f.name}.`)}b.outerHTML=folBtn(f,b.classList.contains('sm'));folBind(root,list,after);after&&after()}catch(err){b.disabled=false;toast('lock',fbErr(err))}})}
 const shareIcon='<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M12 3 V15 M7 8 L12 3 L17 8 M5 13 V19 C5 20 6 21 7 21 H17 C18 21 19 20 19 19 V13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const qrIcon='<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><path d="M14 14h3v3h-3zM18 18h3v3h-3zM18 14h3M14 18v3" stroke-linecap="round"/></svg>';
-let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=423';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
+let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=424';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
 function qrMatrix(text){const Q=window.QRCodeLib,q=new Q(-1,Q.ECL.M);q.addData(text);q.make();const n=q.getModuleCount(),m=[];for(let r=0;r<n;r++){m.push([]);for(let c=0;c<n;c++)m[r].push(q.isDark(r,c))}return m}
 function qrSvgOf(m){const n=m.length;let d='';for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(m[r][c])d+=`M${c} ${r}h1.02v1.02h-1.02z`;
   return `<svg viewBox="-2 -2 ${n+4} ${n+4}" class="pcqr" shape-rendering="crispEdges" aria-label="Kode QR profil"><rect x="-2" y="-2" width="${n+4}" height="${n+4}" fill="#fff"/><path d="${d}" fill="#1C1E3D"/></svg>`}
@@ -17021,7 +17090,7 @@ window.adProfile=adProfile;
 openAdmin=function(){const el=$('#adminPanel'),u=FBX.user;if(!u){showLogin();return}ADU.rows=null;ADX.cls=null;ADX.rep=null;ADX.err=null;el.hidden=false;$('#auth').hidden=true;$('#onb').hidden=true;document.body.classList.remove('teacher');
   el.innerHTML=`<div class="onbin" style="max-width:920px;gap:14px">
    <div class="thead"><span style="width:52px;height:52px;flex:none">${ICONS.key}</span><div class="grow"><h2>Panel Admin</h2><p>${esc(u.email)}</p></div></div>
-   <div class="tcard"><h3>Ringkasan</h3><div class="fbstats" id="adStats"><p class="note">Memuat…</p></div></div>${ADU_CARD}
+   <div class="tcard"><h3>Ringkasan</h3><div class="fbstats" id="adStats"><p class="note">Memuat…</p></div></div>${ADU_CARD}<div class="tcard"><h3>Suara hijaiyah bawaan</h3><p class="sub" style="margin:0">Rekaman di sini menggantikan suara bawaan untuk semua pengguna. Rekaman guru tetap diutamakan untuk murid di kelasnya.</p><button class="primary" id="adSuara" style="width:auto;align-self:flex-start">Rekam suara bawaan</button></div>
    <div class="tcard"><h3>Guru dan paket Pro</h3><p class="sub" style="margin:0">Setelah guru membayar, cari emailnya lalu tekan +1 bulan atau +1 tahun. Fitur Pro langsung terbuka di perangkat guru.</p>
     <div class="tfield"><label for="adFind">Cari guru</label><input id="adFind" placeholder="Nama, email, atau sekolah" autocomplete="off"></div><div id="adList"><p class="note">Memuat…</p></div></div>
    <div class="tcard"><h3>Pengaturan aplikasi</h3>
@@ -17041,7 +17110,7 @@ openAdmin=function(){const el=$('#adminPanel'),u=FBX.user;if(!u){showLogin();ret
    <div class="tcard" id="adRepCard"><h3>Laporan soal</h3><p class="note" style="margin:0">Laporan dari murid dan guru tentang soal yang salah atau kurang jelas.</p><div class="aduchips">${[['open','Baru'],['done','Selesai'],['all','Semua']].map(([k,l])=>`<button class="aduchip" data-rpf="${k}" aria-pressed="${k==='open'}">${l}</button>`).join('')}</div><div id="adRepList"><p class="note">Memuat…</p></div></div>
    <div class="tcard" id="adErrCard"><h3>Error aplikasi</h3><p class="note" style="margin:0">Error yang terjadi di HP atau laptop pengguna tercatat otomatis di sini. <span id="adErrN"></span></p><div id="adErrList"><p class="note">Memuat…</p></div></div>
    <div style="display:flex;gap:10px;flex-wrap:wrap"><button class="primary" id="adTeach">Buka Mode Guru</button><button class="ghost" id="adOut" style="color:var(--bad)">Keluar</button></div></div>`;
-  hydrate(el);try{aduInit()}catch(e){console.warn(e)}try{adMenu(el)}catch(e){console.warn(e)}
+  hydrate(el);try{aduInit()}catch(e){console.warn(e)}try{$('#adSuara').onclick=()=>suaraStudio('admin')}catch(e){}try{adMenu(el)}catch(e){console.warn(e)}
   $('#adOut').onclick=logout;
   $('#adTeach').onclick=async()=>{setSession({role:'teacher',uid:u.uid});el.hidden=true;busy(true);let s=null;try{s=await FB.db.doc('users/'+u.uid).get()}catch(e){}busy(false);
     if(s&&s.exists&&s.data().role==='teacher'){FBX.me=s.data();fbEnterTeacher(u,FBX.me)}else fbTeacherForm(u)};
@@ -18251,16 +18320,17 @@ function docForm(after){const d=DOCd(),di=docInfo();
 const TOOLS=[
  {id:'modul',ic:'book',c:'#1CB0F6',t:'Modul Ajar',d:'Modul ajar Pembelajaran Mendalam untuk satu bab, lengkap sampai lampiran.',inc:['Identifikasi murid dari data kelasmu','8 dimensi profil lulusan','Kegiatan tiap pertemuan','Asesmen, KKTP, LKPD, kunci, rubrik'],go:wzModul},
  {id:'atp',ic:'cal',c:'#58CC02',t:'ATP, Prota, Promes',d:'Alur tujuan pembelajaran dan program tahunan/semester untuk satu mata pelajaran.',inc:['Tujuan pembelajaran tiap bab','Pembagian JP otomatis','Promes per minggu, siap diisi kalender'],go:wzAtp},
- {id:'soal',ic:'quiz',c:'#FF9600',t:'Cetak Soal Ujian',d:'Lembar kerja, ulangan harian, STS, atau SAS dari bab pilihan dan Bank Soal-mu.',inc:['Paket A dan B (diacak)','Lembar jawaban','Kunci dan pembahasan','Kisi-kisi dengan level kognitif'],go:wzSoal}];
+ {id:'soal',ic:'quiz',c:'#FF9600',t:'Cetak Soal Ujian',d:'Lembar kerja, ulangan harian, STS, atau SAS dari bab pilihan dan Bank Soal-mu.',inc:['Paket A dan B (diacak)','Lembar jawaban','Kunci dan pembahasan','Kisi-kisi dengan level kognitif'],go:wzSoal},
+ {id:'suara',ic:'rehal',c:'#0E9F6E',t:'Suara Hijaiyah dan Angka Arab',free:1,d:'Rekam suaramu sendiri untuk huruf hijaiyah, bilangan Arab, dan harakat. Murid di kelasmu akan mendengar suaramu.',inc:['29 huruf, 10 bilangan, 45 harakat','Bisa diulang dan dihapus kapan saja','Tanpa rekaman, suara bawaan yang dipakai'],go:()=>suaraStudio(FBX.user.uid)}];
 function renderTPer(){const v=$('#vTPer');if(!v)return;const c=tCls(),di=docInfo(),pro=proOK();
   v.innerHTML=thead(['Perangkat Ajar','teach'],`Draf otomatis Kurikulum Merdeka untuk ${esc(c.full)}. Periksa dan sesuaikan sebelum dipakai.`,`<button class="ghost press" id="pgDoc" style="color:var(--ink);background:var(--card)">Data dokumen</button>`)+
-   `<div class="pgrid">${TOOLS.map(x=>`<div class="tcard pgcard" style="--pc:${x.c}"><div class="pgtop"><span class="pgic"><i data-icon="${x.ic}"></i></span><h3>${x.t}</h3></div><p class="sub">${x.d}</p><ul class="pginc">${x.inc.map(i=>`<li>${i}</li>`).join('')}</ul><button class="primary press" data-pg="${x.id}">${pro?'Buat sekarang':'🔒 Buat sekarang'}</button></div>`).join('')}</div>
+   `<div class="pgrid">${TOOLS.map(x=>`<div class="tcard pgcard" style="--pc:${x.c}"><div class="pgtop"><span class="pgic"><i data-icon="${x.ic}"></i></span><h3>${x.t}</h3></div><p class="sub">${x.d}</p><ul class="pginc">${x.inc.map(i=>`<li>${i}</li>`).join('')}</ul><button class="primary press" data-pg="${x.id}">${x.free?'Rekam suara':pro?'Buat sekarang':'🔒 Buat sekarang'}</button></div>`).join('')}</div>
    <div class="tcard pgdoc"><div class="pgdh"><h3>Kop dan tanda tangan</h3><button class="smallbtn" id="pgDoc2">Ubah</button></div>
    <div class="pgkv"><span>Guru</span><b>${esc(di.guru||'-')}${di.nip?' · NIP '+esc(di.nip):''}</b><span>Sekolah</span><b>${esc(di.school||'-')}${di.kota?', '+esc(di.kota):''}</b><span>Kepala sekolah</span><b>${di.ks?esc(di.ks):'<i class="note">belum diisi</i>'}</b><span>Tahun ajaran</span><b>${esc(di.ta)} · Semester ${semNm(di.sem)}</b></div></div>
    ${pro?'':`<div class="tcard"><p class="note" style="margin:0">Perangkat ajar termasuk paket Pro. <button class="smallbtn" data-pgpro>Lihat paket Pro</button></p></div>`}`;
   hydrate(v);$('#pgDoc').onclick=$('#pgDoc2').onclick=()=>docForm(renderTPer);
   const pp=v.querySelector('[data-pgpro]');if(pp)pp.onclick=()=>proAsk();
-  v.querySelectorAll('[data-pg]').forEach(b=>b.onclick=()=>{if(!needPro())return;const t=TOOLS.find(x=>x.id===b.dataset.pg);
+  v.querySelectorAll('[data-pg]').forEach(b=>b.onclick=()=>{const t=TOOLS.find(x=>x.id===b.dataset.pg);if(t.free){t.go();return}if(!needPro())return;
     if(!DOCd().asked&&!DOCd().ks){DOCd().asked=1;touchT();docForm(()=>t.go());return}t.go()})}
 
 /* =================== ADMINISTRASI KELAS =================== */

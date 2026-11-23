@@ -316,6 +316,24 @@ service cloud.firestore {
       allow write: if signedIn() && request.auth.uid == uid;
     }
 
+    // Suara huruf hijaiyah/bilangan Arab. owner = 'admin' (suara bawaan semua pengguna) atau uid guru (untuk murid kelasnya).
+    match /suara/{owner} {
+      function suaraRead() {
+        return signedIn() && (owner == 'admin' || request.auth.uid == owner || isAdmin()
+          || get(/databases/$(database)/documents/users/$(request.auth.uid)).data.get('teacherUid', '') == owner);
+      }
+      function suaraWrite() {
+        return signedIn() && ((owner == 'admin' && isAdmin())
+          || (request.auth.uid == owner && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.get('role', '') == 'teacher'));
+      }
+      allow read: if suaraRead();
+      allow write: if suaraWrite();
+      match /g/{grp} {
+        allow read: if suaraRead();
+        allow write: if suaraWrite() && grp in ['huruf', 'angka', 'harakat'];
+      }
+    }
+
     match /classCodes/{code} {
       allow get: if signedIn();
       allow list: if false;
