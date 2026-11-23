@@ -4100,6 +4100,13 @@ body.teacher:not(.playing):not(.evtv) .toast{top:auto!important;bottom:calc(64px
 .admtabs button.on{background:var(--tb);color:#1899D6;box-shadow:inset 0 0 0 2px #84D8FF}
 @media(max-width:700px){.skb small{white-space:normal;line-height:1.1;font-size:10px;min-height:22px;display:flex;align-items:center;text-align:center}}
 @media(max-width:400px){#tBarTitle{font-size:16px!important;letter-spacing:-.2px}}@media(max-width:370px){#tBarTitle{font-size:15px!important}}
+@font-face{font-family:"JNaskh";src:url(fonts/naskh.woff) format("woff");font-weight:400 900;font-display:swap;unicode-range:U+0600-06FF,U+0750-077F,U+FB50-FDFF,U+FE70-FEFF}
+.ar{font-family:"JNaskh",serif;direction:rtl;unicode-bidi:isolate;font-weight:700;line-height:1.5}
+.arbig{display:block;font-family:"JNaskh",serif;direction:rtl;font-weight:700;font-size:clamp(64px,14vw,96px);line-height:1.55;color:var(--purple);margin-top:4px}
+#opts.aropts .opt .t{font-size:56px!important;line-height:1.5}#opts.aropts .opt .t .ar{font-size:inherit}
+.ayat{display:block;margin-top:10px;padding:12px 14px;border-radius:16px;background:#ECFDF5;color:#065F46;font-weight:800;font-size:clamp(18px,4.6vw,24px);line-height:1.4;font-style:italic}
+html[data-theme=malam] .ayat{background:#063F2E;color:#A7F3D0}
+.tke b.ar{font-size:38px;line-height:1.2;white-space:nowrap}.tke.sm b.ar{font-size:28px}
 </style>
 <style>html,body{margin:0}</style>
 </head>
@@ -4316,7 +4323,7 @@ body.teacher:not(.playing):not(.evtv) .toast{top:auto!important;bottom:calc(64px
 <div class="syncpill" id="syncPill" hidden></div>
 <div class="toast" id="toast" hidden></div>
 
-<script src="av.js?v=421"></script>
+<script src="av.js?v=422"></script>
 <script>
 /* ---------- visual assets ---------- */
 const INK='#1B1E3D';
@@ -5103,10 +5110,86 @@ const PAI_SMA=[
  ['Pusat ilmu pengetahuan di Bagdad pada masa Dinasti Abbasiyah bernama …','Baitul Hikmah','Al-Azhar','Nizamiyah','Darul Arqam'],
  ['Husnuzan artinya …','berprasangka baik','berprasangka buruk','bergunjing','iri hati'],
  ['Mujahadah an-nafs artinya …','bersungguh-sungguh mengendalikan hawa nafsu','mengikuti hawa nafsu','berlomba dalam kebaikan','menyendiri dari masyarakat']];
+/* ===== TK: huruf hijaiyah, angka Arab, dan Al-Qur'an ===== */
+const HJ=[['ا','Alif',0],['ب','Ba',1],['ت','Ta',2],['ث','Tsa',3],['ج','Jim',1],['ح','Ha',0],['خ','Kho',1],['د','Dal',0],['ذ','Dzal',1],['ر','Ro',0],['ز','Za',1],['س','Sin',0],['ش','Syin',3],['ص','Shod',0],['ض','Dhod',1],['ط','Tho',0],['ظ','Zho',1],['ع','‘Ain',0],['غ','Ghoin',1],['ف','Fa',1],['ق','Qof',2],['ك','Kaf',0],['ل','Lam',0],['م','Mim',0],['ن','Nun',1],['و','Wau',0],['ه','Ha',0],['ء','Hamzah',0],['ي','Ya',2]];
+const HJG=[[0,7],[7,14],[14,21],[21,29]];
+const AR=t=>`<span class="ar">${t}</span>`;
+const arFont=()=>{try{document.fonts&&document.fonts.load('700 40px JNaskh','ب')}catch(e){}};
+const hjSet=g=>{arFont();const [a,b]=g==null?[0,29]:HJG[g];return HJ.slice(a,b)};
+const hjOthers=(h,pool,n)=>shuffle(pool.filter(x=>x[1]!==h[1])).filter((x,i,a)=>a.findIndex(y=>y[1]===x[1])===i).slice(0,n);
+const hjName=g=>()=>{const set=hjSet(g),h=pick(set);const o=[h,...hjOthers(h,set.length>=4?set:HJ,3)];
+  return Q(`🔊 Huruf apa ini?<span class="arbig">${h[0]}</span>`,{opts:shuffle(o.map(x=>x[1])),ans:h[1]},`Ini huruf ${h[1]}.`,{say:'Huruf apa ini?',html:true})};
+const hjPick=g=>()=>{const set=hjSet(g),h=pick(set);const o=[h,...hjOthers(h,set.length>=4?set:HJ,3)];
+  return Q(`🔊 Mana huruf <b>${h[1]}</b>?`,{opts:shuffle(o.map(x=>AR(x[0]))),ans:AR(h[0])},`Huruf ${h[1]} bentuknya ${AR(h[0])}.`,{say:`Mana huruf ${h[1]}?`,pic:true,ar:true,html:true,optSay:Object.fromEntries(o.map(x=>[AR(x[0]),'huruf '+x[1]]))})};
+const hjDots=g=>()=>{const set=hjSet(g),h=pick(set);const n=h[2];
+  return Q(`🔊 Huruf ${h[1]} titiknya ada berapa?<span class="arbig">${h[0]}</span>`,{opts:['0','1','2','3'],ans:String(n)},n?`Huruf ${h[1]} punya ${n} titik.`:`Huruf ${h[1]} tidak punya titik.`,{say:`Huruf ${h[1]} titiknya ada berapa?`,html:true,pic:true})};
+const hjNext=g=>()=>{const [a,b]=g==null?[0,28]:[HJG[g][0],Math.min(28,HJG[g][1])];const i=R(a,b-1),h=HJ[i],nx=HJ[i+1];const o=[nx,...hjOthers(nx,HJ.filter(x=>x!==h),3)];
+  return Q(`🔊 Sesudah huruf ${h[1]} ${AR(h[0])} adalah huruf …`,{opts:shuffle(o.map(x=>AR(x[0]))),ans:AR(nx[0])},`Urutannya: ${h[1]}, lalu ${nx[1]}.`,{say:`Sesudah huruf ${h[1]}, huruf apa?`,pic:true,ar:true,html:true,optSay:Object.fromEntries(o.map(x=>[AR(x[0]),'huruf '+x[1]]))})};
+const HJ_HAR=[['ب','b'],['ت','t'],['ج','j'],['د','d'],['ر','r'],['ز','z'],['س','s'],['ف','f'],['ك','k'],['ل','l'],['م','m'],['ن','n'],['ه','h'],['ي','y'],['و','w']];
+const hjHarakat=()=>{arFont();const [c,l]=pick(HJ_HAR),k=R(0,2),mk=['َ','ِ','ُ'][k],v='aiu'[k],nm=['fathah','kasrah','dhommah'][k];
+  return Q(`🔊 Ini dibaca apa?<span class="arbig">${c+mk}</span>`,{opts:shuffle([l+'a',l+'i',l+'u']),ans:l+v},`Tanda ${nm} dibaca "${v}", jadi ${l+v}.`,{say:'Ini dibaca apa?',html:true,pic:true})};
+const hjMark=()=>{arFont();const k=R(0,2),[c]=pick(HJ_HAR),nm=['fathah','kasrah','dhommah'];const desc=['garis kecil di atas huruf','garis kecil di bawah huruf','seperti angka 9 kecil di atas huruf'][k];
+  return Q(`🔊 Tanda baca ini namanya …<span class="arbig">${c+['َ','ِ','ُ'][k]}</span>`,{opts:shuffle(nm.concat(['sukun'])),ans:nm[k]},`${nm[k][0].toUpperCase()+nm[k].slice(1)}: ${desc}.`,{say:'Tanda baca ini namanya apa?',html:true})};
+const tkTraceAr=g=>()=>{const h=pick(hjSet(g));return Q(`<span class="qtag">Tebalkan huruf hijaiyah</span>🔊 Tebalkan huruf <b>${h[1]}</b> dengan jarimu!`,{opts:['Selesai','Belum'],ans:'Selesai'},`Hebat! Kamu menebalkan huruf ${h[1]}.`,{trace:h[0],traceFont:'JNaskh',html:true,say:`Tebalkan huruf ${h[1]} dengan jarimu. Ikuti garisnya.`})};
+/* angka Arab */
+const ARD='٠١٢٣٤٥٦٧٨٩',arNum=n=>String(n).split('').map(d=>ARD[+d]).join('');
+const ARW=['','wahid','itsnan','tsalatsah','arba‘ah','khamsah','sittah','sab‘ah','tsamaniyah','tis‘ah','‘asyarah'];
+const arRange=g=>{arFont();return g===0?[1,5]:g===1?[6,10]:[1,10]};
+const arTrace=g=>()=>{const [a,b]=arRange(g),n=R(a,b);return Q(`<span class="qtag">Tebalkan angka Arab</span>🔊 Tebalkan angka <b>${n}</b> dalam angka Arab!`,{opts:['Selesai','Belum'],ans:'Selesai'},`Hebat! Angka ${n} ditulis ${AR(arNum(n))}.`,{trace:arNum(n),traceFont:'JNaskh',html:true,say:`Tebalkan angka ${n}, dalam bahasa Arab ${ARW[n]}. Ikuti garisnya.`})};
+const arRead=g=>()=>{const [a,b]=arRange(g),n=R(a,b),o=new Set([n]);while(o.size<4){const v=R(1,10);o.add(v)}
+  return Q(`🔊 Angka Arab ini berapa?<span class="arbig">${arNum(n)}</span>`,{opts:shuffle([...o].map(String)),ans:String(n)},`${AR(arNum(n))} adalah angka ${n} (${ARW[n]}).`,{say:'Angka Arab ini berapa?',html:true,pic:true})};
+const arPick=g=>()=>{const [a,b]=arRange(g),n=R(a,b),o=new Set([n]);while(o.size<4)o.add(R(1,10));const t=pick(THINGS);
+  return Q(`🔊 Ada berapa ${t[1]}? Pilih angka Arabnya.<div class="objs">${t[0].repeat(n)}</div>`,{opts:shuffle([...o].map(v=>AR(arNum(v)))),ans:AR(arNum(n))},`Ada ${n} ${t[1]}, angka Arabnya ${AR(arNum(n))}.`,{say:`Ada berapa ${t[1]}? Pilih angka Arabnya.`,pic:true,ar:true,html:true,optSay:Object.fromEntries([...o].map(v=>[AR(arNum(v)),'angka '+v]))})};
+const arWord=g=>()=>{const [a,b]=arRange(g),n=R(a,b),o=new Set([n]);while(o.size<4)o.add(R(1,10));
+  return Q(`🔊 Dalam bahasa Arab, angka <b>${n}</b> ${AR(arNum(n))} dibaca …`,{opts:shuffle([...o].map(v=>ARW[v])),ans:ARW[n]},`${n} dalam bahasa Arab: ${ARW[n]}.`,{say:`Dalam bahasa Arab, angka ${n} dibaca apa?`,html:true})};
+/* Al-Qur'an: surah pendek (bacaan latin) */
+const SURAH=[
+ ['Al-Fatihah',['Bismillahir rahmanir rahim','Alhamdu lillahi rabbil ‘alamin','Ar-rahmanir rahim','Maliki yaumid din','Iyyaka na‘budu wa iyyaka nasta‘in','Ihdinash shirathal mustaqim','Shirathal ladzina an‘amta ‘alaihim ghairil maghdhubi ‘alaihim wa ladh dhallin'],'Pembuka Al-Qur’an, dibaca di setiap rakaat shalat'],
+ ['An-Nas',['Qul a‘udzu birabbin nas','Malikin nas','Ilahin nas','Min syarril waswasil khannas','Alladzi yuwaswisu fi shudurin nas','Minal jinnati wan nas'],'Berlindung kepada Allah, Tuhan manusia'],
+ ['Al-Falaq',['Qul a‘udzu birabbil falaq','Min syarri ma khalaq','Wa min syarri ghasiqin idza waqab','Wa min syarrin naffatsati fil ‘uqad','Wa min syarri hasidin idza hasad'],'Berlindung kepada Allah, Tuhan yang menguasai subuh'],
+ ['Al-Ikhlas',['Qul huwallahu ahad','Allahush shamad','Lam yalid wa lam yulad','Wa lam yakun lahu kufuwan ahad'],'Allah itu Maha Esa'],
+ ['Al-Kautsar',['Inna a‘thainakal kautsar','Fa shalli lirabbika wanhar','Inna syani’aka huwal abtar'],'Nikmat yang banyak dari Allah'],
+ ['Al-‘Ashr',['Wal ‘ashr','Innal insana lafi khusr','Illalladzina amanu wa ‘amilush shalihati wa tawashau bil haqqi wa tawashau bish shabr'],'Demi masa, manfaatkan waktu dengan baik']];
+const ayat=t=>`<span class="ayat">${t}</span>`;
+const qrNext=k=>()=>{const [nm,v]=SURAH[k],i=R(0,v.length-2),ans=v[i+1];const pool=v.filter((x,j)=>j!==i&&j!==i+1).concat(...SURAH.filter((_,j)=>j!==k).map(x=>x[1]));const o=[ans,...shuffle(pool).slice(0,2)];
+  return Q(`🔊 Surah ${nm}. Lanjutkan ayatnya:${ayat(v[i])}`,{opts:shuffle(o),ans},`Sesudah «${v[i]}» adalah «${ans}».`.replace(/[«»]/g,'"'),{say:`Surah ${nm}. ${v[i]}. Lanjutannya apa?`,html:true})};
+const qrWhich=k=>()=>{const [nm,v]=SURAH[k];const o=[nm,...shuffle(SURAH.filter((_,j)=>j!==k).map(x=>x[0])).slice(0,3)];
+  return Q(`🔊 Ayat ini dari surah apa?${ayat(v[0])}`,{opts:shuffle(o),ans:nm},`Surah ${nm} dimulai dengan "${v[0]}".`,{say:`${v[0]}. Ini surah apa?`,html:true})};
+const qrCount=k=>()=>{const [nm,v]=SURAH[k],o=new Set([v.length]);while(o.size<4)o.add(R(3,8));
+  return Q(`🔊 Surah ${nm} ada berapa ayat?`,{opts:shuffle([...o].map(String)),ans:String(v.length)},`Surah ${nm} ada ${v.length} ayat.`,{say:`Surah ${nm} ada berapa ayat?`})};
+const qrMean=k=>()=>{const [nm,,m]=SURAH[k];const o=[m,...shuffle(SURAH.filter((_,j)=>j!==k).map(x=>x[2])).slice(0,2)];
+  return Q(`🔊 Surah ${nm} isinya tentang …`,{opts:shuffle(o),ans:m},`Surah ${nm}: ${m.toLowerCase()}.`,{say:`Surah ${nm} isinya tentang apa?`})};
+const QR_ADAB=[
+ ['Sebelum membaca Al-Qur’an, sebaiknya kita …','💧 berwudu','🍚 makan','😴 tidur','⚽ bermain','Berwudu agar suci sebelum membaca Al-Qur’an.'],
+ ['Sebelum membaca Al-Qur’an, kita membaca ta‘awudz, yaitu …','A‘udzu billahi minasy syaithanir rajim','Alhamdulillah','Subhanallah','Astagfirullah'],
+ ['Al-Qur’an diturunkan kepada …','Nabi Muhammad','Nabi Adam','Nabi Nuh','Nabi Musa'],
+ ['Al-Qur’an disampaikan kepada Nabi Muhammad oleh malaikat …','Jibril','Mikail','Israfil','Ridwan'],
+ ['Surah pertama dalam Al-Qur’an adalah …','Al-Fatihah','An-Nas','Al-Ikhlas','Al-Falaq'],
+ ['Surah terakhir dalam Al-Qur’an adalah …','An-Nas','Al-Fatihah','Al-Kautsar','Al-Ikhlas'],
+ ['Jumlah surah dalam Al-Qur’an ada …','114','30','100','99'],
+ ['Al-Qur’an terdiri dari … juz','30','114','10','7'],
+ ['Saat ada yang membaca Al-Qur’an, kita sebaiknya …','mendengarkan dengan tenang','berteriak','berlari-lari','bermain gawai'],
+ ['Al-Qur’an kita simpan di tempat yang …','bersih','kotor','basah','berdebu'],
+ ['Al-Qur’an pertama kali turun pada bulan …','Ramadan','Syawal','Muharram','Rajab'],
+ ['Al-Qur’an ditulis dengan huruf …','hijaiyah','latin','angka','gambar']];
 const PAI_SUBJ={
  tk:{id:'pai',name:'Agama Islam',glyph:'PAI',color:'#0E9F6E',fit:'word',units:[
    U('Doa dan salam','Ucapan baik sehari-hari',[PAI_TK,[0,1,2,3,10]],{tip:'Bismillah sebelum, Alhamdulillah sesudah. Jawab salam dengan Wa’alaikumussalam.'}),
-   U('Mengenal Islam','Kitab suci, masjid, nabi, dan shalat',[PAI_TK,[4,5,6,7,8,9]],{tip:'Kitab suci Al-Qur’an, tempat ibadah masjid, shalat wajib 5 kali sehari.'})]},
+   U('Mengenal Islam','Kitab suci, masjid, nabi, dan shalat',[PAI_TK,[4,5,6,7,8,9]],{tip:'Kitab suci Al-Qur’an, tempat ibadah masjid, shalat wajib 5 kali sehari.'}),
+   U('Hijaiyah: Alif sampai Kho','Mengenal huruf ا ب ت ث ج ح خ',[hjName(0),hjPick(0),hjDots(0),hjNext(0)],{fit:'picture',tip:'Alif, Ba, Ta, Tsa, Jim, Ha, Kho. Ba titik satu di bawah, Ta titik dua di atas, Tsa titik tiga di atas.'}),
+   U('Hijaiyah: Dal sampai Shod','Mengenal huruf د ذ ر ز س ش ص',[hjName(1),hjPick(1),hjDots(1),hjNext(1)],{fit:'picture',tip:'Dal, Dzal, Ro, Za, Sin, Syin, Shod. Dzal dan Za bertitik satu, Syin bertitik tiga.'}),
+   U('Hijaiyah: Dhod sampai Fa','Mengenal huruf ض ط ظ ع غ ف',[hjName(2),hjPick(2),hjDots(2),hjNext(2)],{fit:'picture',tip:'Dhod, Tho, Zho, ‘Ain, Ghoin, Fa. Huruf kembar dibedakan dari titiknya.'}),
+   U('Hijaiyah: Qof sampai Ya','Mengenal huruf ق ك ل م ن و ه ء ي',[hjName(3),hjPick(3),hjDots(3),hjNext(3)],{fit:'picture',tip:'Qof, Kaf, Lam, Mim, Nun, Wau, Ha, Hamzah, Ya.'}),
+   U('Tanda baca hijaiyah','Fathah (a), kasrah (i), dhommah (u)',[hjHarakat,hjHarakat,hjMark],{fit:'picture',tip:'Fathah di atas dibaca a, kasrah di bawah dibaca i, dhommah dibaca u: ba, bi, bu.'}),
+   U('Menulis hijaiyah 1','Menebalkan huruf Alif sampai Shod',[tkTraceAr(0),tkTraceAr(1),tkTraceAr(0),hjPick(0)],{fit:'picture',tip:'Huruf hijaiyah ditulis dari kanan ke kiri. Ikuti garis putus-putusnya pelan-pelan.'}),
+   U('Menulis hijaiyah 2','Menebalkan huruf Dhod sampai Ya',[tkTraceAr(2),tkTraceAr(3),tkTraceAr(3),hjPick(3)],{fit:'picture',tip:'Tulis badan hurufnya dulu, baru titiknya.'}),
+   U('Angka Arab 1–5','Membaca dan menulis ١ ٢ ٣ ٤ ٥',[arTrace(0),arTrace(0),arRead(0),arPick(0),arWord(0)],{fit:'picture',tip:'١ satu (wahid), ٢ dua (itsnan), ٣ tiga (tsalatsah), ٤ empat (arba‘ah), ٥ lima (khamsah).'}),
+   U('Angka Arab 6–10','Membaca dan menulis ٦ ٧ ٨ ٩ ١٠',[arTrace(1),arTrace(1),arRead(1),arPick(1),arWord(1)],{fit:'picture',tip:'٦ enam (sittah), ٧ tujuh (sab‘ah), ٨ delapan (tsamaniyah), ٩ sembilan (tis‘ah), ١٠ sepuluh (‘asyarah).'}),
+   U('Adab membaca Al-Qur’an','Sebelum dan saat membaca Al-Qur’an',[QR_ADAB,[0,1,2,3,4,5,6,7,8,9,10,11]],{tip:'Berwudu, membaca ta‘awudz dan basmalah, lalu membaca dengan tenang.'}),
+   U('Surah Al-Fatihah','Hafalan surah pembuka',[qrNext(0),qrNext(0),qrCount(0),qrMean(0)],{tip:'Al-Fatihah ada 7 ayat dan dibaca di setiap rakaat shalat.'}),
+   U('Surah An-Nas dan Al-Falaq','Dua surah perlindungan',[qrNext(1),qrNext(2),qrWhich(1),qrWhich(2),qrCount(1),qrCount(2)],{tip:'An-Nas 6 ayat, Al-Falaq 5 ayat. Keduanya dimulai dengan "Qul a‘udzu".'}),
+   U('Surah Al-Ikhlas','Allah Maha Esa',[qrNext(3),qrNext(3),qrWhich(3),qrCount(3),qrMean(3)],{tip:'Al-Ikhlas ada 4 ayat dan mengajarkan bahwa Allah itu satu.'}),
+   U('Surah Al-Kautsar dan Al-‘Ashr','Surah pendek 3 ayat',[qrNext(4),qrNext(5),qrWhich(4),qrWhich(5),qrMean(4),qrMean(5)],{tip:'Al-Kautsar dan Al-‘Ashr masing-masing 3 ayat.'})]},
  sd1:{id:'pai',name:'Agama Islam',glyph:'PAI',color:'#0E9F6E',fit:'phrase',units:[
    U('Rukun Islam dan iman','Lima rukun Islam dan enam rukun iman',[PAI_SD13,[0,1,2,9]],{tip:'Rukun Islam ada 5, rukun iman ada 6.'}),
    U('Shalat dan puasa','Rakaat shalat, wudu, dan Ramadan',[PAI_SD13,[3,4,5,6,13]],{tip:'Subuh 2, Zuhur 4, Asar 4, Magrib 3, Isya 4 rakaat.'}),
@@ -10413,7 +10496,7 @@ function renderQ(){
   $('#feedback').hidden=true;
   $('#opts').innerHTML=q.opts.map((o,k)=>`<button class="opt" data-k="${k}"><span class="k">${'ABCD'[k]||k+1}</span><span class="t">${o}</span></button>`).join('');
   const chk=!!(game.lesson&&game.mode==='kuis');
-  $('#opts').classList.toggle('picopts',!!q.pic);$('#opts').classList.toggle('bsopts',!!q.bs);
+  $('#opts').classList.toggle('picopts',!!q.pic);$('#opts').classList.toggle('bsopts',!!q.bs);$('#opts').classList.toggle('aropts',!!q.ar);
   if(q.ketik||q.match||q.trace||q.warna||q.baca)setTimeout(()=>qSpecial(q),0);
   if(q.bacaMic&&SPEECH_REC&&!micOff&&!isRebutan())setTimeout(()=>{if(game&&game.qs[game.i]===q)tkBacaUI({baca:q.bacaMic,opts:q.opts,ans:q.ans,_q:q},$('#opts'),true)},0);
   $('#opts').querySelectorAll('.opt').forEach(b=>b.onclick=()=>{const k=+b.dataset.k;if(L.id==='tk'&&chk){if(game.sel===k&&!game.locked){$('#checkBtn').click();return}if(!q.noOptSay){const t=optSpeech(q,k);if(t)say(t)}}else if(chk&&earlyReader()&&!q.noOptSay){const t=optSpeech(q,k);if(t)say(spokenTx(t))}chk?selectOpt(k):answer(k)});
@@ -10482,11 +10565,12 @@ function tkBacaUI(q,box,inline){const w=q.baca.w;let tries=0,rec=null,busy=false
   if(skip)skip.onclick=()=>finish(false)}
 /* ===== TK: menebalkan huruf/angka dengan jari ===== */
 function tkTraceUI(q,box){$('#checkBar').hidden=true;
+  if(q.traceFont&&document.fonts&&!document.fonts.check(`700 40px ${q.traceFont}`,q.trace)&&!q._fw){q._fw=1;box.insertAdjacentHTML('beforeend','<p class="note trcwait">Menyiapkan huruf…</p>');const go=()=>{const w=box.querySelector('.trcwait');if(w)w.remove();tkTraceUI(q,box)};Promise.race([document.fonts.load(`700 40px ${q.traceFont}`,q.trace),new Promise(r=>setTimeout(r,2500))]).then(go,go);return}
   const W=Math.max(220,Math.min(320,(box.clientWidth||320)-4)),dpr=Math.min(3,window.devicePixelRatio||1);
   box.insertAdjacentHTML('beforeend',`<div class="trc"><div class="trcwrap"><canvas id="trcC" width="${W*dpr}" height="${W*dpr}" style="width:${W}px;height:${W}px" aria-label="Papan menebalkan ${esc(q.trace)}"></canvas><div class="trcbar" aria-hidden="true"><i id="trcFill"></i></div></div><button class="ghost press trcclr" id="trcClr">↺ Ulangi</button></div>`);
   const cv=$('#trcC'),c=cv.getContext('2d');c.scale(dpr,dpr);
   const fam=(getComputedStyle(document.documentElement).getPropertyValue('--title')||'').trim()||'system-ui,sans-serif';
-  const font=`900 ${Math.round(W*.74)}px ${fam}`;
+  const font=q.traceFont?`700 ${Math.round(W*(q.trace.length>1?.6:.86))}px ${q.traceFont},serif`:`900 ${Math.round(W*.74)}px ${fam}`;
   const mk=()=>{const o=document.createElement('canvas');o.width=W;o.height=W;return o};
   const glyph=(g,how)=>{g.font=font;g.textAlign='center';g.textBaseline='alphabetic';const m=g.measureText(q.trace);const h=(m.actualBoundingBoxAscent||W*.52)+(m.actualBoundingBoxDescent||0);const y=W/2+h/2-(m.actualBoundingBoxDescent||0);how(g,W/2,y)};
   const mask=mk(),mg=mask.getContext('2d');glyph(mg,(g,x,y)=>{g.fillStyle='#000';g.fillText(q.trace,x,y)});
@@ -13226,7 +13310,11 @@ const TK_CARDS=[
  {id:'hitung',name:'Berhitung',emo:'🔢',color:'#22B85C',d:'Angka, banyak-sedikit, pola',it:[],sub:'hitung'},
  {id:'warna',name:'Warna & Bentuk',emo:'🎨',color:'#FF5C9E',d:'Warna, bentuk, mewarnai',it:[],sub:'warna'},
  {id:'diri',name:'Aku & Sekitarku',emo:'😊',color:'#7C4DFF',d:'Perasaan, tubuh, keluarga',it:[],sub:'diri'},
- {id:'alam',name:'Alam Sekitar',emo:'🌱',color:'#14B8A6',d:'Hewan, tumbuhan, cuaca',it:[],sub:'sains'}];
+ {id:'alam',name:'Alam Sekitar',emo:'🌱',color:'#14B8A6',d:'Hewan, tumbuhan, cuaca',it:[],sub:'sains'},
+ {id:'hjy',name:'Mengenal Huruf Hijaiyah',emo:'',glyph:'ا ب ت',ar:1,color:'#0E9F6E',d:'Huruf, titik, dan tanda baca',it:[['pai','Hijaiyah: Alif sampai Kho'],['pai','Hijaiyah: Dal sampai Shod'],['pai','Hijaiyah: Dhod sampai Fa'],['pai','Hijaiyah: Qof sampai Ya'],['pai','Tanda baca hijaiyah']]},
+ {id:'hjtulis',name:'Menulis Huruf Hijaiyah',emo:'✍️',color:'#16A34A',d:'Menebalkan huruf hijaiyah',it:[['pai','Menulis hijaiyah 1'],['pai','Menulis hijaiyah 2']]},
+ {id:'angkaar',name:'Menulis Angka Arab',emo:'',glyph:'١٢٣',ar:1,color:'#0891B2',d:'Membaca dan menulis ١ sampai ١٠',it:[['pai','Angka Arab 1–5'],['pai','Angka Arab 6–10']]},
+ {id:'quran',name:'Belajar Al-Qur’an',emo:'📖',color:'#B45309',d:'Adab dan surah pendek',it:[['pai','Adab membaca Al-Qur’an'],['pai','Surah Al-Fatihah'],['pai','Surah An-Nas dan Al-Falaq'],['pai','Surah Al-Ikhlas'],['pai','Surah Al-Kautsar dan Al-‘Ashr']]}];
 const TKV={cat:null};
 const isTkCards=()=>{try{return CLS().lv==='tk'}catch(e){return false}};
 function tkCardList(){const c=CLS(),subs=subjVisible(c),used=new Set(),cards=[];
@@ -13239,8 +13327,8 @@ function tkStars(sb,ui){const n=((P.tkc||{})[CLS().id+'/'+sb.id+'/'+ui])||0;retu
 function tkStarRow(n){return `<span class="tkst" aria-label="${n} bintang">${[0,1,2].map(i=>`<i class="${i<n?'on':''}">★</i>`).join('')}</span>`}
 function renderTk(){const cards=tkCardList();document.body.classList.add('tkcards');let h='';const cat=TKV.cat&&cards.find(k=>k.id===TKV.cat);
   if(!cat){h=`<div class="tkhead"><div class="mascot tkm" data-mascot data-mood="happy"></div><div><h2>Mau belajar apa hari ini?</h2><p>Pilih kartu yang kamu suka. Boleh yang mana saja!</p></div></div><div class="tkgrid">`+
-    cards.map(k=>{const st=k.items.reduce((a,r)=>a+tkStars(r.sb,r.ui),0),max=k.items.length*3;return `<button class="tkcard press" data-c="${k.id}" style="--kc:${k.color}"><span class="tke">${k.emo||`<b>${esc(k.glyph||'')}</b>`}</span><span class="tkn">${esc(k.name)}</span><small>${esc(k.d)}</small><span class="tkp"><i style="width:${Math.round(st/max*100)}%"></i></span></button>`}).join('')+`</div>`}
-  else{h=`<div class="tkhead2" style="--kc:${cat.color}"><button class="tkback press" id="tkBack" aria-label="Kembali ke semua kartu">←</button><span class="tke sm">${cat.emo||`<b>${esc(cat.glyph||'')}</b>`}</span><h2>${esc(cat.name)}</h2></div><div class="tkgrid act">`+
+    cards.map(k=>{const st=k.items.reduce((a,r)=>a+tkStars(r.sb,r.ui),0),max=k.items.length*3;return `<button class="tkcard press" data-c="${k.id}" style="--kc:${k.color}"><span class="tke">${k.emo||`<b class="${k.ar?'ar':''}">${esc(k.glyph||'')}</b>`}</span><span class="tkn">${esc(k.name)}</span><small>${esc(k.d)}</small><span class="tkp"><i style="width:${Math.round(st/max*100)}%"></i></span></button>`}).join('')+`</div>`}
+  else{h=`<div class="tkhead2" style="--kc:${cat.color}"><button class="tkback press" id="tkBack" aria-label="Kembali ke semua kartu">←</button><span class="tke sm">${cat.emo||`<b class="${cat.ar?'ar':''}">${esc(cat.glyph||'')}</b>`}</span><h2>${esc(cat.name)}</h2></div><div class="tkgrid act">`+
     cat.items.map((r,i)=>{const u=r.sb.units[r.ui];return `<button class="tkact press" data-i="${i}" style="--kc:${cat.color}"><span class="tkan">${esc(u.t)}</span><small>${esc(u.d||'')}</small>${tkStarRow(tkStars(r.sb,r.ui))}<span class="tkgo">Main ▶</span></button>`}).join('')+`</div>`}
   $('#path').innerHTML=h;hydrate($('#path'));
   $('#path').querySelectorAll('.tkcard').forEach(b=>b.onclick=()=>{TKV.cat=b.dataset.c;try{tone([660],.05)}catch(e){}renderTk();window.scrollTo({top:0})});
@@ -16394,7 +16482,7 @@ function folBind(root,list,after){root.querySelectorAll('[data-follow]').forEach
   try{await folDo(f,on);if(on){try{sfx.ok()}catch(_){}toast('team',`Kamu mengikuti ${f.name}.`)}b.outerHTML=folBtn(f,b.classList.contains('sm'));folBind(root,list,after);after&&after()}catch(err){b.disabled=false;toast('lock',fbErr(err))}})}
 const shareIcon='<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M12 3 V15 M7 8 L12 3 L17 8 M5 13 V19 C5 20 6 21 7 21 H17 C18 21 19 20 19 19 V13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const qrIcon='<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><path d="M14 14h3v3h-3zM18 18h3v3h-3zM18 14h3M14 18v3" stroke-linecap="round"/></svg>';
-let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=421';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
+let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=422';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
 function qrMatrix(text){const Q=window.QRCodeLib,q=new Q(-1,Q.ECL.M);q.addData(text);q.make();const n=q.getModuleCount(),m=[];for(let r=0;r<n;r++){m.push([]);for(let c=0;c<n;c++)m[r].push(q.isDark(r,c))}return m}
 function qrSvgOf(m){const n=m.length;let d='';for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(m[r][c])d+=`M${c} ${r}h1.02v1.02h-1.02z`;
   return `<svg viewBox="-2 -2 ${n+4} ${n+4}" class="pcqr" shape-rendering="crispEdges" aria-label="Kode QR profil"><rect x="-2" y="-2" width="${n+4}" height="${n+4}" fill="#fff"/><path d="${d}" fill="#1C1E3D"/></svg>`}
