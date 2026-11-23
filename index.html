@@ -4333,7 +4333,7 @@ html[data-theme=malam] .ayat{background:#063F2E;color:#A7F3D0}
 <div class="syncpill" id="syncPill" hidden></div>
 <div class="toast" id="toast" hidden></div>
 
-<script src="av.js?v=427"></script>
+<script src="av.js?v=428"></script>
 <script>
 /* ---------- visual assets ---------- */
 const INK='#1B1E3D';
@@ -5132,10 +5132,13 @@ const SUARA_ITEMS=(()=>{const L=[];const nm=['Alif','Ba','Ta','Tsa','Jim','Ha (�
   HJ_ID.forEach((id,i)=>L.push({id:'huruf_'+id,g:'huruf',ar:ch[i],nm:nm[i]}));
   '١ ٢ ٣ ٤ ٥ ٦ ٧ ٨ ٩ ١٠'.split(' ').forEach((c,i)=>L.push({id:'angka_'+(i+1),g:'angka',ar:c,nm:ARW_NM[i+1]+' ('+(i+1)+')'}));
   HAR_LIST.forEach(([c,l])=>['َ','ِ','ُ'].forEach((m,k)=>L.push({id:`harakat_${l}${'aiu'[k]}`,g:'harakat',ar:c+m,nm:l+'aiu'[k]})));return L})();
-const SUARA_BUNDLED=new Set(HJ_ID.map(x=>'huruf_'+x).concat(HAR_LIST.flatMap(([,l])=>['a','i','u'].map(v=>'harakat_'+l+v))));
+const SUARA_BUNDLED=new Set(HJ_ID.map(x=>'huruf_'+x));
 const SUARA={t:{},a:{},tOwner:null,busy:false,at:0};
 function suaraUrl(id){return SUARA.t[id]||SUARA.a[id]||(SUARA_BUNDLED.has(id)?`sounds/hijaiyah/${id}.mp3`:null)}
-const suaraTok=id=>{const u=suaraUrl(id);return u?`⟦${u}⟧`:''};
+const ARW_AR=['','وَاحِد','اِثْنَان','ثَلَاثَة','أَرْبَعَة','خَمْسَة','سِتَّة','سَبْعَة','ثَمَانِيَة','تِسْعَة','عَشَرَة'];
+/* tanpa rekaman: harakat dan bilangan Arab dibacakan suara bahasa Arab di HP (cadangan: suara Indonesia) */
+const suaraTok=id=>{const u=suaraUrl(id);if(u)return `⟦${u}⟧`;const it=SUARA_ITEMS.find(x=>x.id===id);if(!it)return '';
+  if(it.g==='harakat')return `⟦tts:ar:${it.ar}|${it.nm}⟧`;if(it.g==='angka'){const n=+id.split('_')[1];return `⟦tts:ar:${ARW_AR[n]}|${ARW_NM[n].replace(/‘/g,'')}⟧`}return ''};
 const hjTok=h=>suaraTok('huruf_'+HJ_ID[HJ.indexOf(h)]);
 function suaraCacheGet(owner){try{return JSON.parse(localStorage.getItem('jk_suara_'+owner)||'null')}catch(e){return null}}
 function suaraCacheSet(owner,v){try{localStorage.setItem('jk_suara_'+owner,JSON.stringify(v))}catch(e){}}
@@ -5196,7 +5199,7 @@ const hjNext=g=>()=>{const [a,b]=g==null?[0,28]:[HJG[g][0],Math.min(28,HJG[g][1]
   return Q(`🔊 Sesudah huruf ${h[1]} ${AR(h[0])} adalah huruf …`,{opts:shuffle(o.map(x=>AR(x[0]))),ans:AR(nx[0])},`Urutannya: ${h[1]}, lalu ${nx[1]}.`,{say:hjTok(h)?`Sesudah huruf ${hjTok(h)}, huruf apa?`:'Huruf apa yang datang sesudahnya?',pic:true,ar:true,html:true,optSay:Object.fromEntries(o.map(x=>[AR(x[0]),hjTok(x)])),noOptSay:!o.every(x=>hjTok(x))})};
 const HJ_HAR=[['ب','b'],['ت','t'],['ج','j'],['د','d'],['ر','r'],['ز','z'],['س','s'],['ف','f'],['ك','k'],['ل','l'],['م','m'],['ن','n'],['ه','h'],['ي','y'],['و','w']];
 const hjHarakat=()=>{arFont();const [c,l]=pick(HJ_HAR),k=R(0,2),mk=['َ','ِ','ُ'][k],v='aiu'[k],nm=['fathah','kasrah','dhommah'][k];
-  return Q(`🔊 Ini dibaca apa?<span class="arbig">${c+mk}</span>`,{opts:shuffle([l+'a',l+'i',l+'u']),ans:l+v},`Tanda ${nm} dibaca "${v}", jadi ${l+v}.`,{say:'Ini dibaca apa?',html:true,pic:true,optSay:Object.fromEntries('aiu'.split('').map(x=>[l+x,suaraTok('harakat_'+l+x)||l+x]))})};
+  return Q(`🔊 Ini dibaca apa?<span class="arbig">${c+mk}</span>`,{opts:shuffle([l+'a',l+'i',l+'u']),ans:l+v},`Tanda ${nm} dibaca "${v}", jadi ${l+v}.`,{say:'Ini dibaca apa?',html:true,pic:true,optSay:Object.fromEntries('aiu'.split('').map(x=>[l+x,suaraTok('harakat_'+l+x)]))})};
 const hjMark=()=>{arFont();const k=R(0,2),[c]=pick(HJ_HAR),nm=['fathah','kasrah','dhommah'];const desc=['garis kecil di atas huruf','garis kecil di bawah huruf','seperti angka 9 kecil di atas huruf'][k];
   return Q(`🔊 Tanda baca ini namanya …<span class="arbig">${c+['َ','ِ','ُ'][k]}</span>`,{opts:shuffle(nm.concat(['sukun'])),ans:nm[k]},`${nm[k][0].toUpperCase()+nm[k].slice(1)}: ${desc}.`,{say:'Tanda baca ini namanya apa?',html:true})};
 const tkTraceAr=g=>()=>{const h=pick(hjSet(g));return Q(`<span class="qtag">Tebalkan huruf hijaiyah</span>🔊 Tebalkan huruf <b>${h[1]}</b> dengan jarimu!`,{opts:['Selesai','Belum'],ans:'Selesai'},`Hebat! Kamu menebalkan huruf ${h[1]}.`,{trace:h[0],traceFont:'JNaskh',html:true,say:`Tebalkan huruf ${hjTok(h)||'ini'} dengan jarimu. Ikuti garisnya.`})};
@@ -5210,7 +5213,7 @@ const arRead=g=>()=>{const [a,b]=arRange(g),n=R(a,b),o=new Set([n]);while(o.size
 const arPick=g=>()=>{const [a,b]=arRange(g),n=R(a,b),o=new Set([n]);while(o.size<4)o.add(R(1,10));const t=pick(THINGS);
   return Q(`🔊 Ada berapa ${t[1]}? Pilih angka Arabnya.<div class="objs">${t[0].repeat(n)}</div>`,{opts:shuffle([...o].map(v=>AR(arNum(v)))),ans:AR(arNum(n))},`Ada ${n} ${t[1]}, angka Arabnya ${AR(arNum(n))}.`,{say:`Ada berapa ${t[1]}? Pilih angka Arabnya.`,pic:true,ar:true,html:true,optSay:Object.fromEntries([...o].map(v=>[AR(arNum(v)),'angka '+v]))})};
 const arWord=g=>()=>{const [a,b]=arRange(g),n=R(a,b),o=new Set([n]);while(o.size<4)o.add(R(1,10));
-  return Q(`🔊 Dalam bahasa Arab, angka <b>${n}</b> ${AR(arNum(n))} dibaca …`,{opts:shuffle([...o].map(v=>ARW[v])),ans:ARW[n]},`${n} dalam bahasa Arab: ${ARW[n]}.`,{say:`Dalam bahasa Arab, angka ${n} dibaca apa? Ketuk pilihan untuk mendengar.`,html:true,optSay:Object.fromEntries([...o].map(v=>[ARW[v],suaraTok('angka_'+v)||ARW[v].replace(/‘/g,'')]))})};
+  return Q(`🔊 Dalam bahasa Arab, angka <b>${n}</b> ${AR(arNum(n))} dibaca …`,{opts:shuffle([...o].map(v=>ARW[v])),ans:ARW[n]},`${n} dalam bahasa Arab: ${ARW[n]}.`,{say:`Dalam bahasa Arab, angka ${n} dibaca apa? Ketuk pilihan untuk mendengar.`,html:true,optSay:Object.fromEntries([...o].map(v=>[ARW[v],suaraTok('angka_'+v)]))})};
 /* Al-Qur'an: surah pendek (bacaan latin) */
 const SURAH=[
  ['Al-Fatihah',['Bismillahir rahmanir rahim','Alhamdu lillahi rabbil ‘alamin','Ar-rahmanir rahim','Maliki yaumid din','Iyyaka na‘budu wa iyyaka nasta‘in','Ihdinash shirathal mustaqim','Shirathal ladzina an‘amta ‘alaihim ghairil maghdhubi ‘alaihim wa ladh dhallin'],'Pembuka Al-Qur’an, dibaca di setiap rakaat shalat'],
@@ -10348,11 +10351,14 @@ function sayLong(t){if(!t)return;try{const s=window.speechSynthesis;s.cancel();i
 function optSpeech(q,k){if(q.trace||q.warna||q.match||q.baca)return '';const o=q.opts[k];if(q.optSay&&q.optSay[o])return q.optSay[o];const t=plainTx(o).replace(/[^\p{L}\p{N}’' -]/gu,' ').replace(/\s+/g,' ').trim();if(t)return q.optEn?'«'+t+'»':t;const m=String(o).match(/class="objs">([^<]*)</);return m?String([...m[1]].filter(ch=>/\p{Extended_Pictographic}/u.test(ch)).length):''}
 function speakParts(s,t,rate){String(t).split(/(«[^»]*»)/).forEach(p=>{if(!p.trim())return;const en=p[0]==='«';const u=new SpeechSynthesisUtterance(en?p.slice(1,-1):p);u.lang=en?'en-US':'id-ID';u.rate=en?.8:rate;s.speak(u)})}
 const AUD=new Audio();AUD.preload='auto';let audSeq=0;
+try{window.speechSynthesis&&speechSynthesis.getVoices();window.speechSynthesis&&speechSynthesis.addEventListener&&speechSynthesis.addEventListener('voiceschanged',()=>{})}catch(e){}
+function arVoice(){try{const vs=window.speechSynthesis.getVoices();return vs.find(v=>/^ar[-_](SA|XA)/i.test(v.lang))||vs.find(v=>/^ar/i.test(v.lang))||null}catch(e){return null}}
 const stripAud=t=>String(t||'').replace(/⟦[^⟧]*⟧/g,' ').replace(/\s+/g,' ').trim();
 function sayAud(t){const my=++audSeq;try{window.speechSynthesis.cancel()}catch(e){}try{AUD.pause()}catch(e){}
   const parts=String(t).split(/(⟦[^⟧]*⟧)/).filter(p=>p.trim());let i=0;
   const next=()=>{if(my!==audSeq||i>=parts.length)return;const p=parts[i++];
-    if(p[0]==='⟦'){AUD.onended=next;AUD.onerror=next;AUD.src=p.slice(1,-1);const pr=AUD.play();if(pr&&pr.catch)pr.catch(next)}
+    if(p.startsWith('⟦tts:ar:')){const [ar,fb]=p.slice(8,-1).split('|');const v=arVoice();try{const u=new SpeechSynthesisUtterance(v?ar:fb);u.lang=v?v.lang:'id-ID';if(v)u.voice=v;u.rate=v?.8:.9;u.onend=next;u.onerror=next;window.speechSynthesis.speak(u)}catch(e){next()}}
+    else if(p[0]==='⟦'){AUD.onended=next;AUD.onerror=next;AUD.src=p.slice(1,-1);const pr=AUD.play();if(pr&&pr.catch)pr.catch(next)}
     else{try{const u=new SpeechSynthesisUtterance(p.trim());u.lang='id-ID';u.rate=.9;u.onend=next;u.onerror=next;window.speechSynthesis.speak(u)}catch(e){next()}}};next()}
 function say(t){if(!soundOn||!t)return;if(String(t).includes('⟦')){sayAud(t);return}audSeq++;try{AUD.pause()}catch(e){}try{const s=window.speechSynthesis;s.cancel();speakParts(s,t,.9)}catch(e){}}
 
@@ -16572,7 +16578,7 @@ function folBind(root,list,after){root.querySelectorAll('[data-follow]').forEach
   try{await folDo(f,on);if(on){try{sfx.ok()}catch(_){}toast('team',`Kamu mengikuti ${f.name}.`)}b.outerHTML=folBtn(f,b.classList.contains('sm'));folBind(root,list,after);after&&after()}catch(err){b.disabled=false;toast('lock',fbErr(err))}})}
 const shareIcon='<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M12 3 V15 M7 8 L12 3 L17 8 M5 13 V19 C5 20 6 21 7 21 H17 C18 21 19 20 19 19 V13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const qrIcon='<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><path d="M14 14h3v3h-3zM18 18h3v3h-3zM18 14h3M14 18v3" stroke-linecap="round"/></svg>';
-let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=427';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
+let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=428';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
 function qrMatrix(text){const Q=window.QRCodeLib,q=new Q(-1,Q.ECL.M);q.addData(text);q.make();const n=q.getModuleCount(),m=[];for(let r=0;r<n;r++){m.push([]);for(let c=0;c<n;c++)m[r].push(q.isDark(r,c))}return m}
 function qrSvgOf(m){const n=m.length;let d='';for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(m[r][c])d+=`M${c} ${r}h1.02v1.02h-1.02z`;
   return `<svg viewBox="-2 -2 ${n+4} ${n+4}" class="pcqr" shape-rendering="crispEdges" aria-label="Kode QR profil"><rect x="-2" y="-2" width="${n+4}" height="${n+4}" fill="#fff"/><path d="${d}" fill="#1C1E3D"/></svg>`}
