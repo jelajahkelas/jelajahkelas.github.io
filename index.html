@@ -4333,7 +4333,7 @@ html[data-theme=malam] .ayat{background:#063F2E;color:#A7F3D0}
 <div class="syncpill" id="syncPill" hidden></div>
 <div class="toast" id="toast" hidden></div>
 
-<script src="av.js?v=429"></script>
+<script src="av.js?v=430"></script>
 <script>
 /* ---------- visual assets ---------- */
 const INK='#1B1E3D';
@@ -16592,7 +16592,7 @@ function folBind(root,list,after){root.querySelectorAll('[data-follow]').forEach
   try{await folDo(f,on);if(on){try{sfx.ok()}catch(_){}toast('team',`Kamu mengikuti ${f.name}.`)}b.outerHTML=folBtn(f,b.classList.contains('sm'));folBind(root,list,after);after&&after()}catch(err){b.disabled=false;toast('lock',fbErr(err))}})}
 const shareIcon='<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M12 3 V15 M7 8 L12 3 L17 8 M5 13 V19 C5 20 6 21 7 21 H17 C18 21 19 20 19 19 V13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const qrIcon='<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><path d="M14 14h3v3h-3zM18 18h3v3h-3zM18 14h3M14 18v3" stroke-linecap="round"/></svg>';
-let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=429';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
+let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=430';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
 function qrMatrix(text){const Q=window.QRCodeLib,q=new Q(-1,Q.ECL.M);q.addData(text);q.make();const n=q.getModuleCount(),m=[];for(let r=0;r<n;r++){m.push([]);for(let c=0;c<n;c++)m[r].push(q.isDark(r,c))}return m}
 function qrSvgOf(m){const n=m.length;let d='';for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(m[r][c])d+=`M${c} ${r}h1.02v1.02h-1.02z`;
   return `<svg viewBox="-2 -2 ${n+4} ${n+4}" class="pcqr" shape-rendering="crispEdges" aria-label="Kode QR profil"><rect x="-2" y="-2" width="${n+4}" height="${n+4}" fill="#fff"/><path d="${d}" fill="#1C1E3D"/></svg>`}
@@ -17065,11 +17065,11 @@ function adErrDraw(){const host=$('#adErrList');if(!host||!ADX.err)return;const 
 let ADMSEC='ringkasan';
 const ADM_I={ringkasan:'dash',pengguna:'team',kelas:'teach',laporan:'quiz',error:'target',guru:'report',bayar:'gem',atur:'gear'};
 const ADM_IC={ringkasan:'<path d="M4 4h7v7H4zM13 4h7v4h-7zM13 10h7v10h-7zM4 13h7v7H4z"/>',pengguna:'<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.8 3.4-6 6.5-6s5.7 2.2 6.5 6"/><circle cx="17" cy="9" r="2.6"/><path d="M16.5 14.2c2.6.3 4.4 2.3 5 5.3"/>',guru:'<path d="M2 9l10-5 10 5-10 5z"/><path d="M6 11v5c3 2.5 9 2.5 12 0v-5"/>',bayar:'<rect x="3" y="5.5" width="18" height="13" rx="2.5"/><path d="M3 10h18M7 15h4"/>',atur:'<circle cx="12" cy="12" r="3.2"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M5.3 18.7l2.1-2.1M16.6 7.4l2.1-2.1"/>'};
-function adMenu(el){const box=el.querySelector('.onbin');if(!box)return;const cards=[...box.querySelectorAll(':scope > .tcard')];if(cards.length<8)return;
+function adMenu(el){const box=el.querySelector('.onbin');if(!box)return;const cards=[...box.querySelectorAll(':scope > .tcard:not(#adSuaraCard)')];if(cards.length<8)return;const cSuara=box.querySelector(':scope > #adSuaraCard');
   const [cRing,cUser,cGuru,cAtur,cBayar,cKls,cRep,cErr]=cards;const head=box.querySelector(':scope > .thead'),foot=[...box.children].find(x=>x.querySelector&&x.querySelector('#adTeach'));
   const st=$('#aduStats');{const h0=cRing.querySelector(':scope > h3');if(h0)h0.insertAdjacentHTML('afterend','<h3 class="adsub">Guru</h3>')}if(st){cRing.insertAdjacentHTML('beforeend','<h3 class="adsub" style="margin-top:8px">Semua pengguna</h3>');cRing.appendChild(st)}
   cRing.insertAdjacentHTML('beforeend','<div id="adGrowth"></div><div id="adLearn"></div>');if(ADU.rows)try{adCharts(ADU.rows)}catch(e){}
-  const secs=[['ringkasan','Ringkasan',cRing],['pengguna','Pengguna',cUser],['kelas','Kelas',cKls],['laporan','Laporan soal',cRep],['error','Error aplikasi',cErr],['guru','Guru & Pro',cGuru],['bayar','Pembayaran',cBayar],['atur','Pengaturan',cAtur]];
+  const secs=[['ringkasan','Ringkasan',cRing],['pengguna','Pengguna',cUser],['kelas','Kelas',cKls],['laporan','Laporan soal',cRep],['error','Error aplikasi',cErr],['guru','Guru & Pro',cGuru],['bayar','Pembayaran',cBayar],['atur','Pengaturan',cAtur]];if(cSuara){cSuara.style.cssText='margin-top:16px;box-shadow:none;border:2px solid var(--line)';cAtur.appendChild(cSuara)}
   secs.forEach(([k,,c])=>{c.dataset.sec=k;const h=c.querySelector(':scope > h3');if(h)h.classList.add('adh')});
   const lay=document.createElement('div');lay.className='adlay';
   const hr=new Date().getHours(),sap=hr<11?'pagi':hr<15?'siang':hr<18?'sore':'malam',tgl=new Date().toLocaleDateString('id-ID',{weekday:'long',day:'numeric',month:'long',year:'numeric'}),em=(FBX.user&&FBX.user.email)||'';
@@ -17110,7 +17110,7 @@ window.adProfile=adProfile;
 openAdmin=function(){const el=$('#adminPanel'),u=FBX.user;if(!u){showLogin();return}ADU.rows=null;ADX.cls=null;ADX.rep=null;ADX.err=null;el.hidden=false;$('#auth').hidden=true;$('#onb').hidden=true;document.body.classList.remove('teacher');
   el.innerHTML=`<div class="onbin" style="max-width:920px;gap:14px">
    <div class="thead"><span style="width:52px;height:52px;flex:none">${ICONS.key}</span><div class="grow"><h2>Panel Admin</h2><p>${esc(u.email)}</p></div></div>
-   <div class="tcard"><h3>Ringkasan</h3><div class="fbstats" id="adStats"><p class="note">Memuat…</p></div></div>${ADU_CARD}<div class="tcard"><h3>Suara hijaiyah bawaan</h3><p class="sub" style="margin:0">Rekaman di sini menggantikan suara bawaan untuk semua pengguna. Rekaman guru tetap diutamakan untuk murid di kelasnya.</p><button class="primary" id="adSuara" style="width:auto;align-self:flex-start">Rekam suara bawaan</button></div>
+   <div class="tcard"><h3>Ringkasan</h3><div class="fbstats" id="adStats"><p class="note">Memuat…</p></div></div>${ADU_CARD}<div class="tcard" id="adSuaraCard"><h3>Suara hijaiyah bawaan</h3><p class="sub" style="margin:0">Rekaman di sini menggantikan suara bawaan untuk semua pengguna. Rekaman guru tetap diutamakan untuk murid di kelasnya.</p><button class="primary" id="adSuara" style="width:auto;align-self:flex-start">Rekam suara bawaan</button></div>
    <div class="tcard"><h3>Guru dan paket Pro</h3><p class="sub" style="margin:0">Setelah guru membayar, cari emailnya lalu tekan +1 bulan atau +1 tahun. Fitur Pro langsung terbuka di perangkat guru.</p>
     <div class="tfield"><label for="adFind">Cari guru</label><input id="adFind" placeholder="Nama, email, atau sekolah" autocomplete="off"></div><div id="adList"><p class="note">Memuat…</p></div></div>
    <div class="tcard"><h3>Pengaturan aplikasi</h3>
