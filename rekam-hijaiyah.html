@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow">
+<title>Rekam Suara Huruf Hijaiyah · JELAS</title>
+<style>
+@font-face{font-family:"JNaskh";src:url(fonts/naskh.woff) format("woff");font-weight:400 900;font-display:swap}
+*{box-sizing:border-box}body{margin:0;font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:#F4F1FB;color:#2B2440}
+header{background:#0E9F6E;color:#fff;padding:16px 18px}header h1{margin:0;font-size:21px}header p{margin:4px 0 0;opacity:.95;font-size:14px}
+main{max-width:760px;margin:0 auto;padding:14px}
+.tip{background:#fff;border-radius:16px;padding:12px 14px;margin-bottom:12px;font-size:14px;box-shadow:0 2px 0 #E4DAFB}.tip ol{margin:6px 0 0;padding-left:20px}
+.bar{position:sticky;top:0;z-index:5;background:#F4F1FB;padding:8px 0;display:flex;gap:10px;align-items:center}
+.prog{flex:1;height:10px;background:#E4DAFB;border-radius:9px;overflow:hidden}.prog i{display:block;height:100%;background:#0E9F6E;width:0;transition:width .2s}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.card{background:#fff;border-radius:18px;padding:10px;text-align:center;box-shadow:0 3px 0 #E4DAFB;border:3px solid transparent}
+.card.ok{border-color:#0E9F6E}.card.rec{border-color:#E53935}
+.ar{font-family:"JNaskh",serif;font-size:58px;line-height:1.45;direction:rtl;font-weight:700}
+.nm{font-weight:800;margin-top:-4px}.st{font-size:12px;color:#6B6385;min-height:18px}
+.row{display:flex;gap:6px;justify-content:center;margin-top:6px}
+button{font:800 14px system-ui,sans-serif;border:0;border-radius:12px;padding:10px 12px;cursor:pointer}
+.r{background:#E53935;color:#fff}.p{background:#EDE7FB;color:#4B3C7A}.p:disabled{opacity:.4}
+.dl{background:#0E9F6E;color:#fff;padding:12px 16px}.dl:disabled{opacity:.45}
+h2{font-size:17px;margin:18px 4px 8px}
+</style></head><body>
+<header><h1>Rekam Suara Huruf Hijaiyah</h1><p>Untuk ustadz/ustadzah. Rekaman dipakai di pelajaran TK aplikasi JELAS.</p></header>
+<main>
+<div class="tip"><b>Cara merekam</b><ol>
+<li>Cari tempat yang hening. Pegang HP sekitar 20 cm dari mulut.</li>
+<li>Ketuk <b>● Rekam</b>, ucapkan nama hurufnya dengan makhraj yang benar (misalnya "Alif"), lalu ketuk <b>■ Stop</b>.</li>
+<li>Ketuk <b>▶</b> untuk mendengarkan. Kalau kurang pas, rekam ulang.</li>
+<li>Setelah selesai, ketuk <b>Unduh semua rekaman</b>, lalu kirim file ZIP-nya ke pengelola JELAS.</li></ol>
+Rekaman hanya tersimpan di HP ini sampai diunduh. Tidak ada yang dikirim ke internet.</div>
+<div class="bar"><div class="prog"><i id="pg"></i></div><span id="cnt">0/0</span><button class="dl" id="dl" disabled>Unduh semua rekaman</button></div>
+<h2>Nama huruf (29)</h2><div class="grid" id="g1"></div>
+<h2>Bunyi berharakat: fathah, kasrah, dhommah (opsional)</h2><div class="grid" id="g2"></div>
+</main>
+<script>
+const HJ=[['ا','Alif','alif'],['ب','Ba','ba'],['ت','Ta','ta'],['ث','Tsa','tsa'],['ج','Jim','jim'],['ح','Ha','ha_h'],['خ','Kho','kho'],['د','Dal','dal'],['ذ','Dzal','dzal'],['ر','Ro','ro'],['ز','Za','za'],['س','Sin','sin'],['ش','Syin','syin'],['ص','Shod','shod'],['ض','Dhod','dhod'],['ط','Tho','tho'],['ظ','Zho','zho'],['ع','‘Ain','ain'],['غ','Ghoin','ghoin'],['ف','Fa','fa'],['ق','Qof','qof'],['ك','Kaf','kaf'],['ل','Lam','lam'],['م','Mim','mim'],['ن','Nun','nun'],['و','Wau','wau'],['ه','Ha','ha_kecil'],['ء','Hamzah','hamzah'],['ي','Ya','ya']];
+const HAR=[['ب','b'],['ت','t'],['ج','j'],['د','d'],['ر','r'],['ز','z'],['س','s'],['ف','f'],['ك','k'],['ل','l'],['م','m'],['ن','n'],['ه','h'],['ي','y'],['و','w']];
+const ITEMS=HJ.map(([c,n,id])=>({id:'huruf_'+id,ar:c,nm:n+(id==='ha_h'?' (ح)':id==='ha_kecil'?' (ه)':''),grp:'g1'}));
+HAR.forEach(([c,l])=>['َ','ِ','ُ'].forEach((m,k)=>ITEMS.push({id:`harakat_${l}${'aiu'[k]}${c==='ه'?'_h':''}`,ar:c+m,nm:l+'aiu'[k],grp:'g2'})));
+const REC={};let mr=null,cur=null,chunks=[],stream=null;
+const mime=['audio/webm;codecs=opus','audio/ogg;codecs=opus','audio/mp4','audio/webm'].find(t=>window.MediaRecorder&&MediaRecorder.isTypeSupported&&MediaRecorder.isTypeSupported(t))||'';
+const ext=mime.includes('mp4')?'m4a':mime.includes('ogg')?'ogg':'webm';
+function draw(){ITEMS.forEach(it=>{const c=document.getElementById('c_'+it.id);c.classList.toggle('ok',!!REC[it.id]);c.classList.toggle('rec',cur===it.id);
+  c.querySelector('.r').textContent=cur===it.id?'■ Stop':'● Rekam';c.querySelector('.p').disabled=!REC[it.id];c.querySelector('.st').textContent=cur===it.id?'Merekam…':REC[it.id]?'Sudah direkam':''});
+  const n=ITEMS.filter(i=>REC[i.id]).length,need=ITEMS.filter(i=>i.grp==='g1').length;document.getElementById('cnt').textContent=n+'/'+ITEMS.length;
+  document.getElementById('pg').style.width=Math.round(n/ITEMS.length*100)+'%';document.getElementById('dl').disabled=!n}
+ITEMS.forEach(it=>{document.getElementById(it.grp).insertAdjacentHTML('beforeend',`<div class="card" id="c_${it.id}"><div class="ar">${it.ar}</div><div class="nm">${it.nm}</div><div class="st"></div><div class="row"><button class="r">● Rekam</button><button class="p" disabled>▶</button></div></div>`);
+  const c=document.getElementById('c_'+it.id);c.querySelector('.r').onclick=()=>toggle(it.id);c.querySelector('.p').onclick=()=>{const a=new Audio(URL.createObjectURL(REC[it.id]));a.play()}});
+async function toggle(id){if(cur===id){mr.stop();return}if(cur)return;
+  try{stream=stream||await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:false,noiseSuppression:true,autoGainControl:true}})}catch(e){alert('Izin mikrofon ditolak. Izinkan mikrofon di pengaturan browser, lalu coba lagi.');return}
+  chunks=[];mr=new MediaRecorder(stream,mime?{mimeType:mime}:undefined);mr.ondataavailable=e=>e.data.size&&chunks.push(e.data);
+  mr.onstop=()=>{REC[cur]=new Blob(chunks,{type:mr.mimeType||mime});cur=null;draw()};cur=id;mr.start();draw()}
+/* ZIP sederhana (tanpa kompresi) */
+const CRC=(()=>{const t=new Uint32Array(256);for(let n=0;n<256;n++){let c=n;for(let k=0;k<8;k++)c=c&1?0xEDB88320^(c>>>1):c>>>1;t[n]=c>>>0}return d=>{let c=0xFFFFFFFF;for(let i=0;i<d.length;i++)c=t[(c^d[i])&255]^(c>>>8);return (c^0xFFFFFFFF)>>>0}})();
+async function zip(files){const enc=new TextEncoder(),parts=[],cen=[];let off=0;
+  for(const f of files){const name=enc.encode(f.name),data=new Uint8Array(await f.blob.arrayBuffer()),crc=CRC(data);
+    const h=new DataView(new ArrayBuffer(30));h.setUint32(0,0x04034b50,true);h.setUint16(4,20,true);h.setUint32(14,crc,true);h.setUint32(18,data.length,true);h.setUint32(22,data.length,true);h.setUint16(26,name.length,true);
+    parts.push(h.buffer,name,data);
+    const c=new DataView(new ArrayBuffer(46));c.setUint32(0,0x02014b50,true);c.setUint16(4,20,true);c.setUint16(6,20,true);c.setUint32(16,crc,true);c.setUint32(20,data.length,true);c.setUint32(24,data.length,true);c.setUint16(28,name.length,true);c.setUint32(42,off,true);
+    cen.push(c.buffer,name);off+=30+name.length+data.length}
+  const csz=cen.reduce((a,b)=>a+(b.byteLength||b.length),0);const e=new DataView(new ArrayBuffer(22));e.setUint32(0,0x06054b50,true);e.setUint16(8,files.length,true);e.setUint16(10,files.length,true);e.setUint32(12,csz,true);e.setUint32(16,off,true);
+  return new Blob([...parts,...cen,e.buffer],{type:'application/zip'})}
+document.getElementById('dl').onclick=async()=>{const files=ITEMS.filter(i=>REC[i.id]).map(i=>({name:`${i.id}.${ext}`,blob:REC[i.id]}));const z=await zip(files);const a=document.createElement('a');a.href=URL.createObjectURL(z);a.download='rekaman-hijaiyah.zip';a.click()};
+window.addEventListener('beforeunload',e=>{if(Object.keys(REC).length){e.preventDefault();e.returnValue=''}});
+draw();
+</script></body></html>
