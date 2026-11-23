@@ -4323,7 +4323,7 @@ html[data-theme=malam] .ayat{background:#063F2E;color:#A7F3D0}
 <div class="syncpill" id="syncPill" hidden></div>
 <div class="toast" id="toast" hidden></div>
 
-<script src="av.js?v=422"></script>
+<script src="av.js?v=423"></script>
 <script>
 /* ---------- visual assets ---------- */
 const INK='#1B1E3D';
@@ -5118,30 +5118,30 @@ const arFont=()=>{try{document.fonts&&document.fonts.load('700 40px JNaskh','ب'
 const hjSet=g=>{arFont();const [a,b]=g==null?[0,29]:HJG[g];return HJ.slice(a,b)};
 const hjOthers=(h,pool,n)=>shuffle(pool.filter(x=>x[1]!==h[1])).filter((x,i,a)=>a.findIndex(y=>y[1]===x[1])===i).slice(0,n);
 const hjName=g=>()=>{const set=hjSet(g),h=pick(set);const o=[h,...hjOthers(h,set.length>=4?set:HJ,3)];
-  return Q(`🔊 Huruf apa ini?<span class="arbig">${h[0]}</span>`,{opts:shuffle(o.map(x=>x[1])),ans:h[1]},`Ini huruf ${h[1]}.`,{say:'Huruf apa ini?',html:true})};
+  return Q(`🔊 Huruf apa ini?<span class="arbig">${h[0]}</span>`,{opts:shuffle(o.map(x=>x[1])),ans:h[1]},`Ini huruf ${h[1]}.`,{say:'Huruf apa ini?',html:true,noOptSay:true})};
 const hjPick=g=>()=>{const set=hjSet(g),h=pick(set);const o=[h,...hjOthers(h,set.length>=4?set:HJ,3)];
-  return Q(`🔊 Mana huruf <b>${h[1]}</b>?`,{opts:shuffle(o.map(x=>AR(x[0]))),ans:AR(h[0])},`Huruf ${h[1]} bentuknya ${AR(h[0])}.`,{say:`Mana huruf ${h[1]}?`,pic:true,ar:true,html:true,optSay:Object.fromEntries(o.map(x=>[AR(x[0]),'huruf '+x[1]]))})};
+  return Q(`🔊 Mana huruf <b>${h[1]}</b>?`,{opts:shuffle(o.map(x=>AR(x[0]))),ans:AR(h[0])},`Huruf ${h[1]} bentuknya ${AR(h[0])}.`,{say:'Cari huruf yang ditanyakan, ya.',pic:true,ar:true,html:true,noOptSay:true})};
 const hjDots=g=>()=>{const set=hjSet(g),h=pick(set);const n=h[2];
-  return Q(`🔊 Huruf ${h[1]} titiknya ada berapa?<span class="arbig">${h[0]}</span>`,{opts:['0','1','2','3'],ans:String(n)},n?`Huruf ${h[1]} punya ${n} titik.`:`Huruf ${h[1]} tidak punya titik.`,{say:`Huruf ${h[1]} titiknya ada berapa?`,html:true,pic:true})};
+  return Q(`🔊 Huruf ${h[1]} titiknya ada berapa?<span class="arbig">${h[0]}</span>`,{opts:['0','1','2','3'],ans:String(n)},n?`Huruf ${h[1]} punya ${n} titik.`:`Huruf ${h[1]} tidak punya titik.`,{say:'Huruf ini titiknya ada berapa?',html:true,pic:true})};
 const hjNext=g=>()=>{const [a,b]=g==null?[0,28]:[HJG[g][0],Math.min(28,HJG[g][1])];const i=R(a,b-1),h=HJ[i],nx=HJ[i+1];const o=[nx,...hjOthers(nx,HJ.filter(x=>x!==h),3)];
-  return Q(`🔊 Sesudah huruf ${h[1]} ${AR(h[0])} adalah huruf …`,{opts:shuffle(o.map(x=>AR(x[0]))),ans:AR(nx[0])},`Urutannya: ${h[1]}, lalu ${nx[1]}.`,{say:`Sesudah huruf ${h[1]}, huruf apa?`,pic:true,ar:true,html:true,optSay:Object.fromEntries(o.map(x=>[AR(x[0]),'huruf '+x[1]]))})};
+  return Q(`🔊 Sesudah huruf ${h[1]} ${AR(h[0])} adalah huruf …`,{opts:shuffle(o.map(x=>AR(x[0]))),ans:AR(nx[0])},`Urutannya: ${h[1]}, lalu ${nx[1]}.`,{say:'Huruf apa yang datang sesudahnya?',pic:true,ar:true,html:true,noOptSay:true})};
 const HJ_HAR=[['ب','b'],['ت','t'],['ج','j'],['د','d'],['ر','r'],['ز','z'],['س','s'],['ف','f'],['ك','k'],['ل','l'],['م','m'],['ن','n'],['ه','h'],['ي','y'],['و','w']];
 const hjHarakat=()=>{arFont();const [c,l]=pick(HJ_HAR),k=R(0,2),mk=['َ','ِ','ُ'][k],v='aiu'[k],nm=['fathah','kasrah','dhommah'][k];
-  return Q(`🔊 Ini dibaca apa?<span class="arbig">${c+mk}</span>`,{opts:shuffle([l+'a',l+'i',l+'u']),ans:l+v},`Tanda ${nm} dibaca "${v}", jadi ${l+v}.`,{say:'Ini dibaca apa?',html:true,pic:true})};
+  return Q(`🔊 Ini dibaca apa?<span class="arbig">${c+mk}</span>`,{opts:shuffle([l+'a',l+'i',l+'u']),ans:l+v},`Tanda ${nm} dibaca "${v}", jadi ${l+v}.`,{say:'Ini dibaca apa?',html:true,pic:true,noOptSay:true})};
 const hjMark=()=>{arFont();const k=R(0,2),[c]=pick(HJ_HAR),nm=['fathah','kasrah','dhommah'];const desc=['garis kecil di atas huruf','garis kecil di bawah huruf','seperti angka 9 kecil di atas huruf'][k];
   return Q(`🔊 Tanda baca ini namanya …<span class="arbig">${c+['َ','ِ','ُ'][k]}</span>`,{opts:shuffle(nm.concat(['sukun'])),ans:nm[k]},`${nm[k][0].toUpperCase()+nm[k].slice(1)}: ${desc}.`,{say:'Tanda baca ini namanya apa?',html:true})};
-const tkTraceAr=g=>()=>{const h=pick(hjSet(g));return Q(`<span class="qtag">Tebalkan huruf hijaiyah</span>🔊 Tebalkan huruf <b>${h[1]}</b> dengan jarimu!`,{opts:['Selesai','Belum'],ans:'Selesai'},`Hebat! Kamu menebalkan huruf ${h[1]}.`,{trace:h[0],traceFont:'JNaskh',html:true,say:`Tebalkan huruf ${h[1]} dengan jarimu. Ikuti garisnya.`})};
+const tkTraceAr=g=>()=>{const h=pick(hjSet(g));return Q(`<span class="qtag">Tebalkan huruf hijaiyah</span>🔊 Tebalkan huruf <b>${h[1]}</b> dengan jarimu!`,{opts:['Selesai','Belum'],ans:'Selesai'},`Hebat! Kamu menebalkan huruf ${h[1]}.`,{trace:h[0],traceFont:'JNaskh',html:true,say:'Tebalkan huruf ini dengan jarimu. Ikuti garisnya.'})};
 /* angka Arab */
 const ARD='٠١٢٣٤٥٦٧٨٩',arNum=n=>String(n).split('').map(d=>ARD[+d]).join('');
 const ARW=['','wahid','itsnan','tsalatsah','arba‘ah','khamsah','sittah','sab‘ah','tsamaniyah','tis‘ah','‘asyarah'];
 const arRange=g=>{arFont();return g===0?[1,5]:g===1?[6,10]:[1,10]};
-const arTrace=g=>()=>{const [a,b]=arRange(g),n=R(a,b);return Q(`<span class="qtag">Tebalkan angka Arab</span>🔊 Tebalkan angka <b>${n}</b> dalam angka Arab!`,{opts:['Selesai','Belum'],ans:'Selesai'},`Hebat! Angka ${n} ditulis ${AR(arNum(n))}.`,{trace:arNum(n),traceFont:'JNaskh',html:true,say:`Tebalkan angka ${n}, dalam bahasa Arab ${ARW[n]}. Ikuti garisnya.`})};
+const arTrace=g=>()=>{const [a,b]=arRange(g),n=R(a,b);return Q(`<span class="qtag">Tebalkan angka Arab</span>🔊 Tebalkan angka <b>${n}</b> dalam angka Arab!`,{opts:['Selesai','Belum'],ans:'Selesai'},`Hebat! Angka ${n} ditulis ${AR(arNum(n))}.`,{trace:arNum(n),traceFont:'JNaskh',html:true,say:`Tebalkan angka ${n} dalam angka Arab. Ikuti garisnya.`})};
 const arRead=g=>()=>{const [a,b]=arRange(g),n=R(a,b),o=new Set([n]);while(o.size<4){const v=R(1,10);o.add(v)}
   return Q(`🔊 Angka Arab ini berapa?<span class="arbig">${arNum(n)}</span>`,{opts:shuffle([...o].map(String)),ans:String(n)},`${AR(arNum(n))} adalah angka ${n} (${ARW[n]}).`,{say:'Angka Arab ini berapa?',html:true,pic:true})};
 const arPick=g=>()=>{const [a,b]=arRange(g),n=R(a,b),o=new Set([n]);while(o.size<4)o.add(R(1,10));const t=pick(THINGS);
   return Q(`🔊 Ada berapa ${t[1]}? Pilih angka Arabnya.<div class="objs">${t[0].repeat(n)}</div>`,{opts:shuffle([...o].map(v=>AR(arNum(v)))),ans:AR(arNum(n))},`Ada ${n} ${t[1]}, angka Arabnya ${AR(arNum(n))}.`,{say:`Ada berapa ${t[1]}? Pilih angka Arabnya.`,pic:true,ar:true,html:true,optSay:Object.fromEntries([...o].map(v=>[AR(arNum(v)),'angka '+v]))})};
 const arWord=g=>()=>{const [a,b]=arRange(g),n=R(a,b),o=new Set([n]);while(o.size<4)o.add(R(1,10));
-  return Q(`🔊 Dalam bahasa Arab, angka <b>${n}</b> ${AR(arNum(n))} dibaca …`,{opts:shuffle([...o].map(v=>ARW[v])),ans:ARW[n]},`${n} dalam bahasa Arab: ${ARW[n]}.`,{say:`Dalam bahasa Arab, angka ${n} dibaca apa?`,html:true})};
+  return Q(`🔊 Dalam bahasa Arab, angka <b>${n}</b> ${AR(arNum(n))} dibaca …`,{opts:shuffle([...o].map(v=>ARW[v])),ans:ARW[n]},`${n} dalam bahasa Arab: ${ARW[n]}.`,{say:`Dalam bahasa Arab, angka ${n} dibaca apa?`,html:true,noOptSay:true})};
 /* Al-Qur'an: surah pendek (bacaan latin) */
 const SURAH=[
  ['Al-Fatihah',['Bismillahir rahmanir rahim','Alhamdu lillahi rabbil ‘alamin','Ar-rahmanir rahim','Maliki yaumid din','Iyyaka na‘budu wa iyyaka nasta‘in','Ihdinash shirathal mustaqim','Shirathal ladzina an‘amta ‘alaihim ghairil maghdhubi ‘alaihim wa ladh dhallin'],'Pembuka Al-Qur’an, dibaca di setiap rakaat shalat'],
@@ -5151,17 +5151,21 @@ const SURAH=[
  ['Al-Kautsar',['Inna a‘thainakal kautsar','Fa shalli lirabbika wanhar','Inna syani’aka huwal abtar'],'Nikmat yang banyak dari Allah'],
  ['Al-‘Ashr',['Wal ‘ashr','Innal insana lafi khusr','Illalladzina amanu wa ‘amilush shalihati wa tawashau bil haqqi wa tawashau bish shabr'],'Demi masa, manfaatkan waktu dengan baik']];
 const ayat=t=>`<span class="ayat">${t}</span>`;
+const SURAH_G=[1,6231,6226,6222,6205,6177];/* nomor ayat global pertama tiap surah di SURAH */
+const ayUrl=(k,i)=>`https://cdn.islamic.network/quran/audio/128/ar.alafasy/${SURAH_G[k]+i}.mp3`;
+const AY_URL={};SURAH.forEach(([,v],k)=>v.forEach((t,i)=>AY_URL[t]=ayUrl(k,i)));
+const ayOpt=o=>Object.fromEntries(o.map(t=>[t,AY_URL[t]?`⟦${AY_URL[t]}⟧`:'']));
 const qrNext=k=>()=>{const [nm,v]=SURAH[k],i=R(0,v.length-2),ans=v[i+1];const pool=v.filter((x,j)=>j!==i&&j!==i+1).concat(...SURAH.filter((_,j)=>j!==k).map(x=>x[1]));const o=[ans,...shuffle(pool).slice(0,2)];
-  return Q(`🔊 Surah ${nm}. Lanjutkan ayatnya:${ayat(v[i])}`,{opts:shuffle(o),ans},`Sesudah «${v[i]}» adalah «${ans}».`.replace(/[«»]/g,'"'),{say:`Surah ${nm}. ${v[i]}. Lanjutannya apa?`,html:true})};
+  return Q(`🔊 Surah ${nm}. Lanjutkan ayatnya:${ayat(v[i])}`,{opts:shuffle(o),ans},`Sesudah «${v[i]}» adalah «${ans}».`.replace(/[«»]/g,'"'),{say:`Surah ${nm}. Dengarkan. ⟦${ayUrl(k,i)}⟧ Ayat selanjutnya apa? Ketuk pilihan untuk mendengarkan.`,html:true,optSay:ayOpt(o)})};
 const qrWhich=k=>()=>{const [nm,v]=SURAH[k];const o=[nm,...shuffle(SURAH.filter((_,j)=>j!==k).map(x=>x[0])).slice(0,3)];
-  return Q(`🔊 Ayat ini dari surah apa?${ayat(v[0])}`,{opts:shuffle(o),ans:nm},`Surah ${nm} dimulai dengan "${v[0]}".`,{say:`${v[0]}. Ini surah apa?`,html:true})};
+  return Q(`🔊 Ayat ini dari surah apa?${ayat(v[0])}`,{opts:shuffle(o),ans:nm},`Surah ${nm} dimulai dengan "${v[0]}".`,{say:`Dengarkan ayat ini. ⟦${ayUrl(k,0)}⟧ Ini surah apa?`,html:true})};
 const qrCount=k=>()=>{const [nm,v]=SURAH[k],o=new Set([v.length]);while(o.size<4)o.add(R(3,8));
   return Q(`🔊 Surah ${nm} ada berapa ayat?`,{opts:shuffle([...o].map(String)),ans:String(v.length)},`Surah ${nm} ada ${v.length} ayat.`,{say:`Surah ${nm} ada berapa ayat?`})};
 const qrMean=k=>()=>{const [nm,,m]=SURAH[k];const o=[m,...shuffle(SURAH.filter((_,j)=>j!==k).map(x=>x[2])).slice(0,2)];
   return Q(`🔊 Surah ${nm} isinya tentang …`,{opts:shuffle(o),ans:m},`Surah ${nm}: ${m.toLowerCase()}.`,{say:`Surah ${nm} isinya tentang apa?`})};
 const QR_ADAB=[
  ['Sebelum membaca Al-Qur’an, sebaiknya kita …','💧 berwudu','🍚 makan','😴 tidur','⚽ bermain','Berwudu agar suci sebelum membaca Al-Qur’an.'],
- ['Sebelum membaca Al-Qur’an, kita membaca ta‘awudz, yaitu …','A‘udzu billahi minasy syaithanir rajim','Alhamdulillah','Subhanallah','Astagfirullah'],
+ ['Kita membaca ta‘awudz sebelum membaca Al-Qur’an agar …','dilindungi Allah dari setan','cepat selesai','bisa tidur','suara keras'],
  ['Al-Qur’an diturunkan kepada …','Nabi Muhammad','Nabi Adam','Nabi Nuh','Nabi Musa'],
  ['Al-Qur’an disampaikan kepada Nabi Muhammad oleh malaikat …','Jibril','Mikail','Israfil','Ridwan'],
  ['Surah pertama dalam Al-Qur’an adalah …','Al-Fatihah','An-Nas','Al-Ikhlas','Al-Falaq'],
@@ -5186,7 +5190,7 @@ const PAI_SUBJ={
    U('Angka Arab 1–5','Membaca dan menulis ١ ٢ ٣ ٤ ٥',[arTrace(0),arTrace(0),arRead(0),arPick(0),arWord(0)],{fit:'picture',tip:'١ satu (wahid), ٢ dua (itsnan), ٣ tiga (tsalatsah), ٤ empat (arba‘ah), ٥ lima (khamsah).'}),
    U('Angka Arab 6–10','Membaca dan menulis ٦ ٧ ٨ ٩ ١٠',[arTrace(1),arTrace(1),arRead(1),arPick(1),arWord(1)],{fit:'picture',tip:'٦ enam (sittah), ٧ tujuh (sab‘ah), ٨ delapan (tsamaniyah), ٩ sembilan (tis‘ah), ١٠ sepuluh (‘asyarah).'}),
    U('Adab membaca Al-Qur’an','Sebelum dan saat membaca Al-Qur’an',[QR_ADAB,[0,1,2,3,4,5,6,7,8,9,10,11]],{tip:'Berwudu, membaca ta‘awudz dan basmalah, lalu membaca dengan tenang.'}),
-   U('Surah Al-Fatihah','Hafalan surah pembuka',[qrNext(0),qrNext(0),qrCount(0),qrMean(0)],{tip:'Al-Fatihah ada 7 ayat dan dibaca di setiap rakaat shalat.'}),
+   U('Surah Al-Fatihah','Hafalan surah pembuka · suara Syaikh Mishary Rasyid Alafasy',[qrNext(0),qrNext(0),qrCount(0),qrMean(0)],{tip:'Al-Fatihah ada 7 ayat dan dibaca di setiap rakaat shalat.'}),
    U('Surah An-Nas dan Al-Falaq','Dua surah perlindungan',[qrNext(1),qrNext(2),qrWhich(1),qrWhich(2),qrCount(1),qrCount(2)],{tip:'An-Nas 6 ayat, Al-Falaq 5 ayat. Keduanya dimulai dengan "Qul a‘udzu".'}),
    U('Surah Al-Ikhlas','Allah Maha Esa',[qrNext(3),qrNext(3),qrWhich(3),qrCount(3),qrMean(3)],{tip:'Al-Ikhlas ada 4 ayat dan mengajarkan bahwa Allah itu satu.'}),
    U('Surah Al-Kautsar dan Al-‘Ashr','Surah pendek 3 ayat',[qrNext(4),qrNext(5),qrWhich(4),qrWhich(5),qrMean(4),qrMean(5)],{tip:'Al-Kautsar dan Al-‘Ashr masing-masing 3 ayat.'})]},
@@ -10274,7 +10278,14 @@ function sayLong(t){if(!t)return;try{const s=window.speechSynthesis;s.cancel();i
   out.forEach(x=>{const u=new SpeechSynthesisUtterance(x.trim());u.lang='id-ID';u.rate=.9;s.speak(u)})}catch(e){}}
 function optSpeech(q,k){if(q.trace||q.warna||q.match||q.baca)return '';const o=q.opts[k];if(q.optSay&&q.optSay[o])return q.optSay[o];const t=plainTx(o).replace(/[^\p{L}\p{N}’' -]/gu,' ').replace(/\s+/g,' ').trim();if(t)return q.optEn?'«'+t+'»':t;const m=String(o).match(/class="objs">([^<]*)</);return m?String([...m[1]].filter(ch=>/\p{Extended_Pictographic}/u.test(ch)).length):''}
 function speakParts(s,t,rate){String(t).split(/(«[^»]*»)/).forEach(p=>{if(!p.trim())return;const en=p[0]==='«';const u=new SpeechSynthesisUtterance(en?p.slice(1,-1):p);u.lang=en?'en-US':'id-ID';u.rate=en?.8:rate;s.speak(u)})}
-function say(t){if(!soundOn||!t)return;try{const s=window.speechSynthesis;s.cancel();speakParts(s,t,.9)}catch(e){}}
+const AUD=new Audio();AUD.preload='auto';let audSeq=0;
+const stripAud=t=>String(t||'').replace(/⟦[^⟧]*⟧/g,' ').replace(/\s+/g,' ').trim();
+function sayAud(t){const my=++audSeq;try{window.speechSynthesis.cancel()}catch(e){}try{AUD.pause()}catch(e){}
+  const parts=String(t).split(/(⟦[^⟧]*⟧)/).filter(p=>p.trim());let i=0;
+  const next=()=>{if(my!==audSeq||i>=parts.length)return;const p=parts[i++];
+    if(p[0]==='⟦'){AUD.onended=next;AUD.onerror=next;AUD.src=p.slice(1,-1);const pr=AUD.play();if(pr&&pr.catch)pr.catch(next)}
+    else{try{const u=new SpeechSynthesisUtterance(p.trim());u.lang='id-ID';u.rate=.9;u.onend=next;u.onerror=next;window.speechSynthesis.speak(u)}catch(e){next()}}};next()}
+function say(t){if(!soundOn||!t)return;if(String(t).includes('⟦')){sayAud(t);return}audSeq++;try{AUD.pause()}catch(e){}try{const s=window.speechSynthesis;s.cancel();speakParts(s,t,.9)}catch(e){}}
 
 /* ---------- state ---------- */
 let L=null,S=null,game=null,timerId=null,M=null,DUEL=null,CUR=null;
@@ -10577,6 +10588,13 @@ function tkTraceUI(q,box){$('#checkBar').hidden=true;
   const wide=mk(),wg=wide.getContext('2d');glyph(wg,(g,x,y)=>{g.fillStyle='#000';g.strokeStyle='#000';g.lineWidth=W*.11;g.lineJoin='round';g.fillText(q.trace,x,y);g.strokeText(q.trace,x,y)});
   const user=mk(),ug=user.getContext('2d');const LW=W*.085;
   const md=mg.getImageData(0,0,W,W).data,wd=wg.getImageData(0,0,W,W).data;let mN=0;for(let i=3;i<md.length;i+=12)if(md[i]>120)mN++;
+  /* bagian-bagian huruf (badan, titik) — semuanya harus ditebalkan */
+  const ST=2,GW=Math.ceil(W/ST),lab=new Int32Array(GW*GW).fill(-1),comps=[];
+  for(let gy=0;gy<GW;gy++)for(let gx=0;gx<GW;gx++){const k=gy*GW+gx;if(lab[k]>=0)continue;const px=Math.min(W-1,gx*ST),py=Math.min(W-1,gy*ST);if(md[(py*W+px)*4+3]<=120)continue;
+    const cells=[],st=[k];lab[k]=comps.length;while(st.length){const c=st.pop();cells.push(c);const cx=c%GW,cy=(c-cx)/GW;
+      for(let dy=-1;dy<=1;dy++)for(let dx=-1;dx<=1;dx++){const nx=cx+dx,ny=cy+dy;if(nx<0||ny<0||nx>=GW||ny>=GW)continue;const nk=ny*GW+nx;if(lab[nk]>=0)continue;const qx=Math.min(W-1,nx*ST),qy=Math.min(W-1,ny*ST);if(md[(qy*W+qx)*4+3]>120){lab[nk]=comps.length;st.push(nk)}}}
+    comps.push(cells)}
+  const parts=comps.filter(c=>c.length>=8);cv._tr={parts,GW,ST};
   const base=()=>{c.clearRect(0,0,W,W);c.fillStyle='#fff';c.fillRect(0,0,W,W);
     c.strokeStyle='#EFEAF8';c.lineWidth=2;c.setLineDash([]);[.25,.75].forEach(f=>{c.beginPath();c.moveTo(10,W*f);c.lineTo(W-10,W*f);c.stroke()});
     glyph(c,(g,x,y)=>{g.fillStyle='#EEE8FB';g.fillText(q.trace,x,y);g.setLineDash([7,7]);g.strokeStyle='#A58BE6';g.lineWidth=3;g.lineJoin='round';g.strokeText(q.trace,x,y);g.setLineDash([])});
@@ -10584,11 +10602,14 @@ function tkTraceUI(q,box){$('#checkBar').hidden=true;
   base();let last=null,done=false,warned=0;
   const pt=e=>{const r=cv.getBoundingClientRect();return [(e.clientX-r.left)*W/r.width,(e.clientY-r.top)*W/r.height]};
   const line=(a,b2)=>{[ug,c].forEach(g=>{g.strokeStyle='#7C4DFF';g.lineWidth=LW;g.lineCap='round';g.lineJoin='round';g.beginPath();g.moveTo(a[0],a[1]);g.lineTo(b2[0],b2[1]);g.stroke()})};
-  const score=()=>{const ud=ug.getImageData(0,0,W,W).data;let cov=0,u=0,out=0;for(let i=3;i<ud.length;i+=12){const on=ud[i]>40;if(md[i]>120&&on)cov++;if(on){u++;if(wd[i]<40)out++}}return {cov:mN?cov/mN:0,out:u?out/u:0,u}};
+  const score=()=>{const ud=ug.getImageData(0,0,W,W).data;let cov=0,u=0,out=0;for(let i=3;i<ud.length;i+=12){const on=ud[i]>40;if(md[i]>120&&on)cov++;if(on){u++;if(wd[i]<40)out++}}
+    let pmin=1,pavg=0;parts.forEach(cells=>{let h=0;cells.forEach(c=>{const cx=c%GW,cy=(c-cx)/GW;const px=Math.min(W-1,cx*ST),py=Math.min(W-1,cy*ST);if(ud[(py*W+px)*4+3]>40)h++});pmin=Math.min(pmin,h/cells.length);pavg+=Math.min(1,h/cells.length/.6)});
+    return {cov:mN?cov/mN:0,out:u?out/u:0,u,pmin,pavg:parts.length?pavg/parts.length:1}};
   const fill=$('#trcFill');
-  const check=()=>{if(done)return;const r=score();fill.style.width=Math.min(100,Math.round(r.cov/.62*100))+'%';
+  const check=()=>{if(done)return;const r=score();fill.style.width=Math.min(r.pmin>=.6?100:96,Math.round(Math.min(r.cov/.7,r.pavg)*100))+'%';
     if(r.out>.38&&r.u>200){if(warned++<2)try{say('Ikuti garis titik-titiknya, ya.')}catch(e){}if(r.out>.55){ug.clearRect(0,0,W,W);base();fill.style.width='0%'}return}
-    if(r.cov>=.62){done=true;fill.style.width='100%';cv.classList.add('trcok');try{sfx.ok()}catch(e){}setTimeout(()=>{if(game&&game.qs[game.i]===q){game.sel=0;answer(0)}},500)}};
+    if(r.cov>=.62&&r.pmin<.6&&parts.length>1&&!r.nagged){r.nagged=1;if(!check.nag){check.nag=1;try{say('Jangan lupa tebalkan semua bagiannya, termasuk titiknya, ya.')}catch(e){}}}
+    if(r.cov>=.7&&r.pmin>=.6){done=true;fill.style.width='100%';cv.classList.add('trcok');try{sfx.ok()}catch(e){}setTimeout(()=>{if(game&&game.qs[game.i]===q){game.sel=0;answer(0)}},500)}};
   cv.onpointerdown=e=>{if(done)return;e.preventDefault();try{cv.setPointerCapture(e.pointerId)}catch(_){}last=pt(e);line(last,[last[0]+.1,last[1]])};
   cv.onpointermove=e=>{if(!last||done)return;const p=pt(e);line(last,p);last=p};
   const up=()=>{if(!last)return;last=null;check()};cv.onpointerup=up;cv.onpointercancel=up;cv.onpointerleave=up;
@@ -10716,7 +10737,7 @@ function answer(k){tmStop();
   $('#nextBtn').textContent=game.lesson?(last?'Selesai':'Lanjut'):last?(team?'Lihat klasemen →':'Lihat rapor →'):'Lanjut →';
   try{rpBtn()}catch(e){}
   if(L.id!=='tk'&&earlyReader()&&soundOn){const ai=q.opts.indexOf(q.ans);const at=ai>=0&&!q.noOptSay?spokenTx(optSpeech(q,ai)):'';say(ok?pick(['Benar!','Hebat, betul!','Pintar!']):'Belum tepat.'+(at?' Jawabannya '+at+'.':''))}
-  if(L.id==='tk'){const ai=q.opts.indexOf(q.ans);const mine=k>=0?optSpeech(q,k):'';say((mine?mine+'. ':'')+(ok?pick(['Hebat, benar!','Pintar sekali!','Hore, betul!']):(q.match||q.warna||q.trace||q.baca)?'Tidak apa-apa. Ayo lebih teliti lagi, ya.':`Belum tepat. Jawabannya, ${optSpeech(q,ai)||'yang ditandai hijau'}.`))}
+  if(L.id==='tk'){const ai=q.opts.indexOf(q.ans);const mine=k>=0?stripAud(optSpeech(q,k)):'';say((mine?mine+'. ':'')+(ok?pick(['Hebat, benar!','Pintar sekali!','Hore, betul!']):(q.match||q.warna||q.trace||q.baca)?'Tidak apa-apa. Ayo lebih teliti lagi, ya.':`Belum tepat. Jawabannya, ${stripAud(optSpeech(q,ai))||'yang ditandai hijau'}.`))}
   $('#nextBtn').focus({preventScroll:true});
 }
 const optIdx=k=>/^[1-4]$/.test(k)?+k-1:/^[a-dA-D]$/.test(k)?k.toLowerCase().charCodeAt(0)-97:-1;
@@ -16482,7 +16503,7 @@ function folBind(root,list,after){root.querySelectorAll('[data-follow]').forEach
   try{await folDo(f,on);if(on){try{sfx.ok()}catch(_){}toast('team',`Kamu mengikuti ${f.name}.`)}b.outerHTML=folBtn(f,b.classList.contains('sm'));folBind(root,list,after);after&&after()}catch(err){b.disabled=false;toast('lock',fbErr(err))}})}
 const shareIcon='<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M12 3 V15 M7 8 L12 3 L17 8 M5 13 V19 C5 20 6 21 7 21 H17 C18 21 19 20 19 19 V13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const qrIcon='<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><path d="M14 14h3v3h-3zM18 18h3v3h-3zM18 14h3M14 18v3" stroke-linecap="round"/></svg>';
-let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=422';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
+let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=423';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
 function qrMatrix(text){const Q=window.QRCodeLib,q=new Q(-1,Q.ECL.M);q.addData(text);q.make();const n=q.getModuleCount(),m=[];for(let r=0;r<n;r++){m.push([]);for(let c=0;c<n;c++)m[r].push(q.isDark(r,c))}return m}
 function qrSvgOf(m){const n=m.length;let d='';for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(m[r][c])d+=`M${c} ${r}h1.02v1.02h-1.02z`;
   return `<svg viewBox="-2 -2 ${n+4} ${n+4}" class="pcqr" shape-rendering="crispEdges" aria-label="Kode QR profil"><rect x="-2" y="-2" width="${n+4}" height="${n+4}" fill="#fff"/><path d="${d}" fill="#1C1E3D"/></svg>`}
