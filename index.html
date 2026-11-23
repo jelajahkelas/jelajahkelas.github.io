@@ -4333,7 +4333,7 @@ html[data-theme=malam] .ayat{background:#063F2E;color:#A7F3D0}
 <div class="syncpill" id="syncPill" hidden></div>
 <div class="toast" id="toast" hidden></div>
 
-<script src="av.js?v=425"></script>
+<script src="av.js?v=426"></script>
 <script>
 /* ---------- visual assets ---------- */
 const INK='#1B1E3D';
@@ -5196,7 +5196,7 @@ const hjNext=g=>()=>{const [a,b]=g==null?[0,28]:[HJG[g][0],Math.min(28,HJG[g][1]
   return Q(`🔊 Sesudah huruf ${h[1]} ${AR(h[0])} adalah huruf …`,{opts:shuffle(o.map(x=>AR(x[0]))),ans:AR(nx[0])},`Urutannya: ${h[1]}, lalu ${nx[1]}.`,{say:hjTok(h)?`Sesudah huruf ${hjTok(h)}, huruf apa?`:'Huruf apa yang datang sesudahnya?',pic:true,ar:true,html:true,optSay:Object.fromEntries(o.map(x=>[AR(x[0]),hjTok(x)])),noOptSay:!o.every(x=>hjTok(x))})};
 const HJ_HAR=[['ب','b'],['ت','t'],['ج','j'],['د','d'],['ر','r'],['ز','z'],['س','s'],['ف','f'],['ك','k'],['ل','l'],['م','m'],['ن','n'],['ه','h'],['ي','y'],['و','w']];
 const hjHarakat=()=>{arFont();const [c,l]=pick(HJ_HAR),k=R(0,2),mk=['َ','ِ','ُ'][k],v='aiu'[k],nm=['fathah','kasrah','dhommah'][k];
-  return Q(`🔊 Ini dibaca apa?<span class="arbig">${c+mk}</span>`,{opts:shuffle([l+'a',l+'i',l+'u']),ans:l+v},`Tanda ${nm} dibaca "${v}", jadi ${l+v}.`,{say:'Ini dibaca apa?',html:true,pic:true,optSay:Object.fromEntries('aiu'.split('').map(x=>[l+x,suaraTok('harakat_'+l+x)])),noOptSay:!'aiu'.split('').every(x=>suaraTok('harakat_'+l+x))})};
+  return Q(`🔊 Ini dibaca apa?<span class="arbig">${c+mk}</span>`,{opts:shuffle([l+'a',l+'i',l+'u']),ans:l+v},`Tanda ${nm} dibaca "${v}", jadi ${l+v}.`,{say:'Ini dibaca apa?',html:true,pic:true,optSay:Object.fromEntries('aiu'.split('').map(x=>[l+x,suaraTok('harakat_'+l+x)||l+x]))})};
 const hjMark=()=>{arFont();const k=R(0,2),[c]=pick(HJ_HAR),nm=['fathah','kasrah','dhommah'];const desc=['garis kecil di atas huruf','garis kecil di bawah huruf','seperti angka 9 kecil di atas huruf'][k];
   return Q(`🔊 Tanda baca ini namanya …<span class="arbig">${c+['َ','ِ','ُ'][k]}</span>`,{opts:shuffle(nm.concat(['sukun'])),ans:nm[k]},`${nm[k][0].toUpperCase()+nm[k].slice(1)}: ${desc}.`,{say:'Tanda baca ini namanya apa?',html:true})};
 const tkTraceAr=g=>()=>{const h=pick(hjSet(g));return Q(`<span class="qtag">Tebalkan huruf hijaiyah</span>🔊 Tebalkan huruf <b>${h[1]}</b> dengan jarimu!`,{opts:['Selesai','Belum'],ans:'Selesai'},`Hebat! Kamu menebalkan huruf ${h[1]}.`,{trace:h[0],traceFont:'JNaskh',html:true,say:`Tebalkan huruf ${hjTok(h)||'ini'} dengan jarimu. Ikuti garisnya.`})};
@@ -5210,7 +5210,7 @@ const arRead=g=>()=>{const [a,b]=arRange(g),n=R(a,b),o=new Set([n]);while(o.size
 const arPick=g=>()=>{const [a,b]=arRange(g),n=R(a,b),o=new Set([n]);while(o.size<4)o.add(R(1,10));const t=pick(THINGS);
   return Q(`🔊 Ada berapa ${t[1]}? Pilih angka Arabnya.<div class="objs">${t[0].repeat(n)}</div>`,{opts:shuffle([...o].map(v=>AR(arNum(v)))),ans:AR(arNum(n))},`Ada ${n} ${t[1]}, angka Arabnya ${AR(arNum(n))}.`,{say:`Ada berapa ${t[1]}? Pilih angka Arabnya.`,pic:true,ar:true,html:true,optSay:Object.fromEntries([...o].map(v=>[AR(arNum(v)),'angka '+v]))})};
 const arWord=g=>()=>{const [a,b]=arRange(g),n=R(a,b),o=new Set([n]);while(o.size<4)o.add(R(1,10));
-  return Q(`🔊 Dalam bahasa Arab, angka <b>${n}</b> ${AR(arNum(n))} dibaca …`,{opts:shuffle([...o].map(v=>ARW[v])),ans:ARW[n]},`${n} dalam bahasa Arab: ${ARW[n]}.`,{say:`Dalam bahasa Arab, angka ${n} dibaca apa? Ketuk pilihan untuk mendengar.`,html:true,optSay:Object.fromEntries([...o].map(v=>[ARW[v],suaraTok('angka_'+v)])),noOptSay:![...o].every(v=>suaraTok('angka_'+v))})};
+  return Q(`🔊 Dalam bahasa Arab, angka <b>${n}</b> ${AR(arNum(n))} dibaca …`,{opts:shuffle([...o].map(v=>ARW[v])),ans:ARW[n]},`${n} dalam bahasa Arab: ${ARW[n]}.`,{say:`Dalam bahasa Arab, angka ${n} dibaca apa? Ketuk pilihan untuk mendengar.`,html:true,optSay:Object.fromEntries([...o].map(v=>[ARW[v],suaraTok('angka_'+v)||ARW[v].replace(/‘/g,'')]))})};
 /* Al-Qur'an: surah pendek (bacaan latin) */
 const SURAH=[
  ['Al-Fatihah',['Bismillahir rahmanir rahim','Alhamdu lillahi rabbil ‘alamin','Ar-rahmanir rahim','Maliki yaumid din','Iyyaka na‘budu wa iyyaka nasta‘in','Ihdinash shirathal mustaqim','Shirathal ladzina an‘amta ‘alaihim ghairil maghdhubi ‘alaihim wa ladh dhallin'],'Pembuka Al-Qur’an, dibaca di setiap rakaat shalat'],
@@ -16572,7 +16572,7 @@ function folBind(root,list,after){root.querySelectorAll('[data-follow]').forEach
   try{await folDo(f,on);if(on){try{sfx.ok()}catch(_){}toast('team',`Kamu mengikuti ${f.name}.`)}b.outerHTML=folBtn(f,b.classList.contains('sm'));folBind(root,list,after);after&&after()}catch(err){b.disabled=false;toast('lock',fbErr(err))}})}
 const shareIcon='<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M12 3 V15 M7 8 L12 3 L17 8 M5 13 V19 C5 20 6 21 7 21 H17 C18 21 19 20 19 19 V13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const qrIcon='<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><path d="M14 14h3v3h-3zM18 18h3v3h-3zM18 14h3M14 18v3" stroke-linecap="round"/></svg>';
-let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=425';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
+let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=426';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
 function qrMatrix(text){const Q=window.QRCodeLib,q=new Q(-1,Q.ECL.M);q.addData(text);q.make();const n=q.getModuleCount(),m=[];for(let r=0;r<n;r++){m.push([]);for(let c=0;c<n;c++)m[r].push(q.isDark(r,c))}return m}
 function qrSvgOf(m){const n=m.length;let d='';for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(m[r][c])d+=`M${c} ${r}h1.02v1.02h-1.02z`;
   return `<svg viewBox="-2 -2 ${n+4} ${n+4}" class="pcqr" shape-rendering="crispEdges" aria-label="Kode QR profil"><rect x="-2" y="-2" width="${n+4}" height="${n+4}" fill="#fff"/><path d="${d}" fill="#1C1E3D"/></svg>`}
