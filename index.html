@@ -4333,7 +4333,7 @@ html[data-theme=malam] .ayat{background:#063F2E;color:#A7F3D0}
 <div class="syncpill" id="syncPill" hidden></div>
 <div class="toast" id="toast" hidden></div>
 
-<script src="av.js?v=428"></script>
+<script src="av.js?v=429"></script>
 <script>
 /* ---------- visual assets ---------- */
 const INK='#1B1E3D';
@@ -5159,8 +5159,8 @@ async function suaraSave(owner,id,dataUrl){const it=SUARA_ITEMS.find(x=>x.id===i
 function suaraStudio(owner){const isAdm=owner==='admin';let mine={},cur=null,mr=null,chunks=[],stream=null,tmo=null;
   const mime=['audio/webm;codecs=opus','audio/ogg;codecs=opus','audio/mp4','audio/webm'].find(t=>window.MediaRecorder&&MediaRecorder.isTypeSupported&&MediaRecorder.isTypeSupported(t))||'';
   const ov=document.createElement('div');ov.className='sstudio';ov.setAttribute('role','dialog');ov.setAttribute('aria-label','Rekam suara hijaiyah');
-  ov.innerHTML=`<div class="sshead"><div class="grow"><h2>Suara Hijaiyah dan Angka Arab</h2><p>${isAdm?'Suara admin: menggantikan suara bawaan untuk <b>semua pengguna</b>.':'Suaramu dipakai untuk <b>murid di kelasmu</b>.'} Ucapkan dengan makhraj yang benar. Setiap rekaman maksimal 3 detik.</p></div><button class="xbtn press" aria-label="Tutup">✕</button></div>
-   <div class="ssbody"><p class="note" id="ssMsg">Memuat rekaman…</p>${[['huruf','Nama huruf (29)'],['angka','Bilangan Arab 1–10'],['harakat','Bunyi berharakat (opsional)']].map(([g,l])=>`<h3>${l}</h3><div class="ssgrid">${SUARA_ITEMS.filter(x=>x.g===g).map(x=>`<div class="sscard" data-id="${x.id}"><div class="ar">${x.ar}</div><b>${esc(x.nm)}</b><small class="sssrc"></small><div class="ssrow"><button class="ssrec press">● Rekam</button><button class="ssplay press" aria-label="Dengarkan">▶</button><button class="ssdel press" aria-label="Hapus rekaman">🗑</button></div></div>`).join('')}</div>`).join('')}</div>`;
+  ov.innerHTML=`<div class="sshead"><div class="grow"><h2>Suara Hijaiyah dan Angka Arab</h2><p>${isAdm?'Suara admin: menggantikan suara bawaan untuk <b>semua pengguna</b>.':'Suaramu dipakai untuk <b>murid di kelasmu</b>.'} Rekam langsung (● Rekam) atau unggah file suara (⬆), satu file untuk satu huruf, maksimal 3 detik.</p></div><button class="xbtn press" aria-label="Tutup">✕</button></div>
+   <div class="ssbody"><p class="note" id="ssMsg">Memuat rekaman…</p>${[['huruf','Nama huruf (29)'],['angka','Bilangan Arab 1–10'],['harakat','Bunyi berharakat (opsional)']].map(([g,l])=>`<h3>${l}</h3><div class="ssgrid">${SUARA_ITEMS.filter(x=>x.g===g).map(x=>`<div class="sscard" data-id="${x.id}"><div class="ar">${x.ar}</div><b>${esc(x.nm)}</b><small class="sssrc"></small><div class="ssrow"><button class="ssrec press">● Rekam</button><button class="ssup press" aria-label="Unggah file suara" title="Unggah file suara">⬆</button><button class="ssplay press" aria-label="Dengarkan">▶</button><button class="ssdel press" aria-label="Hapus rekaman">🗑</button></div></div>`).join('')}</div>`).join('')}</div>`;
   document.body.appendChild(ov);
   const close=()=>{try{if(mr&&mr.state==='recording')mr.stop()}catch(e){}try{stream&&stream.getTracks().forEach(t=>t.stop())}catch(e){}ov.remove();SUARA.at=0;suaraInit(true)};
   ov.querySelector('.xbtn').onclick=close;
@@ -5179,7 +5179,21 @@ function suaraStudio(owner){const isAdm=owner==='admin';let mine={},cur=null,mr=
       const card=ov.querySelector(`[data-id="${rid}"] .sssrc`);if(card)card.textContent='Menyimpan…';
       try{await suaraSave(owner,rid,d);mine[rid]=d;draw();play(rid)}catch(e){toast('lock','Gagal menyimpan. Periksa koneksi.');draw()}};
     cur=id;mr.start();draw();tmo=setTimeout(stop,3000)};
-  ov.querySelectorAll('.sscard').forEach(c=>{const id=c.dataset.id;c.querySelector('.ssrec').onclick=()=>cur&&cur!==id?null:start(id);c.querySelector('.ssplay').onclick=()=>play(id);
+  /* unggah file suara: dipotong jeda kosongnya, dijadikan WAV 16 kHz mono (maks. 3 detik) */
+  async function fileToClip(file){const ac=new (window.AudioContext||window.webkitAudioContext)();const buf=await ac.decodeAudioData(await file.arrayBuffer());
+    const ch=buf.getChannelData(0),sr=buf.sampleRate;let a=0,b=ch.length-1;const th=.02;while(a<b&&Math.abs(ch[a])<th)a++;while(b>a&&Math.abs(ch[b])<th)b--;
+    a=Math.max(0,a-Math.round(.03*sr));b=Math.min(ch.length-1,b+Math.round(.08*sr));const dur=(b-a)/sr;if(dur>3.2)throw new Error('long');if(dur<.1)throw new Error('short');
+    const R=16000,n=Math.round((b-a)*R/sr),out=new Int16Array(n);let pk=0;for(let i=a;i<=b;i++)pk=Math.max(pk,Math.abs(ch[i]));const g=pk>0?.9/pk:1;
+    for(let i=0;i<n;i++){const v=ch[a+Math.min(b-a,Math.floor(i*sr/R))]*g;out[i]=Math.max(-1,Math.min(1,v))*32767}
+    try{ac.close()}catch(e){}
+    const hd=new DataView(new ArrayBuffer(44)),w=(o,t)=>{for(let i=0;i<t.length;i++)hd.setUint8(o+i,t.charCodeAt(i))};
+    w(0,'RIFF');hd.setUint32(4,36+n*2,true);w(8,'WAVE');w(12,'fmt ');hd.setUint32(16,16,true);hd.setUint16(20,1,true);hd.setUint16(22,1,true);hd.setUint32(24,R,true);hd.setUint32(28,R*2,true);hd.setUint16(32,2,true);hd.setUint16(34,16,true);w(36,'data');hd.setUint32(40,n*2,true);
+    return blobToData(new Blob([hd.buffer,out.buffer],{type:'audio/wav'}))}
+  const upIn=document.createElement('input');upIn.type='file';upIn.accept='audio/*,.mp3,.m4a,.wav,.ogg,.opus,.aac';upIn.hidden=true;ov.appendChild(upIn);let upId=null;
+  upIn.onchange=async()=>{const f=upIn.files&&upIn.files[0];upIn.value='';if(!f||!upId)return;const id=upId;const card=ov.querySelector(`[data-id="${id}"] .sssrc`);if(card)card.textContent='Mengolah…';
+    let d;try{d=await fileToClip(f)}catch(e){toast('lock',e.message==='long'?'Suaranya lebih dari 3 detik. Potong dulu, satu file satu huruf.':e.message==='short'?'Suaranya terlalu pendek atau kosong.':'File suara tidak bisa dibaca. Coba MP3, M4A, atau WAV.');draw();return}
+    if(card)card.textContent='Menyimpan…';try{await suaraSave(owner,id,d);mine[id]=d;draw();play(id)}catch(e){toast('lock','Gagal menyimpan. Periksa koneksi.');draw()}};
+  ov.querySelectorAll('.sscard').forEach(c=>{const id=c.dataset.id;c.querySelector('.ssrec').onclick=()=>cur&&cur!==id?null:start(id);c.querySelector('.ssplay').onclick=()=>play(id);c.querySelector('.ssup').onclick=()=>{if(cur)return;upId=id;upIn.click()};
     c.querySelector('.ssdel').onclick=async()=>{if(!confirmDel())return;try{await suaraSave(owner,id,null);delete mine[id];draw()}catch(e){toast('lock','Gagal menghapus.')}}});
   function confirmDel(){return window.confirm?window.confirm('Hapus rekaman ini? Suara bawaan akan dipakai lagi.'):true}
   (async()=>{try{const m=await FB.db.doc('suara/'+owner).get();if(m.exists)for(const g of ['huruf','angka','harakat']){const d=await FB.db.doc(`suara/${owner}/g/${g}`).get();if(d.exists)Object.assign(mine,(d.data()||{}).c||{})}
@@ -16578,7 +16592,7 @@ function folBind(root,list,after){root.querySelectorAll('[data-follow]').forEach
   try{await folDo(f,on);if(on){try{sfx.ok()}catch(_){}toast('team',`Kamu mengikuti ${f.name}.`)}b.outerHTML=folBtn(f,b.classList.contains('sm'));folBind(root,list,after);after&&after()}catch(err){b.disabled=false;toast('lock',fbErr(err))}})}
 const shareIcon='<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M12 3 V15 M7 8 L12 3 L17 8 M5 13 V19 C5 20 6 21 7 21 H17 C18 21 19 20 19 19 V13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const qrIcon='<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><path d="M14 14h3v3h-3zM18 18h3v3h-3zM18 14h3M14 18v3" stroke-linecap="round"/></svg>';
-let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=428';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
+let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=429';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
 function qrMatrix(text){const Q=window.QRCodeLib,q=new Q(-1,Q.ECL.M);q.addData(text);q.make();const n=q.getModuleCount(),m=[];for(let r=0;r<n;r++){m.push([]);for(let c=0;c<n;c++)m[r].push(q.isDark(r,c))}return m}
 function qrSvgOf(m){const n=m.length;let d='';for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(m[r][c])d+=`M${c} ${r}h1.02v1.02h-1.02z`;
   return `<svg viewBox="-2 -2 ${n+4} ${n+4}" class="pcqr" shape-rendering="crispEdges" aria-label="Kode QR profil"><rect x="-2" y="-2" width="${n+4}" height="${n+4}" fill="#fff"/><path d="${d}" fill="#1C1E3D"/></svg>`}
