@@ -4117,6 +4117,7 @@ html[data-theme=malam] .ayat{background:#063F2E;color:#A7F3D0}
 .sscard.ok{border-color:#0E9F6E}.sscard.rec{border-color:#E53935;animation:wBad .6s infinite}.sscard .ar{font-size:44px;line-height:1.4}.sscard small{color:var(--muted);font-size:12px;min-height:16px}
 .sscard{min-width:0;box-sizing:border-box}.ssrow{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin-top:6px;width:100%}.ssrow .ssrec{grid-column:1/-1}.ssrow button{border:0;border-radius:12px;padding:9px 4px;min-width:0;font:800 14px system-ui,sans-serif;cursor:pointer;background:#EDE7FB;color:#4B3C7A}.ssrow button[hidden]{display:none}
 .ssrow .ssrec{background:#E53935;color:#fff}.ssrow button:disabled{opacity:.35}
+.qemo{display:block;font-size:56px;line-height:1.3;margin-top:6px}
 </style>
 <style>html,body{margin:0}</style>
 </head>
@@ -4333,7 +4334,7 @@ html[data-theme=malam] .ayat{background:#063F2E;color:#A7F3D0}
 <div class="syncpill" id="syncPill" hidden></div>
 <div class="toast" id="toast" hidden></div>
 
-<script src="av.js?v=432"></script>
+<script src="av.js?v=433"></script>
 <script>
 /* ---------- visual assets ---------- */
 const INK='#1B1E3D';
@@ -5148,12 +5149,12 @@ async function suaraFetch(owner){const c=suaraCacheGet(owner)||{upd:0,clips:{}};
       suaraCacheSet(owner,{upd:md.upd||0,clips});return clips}}catch(e){}
   return c.clips||{}}
 function suaraTeacherUid(){try{if(SESSION&&SESSION.role==='teacher')return FBX.user&&FBX.user.uid;return FBX.me&&FBX.me.teacherUid||null}catch(e){return null}}
-async function suaraInit(force){if(typeof FB==='undefined'||!FB.db||!window.FBX||!FBX.user)return;if(SUARA.busy||(!force&&Date.now()-SUARA.at<10*60000))return;SUARA.busy=true;SUARA.at=Date.now();
+async function suaraInit(force){if(typeof FB==='undefined'||!FB||!FB.db||!window.FBX||!FBX.user)return;if(SUARA.busy||(!force&&Date.now()-SUARA.at<10*60000))return;SUARA.busy=true;SUARA.at=Date.now();
   try{const ac=suaraCacheGet('admin');if(ac)SUARA.a=ac.clips||{};const tu=suaraTeacherUid();if(tu){const tc=suaraCacheGet(tu);if(tc)SUARA.t=tc.clips||{}}
     SUARA.a=await suaraFetch('admin');SUARA.tOwner=tu;SUARA.t=tu?await suaraFetch(tu):{};suaraWatch('admin');if(tu)suaraWatch(tu)}finally{SUARA.busy=false}}
 /* pantau perubahan: rekaman baru dari admin/guru langsung terpakai di HP lain */
 const SUARA_W={};
-function suaraWatch(owner){if(SUARA_W[owner]||!FB.db)return;try{SUARA_W[owner]=FB.db.doc('suara/'+owner).onSnapshot(sn=>{const up=sn.exists?(sn.data()||{}).upd||0:0;const c=suaraCacheGet(owner);if(c&&(c.upd||0)>=up)return;
+function suaraWatch(owner){if(SUARA_W[owner]||!FB||!FB.db)return;try{SUARA_W[owner]=FB.db.doc('suara/'+owner).onSnapshot(sn=>{const up=sn.exists?(sn.data()||{}).upd||0:0;const c=suaraCacheGet(owner);if(c&&(c.upd||0)>=up)return;
   suaraFetch(owner).then(cl=>{if(owner==='admin')SUARA.a=cl;else if(owner===SUARA.tOwner)SUARA.t=cl})},()=>{})}catch(e){}}
 /* --- perekam (guru & admin) --- */
 function blobToData(b){return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result);r.onerror=rej;r.readAsDataURL(b)})}
@@ -5270,6 +5271,56 @@ const QR_ADAB=[
  ['Al-Qur’an kita simpan di tempat yang …','bersih','kotor','basah','berdebu'],
  ['Al-Qur’an pertama kali turun pada bulan …','Ramadan','Syawal','Muharram','Rajab'],
  ['Al-Qur’an ditulis dengan huruf …','hijaiyah','latin','angka','gambar']];
+/* ===== TK: Sirah Nabi (25 nabi, Adam sampai Muhammad) ===== */
+const NABI=[
+ ['Adam','👤',['menjadi manusia pertama','diciptakan Allah dari tanah','istrinya bernama Hawa']],
+ ['Idris','✍️',['pertama kali pandai menulis dengan pena','pandai menjahit pakaian']],
+ ['Nuh','🚢',['membuat kapal yang sangat besar','naik kapal bersama hewan-hewan saat banjir besar']],
+ ['Hud','🌪️',['diutus kepada kaum ‘Ad','kaumnya yang membangkang ditimpa angin sangat kencang']],
+ ['Saleh','🐪',['punya mukjizat unta yang keluar dari batu','diutus kepada kaum Tsamud']],
+ ['Ibrahim','🔥',['dibakar api tetapi tidak terbakar','membangun Ka‘bah bersama putranya']],
+ ['Luth','🏘️',['adalah keponakan Nabi Ibrahim']],
+ ['Ismail','💧',['saat masih bayi, di dekatnya muncul air zamzam','membantu ayahnya, Nabi Ibrahim, membangun Ka‘bah']],
+ ['Ishaq','🧒',['adalah putra Nabi Ibrahim dan Sarah']],
+ ['Ya‘qub','👨‍👦',['adalah ayah Nabi Yusuf','punya dua belas anak laki-laki']],
+ ['Yusuf','💭',['dibuang saudara-saudaranya ke dalam sumur','pandai mengartikan mimpi']],
+ ['Ayyub','🤒',['tetap sabar walaupun sakit sangat lama']],
+ ['Syu‘aib','⚖️',['mengajak kaumnya jujur saat menimbang dan menakar']],
+ ['Musa','🌊',['tongkatnya bisa membelah laut','menerima kitab Taurat']],
+ ['Harun','🗣️',['adalah saudara Nabi Musa yang pandai berbicara']],
+ ['Dzulkifli','🤝',['terkenal sabar dan selalu menepati janji']],
+ ['Daud','🎵',['suaranya merdu dan menerima kitab Zabur','bisa melunakkan besi dengan tangannya']],
+ ['Sulaiman','🐜',['bisa berbicara dengan hewan, seperti semut dan burung','adalah putra Nabi Daud']],
+ ['Ilyas','🗿',['mengajak kaumnya berhenti menyembah berhala Ba‘al']],
+ ['Ilyasa‘','🧭',['melanjutkan dakwah Nabi Ilyas']],
+ ['Yunus','🐋',['ditelan ikan yang sangat besar']],
+ ['Zakaria','🤲',['berdoa meminta anak saat sudah tua','mengasuh Maryam']],
+ ['Yahya','🌿',['adalah putra Nabi Zakaria']],
+ ['Isa','👶',['bisa berbicara saat masih bayi','menerima kitab Injil']],
+ ['Muhammad','⭐',['adalah nabi terakhir','menerima kitab Al-Qur’an','lahir di kota Mekah']]];
+const NBG=[[0,5],[5,10],[10,15],[15,21],[21,25]];
+const nbName=n=>'Nabi '+n[0];
+const NB_REL=[['Ibrahim','Ismail','Ishaq','Luth'],['Ya‘qub','Yusuf'],['Musa','Harun'],['Daud','Sulaiman'],['Ilyas','Ilyasa‘'],['Zakaria','Yahya','Isa']];
+const nbRel=(a,b)=>NB_REL.some(g=>g.includes(a[0])&&g.includes(b[0]));
+const nbWho=g=>()=>{const [a,b]=g==null?[0,25]:NBG[g];const n=pick(NABI.slice(a,b)),c=pick(n[2]);const o=[n,...shuffle(NABI.filter(x=>x!==n&&!nbRel(x,n))).slice(0,3)];
+  return Q(`🔊 Siapa nabi yang ${c}? <span class="qemo">${n[1]}</span>`,{opts:shuffle(o.map(nbName)),ans:nbName(n)},`${nbName(n)} ${c}.`,{say:`Siapa nabi yang ${c}?`,html:true})};
+const nbFact=g=>()=>{const [a,b]=g==null?[0,25]:NBG[g];const n=pick(NABI.slice(a,b)),c=pick(n[2]);const others=shuffle(NABI.filter(x=>x!==n&&!nbRel(x,n)).flatMap(x=>x[2])).slice(0,2);
+  return Q(`🔊 ${nbName(n)} …`,{opts:shuffle([c,...others]),ans:c},`${nbName(n)} ${c}.`,{say:`${nbName(n)}, yang mana yang benar?`})};
+const nbNext=g=>()=>{const [a,b]=g==null?[0,24]:[NBG[g][0],Math.min(24,NBG[g][1])];const i=R(a,b-1),n=NABI[i],nx=NABI[i+1];const o=[nx,...shuffle(NABI.filter(x=>x!==n&&x!==nx)).slice(0,3)];
+  return Q(`🔊 Sesudah ${nbName(n)}, nabi berikutnya adalah …`,{opts:shuffle(o.map(nbName)),ans:nbName(nx)},`Urutannya: ${nbName(n)}, lalu ${nbName(nx)}.`,{say:`Sesudah ${nbName(n)}, nabi berikutnya siapa?`})};
+const NB_REV=[
+ ['Nabi pertama adalah …','Nabi Adam','Nabi Nuh','Nabi Ibrahim','Nabi Muhammad','Nabi Adam adalah manusia dan nabi pertama.'],
+ ['Nabi terakhir adalah …','Nabi Muhammad','Nabi Isa','Nabi Musa','Nabi Adam','Nabi Muhammad adalah nabi dan rasul terakhir.'],
+ ['Jumlah nabi yang wajib kita ketahui ada …','25','10','5','100','Ada 25 nabi yang disebut dalam Al-Qur’an dan wajib diketahui.'],
+ ['Kitab Taurat diturunkan kepada …','Nabi Musa','Nabi Daud','Nabi Isa','Nabi Muhammad','Taurat untuk Nabi Musa.'],
+ ['Kitab Zabur diturunkan kepada …','Nabi Daud','Nabi Musa','Nabi Isa','Nabi Nuh','Zabur untuk Nabi Daud.'],
+ ['Kitab Injil diturunkan kepada …','Nabi Isa','Nabi Musa','Nabi Daud','Nabi Yahya','Injil untuk Nabi Isa.'],
+ ['Kitab Al-Qur’an diturunkan kepada …','Nabi Muhammad','Nabi Isa','Nabi Musa','Nabi Ibrahim','Al-Qur’an untuk Nabi Muhammad.'],
+ ['Ayah Nabi Muhammad bernama …','Abdullah','Abu Thalib','Abdul Muthalib','Hamzah','Ayah Nabi Muhammad adalah Abdullah.'],
+ ['Ibu Nabi Muhammad bernama …','Aminah','Khadijah','Halimah','Fatimah','Ibu Nabi Muhammad adalah Aminah.'],
+ ['Nabi Muhammad diberi gelar Al-Amin, artinya …','dapat dipercaya','sangat kuat','sangat kaya','pandai bernyanyi','Al-Amin artinya orang yang dapat dipercaya.'],
+ ['Nabi Muhammad lahir di kota …','Mekah','Madinah','Jakarta','Mesir','Nabi Muhammad lahir di Mekah.'],
+ ['Nabi yang disebut ulul azmi karena sangat sabar adalah …','Nabi Nuh','Nabi Idris','Nabi Luth','Nabi Yahya','Ulul azmi: Nabi Nuh, Ibrahim, Musa, Isa, dan Muhammad.']];
 const PAI_SUBJ={
  tk:{id:'pai',name:'Agama Islam',glyph:'PAI',color:'#0E9F6E',fit:'word',units:[
    U('Doa dan salam','Ucapan baik sehari-hari',[PAI_TK,[0,1,2,3,10]],{tip:'Bismillah sebelum, Alhamdulillah sesudah. Jawab salam dengan Wa’alaikumussalam.'}),
@@ -5287,7 +5338,13 @@ const PAI_SUBJ={
    U('Surah Al-Fatihah','Hafalan surah pembuka · suara Syaikh Mishary Rasyid Alafasy',[qrNext(0),qrNext(0),qrCount(0),qrMean(0)],{tip:'Al-Fatihah ada 7 ayat dan dibaca di setiap rakaat shalat.'}),
    U('Surah An-Nas dan Al-Falaq','Dua surah perlindungan',[qrNext(1),qrNext(2),qrWhich(1),qrWhich(2),qrCount(1),qrCount(2)],{tip:'An-Nas 6 ayat, Al-Falaq 5 ayat. Keduanya dimulai dengan "Qul a‘udzu".'}),
    U('Surah Al-Ikhlas','Allah Maha Esa',[qrNext(3),qrNext(3),qrWhich(3),qrCount(3),qrMean(3)],{tip:'Al-Ikhlas ada 4 ayat dan mengajarkan bahwa Allah itu satu.'}),
-   U('Surah Al-Kautsar dan Al-‘Ashr','Surah pendek 3 ayat',[qrNext(4),qrNext(5),qrWhich(4),qrWhich(5),qrMean(4),qrMean(5)],{tip:'Al-Kautsar dan Al-‘Ashr masing-masing 3 ayat.'})]},
+   U('Surah Al-Kautsar dan Al-‘Ashr','Surah pendek 3 ayat',[qrNext(4),qrNext(5),qrWhich(4),qrWhich(5),qrMean(4),qrMean(5)],{tip:'Al-Kautsar dan Al-‘Ashr masing-masing 3 ayat.'}),
+   U('Nabi Adam sampai Nabi Saleh','Adam, Idris, Nuh, Hud, Saleh',[nbWho(0),nbWho(0),nbFact(0),nbNext(0)],{tip:'Nabi Adam manusia pertama, Nabi Idris pandai menulis, Nabi Nuh membuat kapal, Nabi Hud diutus kepada kaum ‘Ad, Nabi Saleh punya mukjizat unta.'}),
+   U('Nabi Ibrahim sampai Nabi Ya‘qub','Ibrahim, Luth, Ismail, Ishaq, Ya‘qub',[nbWho(1),nbWho(1),nbFact(1),nbNext(1)],{tip:'Nabi Ibrahim tidak terbakar api, Nabi Ismail putranya, Nabi Ya‘qub ayah Nabi Yusuf.'}),
+   U('Nabi Yusuf sampai Nabi Harun','Yusuf, Ayyub, Syu‘aib, Musa, Harun',[nbWho(2),nbWho(2),nbFact(2),nbNext(2)],{tip:'Nabi Yusuf pandai mengartikan mimpi, Nabi Ayyub sabar, Nabi Musa membelah laut, Nabi Harun saudaranya.'}),
+   U('Nabi Dzulkifli sampai Nabi Yunus','Dzulkifli, Daud, Sulaiman, Ilyas, Ilyasa‘, Yunus',[nbWho(3),nbWho(3),nbFact(3),nbNext(3)],{tip:'Nabi Daud menerima Zabur, Nabi Sulaiman bisa berbicara dengan hewan, Nabi Yunus ditelan ikan besar.'}),
+   U('Nabi Zakaria sampai Nabi Muhammad','Zakaria, Yahya, Isa, Muhammad',[nbWho(4),nbWho(4),nbFact(4),nbNext(4)],{tip:'Nabi Yahya putra Nabi Zakaria, Nabi Isa menerima Injil, Nabi Muhammad nabi terakhir.'}),
+   U('Mengenal 25 nabi','Nabi pertama dan terakhir, kitab, dan Nabi Muhammad',[NB_REV,[0,1,2,3,4,5,6,7,8,9,10,11]],{tip:'25 nabi dari Adam sampai Muhammad. Kitab: Taurat (Musa), Zabur (Daud), Injil (Isa), Al-Qur’an (Muhammad).'})]},
  sd1:{id:'pai',name:'Agama Islam',glyph:'PAI',color:'#0E9F6E',fit:'phrase',units:[
    U('Rukun Islam dan iman','Lima rukun Islam dan enam rukun iman',[PAI_SD13,[0,1,2,9]],{tip:'Rukun Islam ada 5, rukun iman ada 6.'}),
    U('Shalat dan puasa','Rakaat shalat, wudu, dan Ramadan',[PAI_SD13,[3,4,5,6,13]],{tip:'Subuh 2, Zuhur 4, Asar 4, Magrib 3, Isya 4 rakaat.'}),
@@ -13432,6 +13489,7 @@ const TK_CARDS=[
  {id:'hjy',name:'Mengenal Huruf Hijaiyah',emo:'',glyph:'ا ب ت',ar:1,color:'#0E9F6E',d:'Huruf, titik, dan tanda baca',it:[['pai','Hijaiyah: Alif sampai Kho'],['pai','Hijaiyah: Dal sampai Shod'],['pai','Hijaiyah: Dhod sampai Fa'],['pai','Hijaiyah: Qof sampai Ya'],['pai','Tanda baca hijaiyah']]},
  {id:'hjtulis',name:'Menulis Huruf Hijaiyah',emo:'✍️',color:'#16A34A',d:'Menebalkan huruf hijaiyah',it:[['pai','Menulis hijaiyah 1'],['pai','Menulis hijaiyah 2']]},
  {id:'angkaar',name:'Menulis Angka Arab',emo:'',glyph:'١٢٣',ar:1,color:'#0891B2',d:'Membaca dan menulis ١ sampai ١٠',it:[['pai','Angka Arab 1–5'],['pai','Angka Arab 6–10']]},
+ {id:'sirah',name:'Sirah Nabi',emo:'🕌',color:'#7C3AED',d:'Kisah 25 nabi, Adam sampai Muhammad',it:[['pai','Nabi Adam sampai Nabi Saleh'],['pai','Nabi Ibrahim sampai Nabi Ya‘qub'],['pai','Nabi Yusuf sampai Nabi Harun'],['pai','Nabi Dzulkifli sampai Nabi Yunus'],['pai','Nabi Zakaria sampai Nabi Muhammad'],['pai','Mengenal 25 nabi']]},
  {id:'quran',name:'Belajar Al-Qur’an',emo:'📖',color:'#B45309',d:'Adab dan surah pendek',it:[['pai','Adab membaca Al-Qur’an'],['pai','Surah Al-Fatihah'],['pai','Surah An-Nas dan Al-Falaq'],['pai','Surah Al-Ikhlas'],['pai','Surah Al-Kautsar dan Al-‘Ashr']]}];
 const TKV={cat:null};
 const isTkCards=()=>{try{return CLS().lv==='tk'}catch(e){return false}};
@@ -16600,7 +16658,7 @@ function folBind(root,list,after){root.querySelectorAll('[data-follow]').forEach
   try{await folDo(f,on);if(on){try{sfx.ok()}catch(_){}toast('team',`Kamu mengikuti ${f.name}.`)}b.outerHTML=folBtn(f,b.classList.contains('sm'));folBind(root,list,after);after&&after()}catch(err){b.disabled=false;toast('lock',fbErr(err))}})}
 const shareIcon='<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M12 3 V15 M7 8 L12 3 L17 8 M5 13 V19 C5 20 6 21 7 21 H17 C18 21 19 20 19 19 V13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const qrIcon='<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><path d="M14 14h3v3h-3zM18 18h3v3h-3zM18 14h3M14 18v3" stroke-linecap="round"/></svg>';
-let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=432';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
+let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=433';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
 function qrMatrix(text){const Q=window.QRCodeLib,q=new Q(-1,Q.ECL.M);q.addData(text);q.make();const n=q.getModuleCount(),m=[];for(let r=0;r<n;r++){m.push([]);for(let c=0;c<n;c++)m[r].push(q.isDark(r,c))}return m}
 function qrSvgOf(m){const n=m.length;let d='';for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(m[r][c])d+=`M${c} ${r}h1.02v1.02h-1.02z`;
   return `<svg viewBox="-2 -2 ${n+4} ${n+4}" class="pcqr" shape-rendering="crispEdges" aria-label="Kode QR profil"><rect x="-2" y="-2" width="${n+4}" height="${n+4}" fill="#fff"/><path d="${d}" fill="#1C1E3D"/></svg>`}
