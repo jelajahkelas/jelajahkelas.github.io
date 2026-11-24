@@ -285,6 +285,13 @@ service cloud.firestore {
         && request.resource.data.upd is number;
       allow delete: if signedIn() && request.auth.uid == uid;
     }
+    // Ajak teman: dibuat sekali oleh akun baru; diperiksa dan diberi hadiah oleh server penghitung peringkat.
+    match /ref/{uid} {
+      allow create: if signedIn() && request.auth.uid == uid && request.resource.data.uid == uid
+        && request.resource.data.by is string && request.resource.data.by.size() < 128 && request.resource.data.by != uid
+        && request.resource.data.upd is number;
+      allow read, update, delete: if false;
+    }
     match /rkb/{id} {
       allow read: if signedIn();
       allow write: if false;

@@ -50,17 +50,41 @@ const hrsIntoMonth = (wit(NOW).getTime() - Date.parse(MO + '-01T00:00:00Z')) / 3
 
 // ---------- cache ----------
 const CF = '.rkcache/state.json';
-let S = { rkLast: 0, clsLast: 0, rk: {}, cls: {}, hash: {}, finW: null, finM: null, lastW: {}, lastM: {} };
+let S = { rkLast: 0, clsLast: 0, usrLast: 0, refLast: 0, rk: {}, usr: {}, cls: {}, ref: {}, refDone: {}, hash: {}, finW: null, finM: null, lastW: {}, lastM: {} };
 try { S = Object.assign(S, JSON.parse(fs.readFileSync(DRY && process.env.RK_STATE ? process.env.RK_STATE : CF, 'utf8'))); } catch (_) {}
+
+// ---------- entri dari akun murid (supaya semua pengguna tampil walau belum membuka versi terbaru) ----------
+const witDay = (ms) => ymd(wit(new Date(ms)));
+function fromUser(u) {
+  if (u.role !== 'student' || u.disabled) return null;
+  let p = {}; try { p = JSON.parse(u.p || '{}'); } catch (_) { return null; }
+  const today = witDay(NOW.getTime()), yest = witDay(NOW.getTime() - 864e5);
+  const wk = p.week || {}, days = Array.isArray(p.ld) && p.ld.length ? p.ld : (Array.isArray(p.hist) ? p.hist : []);
+  const st = (p.lastDay === today || p.lastDay === yest) ? (+p.streak || 0) : 0;
+  const xpd = p.xpd || {}, msum = Object.entries(xpd).filter(([k]) => k.startsWith(MO)).reduce((a, [, v]) => a + (+v || 0), 0);
+  const mxp = p.mxp && p.mxp.mo === MO ? Math.max(+p.mxp.xp || 0, msum) : msum;
+  const fr = p.rkFrame && NOW.getTime() - (+p.rkFrame.at || 0) < 28 * 864e5 ? +p.rkFrame.r || 0 : 0;
+  return { uid: u.id, name: String(p.name || u.name || '').slice(0, 40), color: p.color || null, av: p.avatar || null, cls: u.cls || p.cls || 'sd1', cid: u.classId || null,
+    w: wk.id || null, wxp: +wk.xp || 0, pw: (p.wkPrev && p.wkPrev.id) || null, pwxp: (p.wkPrev && +p.wkPrev.xp) || 0, ppw: (p.wkPrev2 && p.wkPrev2.id) || null, ppx: (p.wkPrev2 && +p.wkPrev2.xp) || 0,
+    mo: MO, mact: new Set(days.filter((d) => String(d).startsWith(MO))).size, pmo: PMO, pmact: new Set(days.filter((d) => String(d).startsWith(PMO))).size,
+    st, bst: Math.max(+p.bestStreak || 0, st), xp: +u.xp || +p.xp || 0, mxp, fr, created: +u.created || +p.created || 0, upd: +u.upd || 0 };
+}
 
 if (DRY) {
   const d = JSON.parse(fs.readFileSync(process.env.RK_DATA, 'utf8'));
   d.rk.forEach((e) => { S.rk[e.uid] = e; }); d.cls.forEach((c) => { S.cls[c.id] = c; });
+  (d.users || []).forEach((u) => { const e = fromUser(u); if (e) S.usr[u.id] = e; else delete S.usr[u.id]; });
+  (d.ref || []).forEach((r) => { S.ref[r.id] = r; });
 } else {
   const rk = await since('rk', S.rkLast);
   rk.forEach((e) => { if (e.uid && e.uid === e.id) { S.rk[e.uid] = e; S.rkLast = Math.max(S.rkLast, +e.upd || 0); } });
   const cls = await since('classes', S.clsLast, ['school', 'label', 'cls', 'name', 'members', 'teacherUid', 'upd']);
   cls.forEach((c) => { S.cls[c.id] = { id: c.id, school: c.school || '', label: c.label || '', cls: c.cls || '', tname: c.name || '', n: c.members && typeof c.members === 'object' ? Object.keys(c.members).length : 0 }; S.clsLast = Math.max(S.clsLast, +c.upd || 0); });
+  const us = await since('users', S.usrLast, ['role', 'classId', 'created', 'disabled', 'name', 'cls', 'xp', 'p', 'upd']);
+  us.forEach((u) => { const e = fromUser(u); if (e) S.usr[u.id] = e; else delete S.usr[u.id]; S.usrLast = Math.max(S.usrLast, +u.upd || 0); });
+  const rf = await since('ref', S.refLast).catch(() => []);
+  rf.forEach((r) => { if (r.uid && r.by && r.uid === r.id) S.ref[r.id] = r; S.refLast = Math.max(S.refLast, +r.upd || 0); });
+  console.log(`Akun berubah: ${us.length}, total murid ${Object.keys(S.usr).length}, ajakan ${rf.length}.`);
   console.log(`Entri baru: ${rk.length}, kelas berubah: ${cls.length}; total entri ${Object.keys(S.rk).length}, kelas ${Object.keys(S.cls).length}.`);
 }
 
@@ -70,13 +94,20 @@ const slug = (s) => String(s || '').toLowerCase().normalize('NFKD').replace(/[^a
 const clsOf = (e) => (e.cid && S.cls[e.cid]) || null;
 const schOf = (e) => { const c = clsOf(e); return c && slug(c.school) ? slug(c.school) : null; };
 const row = (e, v, v2) => { const c = clsOf(e); return { u: e.uid, n: String(e.name || '').slice(0, 40), c: e.color || null, a: e.av || null, k: c ? c.label : '', s: c ? c.school : '', j: JEN(e.cls), v, ...(v2 != null ? { v2 } : {}), ...(e.fr ? { fr: e.fr } : {}) }; };
-const ENT = Object.values(S.rk).filter((e) => e && e.uid && (+e.upd || 0) > NOW.getTime() - 120 * 864e5);
+const ENT = (() => { const m = {};
+  Object.values(S.usr).forEach((e) => { m[e.uid] = { ...e }; });
+  Object.values(S.rk).forEach((e) => { if (!e || !e.uid) return; const u = m[e.uid]; if (!u) { if ((+e.upd || 0) > NOW.getTime() - 120 * 864e5) m[e.uid] = { ...e }; return; }
+    if ((+e.upd || 0) > (+u.upd || 0)) Object.assign(u, e, { xp: Math.max(+e.xp || 0, +u.xp || 0), mxp: e.mo === MO && e.mxp != null ? Math.max(+e.mxp, +u.mxp || 0) : u.mxp }); });
+  return Object.values(m); })();
 const xpOf = (e, wk) => e.w === wk ? +e.wxp || 0 : e.pw === wk ? +e.pwxp || 0 : e.ppw === wk ? +e.ppx || 0 : 0;
 const actOf = (e, mo) => e.mo === mo ? +e.mact || 0 : e.pmo === mo ? +e.pmact || 0 : 0;
-function boards(list, wk, pwk, mo, lim) {
+function boards(list, wk, pwk, mo, lim, zeros) {
   const top = (arr) => arr.sort((a, b) => b.v - a.v || (b.v2 || 0) - (a.v2 || 0)).slice(0, lim);
+  const mx = (e) => e.mo === mo ? +e.mxp || 0 : 0;
   return {
-    xp: top(list.map((e) => row(e, xpOf(e, wk))).filter((r) => r.v > 0)),
+    xp: top(list.map((e) => row(e, xpOf(e, wk), +e.xp || 0)).filter((r) => zeros || r.v > 0)),
+    xpm: top(list.map((e) => row(e, mx(e), +e.xp || 0)).filter((r) => zeros || r.v > 0)),
+    xpt: top(list.map((e) => row(e, +e.xp || 0)).filter((r) => r.v > 0)),
     naik: top(list.map((e) => { const a = xpOf(e, wk), b = xpOf(e, pwk); return b >= 20 && a > b ? row(e, a - b, a) : null; }).filter(Boolean)),
     act: top(list.map((e) => row(e, actOf(e, mo))).filter((r) => r.v > 0)),
     str: top(list.map((e) => row(e, +e.bst || 0, +e.st || 0)).filter((r) => r.v > 0)),
@@ -96,12 +127,13 @@ const allCls = new Set(Object.keys(byCls));
 const klsJ = {}; ['tk', 'sd', 'smp', 'sma'].forEach((j) => { klsJ[j] = klsRank(new Set([...allCls].filter((cid) => JEN(S.cls[cid].cls) === j)), W); });
 const klsS = {}; Object.keys(bySch).forEach((s) => { klsS[s] = klsRank(new Set([...allCls].filter((cid) => slug(S.cls[cid].school) === s)), W); });
 const meta = { w: W, mo: MO, at: NOW.getTime() };
-['tk', 'sd', 'smp', 'sma'].forEach((j) => { writes['nas_' + j] = { ...meta, j, b: boards(byJ[j] || [], W, PW, MO, 50), kls: klsJ[j].slice(0, 50), last: S.lastW['nas_' + j] || null, lastM: S.lastM['nas_' + j] || null }; });
-Object.entries(bySch).forEach(([s, list]) => { const nm = clsOf(list[0]).school; writes['sch_' + s] = { ...meta, s: nm, b: boards(list, W, PW, MO, 50), kls: klsS[s].slice(0, 50), last: S.lastW['sch_' + s] || null, lastM: S.lastM['sch_' + s] || null }; });
+['tk', 'sd', 'smp', 'sma'].forEach((j) => { writes['nas_' + j] = { ...meta, j, b: boards(byJ[j] || [], W, PW, MO, 100, true), kls: klsJ[j].slice(0, 50), last: S.lastW['nas_' + j] || null, lastM: S.lastM['nas_' + j] || null }; });
+{ const klsAll = klsRank(allCls, W); writes.nas_all = { ...meta, j: 'all', b: boards(ENT, W, PW, MO, 100, true), kls: klsAll.slice(0, 50), last: S.lastW.nas_all || null, lastM: S.lastM.nas_all || null }; }
+Object.entries(bySch).forEach(([s, list]) => { const nm = clsOf(list[0]).school; writes['sch_' + s] = { ...meta, s: nm, b: boards(list, W, PW, MO, 100, true), kls: klsS[s].slice(0, 50), last: S.lastW['sch_' + s] || null, lastM: S.lastM['sch_' + s] || null }; });
 Object.entries(byCls).forEach(([cid, list]) => {
   const c = S.cls[cid], j = JEN(c.cls), s = slug(c.school);
   const rs = s && klsS[s] ? klsS[s].findIndex((x) => x.cid === cid) + 1 : 0, rn = klsJ[j].findIndex((x) => x.cid === cid) + 1;
-  writes['cls_' + cid] = { ...meta, k: c.label, s: c.school, sch: s || null, j, b: boards(list, W, PW, MO, 300), rs, ns: s && klsS[s] ? klsS[s].length : 0, rn, nn: klsJ[j].length, last: S.lastW['cls_' + cid] || null, lastM: S.lastM['cls_' + cid] || null };
+  writes['cls_' + cid] = { ...meta, k: c.label, s: c.school, sch: s || null, j, b: boards(list, W, PW, MO, 300, true), rs, ns: s && klsS[s] ? klsS[s].length : 0, rn, nn: klsJ[j].length, last: S.lastW['cls_' + cid] || null, lastM: S.lastM['cls_' + cid] || null };
 });
 
 // ---------- penutupan minggu / bulan: penghargaan juara ----------
@@ -120,6 +152,7 @@ if (S.finW !== PW && hrsIntoWeek >= 3) {
   const per = wLabel(PW);
   const scopes = [];
   ['tk', 'sd', 'smp', 'sma'].forEach((j) => scopes.push({ id: 'nas_' + j, sc: 'nasional', lbl: 'Nasional ' + j.toUpperCase(), list: byJ[j] || [], g: G.nasional }));
+  scopes.push({ id: 'nas_all', sc: 'nasional', lbl: 'Semua JELAS', list: ENT, g: G.nasional });
   Object.entries(bySch).forEach(([s, list]) => scopes.push({ id: 'sch_' + s, sc: 'sekolah', lbl: clsOf(list[0]).school, list, g: G.sekolah }));
   Object.entries(byCls).forEach(([cid, list]) => scopes.push({ id: 'cls_' + cid, sc: 'kelas', lbl: S.cls[cid].label || 'Kelas', sub: S.cls[cid].school, list, g: G.kelas }));
   for (const sc of scopes) {
@@ -142,6 +175,7 @@ if (S.finM !== PMO && hrsIntoMonth >= 3) {
   const per = mLabel(PMO);
   const scopes = [];
   ['tk', 'sd', 'smp', 'sma'].forEach((j) => scopes.push({ id: 'nas_' + j, sc: 'nasional', lbl: 'Nasional ' + j.toUpperCase(), list: byJ[j] || [], g: G.nasional }));
+  scopes.push({ id: 'nas_all', sc: 'nasional', lbl: 'Semua JELAS', list: ENT, g: G.nasional });
   Object.entries(bySch).forEach(([s, list]) => scopes.push({ id: 'sch_' + s, sc: 'sekolah', lbl: clsOf(list[0]).school, list, g: G.sekolah }));
   Object.entries(byCls).forEach(([cid, list]) => scopes.push({ id: 'cls_' + cid, sc: 'kelas', lbl: S.cls[cid].label || 'Kelas', sub: S.cls[cid].school, list, g: G.kelas }));
   for (const sc of scopes) {
@@ -155,13 +189,32 @@ if (S.finM !== PMO && hrsIntoMonth >= 3) {
 // penutupan baru saja terjadi: perbarui "last" di papan yang ditulis
 if (nAw) Object.keys(writes).forEach((id) => { writes[id].last = S.lastW[id] || null; writes[id].lastM = S.lastM[id] || null; });
 
+// ---------- ajak teman: hadiah untuk pengajak dan teman baru setelah teman baru belajar ----------
+let nRef = 0;
+for (const r of Object.values(S.ref)) {
+  if (S.refDone[r.uid]) continue;
+  const nu = S.usr[r.uid], by = S.usr[r.by];
+  if (!nu || !by || r.by === r.uid) { if (NOW.getTime() - (+r.at || 0) > 30 * 864e5) S.refDone[r.uid] = 'x'; continue; }
+  if (nu.created && nu.created < (+r.at || 0) - 7 * 864e5) { S.refDone[r.uid] = 'lama'; continue; } // bukan akun baru
+  if ((+nu.xp || 0) < 20) continue; // tunggu sampai teman baru benar-benar belajar
+  const cntBy = Object.values(S.ref).filter((x) => x.by === r.by && S.refDone[x.uid] === 'ok').length;
+  const per = ymd(wit(NOW));
+  if (cntBy < 20) give(r.by, { id: 'ajak:' + r.uid, p: per, sc: 'ajak', lbl: 'Ajak teman', sub: nu.name, m: 'ajak', r: 0, v: 0, g: 50 });
+  give(r.uid, { id: 'ajak:' + r.uid, p: per, sc: 'ajak', lbl: 'Diajak teman', sub: by.name, m: 'ajak', r: 0, v: 0, g: 25 });
+  S.refDone[r.uid] = 'ok'; nRef++;
+}
+
 // permata: tiap murid hanya mendapat permata dari gelar terbaiknya per periode (gelar lain tetap dicatat)
-Object.values(awards).forEach((list) => { const per = {}; list.forEach((a) => { const k = a.id.split(':')[0]; if (!per[k] || a.g > per[k].g) per[k] = a; }); list.forEach((a) => { if (per[a.id.split(':')[0]] !== a) a.g = 0; }); });
+Object.values(awards).forEach((list) => { const per = {}; list.forEach((a) => { if (a.m === 'ajak') return; const k = a.id.split(':')[0]; if (!per[k] || a.g > per[k].g) per[k] = a; }); list.forEach((a) => { if (a.m !== 'ajak' && per[a.id.split(':')[0]] !== a) a.g = 0; }); });
 
 // ---------- tulis ----------
 const h = (s) => { let x = 0; for (let i = 0; i < s.length; i++) x = (x * 31 + s.charCodeAt(i)) | 0; return x; };
 let nW = 0;
-for (const [id, d] of Object.entries(writes)) {
+function pack(d) { const P = {}; const b = {};
+  Object.entries(d.b || {}).forEach(([m, list]) => { b[m] = list.map((r) => { if (!P[r.u]) P[r.u] = { n: r.n, c: r.c, a: r.a, k: r.k, s: r.s, ...(r.fr ? { fr: r.fr } : {}) }; return r.v2 != null ? [r.u, r.v, r.v2] : [r.u, r.v]; }); });
+  return { ...d, b, P }; }
+for (const [id, d0] of Object.entries(writes)) {
+  const d = pack(d0);
   const body = JSON.stringify({ ...d, at: 0 }), hv = h(body);
   if (S.hash[id] === hv && NOW.getTime() - (S.hash[id + '@'] || 0) < 6 * 3600e3) continue;
   const doc = { d: JSON.stringify(d), upd: NOW.getTime() };
@@ -179,5 +232,5 @@ for (const [uid, list] of Object.entries(awards)) {
     await C.patchDoc('rkw/' + uid, { d: JSON.stringify([...old, ...add].slice(-40)), upd: NOW.getTime() }); nU++;
   } catch (e) { console.log('penghargaan gagal:', e.message.slice(0, 120)); }
 }
-console.log(`Papan ditulis: ${nW} dari ${Object.keys(writes).length}. Penerima penghargaan: ${nU}. Minggu ${W}${nAw ? ' (penutupan dijalankan)' : ''}.`);
+console.log(`Papan ditulis: ${nW} dari ${Object.keys(writes).length}. Penerima penghargaan: ${nU}. Ajakan berhasil: ${nRef}. Minggu ${W}${nAw ? ' (penutupan dijalankan)' : ''}.`);
 if (!DRY || process.env.RK_SAVE) { fs.mkdirSync('.rkcache', { recursive: true }); fs.writeFileSync(DRY ? process.env.RK_SAVE : CF, JSON.stringify(S)); }

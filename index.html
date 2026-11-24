@@ -4194,6 +4194,13 @@ html[data-theme=malam] .ayat{background:#063F2E;color:#A7F3D0}
 .rk2-last{margin:10px 16px 4px;padding:10px 12px;border-radius:14px;background:rgba(255,200,0,.12);display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 8px}.rk2-last small{color:var(--muted)}.rk2-last div{width:100%;display:flex;flex-wrap:wrap;gap:4px 14px;font-weight:800;font-size:14px}
 .rk2-foot{margin:8px 16px 6px;font-size:12px;color:var(--muted)}.rk2-pad{padding:10px 16px}
 .rk2-empty{display:flex;flex-direction:column;align-items:center;text-align:center;padding:16px 24px 8px}.rk2-empty img{width:96px}.rk2-empty p{margin:6px 0 0;font-weight:800;color:var(--muted)}
+.rk2-per{display:flex;gap:4px;margin:6px 16px 0;padding:3px;border-radius:12px;border:2px solid var(--line)}.rk2-per button{flex:1;border:0;border-radius:9px;padding:6px;background:transparent;color:var(--muted);font-weight:800;font-family:inherit;font-size:12.5px}.rk2-per button.on{background:#FFC800;color:#3B2A00}
+.rk2-scope{margin:8px 16px 0;font-size:12.5px;color:var(--muted);font-weight:700}
+.rk2-zero{margin:8px 16px 2px;padding:6px 10px;border-radius:10px;background:var(--line);color:var(--muted);font-size:12px;font-weight:900;text-align:center;letter-spacing:.02em}
+.lgx-row.rk0{opacity:.6}
+.rkbot{overflow:hidden;background:#EEE6FF!important}.rkbot img{width:100%;height:100%;object-fit:contain}.rkbtag{font-style:normal;font-size:11px;font-weight:800;color:#7C3AED;background:rgba(124,58,237,.12);border-radius:999px;padding:1px 6px;vertical-align:middle}
+.rkbotrow{background:rgba(124,58,237,.04)}
+.rk2-ajak{display:flex;gap:12px;align-items:center}.rk2-ajak img{width:76px;flex:none}.rk2-ajak b{font-family:var(--title);font-size:17px}.rk2-ajak p{margin:2px 0 8px;font-size:13.5px;color:var(--muted)}.rk2-ajak .primary{margin:0;padding:10px 18px}
 </style>
 <style>html,body{margin:0}</style>
 </head>
@@ -4410,7 +4417,7 @@ html[data-theme=malam] .ayat{background:#063F2E;color:#A7F3D0}
 <div class="syncpill" id="syncPill" hidden></div>
 <div class="toast" id="toast" hidden></div>
 
-<script src="av.js?v=445"></script>
+<script src="av.js?v=446"></script>
 <script>
 /* ---------- visual assets ---------- */
 const INK='#1B1E3D';
@@ -12961,7 +12968,7 @@ function tickHearts(){if(!P)return;if(P.hearts>=5){P.heartsAt=null;return}if(!P.
 function shownStreak(p){p=p||P;if(!p.lastDay)return 0;const gap=dayNum(dayKey())-dayNum(p.lastDay);if(gap<=1)return p.streak;if(gap-1<=(+p.freeze||0))return p.streak;return 0}
 function boostLeft(){const b=P&&P.xpBoost;return b&&b.until>Date.now()?Math.ceil((b.until-Date.now())/60000):0}
 function boostAdd(min){const now=Date.now();P.xpBoost={until:Math.max(now,(P.xpBoost&&P.xpBoost.until)||0)+min*60000,x:2};try{renderTop()}catch(e){}}
-function addXp(xp,src){if(src==='game'){/* XP dari permainan dibatasi 60 per hari supaya peringkat didapat dari belajar */ensureDay(P);const u=P.today.gxp||0;xp=Math.max(0,Math.min(xp,60-u));P.today.gxp=u+xp;if(!xp)return false}if(boostLeft())xp*=2;try{clearTimeout(addXp._fq);addXp._fq=setTimeout(()=>window.fqSync&&window.fqSync(),1500)}catch(e){}P.xp+=xp;P.week.xp+=xp;P.today.xp+=xp;const t=dayKey();let up=false;P.xpd=P.xpd||{};P.xpd[t]=(P.xpd[t]||0)+xp;Object.keys(P.xpd).forEach(k=>{if(dayNum(t)-dayNum(k)>13)delete P.xpd[k]});
+function addXp(xp,src){if(src==='game'){/* XP dari permainan dibatasi 60 per hari supaya peringkat didapat dari belajar */ensureDay(P);const u=P.today.gxp||0;xp=Math.max(0,Math.min(xp,60-u));P.today.gxp=u+xp;if(!xp)return false}if(boostLeft())xp*=2;try{clearTimeout(addXp._fq);addXp._fq=setTimeout(()=>window.fqSync&&window.fqSync(),1500)}catch(e){}P.xp+=xp;P.week.xp+=xp;P.today.xp+=xp;const t=dayKey();{const mo=t.slice(0,7);if(!P.mxp||P.mxp.mo!==mo)P.mxp={mo,xp:0};P.mxp.xp+=xp}let up=false;P.xpd=P.xpd||{};P.xpd[t]=(P.xpd[t]||0)+xp;Object.keys(P.xpd).forEach(k=>{if(dayNum(t)-dayNum(k)>13)delete P.xpd[k]});
   if(P.lastDay!==t){const gap=P.lastDay?dayNum(t)-dayNum(P.lastDay):99;if(gap===1)P.streak++;else if(gap>=2&&gap-1<=(+P.freeze||0)){const miss=gap-1;P.freeze-=miss;P.streak++;const fd=[];for(let i=miss;i>=1;i--)fd.push(dayKey(new Date(Date.now()-i*864e5)));P.frz=[...(P.frz||[]).slice(-60),...fd]}else{if(P.streak>=3&&P.lastDay&&gap<=4)P.brk={n:P.streak,day:t,from:P.lastDay};P.streak=1}P.lastDay=t;P.hist=[...(P.hist||[]).slice(-800),t];P.days=[...P.days.filter(d=>dayNum(t)-dayNum(d)<14),t];up=true}
   P.bestStreak=Math.max(P.bestStreak||0,P.streak);return up}
 
@@ -15334,7 +15341,9 @@ function rkRoll(p){try{const w=p.week;if(!w||!w.id)return;const r=rkState(p),tg=
   if(xp<=0){if(r.s>0)r.s--;else if(r.t>0){r.t--;r.s=2}}else{r.s+=earned;while(r.s>=3&&r.t<TIERS.length-1){r.s-=3;r.t++}if(r.t>=TIERS.length-1)r.s=Math.min(r.s,3)}
   r.last={w:w.id,earned,xp,days,les,from,to:r.t,fromS,toS:r.s,idle:xp<=0,seen:false};
   p.wkPrev2=p.wkPrev||null;p.wkPrev={id:w.id,xp}}catch(e){console.warn('rkRoll',e)}}
-function rkMarkLesson(){const t=dayKey();P.ld=[...new Set([...(P.ld||[]).filter(d=>dayNum(t)-dayNum(d)<70),t])];ensureDay(P);P.week.les=(P.week.les||0)+1}
+try{const q=new URLSearchParams(location.search).get('ajak');if(q&&/^[A-Za-z0-9]{10,64}$/.test(q))localStorage.setItem('jk_ajak',q)}catch(e){}
+function rkRef(){try{if(!FB||!FBX.user||isT()||!P||P.ajakSent)return;const by=localStorage.getItem('jk_ajak'),uid=FBX.user.uid;if(!by||by===uid)return;P.ajakSent=1;FB.db.doc('ref/'+uid).set({uid,by,at:Date.now(),upd:Date.now()}).catch(()=>{P.ajakSent=0})}catch(e){}}
+function rkMarkLesson(){setTimeout(rkRef,1500);const t=dayKey();P.ld=[...new Set([...(P.ld||[]).filter(d=>dayNum(t)-dayNum(d)<70),t])];ensureDay(P);P.week.les=(P.week.les||0)+1}
 function rkFrame(p){p=p||P;const f=p.rkFrame;return f&&Date.now()-f.at<28*864e5?f:null}
 if(FB){
 const FREE_MAX=+(FB.cfg.freeStudents||10);
@@ -16438,12 +16447,12 @@ const RKV={sc:null,m:'xp'};const RKC={};
 const rkJen=c=>c==='tk'?'tk':/^sd/.test(c||'')?'sd':c==='smp'?'smp':c==='sma'?'sma':'sd';
 const RKJN={tk:'TK',sd:'SD',smp:'SMP',sma:'SMA/SMK'};
 function rkGet(id,fresh){const c=RKC[id];if(c&&!fresh&&Date.now()-c.t<5*60e3)return Promise.resolve(c.d);
-  return FB.db.doc('rkb/'+id).get().then(s=>{let d=null;try{d=s.exists?JSON.parse(s.data().d):null;if(d)d.upd=s.data().upd}catch(e){}RKC[id]={d,t:Date.now()};return d})}
+  return FB.db.doc('rkb/'+id).get().then(s=>{let d=null;try{d=s.exists?JSON.parse(s.data().d):null;if(d){d.upd=s.data().upd;if(d.P&&d.b)Object.keys(d.b).forEach(m=>{d.b[m]=d.b[m].map(x=>Array.isArray(x)?Object.assign({u:x[0],v:x[1],v2:x[2]},d.P[x[0]]||{}):x)})}}catch(e){}RKC[id]={d,t:Date.now()};return d})}
 function rkMine(){const r=rkState(),mo=dayKey().slice(0,7),pm=(()=>{const d=new Date();d.setDate(0);return dayKey(d).slice(0,7)})();ensureDay(P);
   return {uid:FBX.user.uid,name:String(P.name||'').slice(0,60),color:P.color||null,av:P.avatar||null,cls:P.cls,cid:(FBX.me&&FBX.me.classId)||null,
    w:P.week.id,wxp:P.week.xp||0,pw:(P.wkPrev&&P.wkPrev.id)||null,pwxp:(P.wkPrev&&P.wkPrev.xp)||0,ppw:(P.wkPrev2&&P.wkPrev2.id)||null,ppx:(P.wkPrev2&&P.wkPrev2.xp)||0,
    mo,mact:Math.min(31,rkMonthDays(P,mo)),pmo:pm,pmact:Math.min(31,rkMonthDays(P,pm)),st:shownStreak()||0,bst:Math.min(4999,Math.max(P.bestStreak||0,shownStreak()||0)),
-   t:r.t,s:r.s,fr:rkFrame()?rkFrame().r:0}}
+   t:r.t,s:r.s,fr:rkFrame()?rkFrame().r:0,xp:P.xp||0,mxp:P.mxp&&P.mxp.mo===mo?P.mxp.xp:0}}
 function rkPush(force){if(!FBX.user||isT()||!P)return Promise.resolve();const d=rkMine();const key=JSON.stringify(d);if(!force&&key===RKV.pk)return Promise.resolve();RKV.pk=key;d.upd=Date.now();
   return FB.db.doc('rk/'+FBX.user.uid).set(d).catch(()=>{RKV.pk=null})}
 async function rkSync(){if(!FBX.user||isT()||!P||RKV.busy)return;RKV.busy=true;try{ensureDay(P);await rkPush();await rkAwards()}catch(e){}finally{RKV.busy=false}setTimeout(rkResult,500)}
@@ -16453,15 +16462,15 @@ async function rkAwards(){if(!FBX.user||isT()||!P)return;if(Date.now()-(RKV.awAt
   let list=[];try{const s=await FB.db.doc('rkw/'+FBX.user.uid).get();if(s.exists)list=JSON.parse(s.data().d||'[]')}catch(e){return}
   const r=rkState(),got=new Set(r.got),nw=list.filter(a=>a&&a.id&&!got.has(a.id));if(!nw.length)return;
   let gems=0;nw.forEach(a=>{gems+=+a.g||0;got.add(a.id)});r.got=[...got].slice(-200);P.gems=(P.gems||0)+gems;
-  const best=nw.slice().sort((a,b)=>a.r-b.r||RKSC[b.sc]-RKSC[a.sc])[0];
-  if(best&&best.r<=3){const cur=rkFrame();if(!cur||best.r<cur.r||(best.r===cur.r&&RKSC[best.sc]>=(RKSC[cur.sc]||0)))P.rkFrame={r:best.r,sc:best.sc,t:rkTitle(best),at:Date.now()}}
+  const best=nw.filter(a=>a.m!=='ajak').sort((a,b)=>a.r-b.r||RKSC[b.sc]-RKSC[a.sc])[0];
+  if(best&&best.r>=1&&best.r<=3){const cur=rkFrame();if(!cur||best.r<cur.r||(best.r===cur.r&&RKSC[best.sc]>=(RKSC[cur.sc]||0)))P.rkFrame={r:best.r,sc:best.sc,t:rkTitle(best),at:Date.now()}}
   P.rkNew=(P.rkNew||[]).concat(nw).slice(-12);save();try{renderTop()}catch(e){}rkPush(true);setTimeout(rkAwardModal,700)}
-function rkTitle(a){const m={xp:'XP Terbanyak',naik:'Paling Meningkat',act:'Paling Rajin',kls:'Kelas Juara',str:'Runtunan Terpanjang'}[a.m]||'Juara';return `Juara ${a.r} ${m} · ${a.lbl}`}
+function rkTitle(a){if(a.m==='ajak')return a.lbl==='Ajak teman'?`Teman baru bergabung: ${a.sub}`:`Hadiah dari ajakan ${a.sub}`;const m={xp:'XP Terbanyak',naik:'Paling Meningkat',act:'Paling Rajin',kls:'Kelas Juara',str:'Runtunan Terpanjang'}[a.m]||'Juara';return `Juara ${a.r} ${m} · ${a.lbl}`}
 function rkAwardModal(){const L=P&&P.rkNew;if(!L||!L.length)return;if(!$('#modal').hidden||document.body.classList.contains('playing')){clearTimeout(RKV.awT);RKV.awT=setTimeout(rkAwardModal,4000);return}P.rkNew=[];save();
   const g=L.reduce((s,a)=>s+(+a.g||0),0);
-  openModal(`<div class="rkaw"><img src="pets/uli-piala.webp" alt="" class="rkaw-img"><h3>Selamat, kamu juara!</h3>
-   <div class="rkaw-list">${L.slice(0,6).map((a,i)=>`<div class="rkaw-it"><span class="rkaw-r r${a.r}">${a.r}</span><span><b>${esc(rkTitle(a))}</b><small>${esc((a.sub?a.sub+' · ':'')+a.p)}</small></span><button class="ghost rkaw-c" data-i="${i}" aria-label="Unduh sertifikat">📜</button></div>`).join('')}</div>
-   ${g?`<p class="pill ok" style="font-size:16px">+${g} permata</p>`:''}<p class="note">Bingkai juara terpasang di profilmu selama 4 minggu. Ketuk 📜 untuk menyimpan sertifikat.</p><button class="primary" id="mClose" style="width:100%">Mantap!</button></div>`);
+  openModal(`<div class="rkaw"><img src="pets/uli-piala.webp" alt="" class="rkaw-img"><h3>${L.every(a=>a.m==='ajak')?'Hadiah ajak teman!':'Selamat, kamu juara!'}</h3>
+   <div class="rkaw-list">${L.slice(0,6).map((a,i)=>`<div class="rkaw-it"><span class="rkaw-r r${a.r}">${a.m==='ajak'?'🤝':a.r}</span><span><b>${esc(rkTitle(a))}</b><small>${esc((a.sub?a.sub+' · ':'')+a.p)}</small></span>${a.m==='ajak'?'':`<button class="ghost rkaw-c" data-i="${i}" aria-label="Unduh sertifikat">📜</button>`}</div>`).join('')}</div>
+   ${g?`<p class="pill ok" style="font-size:16px">+${g} permata</p>`:''}${L.some(a=>a.m!=='ajak')?'<p class="note">Bingkai juara terpasang di profilmu selama 4 minggu. Ketuk 📜 untuk menyimpan sertifikat.</p>':''}<button class="primary" id="mClose" style="width:100%">Mantap!</button></div>`);
   $('#mClose').onclick=closeModal;document.querySelectorAll('.rkaw-c').forEach(b=>b.onclick=()=>{const a=L[+b.dataset.i];rkCert({name:P.name,title:rkTitle(a),sub:a.sub||'',period:a.p,r:a.r})});
   try{burstConfetti()}catch(e){}}
 /* hasil mingguan peringkat pribadi */
@@ -16494,14 +16503,23 @@ async function rkCert(o){try{await Promise.all([document.fonts.load('700 60px Fr
     try{const f=new File([b],fn,{type:'image/png'});if(navigator.canShare&&navigator.canShare({files:[f]})){await navigator.share({files:[f],title:'Sertifikat juara JELAS'});return}}catch(e){if(e&&e.name==='AbortError')return}
     const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=fn;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},2000);toast('check','Sertifikat disimpan.')},'image/png')}
 /* tampilan */
-function rkVal(m,v,v2){return m==='xp'?`${v} XP`:m==='naik'?`+${v} XP`:m==='act'?`${v} hari`:m==='str'?`${v} hari`:m==='kls'?`${v} XP/murid`:v}
-function rkRows(list,m,sc){const me=FBX.user&&FBX.user.uid,mc=(FBX.me||{}).classId;let h='';
-  list.forEach((r,i)=>{const rk=i+1,mine=m==='kls'?r.cid===mc:r.u===me;
+function rkVal(m,v,v2){return m==='xp'||m==='xpm'||m==='xpt'?`${v} XP`:m==='naik'?`+${v} XP`:m==='act'?`${v} hari`:m==='str'?`${v} hari`:m==='kls'?`${v} XP/murid`:v}
+function rkAv(r){return r.bot?`<span class="avatar avimg rkbot"><img src="pets/${r.img}.webp" alt=""></span>`:avSpan({uid:r.u,name:r.n,color:r.c,avatar:r.a||null})}
+function rkRows(list,m,sc,from){const me=FBX.user&&FBX.user.uid,mc=(FBX.me||{}).classId;let h='',zero=false;from=from||0;
+  list.forEach((r,i)=>{if(i<from)return;const rk=i+1,mine=m==='kls'?r.cid===mc:r.u===me;
     if(m==='kls'){h+=`<div class="lgx-row ${mine?'me':''}"><span class="lgx-rk">${rk<=3?lgMedal(rk):rk}</span><span class="rkcls">🏫</span><span class="lgx-nm"><b>${esc(r.n)}</b><small>${esc([sc!=='sekolah'?r.s:'',r.t?'Guru: '+r.t:'',r.m+' murid aktif'].filter(Boolean).join(' · '))}</small></span><span class="lgx-xp">${rkVal(m,r.v)}</span></div>`;return}
+    if(!zero&&!r.bot&&r.v===0&&(m==='xp'||m==='xpm')){zero=true;h+=`<div class="rk2-zero">${m==='xp'?'Belum belajar minggu ini':'Belum belajar bulan ini'}</div>`}
+    if(r.bot){h+=`<div class="lgx-row rkbotrow"><span class="lgx-rk">${rk<=3?lgMedal(rk):rk}</span>${rkAv(r)}<span class="lgx-nm"><b>${esc(r.n)} <i class="rkbtag">🤖 maskot</i></b><small>${esc(r.k)}</small></span><span class="lgx-xp">${rkVal(m,r.v)}</span></div>`;return}
     const sub=sc==='kelas'?'':sc==='sekolah'?r.k:[r.k,r.s].filter(Boolean).join(' · ');
-    h+=`<div class="lgx-row ${mine?'me':'tap'}${r.fr?' rkfr'+r.fr:''}" data-u="${esc(r.u)}" ${mine?'':'role="button" tabindex="0"'}><span class="lgx-rk">${rk<=3?lgMedal(rk):rk}</span>${avSpan({uid:r.u,name:r.n,color:r.c,avatar:r.a||null})}<span class="lgx-nm"><b>${esc(r.n||'')}${r.fr?` <i class="rkcrown" title="Juara">👑</i>`:''}</b>${sub?`<small>${esc(sub)}</small>`:''}</span><span class="lgx-xp">${rkVal(m,r.v)}${m==='str'&&r.v2?`<small>sekarang ${r.v2}</small>`:''}</span></div>`});return h}
-function rkLive(list,m){/* ganti nilai milikku dengan angka terbaru di HP */if(!FBX.user||m==='kls')return list;const me=rkMine(),u=FBX.user.uid;const v={xp:me.wxp,act:me.mact,str:me.bst,naik:me.pw&&me.pwxp>=20&&me.wxp>me.pwxp?me.wxp-me.pwxp:0}[m];
-  const L=list.filter(r=>r.u!==u);const old=list.find(r=>r.u===u)||{u,n:me.name,c:me.color,a:me.av,k:'',s:''};if(v>0)L.push(Object.assign({},old,{v,v2:m==='str'?me.st:old.v2,fr:me.fr||0,n:me.name,a:me.av}));
+    h+=`<div class="lgx-row ${mine?'me':'tap'}${r.fr?' rkfr'+r.fr:''}${r.v===0?' rk0':''}" data-u="${esc(r.u)}" ${mine?'':'role="button" tabindex="0"'}><span class="lgx-rk">${r.v===0?'–':rk<=3?lgMedal(rk):rk}</span>${rkAv(r)}<span class="lgx-nm"><b>${esc(r.n||'')}${r.fr?` <i class="rkcrown" title="Juara">👑</i>`:''}</b>${sub?`<small>${esc(sub)}</small>`:''}</span><span class="lgx-xp">${rkVal(m,r.v)}${m==='str'&&r.v2?`<small>sekarang ${r.v2}</small>`:''}</span></div>`});return h}
+/* maskot penantang: muncul selama papan masih sepi, XP-nya naik pelan sepanjang minggu (bukan murid sungguhan) */
+const RK_BOTS=[['uli','Uli',1,'Rajin sekali'],['harimau','Harimau',.75,'Lumayan rajin'],['orangutan','Orangutan',.5,'Santai'],['komodo','Komodo',.3,'Paling santai']];
+function rkBots(list,m){if(m!=='xp'&&m!=='xpm')return list;if(list.filter(r=>r.v>0&&!r.bot).length>=10)return list;
+  const tg=RK_TGT(rkState().t).xp,now=new Date(),day=(now.getDay()+6)%7,fw=Math.min(1,(day+now.getHours()/24+.15)/7),dm=now.getDate()-1+now.getHours()/24;
+  const bots=RK_BOTS.map(([img,n,k,d],i)=>{const base=m==='xp'?tg*k*fw:tg*k*(dm/7);const jit=1+((i*37+now.getDate()*11)%9-4)/60;return {bot:true,u:'bot_'+img,img,n,k:d,v:Math.max(0,Math.round(base*jit/5)*5)}});
+  return list.concat(bots).sort((a,b)=>b.v-a.v||(b.bot?-1:1)*0||(b.v2||0)-(a.v2||0))}
+function rkLive(list,m){/* ganti nilai milikku dengan angka terbaru di HP */if(!FBX.user||m==='kls')return list;const me=rkMine(),u=FBX.user.uid;const v={xp:me.wxp,xpm:me.mxp,xpt:me.xp,act:me.mact,str:me.bst,naik:me.pw&&me.pwxp>=20&&me.wxp>me.pwxp?me.wxp-me.pwxp:0}[m];
+  const L=list.filter(r=>r.u!==u);const old=list.find(r=>r.u===u)||{u,n:me.name,c:me.color,a:me.av,k:'',s:''};if(v>0||list.some(r=>r.u===u))L.push(Object.assign({},old,{v,v2:m==='str'?me.st:(m==='xp'||m==='xpm'?me.xp:old.v2),fr:me.fr||0,n:me.name,a:me.av}));
   return L.sort((a,b)=>b.v-a.v||(b.v2||0)-(a.v2||0))}
 function rkAgo(t){if(!t)return '';const m=Math.round((Date.now()-t)/60e3);return m<2?'baru saja':m<60?`${m} menit lalu`:`${Math.round(m/60)} jam lalu`}
 function rkHead(){const r=rkState(),t=r.t,c=TIERS[t][2],nx=t<TIERS.length-1?TIERS[t+1][0]:null;
@@ -16512,36 +16530,49 @@ function rkTargets(){const r=rkState(),tg=RK_TGT(r.t),d=rkWeekDays(),it=[['⚡',
   return `<div class="rk2-card"><div class="rk2-ct"><b>Target minggu ini</b><span>⏱ ${lgLeft().toLowerCase()} lagi</span></div><div class="rk2-tg">${it.map(([e,l,v,m,col])=>{const ok=v>=m,pc=Math.min(100,Math.round(v/m*100));
     return `<div class="rk2-ti ${ok?'ok':''}" style="--c:${col}"><div class="rk2-ring" style="--p:${pc}"><span>${ok?'★':e}</span></div><b>${Math.min(v,m)}<small>/${m}</small></b><span>${l}</span></div>`}).join('')}</div>
    <p class="rk2-hint">Tiap target tercapai = 1 bintang ⭐</p></div>`}
-function rkPodium(list,m){const p=list.slice(0,3);if(p.length<1)return '';const me=FBX.user&&FBX.user.uid,ord=[1,0,2].filter(i=>p[i]);
-  return `<div class="rk2-pod">${ord.map(i=>{const r=p[i];const kls=m==='kls';return `<div class="rk2-pc p${i+1} ${(!kls&&r.u===me)||(kls&&r.cid===(FBX.me||{}).classId)?'me':''} ${kls?'':'tap'}" data-u="${esc(r.u||'')}">
-    <div class="rk2-pav">${kls?'<span class="rk2-sch">🏫</span>':avSpan({uid:r.u,name:r.n,color:r.c,avatar:r.a||null})}<img class="rk2-pm" src="liga/medal${i+1}.webp?v=1" alt=""></div>
-    <b>${esc(r.n||'')}</b><small>${rkVal(m,r.v)}</small><div class="rk2-step">${i+1}</div></div>`}).join('')}</div>`}
+function rkPodium(list,m){const p=list.slice(0,3).filter(r=>r.v>0);if(p.length<1)return '';const me=FBX.user&&FBX.user.uid,ord=[1,0,2].filter(i=>p[i]);
+  return `<div class="rk2-pod">${ord.map(i=>{const r=p[i];const kls=m==='kls';return `<div class="rk2-pc p${i+1} ${(!kls&&r.u===me)||(kls&&r.cid===(FBX.me||{}).classId)?'me':''} ${kls||r.bot?'':'tap'}" data-u="${esc(r.u||'')}">
+    <div class="rk2-pav">${kls?'<span class="rk2-sch">🏫</span>':rkAv(r)}<img class="rk2-pm" src="liga/medal${i+1}.webp?v=1" alt=""></div>
+    <b>${esc(r.n||'')}${r.bot?' 🤖':''}</b><small>${rkVal(m,r.v)}</small><div class="rk2-step">${i+1}</div></div>`}).join('')}</div>`}
 renderLeague=function(){const card=$('#leagueCard');if(!card||!P)return;APP.profiles.forEach(p=>ensureDay(p));rkState();
   const online=!!(FBX.user&&!isT());
   if(!online){const rows=[...APP.profiles].sort((a,b)=>b.week.xp-a.week.xp).map(p=>({u:p.id,n:p.name,c:p.color,a:p.avatar,v:p.week.xp}));
-    card.innerHTML=`<div class="rk2">${rkHead()+rkTargets()}<div class="rk2-card"><p class="note">Masuk dengan akun untuk ikut papan juara kelas, sekolah, dan nasional.</p><div class="lgx-list">${rkRows(rows,'xp','kelas')}</div></div></div>`;lgCenter();return}
-  const cid=(FBX.me||{}).classId;if(!RKV.sc)RKV.sc=cid?'kelas':'nasional';
+    card.innerHTML=`<div class="rk2">${rkHead()+rkTargets()}<div class="rk2-card"><p class="note">Masuk dengan akun untuk ikut papan juara kelas, sekolah, dan nasional.</p><div class="lgx-list">${rkRows(rkBots(rows,'xp'),'xp','kelas')}</div></div></div>`;lgCenter();return}
+  const cid=(FBX.me||{}).classId,J=rkJen(P.cls);if(!RKV.sc)RKV.sc=cid?'kelas':'semua';RKV.per=RKV.per||'w';
   const ms=RKV.sc==='kelas'?['xp','naik','act','str']:['xp','naik','act','str','kls'];if(!ms.includes(RKV.m))RKV.m='xp';
-  const SH={xp:'XP minggu ini',naik:'Paling meningkat',act:'Hari aktif',str:'Runtunan',kls:'Antarkelas'};
+  const SH={xp:'XP',naik:'Paling meningkat',act:'Hari aktif',str:'Runtunan',kls:'Antarkelas'};
+  const key=RKV.m==='xp'?{w:'xp',m:'xpm',t:'xpt'}[RKV.per]:RKV.m;
   card.innerHTML=`<div class="rk2">${rkHead()+rkTargets()}<div class="rk2-card rk2-board"><div class="rk2-ct"><b>🏆 Papan juara</b></div>
-   <div class="rk2-seg">${[['kelas','Kelasku'],['sekolah','Sekolahku'],['nasional','Nasional '+RKJN[rkJen(P.cls)]]].map(([k,l])=>`<button class="${RKV.sc===k?'on':''}" data-sc="${k}">${l}</button>`).join('')}</div>
-   <div class="rk2-chips">${ms.map(k=>`<button class="${RKV.m===k?'on':''}" data-m="${k}">${RKM[k][1]} ${SH[k]}</button>`).join('')}</div><div id="rkList"><p class="note rk2-pad">Memuat papan juara…</p></div></div></div>`;
+   <div class="rk2-seg">${[['kelas','Kelas'],['sekolah','Sekolah'],['nasional',RKJN[J]],['semua','Semua']].map(([k,l])=>`<button class="${RKV.sc===k?'on':''}" data-sc="${k}">${l}</button>`).join('')}</div>
+   <div class="rk2-chips">${ms.map(k=>`<button class="${RKV.m===k?'on':''}" data-m="${k}">${RKM[k][1]} ${SH[k]}</button>`).join('')}</div>
+   ${RKV.m==='xp'?`<div class="rk2-per">${[['w','Minggu ini'],['m','Bulan ini'],['t','Total']].map(([k,l])=>`<button class="${RKV.per===k?'on':''}" data-per="${k}">${l}</button>`).join('')}</div>`:''}
+   <p class="rk2-scope">${{kelas:'Teman sekelasmu',sekolah:'Semua murid di sekolahmu',nasional:`Semua murid ${RKJN[J]} pengguna JELAS se-Indonesia`,semua:'Semua pengguna JELAS, dari TK sampai SMA/SMK'}[RKV.sc]}</p>
+   <div id="rkList"><p class="note rk2-pad">Memuat papan juara…</p></div></div>${rkAjakCard()}</div>`;
   lgCenter();card.querySelectorAll('[data-sc]').forEach(b=>b.onclick=()=>{RKV.sc=b.dataset.sc;renderLeague()});card.querySelectorAll('[data-m]').forEach(b=>b.onclick=()=>{RKV.m=b.dataset.m;renderLeague()});
+  card.querySelectorAll('[data-per]').forEach(b=>b.onclick=()=>{RKV.per=b.dataset.per;renderLeague()});{const aj=$('#rkAjak');if(aj)aj.onclick=rkAjakShare}
   {const ch=card.querySelector('.rk2-chips .on');if(ch)ch.scrollIntoView({block:'nearest',inline:'center'})}
-  const box=$('#rkList'),sc=RKV.sc,m=RKV.m;const msg=t=>{box.innerHTML=`<div class="rk2-empty"><img src="pets/uli-baca.webp" alt=""><p>${t}</p></div>`};
-  const need=()=>{if(sc==='nasional')return Promise.resolve('nas_'+rkJen(P.cls));if(!cid)return Promise.resolve(null);if(sc==='kelas')return Promise.resolve('cls_'+cid);return rkGet('cls_'+cid).then(d=>d&&d.sch?'sch_'+d.sch:'')};
-  need().then(id=>{if(RKV.sc!==sc||RKV.m!==m)return;if(id===null){msg(sc==='kelas'?'Kamu belum masuk kelas. Minta kode kelas dari gurumu, lalu masukkan di menu Profil.':'Masuk kelas dulu supaya sekolahmu ikut papan juara.');return}
+  const box=$('#rkList'),sc=RKV.sc,m=key;const msg=t=>{box.innerHTML=`<div class="rk2-empty"><img src="pets/uli-baca.webp" alt=""><p>${t}</p></div>`};
+  const need=()=>{if(sc==='semua')return Promise.resolve('nas_all');if(sc==='nasional')return Promise.resolve('nas_'+J);if(!cid)return Promise.resolve(null);if(sc==='kelas')return Promise.resolve('cls_'+cid);return rkGet('cls_'+cid).then(d=>d&&d.sch?'sch_'+d.sch:'')};
+  const stale=()=>RKV.sc!==sc||(RKV.m==='xp'?{w:'xp',m:'xpm',t:'xpt'}[RKV.per]:RKV.m)!==m;
+  need().then(id=>{if(stale())return;if(id===null){msg(sc==='kelas'?'Kamu belum masuk kelas. Minta kode kelas dari gurumu, lalu masukkan di menu Profil.':'Masuk kelas dulu supaya sekolahmu ikut papan juara.');return}
     if(id===''){msg('Sekolahmu belum tercatat. Minta gurumu mengisi nama sekolah di Pengaturan.');return}
-    return rkGet(id).then(d=>{if(RKV.sc!==sc||RKV.m!==m||!$('#rkList'))return;
-      let list=d?(m==='kls'?d.kls||[]:(d.b&&d.b[m])||[]):[];if(d&&d.w!==P.week.id&&m!=='act'&&m!=='str'&&m!=='kls')list=[];list=rkLive(list,m);
+    return rkGet(id).then(d=>{if(stale()||!$('#rkList'))return;
+      let list=d?(m==='kls'?d.kls||[]:(d.b&&d.b[m])||[]):[];if(d&&d.w!==P.week.id&&(m==='xp'||m==='naik'))list=list.map(r=>Object.assign({},r,{v:0}));if(d&&d.mo!==dayKey().slice(0,7)&&(m==='xpm'||m==='act'))list=list.map(r=>Object.assign({},r,{v:0}));
+      list=rkBots(rkLive(list,m),m);
       const pos=sc==='kelas'&&d&&(d.rs||d.rn)?`<div class="rk2-pos"><span>🏫</span><p><b>${esc(d.k||'Kelasmu')}</b> peringkat ${d.rs||'-'} dari ${d.ns} kelas di sekolah${d.rn?` · ${d.rn} dari ${d.nn} kelas ${RKJN[d.j]} se-Indonesia`:''}</p></div>`:'';
-      const last=d&&(m==='act'?d.lastM&&d.lastM.act:d.last&&d.last[m]);const lastP=d&&(m==='act'?d.lastM&&d.lastM.p:d.last&&d.last.p);
-      const info={kls:'Rata-rata XP per murid minggu ini (minimal 2 murid aktif).',naik:'Selisih XP minggu ini dibanding minggu lalu.',act:'Hari belajar (menyelesaikan pelajaran) bulan ini.',str:'Runtunan terpanjang. Angka kecil = runtunan sekarang.',xp:'XP yang dikumpulkan sejak Senin.'}[m];
-      box.innerHTML=pos+(list.length?rkPodium(list,m)+(list.length>3?`<div class="lgx-list rk2-list">${rkRows(list,m,sc).split('<div class="lgx-row').slice(4).map(x=>'<div class="lgx-row'+x).join('')}</div>`:''):`<div class="rk2-empty"><img src="pets/uli-sorak.webp" alt=""><p>${d?'Belum ada yang tercatat. Jadilah yang pertama!':'Papan juara sedang disiapkan. Diperbarui tiap ±30 menit.'}</p></div>`)+
-        (last&&last.length?`<div class="rk2-last"><b>Juara ${m==='act'?'bulan':'minggu'} lalu</b><small>${esc(lastP||'')}</small><div>${last.map((x,i)=>`<span>${['🥇','🥈','🥉'][i]} ${esc(x.n)}</span>`).join('')}</div></div>`:'')+
-        `<p class="rk2-foot">${info}${d&&d.upd?' Diperbarui '+rkAgo(d.upd)+'.':''}</p>`;
+      const lk=m==='xpm'||m==='xpt'?null:m;const last=d&&lk&&(lk==='act'?d.lastM&&d.lastM.act:d.last&&d.last[lk]);const lastP=d&&(lk==='act'?d.lastM&&d.lastM.p:d.last&&d.last.p);
+      const info={kls:'Rata-rata XP per murid minggu ini (minimal 2 murid aktif).',naik:'Selisih XP minggu ini dibanding minggu lalu.',act:'Hari belajar (menyelesaikan pelajaran) bulan ini.',str:'Runtunan terpanjang. Angka kecil = runtunan sekarang.',xp:'XP sejak Senin.',xpm:'XP sejak tanggal 1 bulan ini.',xpt:'Semua XP sejak mulai memakai JELAS.'}[m];
+      const nPod=Math.min(3,list.filter(r=>r.v>0).length);
+      box.innerHTML=pos+(list.length?rkPodium(list,m)+(list.length>nPod?`<div class="lgx-list rk2-list">${rkRows(list,m,sc,nPod)}</div>`:''):`<div class="rk2-empty"><img src="pets/uli-sorak.webp" alt=""><p>${d?'Belum ada yang tercatat. Jadilah yang pertama!':'Papan juara sedang disiapkan. Diperbarui tiap ±30 menit.'}</p></div>`)+
+        (last&&last.length?`<div class="rk2-last"><b>Juara ${lk==='act'?'bulan':'minggu'} lalu</b><small>${esc(lastP||'')}</small><div>${last.map((x,i)=>`<span>${['🥇','🥈','🥉'][i]} ${esc(x.n)}</span>`).join('')}</div></div>`:'')+
+        `<p class="rk2-foot">${info}${list.some(r=>r.bot)?' 🤖 Maskot penantang ikut meramaikan papan selama pesertanya masih sedikit; mereka bukan murid sungguhan dan tidak bisa menang hadiah.':''}${d&&d.upd?' Diperbarui '+rkAgo(d.upd)+'.':''}</p>`;
       box.querySelectorAll('.tap[data-u]').forEach(el=>el.onclick=()=>{const r=list.find(x=>x.u===el.dataset.u);if(r&&r.u!==(FBX.user&&FBX.user.uid)&&window.openUserProfile)openUserProfile(r.u,{name:r.n,av:r.a})})})}).catch(e=>{const b=$('#rkList');if(b)b.innerHTML=`<p class="note rk2-pad">${esc(fbErr(e))}</p>`});
   rkSync()};
+/* ajak teman */
+function rkAjakCard(){return `<div class="rk2-card rk2-ajak"><img src="pets/uli-lambai.webp" alt=""><div><b>Ajak teman belajar</b><p>Kamu dapat <b>50 permata</b>, temanmu <b>25 permata</b> setelah ia mulai belajar.</p><button class="primary" id="rkAjak">Ajak teman</button></div></div>`}
+function rkAjakShare(){if(!FBX.user)return;const url=`https://jelajahkelas.github.io/?ajak=${encodeURIComponent(FBX.user.uid)}`;
+  const t=`Yuk belajar bareng di JELAS! Gratis untuk murid TK sampai SMA/SMK, belajarnya seperti main game. Daftar lewat tautan ini supaya kita sama-sama dapat permata: ${url}`;
+  if(navigator.share){navigator.share({title:'Belajar bareng di JELAS',text:t}).catch(()=>{});return}window.open('https://wa.me/?text='+encodeURIComponent(t),'_blank')}
 /* ajakan setelah pelajaran: posisi di kelas */
 function rkNudge(){try{if(!FBX.user||isT()||Date.now()-(RKV.nAt||0)<15*60e3)return;const cid=(FBX.me||{}).classId;if(!cid)return;
   rkGet('cls_'+cid).then(d=>{if(!d||!d.b||d.w!==P.week.id)return;const L=rkLive(d.b.xp||[],'xp'),i=L.findIndex(r=>r.u===FBX.user.uid);if(i<=0)return;
@@ -17055,7 +17086,7 @@ function folBind(root,list,after){root.querySelectorAll('[data-follow]').forEach
   try{await folDo(f,on);if(on){try{sfx.ok()}catch(_){}toast('team',`Kamu mengikuti ${f.name}.`)}b.outerHTML=folBtn(f,b.classList.contains('sm'));folBind(root,list,after);after&&after()}catch(err){b.disabled=false;toast('lock',fbErr(err))}})}
 const shareIcon='<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M12 3 V15 M7 8 L12 3 L17 8 M5 13 V19 C5 20 6 21 7 21 H17 C18 21 19 20 19 19 V13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const qrIcon='<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><path d="M14 14h3v3h-3zM18 18h3v3h-3zM18 14h3M14 18v3" stroke-linecap="round"/></svg>';
-let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=445';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
+let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=446';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
 function qrMatrix(text){const Q=window.QRCodeLib,q=new Q(-1,Q.ECL.M);q.addData(text);q.make();const n=q.getModuleCount(),m=[];for(let r=0;r<n;r++){m.push([]);for(let c=0;c<n;c++)m[r].push(q.isDark(r,c))}return m}
 function qrSvgOf(m){const n=m.length;let d='';for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(m[r][c])d+=`M${c} ${r}h1.02v1.02h-1.02z`;
   return `<svg viewBox="-2 -2 ${n+4} ${n+4}" class="pcqr" shape-rendering="crispEdges" aria-label="Kode QR profil"><rect x="-2" y="-2" width="${n+4}" height="${n+4}" fill="#fff"/><path d="${d}" fill="#1C1E3D"/></svg>`}
