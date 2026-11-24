@@ -89,7 +89,7 @@ if (DRY) {
 }
 
 // ---------- bantuan ----------
-const JEN = (c) => c === 'tk' ? 'tk' : /^sd/.test(c || '') ? 'sd' : c === 'smp' ? 'smp' : c === 'sma' ? 'sma' : 'sd';
+const JEN = (c) => { c = String(c || ''); const g = /^k(\d+)$/.exec(c); if (g) { const n = +g[1]; return n <= 6 ? 'sd' : n <= 9 ? 'smp' : 'sma'; } return c === 'tk' ? 'tk' : /^sd/.test(c) ? 'sd' : c === 'smp' ? 'smp' : c === 'sma' ? 'sma' : 'sd'; };
 const slug = (s) => String(s || '').toLowerCase().normalize('NFKD').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 80);
 const clsOf = (e) => (e.cid && S.cls[e.cid]) || null;
 const schOf = (e) => { const c = clsOf(e); return c && slug(c.school) ? slug(c.school) : null; };
