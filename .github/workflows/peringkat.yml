@@ -1,0 +1,38 @@
+# Penghitung papan peringkat JELAS: kelas, sekolah, nasional per jenjang, dan antarkelas.
+# Berjalan otomatis ±30 menit sekali memakai kunci FIREBASE_SERVICE_ACCOUNT di GitHub Secrets.
+# Data antara disimpan di cache Actions (tidak bisa diunduh publik) agar hanya entri yang berubah yang dibaca.
+name: Peringkat
+on:
+  schedule:
+    - cron: '13,43 * * * *'
+  workflow_dispatch:
+concurrency:
+  group: peringkat
+  cancel-in-progress: false
+jobs:
+  hitung:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            notif
+            .github
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - uses: actions/cache/restore@v4
+        with:
+          path: .rkcache
+          key: rk-${{ github.run_id }}
+          restore-keys: rk-
+      - name: Hitung peringkat
+        run: node .github/scripts/peringkat.mjs
+        env:
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+      - uses: actions/cache/save@v4
+        if: always()
+        with:
+          path: .rkcache
+          key: rk-${{ github.run_id }}

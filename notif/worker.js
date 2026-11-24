@@ -320,23 +320,21 @@ async function daily(now) {
     info[u.id] = { streak: +p.streak || 0, last: p.lastDay || '', studied: p.lastDay === today };
   }
   const gotLiga = new Set();
-  // 1. Liga: Rabu, Jumat, Minggu sore — sesuai posisi di grup ligamu
+  // 1. Papan juara kelas: Rabu, Jumat, Minggu sore — posisi di kelas dan jarak ke teman di atasnya
   if (needLiga) {
     await patchDoc('config/pushlog', { liga: today });
-    const rows = (await listAllDocs('lge', ['uid', 'w', 't', 'g', 'xp', 'upd'])).filter((r) => r.w === mon && r.g);
-    const groups = {}; rows.forEach((r) => { (groups[r.g] = groups[r.g] || []).push(r); });
+    const rows = (await listAllDocs('rk', ['uid', 'cid', 'w', 'wxp', 'name'])).filter((r) => r.w === mon && r.cid);
+    const groups = {}; rows.forEach((r) => { (groups[r.cid] = groups[r.cid] || []).push(r); });
     let n = 0;
     for (const g of Object.values(groups)) {
-      g.sort((a, b) => (+b.xp || 0) - (+a.xp || 0) || (+a.upd || 0) - (+b.upd || 0));
-      const t = +g[0].t || 0, z = lgZones(t, g.length), T = TIER_NAMES[t] || 'Perunggu';
+      if (g.length < 2) continue;
+      g.sort((a, b) => (+b.wxp || 0) - (+a.wxp || 0));
       for (let i = 0; i < g.length; i++) {
-        const r = g[i], rk = i + 1, u = info[r.uid]; if (!u || g.length < 2) continue;
+        const r = g[i], rk = i + 1, u = info[r.uid]; if (!u) continue;
         let title, body;
-        if (z.up && rk <= z.up) { title = `🏆 Kamu di zona naik Liga ${T}!`; body = `Peringkat ${rk} dari ${g.length}. Tambah XP supaya posisimu tetap aman.`; }
-        else if (z.up && rk <= z.up + 3) { title = '⚔️ Saatnya bersaing!'; body = `Kamu peringkat ${rk} di Liga ${T}. Satu pelajaran lagi bisa membawamu ke zona naik.`; }
-        else if (z.dn && rk > g.length - z.dn) { title = `⚠️ Awas turun dari Liga ${T}!`; body = `Kamu peringkat ${rk} dari ${g.length}. Selesaikan pelajaran supaya tetap bertahan.`; }
-        else { title = `🏅 Liga ${T} masih berlangsung`; body = `Kamu peringkat ${rk} dari ${g.length}. Kejar teman di atasmu, yuk!`; }
-        if (dow === 0) title = '⏰ Liga berakhir malam ini! ' + title.replace(/^\S+\s/, '');
+        if (rk === 1) { const d = (+r.wxp || 0) - (+g[1].wxp || 0); title = '🏆 Kamu juara 1 di kelas!'; body = d <= 30 ? `${g[1].name || 'Temanmu'} hanya tertinggal ${d} XP. Pertahankan posisimu!` : 'Pertahankan posisimu sampai Minggu malam!'; }
+        else { const up = g[i - 1], gap = (+up.wxp || 0) - (+r.wxp || 0) + 1; title = `⚔️ Kamu peringkat ${rk} di kelas`; body = gap <= 60 ? `Tinggal ${gap} XP lagi untuk menyalip ${up.name || 'temanmu'}!` : 'Satu pelajaran hari ini bisa membawamu naik peringkat.'; }
+        if (dow === 0) title = '⏰ Papan juara ditutup malam ini! ' + title.replace(/^\S+\s/, '');
         const s = await pushTo(r.uid, { type: 'liga', title, body }, 6 * 3600); if (s) { n += s; gotLiga.add(r.uid); }
       }
     }
