@@ -4350,7 +4350,7 @@ html[data-theme=malam] .ayat{background:#063F2E;color:#A7F3D0}
 <div class="syncpill" id="syncPill" hidden></div>
 <div class="toast" id="toast" hidden></div>
 
-<script src="av.js?v=439"></script>
+<script src="av.js?v=440"></script>
 <script>
 /* ---------- visual assets ---------- */
 const INK='#1B1E3D';
@@ -13187,9 +13187,12 @@ const SP_EX={
  cr:{n:'Sit-up',g:'inti',t:'rep',b:3,s:1,m:20,tip:'Berbaring, lutut ditekuk, telapak kaki menapak. Bangun pelan sampai duduk sambil mengencangkan perut, lalu turunkan pelan.'},
  mc:{n:'Mountain climber',g:'inti',t:'time',b:8,s:2,m:40,tip:'Posisi push-up, lalu tarik lutut ke dada bergantian dengan cepat tapi terkendali.'},
  st:{n:'Peregangan',g:'pendinginan',t:'time',b:20,s:0,m:20,tip:'Angkat tangan tinggi-tinggi, lalu bungkukkan badan pelan-pelan dan sentuh lutut atau ujung kaki. Tarik napas dalam.'}};
-function spFit(){P.fit=P.fit||{lv:{},days:{},n:0,last:0,intro:false};P.fit.lv=P.fit.lv||{};P.fit.days=P.fit.days||{};return P.fit}
+function spFit(){P.fit=P.fit||{lv:{},days:{},n:0,last:0,intro:false};P.fit.lv=P.fit.lv||{};P.fit.days=P.fit.days||{};
+  /* push-up dinding & lutut dihapus: level lama dipindah ke tahapan push-up biasa */
+  if(!P.fit.pu2){const g=P.gender,k=g==='P'?16:g==='L'?9:12,lv=P.fit.lv.pu||0;P.fit.lv.pu=lv>=k?lv-k:0;P.fit.pu2=1}
+  return P.fit}
 function spAmount(id,mini){const e=SP_EX[id],lv=spFit().lv[id]||0;let name=e.n,amt;
-  if(id==='pu'){const g=P&&P.gender,w=g==='P'?8:g==='L'?4:6,k=g==='P'?16:g==='L'?9:12;if(lv<w){name='Push-up dinding';amt=4+lv*2}else if(lv<k){name='Push-up lutut';amt=3+(lv-w)}else{amt=Math.min(e.m,2+(lv-k))}}
+  if(id==='pu'){amt=Math.min(e.m,3+lv)}
   else amt=Math.min(e.m,e.b+e.s*lv);
   if(mini)amt=Math.max(e.t==='time'?5:1,Math.round(amt/2));amt=spAdjAmt(id,amt);return {id,name,amt,t:e.t,per:e.per||'',tip:e.tip}}
 /* Level olahraga di jalur belajar: push-up saja (bisa dihitung otomatis dengan kamera) */
@@ -16812,7 +16815,7 @@ function folBind(root,list,after){root.querySelectorAll('[data-follow]').forEach
   try{await folDo(f,on);if(on){try{sfx.ok()}catch(_){}toast('team',`Kamu mengikuti ${f.name}.`)}b.outerHTML=folBtn(f,b.classList.contains('sm'));folBind(root,list,after);after&&after()}catch(err){b.disabled=false;toast('lock',fbErr(err))}})}
 const shareIcon='<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M12 3 V15 M7 8 L12 3 L17 8 M5 13 V19 C5 20 6 21 7 21 H17 C18 21 19 20 19 19 V13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const qrIcon='<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><path d="M14 14h3v3h-3zM18 18h3v3h-3zM18 14h3M14 18v3" stroke-linecap="round"/></svg>';
-let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=439';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
+let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=440';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
 function qrMatrix(text){const Q=window.QRCodeLib,q=new Q(-1,Q.ECL.M);q.addData(text);q.make();const n=q.getModuleCount(),m=[];for(let r=0;r<n;r++){m.push([]);for(let c=0;c<n;c++)m[r].push(q.isDark(r,c))}return m}
 function qrSvgOf(m){const n=m.length;let d='';for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(m[r][c])d+=`M${c} ${r}h1.02v1.02h-1.02z`;
   return `<svg viewBox="-2 -2 ${n+4} ${n+4}" class="pcqr" shape-rendering="crispEdges" aria-label="Kode QR profil"><rect x="-2" y="-2" width="${n+4}" height="${n+4}" fill="#fff"/><path d="${d}" fill="#1C1E3D"/></svg>`}
