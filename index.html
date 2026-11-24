@@ -4350,7 +4350,7 @@ html[data-theme=malam] .ayat{background:#063F2E;color:#A7F3D0}
 <div class="syncpill" id="syncPill" hidden></div>
 <div class="toast" id="toast" hidden></div>
 
-<script src="av.js?v=442"></script>
+<script src="av.js?v=443"></script>
 <script>
 /* ---------- visual assets ---------- */
 const INK='#1B1E3D';
@@ -13411,22 +13411,26 @@ const SPT={timer:null};
 /* ---------- penghitung push-up AI (MediaPipe Pose, berjalan di HP; gambar kamera tidak dikirim) ----------
    HP diberdirikan di lantai di depan/samping murid. Kerangka badan dideteksi, lalu push-up dihitung dari
    sudut siku dan jarak bahu ke pergelangan tangan. */
-const MPV='https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14',MPM='https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_lite/float16/1/pose_landmarker_lite.task';
-let MP_PL=null,MP_PLP=null;
-function mpPose(){if(MP_PL)return Promise.resolve(MP_PL);if(MP_PLP)return MP_PLP;
-  MP_PLP=(async()=>{const v=await import(MPV+'/vision_bundle.mjs');const fs=await v.FilesetResolver.forVisionTasks(MPV+'/wasm');
-    const mk=d=>v.PoseLandmarker.createFromOptions(fs,{baseOptions:{modelAssetPath:MPM,delegate:d},runningMode:'VIDEO',numPoses:1,minPoseDetectionConfidence:.5,minPosePresenceConfidence:.5,minTrackingConfidence:.5});
-    try{MP_PL=await mk('GPU')}catch(e){MP_PL=await mk('CPU')}return MP_PL})();
-  MP_PLP.catch(()=>{MP_PLP=null});return MP_PLP}
+const MPV='https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14',MPM=k=>`https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_${k}/float16/1/pose_landmarker_${k}.task`;
+/* HP kuat memakai model Full (lebih akurat), HP lain model Lite; bisa turun otomatis kalau terlalu lambat */
+const mpKind=()=>{try{if(localStorage.getItem('jk_mpslow'))return 'lite'}catch(e){}const m=navigator.deviceMemory||4,c=navigator.hardwareConcurrency||4;return m>=4&&c>=6?'full':'lite'};
+let MP_PL=null,MP_PLP=null,MP_KIND='';
+function mpPose(kind){kind=kind||mpKind();if(MP_PL&&MP_KIND===kind)return Promise.resolve(MP_PL);if(MP_PLP&&MP_PLP.kind===kind)return MP_PLP;
+  const pr=(async()=>{const v=await import(MPV+'/vision_bundle.mjs');const fs=await v.FilesetResolver.forVisionTasks(MPV+'/wasm');
+    const mk=(k,d)=>v.PoseLandmarker.createFromOptions(fs,{baseOptions:{modelAssetPath:MPM(k),delegate:d},runningMode:'VIDEO',numPoses:1,minPoseDetectionConfidence:.5,minPosePresenceConfidence:.5,minTrackingConfidence:.5});
+    const tryK=async k=>{try{return await mk(k,'GPU')}catch(e){return await mk(k,'CPU')}};
+    let pl,k=kind;try{pl=await tryK(k)}catch(e){if(k==='lite')throw e;k='lite';pl=await tryK(k)}
+    try{if(MP_PL&&MP_PL!==pl)MP_PL.close()}catch(e){}MP_PL=pl;MP_KIND=k;return pl})();
+  pr.kind=kind;MP_PLP=pr;pr.catch(()=>{if(MP_PLP===pr)MP_PLP=null});return pr}
 const PU_BONES=[[11,12],[11,13],[13,15],[12,14],[14,16],[11,23],[12,24],[23,24],[23,25],[25,27],[24,26],[26,28]];
 function pushCam(o){o=o||{};const target=o.target||0,wall=!!o.wall;let ov=$('#puOv');if(ov)ov.remove();
   document.body.insertAdjacentHTML('beforeend','<div class="puov" id="puOv" role="dialog" aria-label="Penghitung push-up"></div>');ov=$('#puOv');
   const S={n:0,done:false,stopped:false,stream:null,raf:0,timer:0,tleft:0,mode:target?'target':'bebas',lastT:-1,seen:0,lost:0,
-    a:{st:'up'},v:{st:'up',hi:0,lo:9},lastRep:0,trace:null};
+    a:{st:'up'},v:{st:'up',hi:0,lo:9},rp:{amin:999,vmin:9,badN:0,sag:0,armed:false},bad:{},lastRep:0,trace:null};
   const place=wall?'Berdirikan HP di lantai di samping kamu, sekitar 1–2 meter, sampai badan dan tangan terlihat di layar.':'Berdirikan HP di lantai sekitar 1–2 meter di depan atau di samping kamu, sampai badan dan kedua tangan terlihat di layar.';
   ov.innerHTML=`<div class="puview"><video id="puV" playsinline muted autoplay></video><canvas id="puC"></canvas></div>
    <div class="putop"><button class="xbtn press" id="puX" aria-label="Tutup">✕</button><div class="pupill" id="puSt"><i></i><span>Memuat AI pendeteksi gerakan…</span></div></div>
-   <div class="puhelp" id="puHelp"><b>${esc(o.title||'Penghitung push-up')}</b><p>${place}</p><p class="pupriv">🔒 Gambar kamera hanya diproses di HP ini, tidak disimpan dan tidak dikirim. Pertama kali perlu internet untuk mengunduh AI (±15 MB), berikutnya lebih cepat.</p></div>
+   <div class="puhelp" id="puHelp"><b>${esc(o.title||'Penghitung push-up')}</b><p>${place}</p><p>✅ Dihitung kalau dada turun cukup dalam dan lengan lurus lagi saat naik. Kalau HP di samping, AI juga memeriksa badan tetap lurus.</p><p class="pupriv">🔒 Gambar kamera hanya diproses di HP ini, tidak disimpan dan tidak dikirim. Pertama kali perlu internet untuk mengunduh AI (±15 MB), berikutnya lebih cepat.</p></div>
    <div class="pubot">${target?'':`<div class="pumode"><button data-pm="bebas" class="on">Bebas</button><button data-pm="30">30 detik</button><button data-pm="60">60 detik</button></div>`}
     <div class="purow"><button class="pusm press" id="puUndo" aria-label="Kurangi satu">−1</button><div class="pucnt"><small id="puOf">${target?'TARGET '+target:'HITUNGAN'}</small><b id="puN">0</b></div><button class="pusm press" id="puPlus" aria-label="Tambah satu">+1</button></div>
     ${target?'':'<button class="primary press" id="puOk">Selesai</button>'}</div>`;
@@ -13436,8 +13440,9 @@ function pushCam(o){o=o||{};const target=o.target||0,wall=!!o.wall;let ov=$('#pu
   const stopCam=()=>{S.stopped=true;cancelAnimationFrame(S.raf);clearInterval(S.timer);try{S.stream&&S.stream.getTracks().forEach(t=>t.stop())}catch(e){}};
   const close=()=>{stopCam();ov.remove();if(o.onClose)o.onClose(S.n)};
   const finish=()=>{if(S.done)return;S.done=true;stopCam();try{sfx.win()}catch(e){tone([660,990,1320],.06)}try{haptic([60,40,60])}catch(e){}
-    st(target?`Hebat! ${S.n} push-up selesai.`:`Selesai! ${S.n} push-up.`,'ok');try{if(soundOn)say(target?'Hebat! Selesai.':`Selesai. ${S.n} push-up.`)}catch(e){}
-    if(o.onDone)setTimeout(()=>{ov.remove();o.onDone(S.n)},1500)};
+    const bd=Object.entries(S.bad).filter(x=>x[1]);const sum=bd.length?' · '+bd.map(([k,v])=>`${v} ${k==='dalam'?'kurang dalam':'badan tidak lurus'}`).join(' · '):'';
+    st((target?`Hebat! ${S.n} push-up benar`:`Selesai! ${S.n} push-up benar`)+sum,'ok');try{if(soundOn)say(target?'Hebat! Selesai.':`Selesai. ${S.n} push-up.`)}catch(e){}
+    if(o.onDone)setTimeout(()=>{ov.remove();o.onDone(S.n)},Object.keys(S.bad).length?3000:1500)};
   const startTimer=()=>{const sec=+S.mode;S.tleft=sec;$('#puOf').textContent=sec+' DETIK';S.timer=setInterval(()=>{S.tleft--;$('#puOf').textContent=Math.max(0,S.tleft)+' DETIK';if(S.tleft<=3&&S.tleft>0)tone([600],.03);if(S.tleft<=0){clearInterval(S.timer);finish()}},1000)};
   const rep=()=>{if(S.done)return;if(S.mode!=='bebas'&&S.mode!=='target'&&!S.timer)startTimer();
     S.n++;draw();const b=$('#puN');if(b){b.classList.remove('pop');void b.offsetWidth;b.classList.add('pop')}tone([660+Math.min(S.n,20)*20],.05);try{haptic(25)}catch(e){}
@@ -13456,28 +13461,49 @@ function pushCam(o){o=o||{};const target=o.target||0,wall=!!o.wall;let ov=$('#pu
     if(!angs.length)return {ok:false};
     const an=angs.reduce((a,b)=>a+b,0)/angs.length,vv=vs.length?vs.reduce((a,b)=>a+b,0)/vs.length:null;
     S.an=S.an==null?an:S.an*.5+an*.5;S.vv=vv==null?S.vv:(S.vv==null?vv:S.vv*.5+vv*.5);
-    if(S.trace)S.trace.push([+(now/1000).toFixed(2),Math.round(S.an),S.vv==null?null:+S.vv.toFixed(2)]);
-    /* satu status gabungan: TURUN bila sudut siku < 100° atau bahu mendekati tangan; NAIK (dihitung) bila siku lurus lagi > 140° atau bahu kembali naik */
-    const Vv=S.v,x=S.vv,hasV=x!=null&&!wall;
+    /* kelurusan badan (hanya bisa dinilai bila kamera dari samping): sudut bahu–pinggul–pergelangan kaki (lutut untuk push-up lutut) */
+    let body=null,sag=0;{const sideL=P_[11].v+P_[23].v+P_[o.knee?25:27].v,sideR=P_[12].v+P_[24].v+P_[o.knee?26:28].v;
+      const [si,hi_,fi]=sideL>=sideR?[11,23,o.knee?25:27]:[12,24,o.knee?26:28];const Sh=P_[si],Hp=P_[hi_],Ft=P_[fi];
+      if(Sh.v>.5&&Hp.v>.5&&Ft.v>.5&&Math.abs(Ft.x-Sh.x)>Math.abs(Ft.y-Sh.y)*1.5){body=ang(Sh,Hp,Ft);
+        const ly=Sh.y+(Ft.y-Sh.y)*((Hp.x-Sh.x)/((Ft.x-Sh.x)||1));sag=Hp.y>ly?1:-1}}
+    S.sideN=body==null?0:(S.sideN||0)+1;if(S.sideN<5)body=null;
+    S.body=body==null?null:(S.body==null?body:S.body*.5+body*.5);
+    if(S.trace)S.trace.push([+(now/1000).toFixed(2),Math.round(S.an),S.vv==null?null:+S.vv.toFixed(2),S.body==null?null:Math.round(S.body)]);
+    const Vv=S.v,x=S.vv,hasV=x!=null&&!wall,R_=S.rp;
     if(hasV&&S.a.st==='up')Vv.hi=x>Vv.hi?x:Vv.hi*.995+x*.005;
     const vDown=hasV&&Vv.hi>.45&&x<Vv.hi-Math.max(.28,(Vv.hi-(Vv.lo<9?Vv.lo:Vv.hi*.4))*.5);
-    if(S.a.st==='up'){if(S.an<100||vDown){S.a.st='down';S.a.t=now;Vv.min=hasV?x:9}}
+    if(S.body!=null&&S.body<BODY_OK){R_.badN=(R_.badN||0)+1;R_.sag=sag}
+    if(S.a.st==='up'){
+      /* setengah turun: dari posisi atas, siku menekuk / bahu turun sedikit tapi tidak sampai batas, lalu naik lagi */
+      const top=S.an>142&&(!hasV||x>Vv.hi-.1);
+      if(S.an<100||vDown){S.a.st='down';S.a.t=now;Vv.min=hasV?x:9}
+      else if(top){if(R_.armed&&(R_.amin<120||(hasV&&Vv.hi>.45&&Vv.hi-R_.vmin>.18)))fault('dalam');R_.armed=true;R_.amin=S.an;R_.vmin=hasV?x:9;if(!(S.body!=null&&S.body<BODY_OK))R_.badN=0}
+      else if(R_.armed){R_.amin=Math.min(R_.amin,S.an);if(hasV)R_.vmin=Math.min(R_.vmin,x)}}
     else{if(hasV)Vv.min=Math.min(Vv.min,x);
       const vUp=hasV&&Vv.min<9&&x>Vv.min+(Vv.hi-Vv.min)*.7;
-      if((S.an>140||vUp)&&now-S.a.t>250){S.a.st='up';if(hasV&&Vv.min<9)Vv.lo=Vv.lo<9?Vv.lo*.6+Vv.min*.4:Vv.min;if(now-S.lastRep>500){S.lastRep=now;rep()}}}
-    const down=S.a.st==='down';return {ok:true,down}};
+      if((S.an>140||vUp)&&now-S.a.t>250){S.a.st='up';if(hasV&&Vv.min<9)Vv.lo=Vv.lo<9?Vv.lo*.6+Vv.min*.4:Vv.min;
+        const bad=(R_.badN||0)>=3;const sg=R_.sag;R_.armed=false;R_.badN=0;
+        if(now-S.lastRep>500){S.lastRep=now;if(bad)fault(sg>0?'turun':'naik');else rep()}}}
+    const down=S.a.st==='down';return {ok:true,down,body:S.body}};
+  const BODY_OK=148;
+  const FAULT={dalam:'Turun lebih dalam, dada dekat lantai.',turun:'Luruskan badan, pinggul jangan turun.',naik:'Luruskan badan, pinggul jangan terlalu tinggi.'};
+  const fault=k=>{if(S.done)return;S.bad[k]=(S.bad[k]||0)+1;st(FAULT[k]+' Tidak dihitung.','warn');S.warnUntil=performance.now()+1800;tone([300,240],.08);try{haptic([20,30,20])}catch(e){}
+    try{if(soundOn&&performance.now()-(S.lastSay||0)>2500){S.lastSay=performance.now();say(k==='dalam'?'Turun lebih dalam':'Luruskan badanmu')}}catch(e){}};
+  S.feed=analyse;
   const drawPose=(lm,down)=>{C.width=W();C.height=H();cx.clearRect(0,0,C.width,C.height);if(!lm)return;const p=lm.map(q=>({x:q.x*C.width,y:q.y*C.height,v:q.visibility==null?1:q.visibility}));
     cx.lineWidth=Math.max(3,C.width/120);cx.lineCap='round';
-    PU_BONES.forEach(([a,b])=>{if(p[a].v<.4||p[b].v<.4)return;cx.strokeStyle=[13,14,15,16].includes(a)||[13,14,15,16].includes(b)?(down?'#FFC800':'#FF4B4B'):'#58CC02';cx.beginPath();cx.moveTo(p[a].x,p[a].y);cx.lineTo(p[b].x,p[b].y);cx.stroke()});
+    PU_BONES.forEach(([a,b])=>{if(p[a].v<.4||p[b].v<.4)return;cx.strokeStyle=[13,14,15,16].includes(a)||[13,14,15,16].includes(b)?(down?'#FFC800':'#4DA3FF'):(S.body!=null&&S.body<BODY_OK?'#FF4B4B':'#58CC02');cx.beginPath();cx.moveTo(p[a].x,p[a].y);cx.lineTo(p[b].x,p[b].y);cx.stroke()});
     [0,11,12,13,14,15,16,23,24].forEach(i=>{if(p[i].v<.4)return;cx.fillStyle='#fff';cx.beginPath();cx.arc(p[i].x,p[i].y,cx.lineWidth*1.1,0,7);cx.fill()})};
   const loop=()=>{if(S.stopped)return;S.raf=requestAnimationFrame(loop);if(V.readyState<2||!MP_PL)return;const t=V.currentTime;if(t===S.lastT)return;S.lastT=t;
     let r=null;const now=performance.now();try{r=MP_PL.detectForVideo(V,now)}catch(e){return}
+    {const dt=performance.now()-now;S.dts=(S.dts||[]);S.dts.push(dt);if(S.dts.length>30)S.dts.shift();
+     if(MP_KIND==='full'&&S.dts.length===30&&!S.slowSw&&S.dts.reduce((a,b)=>a+b,0)/30>110){S.slowSw=1;try{localStorage.setItem('jk_mpslow','1')}catch(e){}mpPose('lite').catch(()=>{})}}
     const lm=r&&r.landmarks&&r.landmarks[0];
     if(!lm){S.lost++;if(S.lost>8){drawPose(null);if(!S.done)st('Badan belum terlihat. Mundurkan HP sampai badan dan tangan terlihat.','warn')}return}
     S.lost=0;const res=analyse(lm,now);drawPose(lm,res.down);if(S.done)return;
     if(!res.ok){st('Tangan belum terlihat jelas. Atur posisi HP.','warn');return}
     if(!S.seen){S.seen=1;$('#puHelp').classList.add('mini');st('Badan terdeteksi! Mulai push-up.','ok');try{if(soundOn)say('Badan terdeteksi. Mulai push-up.')}catch(e){}}
-    else st(res.down?'Turun… dorong naik!':'Bagus! Turun lagi.','ok')};
+    else if(performance.now()>(S.warnUntil||0))st(res.down?'Turun… dorong naik!':res.body!=null&&res.body<BODY_OK?'Luruskan badanmu.':'Bagus! Turun lagi.',res.body!=null&&res.body<BODY_OK?'warn':'ok')};
   draw();
   (async()=>{try{S.stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'user',width:{ideal:640},height:{ideal:480}},audio:false})}
     catch(e){st('Kamera tidak bisa dibuka. Hitung dengan tombol +1.','warn');manual();return}
@@ -13516,7 +13542,7 @@ function openSport(ui){if(!P)return;const f=spFit();let el=$('#sportOv');if(!el)
    const sI=$('#spInfo');if(sI)sI.onclick=()=>spDetail(st.plan.map(x=>x.id),st.k,st.mini,()=>{st.plan=st.plan.map((x,i)=>(i===st.k&&SPT.timer)?x:spAmount(x.id,st.mini));if(!SPT.timer)render()});
    const sS=$('#spStart');if(sS)sS.onclick=()=>runTimer(ex.amt,()=>next());
    const sD=$('#spDone');if(sD)sD.onclick=()=>{tone([660,990],.06);try{haptic([30,40,30])}catch(e){}next()};
-   const sC=$('#spCam');if(sC)sC.onclick=()=>pushCam({target:ex.amt,title:ex.name,wall:spVar(ex)==='wall',onDone:n=>{if(n>=ex.amt)next()}});
+   const sC=$('#spCam');if(sC)sC.onclick=()=>pushCam({target:ex.amt,title:ex.name,knee:spVar(ex)==='knee',onDone:n=>{if(n>=ex.amt)next()}});
    const sK=$('#spSkip');if(sK)sK.onclick=()=>{stop();next()};
    const sN=$('#spNext');if(sN)sN.onclick=()=>{stop();st.phase=st.plan[st.k].t==='time'?'ready':'ex';render();sayEx()};
    el.querySelectorAll('[data-f]').forEach(b=>b.onclick=()=>feel(b.dataset.f));
@@ -16816,7 +16842,7 @@ function folBind(root,list,after){root.querySelectorAll('[data-follow]').forEach
   try{await folDo(f,on);if(on){try{sfx.ok()}catch(_){}toast('team',`Kamu mengikuti ${f.name}.`)}b.outerHTML=folBtn(f,b.classList.contains('sm'));folBind(root,list,after);after&&after()}catch(err){b.disabled=false;toast('lock',fbErr(err))}})}
 const shareIcon='<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M12 3 V15 M7 8 L12 3 L17 8 M5 13 V19 C5 20 6 21 7 21 H17 C18 21 19 20 19 19 V13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const qrIcon='<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><path d="M14 14h3v3h-3zM18 18h3v3h-3zM18 14h3M14 18v3" stroke-linecap="round"/></svg>';
-let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=442';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
+let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=443';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
 function qrMatrix(text){const Q=window.QRCodeLib,q=new Q(-1,Q.ECL.M);q.addData(text);q.make();const n=q.getModuleCount(),m=[];for(let r=0;r<n;r++){m.push([]);for(let c=0;c<n;c++)m[r].push(q.isDark(r,c))}return m}
 function qrSvgOf(m){const n=m.length;let d='';for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(m[r][c])d+=`M${c} ${r}h1.02v1.02h-1.02z`;
   return `<svg viewBox="-2 -2 ${n+4} ${n+4}" class="pcqr" shape-rendering="crispEdges" aria-label="Kode QR profil"><rect x="-2" y="-2" width="${n+4}" height="${n+4}" fill="#fff"/><path d="${d}" fill="#1C1E3D"/></svg>`}
