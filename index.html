@@ -4118,22 +4118,22 @@ html[data-theme=malam] .ayat{background:#063F2E;color:#A7F3D0}
 .sscard{min-width:0;box-sizing:border-box}.ssrow{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin-top:6px;width:100%}.ssrow .ssrec{grid-column:1/-1}.ssrow button{border:0;border-radius:12px;padding:9px 4px;min-width:0;font:800 14px system-ui,sans-serif;cursor:pointer;background:#EDE7FB;color:#4B3C7A}.ssrow button[hidden]{display:none}
 .ssrow .ssrec{background:#E53935;color:#fff}.ssrow button:disabled{opacity:.35}
 .qemo{display:block;font-size:56px;line-height:1.3;margin-top:6px}
-.puov{position:fixed;inset:0;z-index:10050;background:var(--bg,#0b1020);color:var(--ink);display:flex;justify-content:center}
-.puin{width:100%;max-width:480px;height:100%;height:100dvh;display:flex;flex-direction:column;gap:10px;padding:max(10px,env(safe-area-inset-top)) 16px max(12px,env(safe-area-inset-bottom));box-sizing:border-box}
-.puhead{display:flex;align-items:center;gap:8px}.puhead b{flex:1;font-family:var(--title);font-size:18px}
-.pumain{flex:1;min-height:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px}
-.puring{position:relative;width:min(56vw,30vh,230px);aspect-ratio:1}.puring svg{width:100%;height:100%;transform:rotate(-90deg)}
-.puring circle{fill:none;stroke-width:10}.pubg{stroke:var(--line)}.pufg{stroke:#0EA5E9;stroke-linecap:round;transition:stroke-dashoffset .3s}
-.punum{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}.punum b{font-family:var(--title);font-size:min(18vw,10vh,76px);line-height:1}.punum small{color:var(--muted);font-weight:700}
-.pustat{font-weight:800;text-align:center;min-height:22px;font-size:16px;padding:0 8px}
-.pumeter{position:relative;width:min(80%,320px);height:10px;border-radius:6px;background:var(--line);overflow:hidden}.pumeter i{position:absolute;left:0;top:0;bottom:0;width:0;background:#0EA5E9;border-radius:6px;transition:width .1s}.pumeter span{position:absolute;left:50%;top:0;bottom:0;width:2px;background:var(--ink);opacity:.5}
-.pucam{display:flex;gap:10px;align-items:center;background:var(--surface);border:2px solid var(--line);border-radius:14px;padding:8px}
-.pucam video{width:76px;height:57px;object-fit:cover;border-radius:8px;transform:scaleX(-1);background:#000;flex:none}.pucam p{margin:0;font-size:13px;line-height:1.35;color:var(--muted)}.pucam.off video{display:none}
-.pumode{display:flex;gap:6px}.pumode button{flex:1;padding:8px;border-radius:10px;border:2px solid var(--line);background:var(--surface);color:var(--ink);font-weight:800;font-family:inherit}.pumode button.on{border-color:#0EA5E9;color:#0EA5E9}
-.puacts{display:grid;grid-template-columns:1fr 1fr 2fr;gap:8px}.puacts button{margin:0;width:100%}
-.pupriv{margin:0;font-size:11px;color:var(--muted);text-align:center}
+.puov{position:fixed;inset:0;z-index:10050;background:#000;color:#fff;overflow:hidden}
+.puview{position:absolute;inset:0}.puview video,.puview canvas{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:scaleX(-1)}
+.putop{position:absolute;left:0;right:0;top:0;display:flex;gap:10px;align-items:center;padding:max(10px,env(safe-area-inset-top)) 12px 10px}
+.putop .xbtn{background:rgba(0,0,0,.45);color:#fff;border-color:rgba(255,255,255,.35);flex:none}
+.pupill{flex:1;display:flex;align-items:center;gap:8px;background:rgba(0,0,0,.55);border-radius:14px;padding:10px 12px;font-weight:800;font-size:14px;line-height:1.3}
+.pupill i{width:10px;height:10px;border-radius:50%;background:#1CB0F6;flex:none}.pupill.ok{background:#58CC02}.pupill.ok i{background:#fff}.pupill.warn{background:#FF9600}.pupill.warn i{background:#fff}
+.puhelp{position:absolute;left:12px;right:12px;top:calc(max(10px,env(safe-area-inset-top)) + 64px);background:rgba(0,0,0,.6);border-radius:14px;padding:12px 14px;font-size:14px;line-height:1.4}
+.puhelp b{font-size:16px}.puhelp p{margin:6px 0 0}.puhelp .pupriv{font-size:11px;opacity:.85}.puhelp.mini{display:none}
+.pubot{position:absolute;left:0;right:0;bottom:0;padding:10px 12px max(12px,env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:8px;background:linear-gradient(transparent,rgba(0,0,0,.65) 35%)}
+.purow{display:flex;align-items:center;justify-content:center;gap:14px}
+.pucnt{min-width:110px;text-align:center;background:rgba(27,30,61,.85);border:2px solid #4DA3FF;border-radius:16px;padding:6px 12px}.pucnt small{display:block;font-size:11px;font-weight:800;letter-spacing:.06em;opacity:.8}
+.pucnt b{display:block;font-family:var(--title);font-size:44px;line-height:1.05}.pucnt b.pop{animation:puPop .35s ease}@keyframes puPop{40%{transform:scale(1.25);color:#FFC800}}
+.pusm{width:52px;height:52px;border-radius:50%;border:2px solid rgba(255,255,255,.4);background:rgba(0,0,0,.45);color:#fff;font-weight:900;font-size:17px;font-family:inherit}
+.pumode{display:flex;gap:6px}.pumode button{flex:1;padding:8px;border-radius:10px;border:2px solid rgba(255,255,255,.35);background:rgba(0,0,0,.45);color:#fff;font-weight:800;font-family:inherit}.pumode button.on{border-color:#4DA3FF;background:rgba(28,176,246,.35)}
+.pubot .primary{margin:0;width:100%}
 .spcam{margin-bottom:6px}
-@media (max-height:620px){.pucam p{font-size:11px}.pumain{gap:6px}}
 </style>
 <style>html,body{margin:0}</style>
 </head>
@@ -4350,7 +4350,7 @@ html[data-theme=malam] .ayat{background:#063F2E;color:#A7F3D0}
 <div class="syncpill" id="syncPill" hidden></div>
 <div class="toast" id="toast" hidden></div>
 
-<script src="av.js?v=438"></script>
+<script src="av.js?v=439"></script>
 <script>
 /* ---------- visual assets ---------- */
 const INK='#1B1E3D';
@@ -13405,60 +13405,81 @@ function sportPop(ui,row){const pend=spPending(ui),done=spDone(ui),rest=spRestLe
   row.querySelector('.npop').onclick=e=>e.stopPropagation();
   {const np=row.querySelector('.npop');const rr=row.getBoundingClientRect(),w=np.offsetWidth,cx=rr.left+rr.width/2,W=document.documentElement.clientWidth,m=12;let dx=0;if(cx-w/2<m)dx=m-(cx-w/2);else if(cx+w/2>W-m)dx=W-m-(cx+w/2);if(dx)np.style.setProperty('--dx',Math.round(dx)+'px')}}
 const SPT={timer:null};
-/* ---------- penghitung push-up pakai kamera depan (semua diproses di HP, tidak ada yang dikirim) ----------
-   Cara kerja: HP diletakkan di lantai di bawah dada, layar menghadap ke atas. Saat badan turun, dada/wajah
-   menutupi kamera sehingga gambar menjadi gelap; saat naik kembali terang. Satu turun-naik = 1 push-up. */
+/* ---------- penghitung push-up AI (MediaPipe Pose, berjalan di HP; gambar kamera tidak dikirim) ----------
+   HP diberdirikan di lantai di depan/samping murid. Kerangka badan dideteksi, lalu push-up dihitung dari
+   sudut siku dan jarak bahu ke pergelangan tangan. */
+const MPV='https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14',MPM='https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_lite/float16/1/pose_landmarker_lite.task';
+let MP_PL=null,MP_PLP=null;
+function mpPose(){if(MP_PL)return Promise.resolve(MP_PL);if(MP_PLP)return MP_PLP;
+  MP_PLP=(async()=>{const v=await import(MPV+'/vision_bundle.mjs');const fs=await v.FilesetResolver.forVisionTasks(MPV+'/wasm');
+    const mk=d=>v.PoseLandmarker.createFromOptions(fs,{baseOptions:{modelAssetPath:MPM,delegate:d},runningMode:'VIDEO',numPoses:1,minPoseDetectionConfidence:.5,minPosePresenceConfidence:.5,minTrackingConfidence:.5});
+    try{MP_PL=await mk('GPU')}catch(e){MP_PL=await mk('CPU')}return MP_PL})();
+  MP_PLP.catch(()=>{MP_PLP=null});return MP_PLP}
+const PU_BONES=[[11,12],[11,13],[13,15],[12,14],[14,16],[11,23],[12,24],[23,24],[23,25],[25,27],[24,26],[26,28]];
 function pushCam(o){o=o||{};const target=o.target||0,wall=!!o.wall;let ov=$('#puOv');if(ov)ov.remove();
   document.body.insertAdjacentHTML('beforeend','<div class="puov" id="puOv" role="dialog" aria-label="Penghitung push-up"></div>');ov=$('#puOv');
-  const S={n:0,state:'up',base:0,lo:0,range:0,cal:[],t0:0,last:0,dip:0,low:0,stream:null,raf:0,done:false,timer:0,tleft:0,mode:target?'target':'bebas',dark:0,
-    stopped:false};
-  const place=wall?'Sandarkan HP berdiri di meja atau kursi yang menempel ke dinding, setinggi dada, kamera depan menghadap kamu.':'Letakkan HP di lantai tepat di bawah dada, layar menghadap ke atas.';
-  ov.innerHTML=`<div class="puin"><div class="puhead"><b>${esc(o.title||'Penghitung push-up')}</b><button class="xbtn press" id="puX" aria-label="Tutup">✕</button></div>
-   <div class="pumain"><div class="puring"><svg viewBox="0 0 120 120"><circle cx="60" cy="60" r="52" class="pubg"/><circle cx="60" cy="60" r="52" class="pufg" id="puArc"/></svg><div class="punum"><b id="puN">0</b><small id="puOf">${target?'dari '+target:'push-up'}</small></div></div>
-    <div class="pustat" id="puSt">Menyiapkan kamera…</div><div class="pumeter"><i id="puMe"></i><span id="puTh"></span></div></div>
-   <div class="pucam"><video id="puV" playsinline muted autoplay></video><p>${place} Turunkan badan sampai dada dekat dengan HP, lalu dorong naik.</p></div>
-   ${target?'':`<div class="pumode"><button data-pm="bebas" class="on">Bebas</button><button data-pm="30">30 detik</button><button data-pm="60">60 detik</button></div>`}
-   <div class="puacts"><button class="ghost press" id="puUndo">− 1</button><button class="ghost press" id="puPlus">+ 1</button><button class="primary press" id="puOk">${target?'Selesai':'Selesai'}</button></div>
-   <p class="pupriv">🔒 Gambar kamera hanya diproses di HP ini dan tidak disimpan atau dikirim.</p></div>`;
-  const V=$('#puV'),cv=document.createElement('canvas');cv.width=32;cv.height=24;const cx=cv.getContext('2d',{willReadFrequently:true});
-  const st=t=>{const e=$('#puSt');if(e)e.textContent=t};
-  const draw=()=>{$('#puN').textContent=S.n;const a=$('#puArc');if(a){const C=2*Math.PI*52,f=target?Math.min(1,S.n/target):(S.mode!=='bebas'&&S.tleft>=0?S.tleft/(+S.mode):0);a.style.strokeDasharray=C;a.style.strokeDashoffset=C*(1-f)}};
+  const S={n:0,done:false,stopped:false,stream:null,raf:0,timer:0,tleft:0,mode:target?'target':'bebas',lastT:-1,seen:0,lost:0,
+    a:{st:'up'},v:{st:'up',hi:0,lo:9},lastRep:0,trace:null};
+  const place=wall?'Berdirikan HP di lantai di samping kamu, sekitar 1–2 meter, sampai badan dan tangan terlihat di layar.':'Berdirikan HP di lantai sekitar 1–2 meter di depan atau di samping kamu, sampai badan dan kedua tangan terlihat di layar.';
+  ov.innerHTML=`<div class="puview"><video id="puV" playsinline muted autoplay></video><canvas id="puC"></canvas></div>
+   <div class="putop"><button class="xbtn press" id="puX" aria-label="Tutup">✕</button><div class="pupill" id="puSt"><i></i><span>Memuat AI pendeteksi gerakan…</span></div></div>
+   <div class="puhelp" id="puHelp"><b>${esc(o.title||'Penghitung push-up')}</b><p>${place}</p><p class="pupriv">🔒 Gambar kamera hanya diproses di HP ini, tidak disimpan dan tidak dikirim. Pertama kali perlu internet untuk mengunduh AI (±15 MB), berikutnya lebih cepat.</p></div>
+   <div class="pubot">${target?'':`<div class="pumode"><button data-pm="bebas" class="on">Bebas</button><button data-pm="30">30 detik</button><button data-pm="60">60 detik</button></div>`}
+    <div class="purow"><button class="pusm press" id="puUndo" aria-label="Kurangi satu">−1</button><div class="pucnt"><small id="puOf">${target?'TARGET '+target:'HITUNGAN'}</small><b id="puN">0</b></div><button class="pusm press" id="puPlus" aria-label="Tambah satu">+1</button></div>
+    <button class="primary press" id="puOk">Selesai</button></div>`;
+  const V=$('#puV'),C=$('#puC'),cx=C.getContext('2d');
+  const st=(t,k)=>{const e=$('#puSt');if(!e)return;e.querySelector('span').textContent=t;e.className='pupill'+(k?' '+k:'')};
+  const draw=()=>{$('#puN').textContent=S.n};
   const stopCam=()=>{S.stopped=true;cancelAnimationFrame(S.raf);clearInterval(S.timer);try{S.stream&&S.stream.getTracks().forEach(t=>t.stop())}catch(e){}};
   const close=()=>{stopCam();ov.remove();if(o.onClose)o.onClose(S.n)};
   const finish=()=>{if(S.done)return;S.done=true;stopCam();try{sfx.win()}catch(e){tone([660,990,1320],.06)}try{haptic([60,40,60])}catch(e){}
-    st(target?`Hebat! ${S.n} push-up selesai.`:`Selesai! Kamu berhasil ${S.n} push-up.`);try{if(soundOn)say(target?'Hebat! Selesai.':`Selesai. ${S.n} push-up.`)}catch(e){}
-    if(o.onDone)setTimeout(()=>{ov.remove();o.onDone(S.n)},1400)};
-  const rep=(manual)=>{if(S.done)return;if(S.mode!=='bebas'&&S.mode!=='target'&&!S.timer){startTimer()}
-    S.n++;draw();tone([660+Math.min(S.n,20)*20],.05);try{haptic(25)}catch(e){}
-    try{if(soundOn&&!(target&&S.n>=target))say(String(S.n))}catch(e){}
-    if(target&&S.n>=target)finish()};
-  const startTimer=()=>{const sec=+S.mode;S.tleft=sec;$('#puOf').textContent=sec+' detik';S.timer=setInterval(()=>{S.tleft--;$('#puOf').textContent=Math.max(0,S.tleft)+' detik';draw();if(S.tleft<=3&&S.tleft>0)tone([600],.03);if(S.tleft<=0){clearInterval(S.timer);finish()}},1000)};
-  ov.querySelectorAll('[data-pm]').forEach(b=>b.onclick=()=>{if(S.n||S.timer)return;ov.querySelectorAll('[data-pm]').forEach(x=>x.classList.toggle('on',x===b));S.mode=b.dataset.pm;$('#puOf').textContent=S.mode==='bebas'?'push-up':S.mode+' detik';S.tleft=S.mode==='bebas'?0:+S.mode;draw()});
-  $('#puX').onclick=close;$('#puPlus').onclick=()=>rep(true);$('#puUndo').onclick=()=>{if(S.n>0&&!S.done){S.n--;draw()}};
-  $('#puOk').onclick=()=>{if(S.done)return;if(target&&S.n<target){stopCam();ov.remove();if(o.onDone)o.onDone(S.n);return}finish();if(!o.onDone)setTimeout(close,1600)};
-  /* analisis kecerahan */
-  const frame=()=>{if(S.stopped)return;S.raf=requestAnimationFrame(frame);const now=performance.now();if(now-S.last<66)return;S.last=now;
-    if(V.readyState<2)return;cx.drawImage(V,0,0,32,24);const d=cx.getImageData(0,0,32,24).data;let L=0;for(let i=0;i<d.length;i+=4)L+=d[i]*.299+d[i+1]*.587+d[i+2]*.114;L/=d.length/4;
-    S.L=S.L==null?L:S.L*.5+L*.5;L=S.L;
-    if(S.cal.length<12){S.cal.push(L);if(S.cal.length===12){const c=S.cal.slice().sort((a,b)=>a-b);S.base=c[6];S.lo=S.base*.35;S.range=S.base-S.lo;st(S.base<18?'Ruangan terlalu gelap. Nyalakan lampu dulu, ya.':'Siap! Mulai push-up.');if(S.base>=18)try{if(soundOn)say('Siap. Mulai.')}catch(e){}}return}
-    if(S.base<18){S.base=S.base*.9+L*.1;if(S.base>=18)st('Siap! Mulai push-up.');return}
-    const range=Math.max(S.range,S.base*.22,14),downTh=S.base-range*.5,upTh=S.base-range*.25;
-    const me=$('#puMe');if(me)me.style.width=Math.max(0,Math.min(1,(S.base-L)/range))*100+'%';const th=$('#puTh');if(th)th.style.left='50%';
-    if(S.done)return;
-    if(S.state==='up'){
-      if(L>S.base)S.base=S.base*.9+L*.1;else if(L>upTh)S.base=S.base*.985+L*.015;
-      if(L<upTh)S.dip=Math.max(S.dip,S.base-L);
-      if(L<downTh){S.low=(S.low||0)+1;if(S.low>=2){S.state='down';S.min=L;S.tDown=now;st('Turun… dorong naik!')}}else S.low=0;
-      if(L>upTh+range*.1&&S.dip>0){if(S.dip<range*.5&&S.dip>range*.25)st('Turun lebih dekat ke HP');S.dip=0}}
-    else{S.min=Math.min(S.min,L);
-      if(L>upTh&&now-S.tDown>250){S.state='up';S.low=0;S.dip=0;const depth=S.base-S.min;S.range=S.range*.6+Math.max(depth,S.base*.22)*.4;st('Bagus! Turun lagi.');rep(false)}}};
+    st(target?`Hebat! ${S.n} push-up selesai.`:`Selesai! ${S.n} push-up.`,'ok');try{if(soundOn)say(target?'Hebat! Selesai.':`Selesai. ${S.n} push-up.`)}catch(e){}
+    if(o.onDone)setTimeout(()=>{ov.remove();o.onDone(S.n)},1500)};
+  const startTimer=()=>{const sec=+S.mode;S.tleft=sec;$('#puOf').textContent=sec+' DETIK';S.timer=setInterval(()=>{S.tleft--;$('#puOf').textContent=Math.max(0,S.tleft)+' DETIK';if(S.tleft<=3&&S.tleft>0)tone([600],.03);if(S.tleft<=0){clearInterval(S.timer);finish()}},1000)};
+  const rep=()=>{if(S.done)return;if(S.mode!=='bebas'&&S.mode!=='target'&&!S.timer)startTimer();
+    S.n++;draw();const b=$('#puN');if(b){b.classList.remove('pop');void b.offsetWidth;b.classList.add('pop')}tone([660+Math.min(S.n,20)*20],.05);try{haptic(25)}catch(e){}
+    try{if(soundOn&&!(target&&S.n>=target))say(String(S.n))}catch(e){}if(target&&S.n>=target)finish()};
+  ov.querySelectorAll('[data-pm]').forEach(b=>b.onclick=()=>{if(S.n||S.timer)return;ov.querySelectorAll('[data-pm]').forEach(x=>x.classList.toggle('on',x===b));S.mode=b.dataset.pm;$('#puOf').textContent=S.mode==='bebas'?'HITUNGAN':S.mode+' DETIK'});
+  $('#puX').onclick=close;$('#puPlus').onclick=rep;$('#puUndo').onclick=()=>{if(S.n>0&&!S.done){S.n--;draw()}};
+  $('#puOk').onclick=()=>{if(S.done)return;if(target&&S.n<target){stopCam();ov.remove();if(o.onDone)o.onDone(S.n);return}finish();if(!o.onDone)setTimeout(close,1700)};
+  /* hitung dari titik-titik badan */
+  const W=()=>V.videoWidth||640,H=()=>V.videoHeight||480;
+  const ang=(a,b,c)=>{const v1=[a.x-b.x,a.y-b.y],v2=[c.x-b.x,c.y-b.y];const d=Math.hypot(...v1)*Math.hypot(...v2)||1;return Math.acos(Math.max(-1,Math.min(1,(v1[0]*v2[0]+v1[1]*v2[1])/d)))*180/Math.PI};
+  const analyse=(lm,now)=>{const P_=lm.map(p=>({x:p.x*W(),y:p.y*H(),v:p.visibility==null?1:p.visibility}));
+    let angs=[],vs=[];
+    [[11,13,15],[12,14,16]].forEach(([s,e,w])=>{const A=P_[s],B=P_[e],Cc=P_[w];if(A.v<.5||B.v<.5||Cc.v<.5)return;
+      angs.push(ang(A,B,Cc));const len=Math.hypot(A.x-B.x,A.y-B.y)+Math.hypot(B.x-Cc.x,B.y-Cc.y);if(len>0)vs.push((Cc.y-A.y)/len)});
+    if(!angs.length)return {ok:false};
+    const an=angs.reduce((a,b)=>a+b,0)/angs.length,vv=vs.length?vs.reduce((a,b)=>a+b,0)/vs.length:null;
+    S.an=S.an==null?an:S.an*.5+an*.5;S.vv=vv==null?S.vv:(S.vv==null?vv:S.vv*.5+vv*.5);
+    if(S.trace)S.trace.push([+(now/1000).toFixed(2),Math.round(S.an),S.vv==null?null:+S.vv.toFixed(2)]);
+    /* satu status gabungan: TURUN bila sudut siku < 100° atau bahu mendekati tangan; NAIK (dihitung) bila siku lurus lagi > 140° atau bahu kembali naik */
+    const Vv=S.v,x=S.vv,hasV=x!=null&&!wall;
+    if(hasV&&S.a.st==='up')Vv.hi=x>Vv.hi?x:Vv.hi*.995+x*.005;
+    const vDown=hasV&&Vv.hi>.45&&x<Vv.hi-Math.max(.28,(Vv.hi-(Vv.lo<9?Vv.lo:Vv.hi*.4))*.5);
+    if(S.a.st==='up'){if(S.an<100||vDown){S.a.st='down';S.a.t=now;Vv.min=hasV?x:9}}
+    else{if(hasV)Vv.min=Math.min(Vv.min,x);
+      const vUp=hasV&&Vv.min<9&&x>Vv.min+(Vv.hi-Vv.min)*.7;
+      if((S.an>140||vUp)&&now-S.a.t>250){S.a.st='up';if(hasV&&Vv.min<9)Vv.lo=Vv.lo<9?Vv.lo*.6+Vv.min*.4:Vv.min;if(now-S.lastRep>500){S.lastRep=now;rep()}}}
+    const down=S.a.st==='down';return {ok:true,down}};
+  const drawPose=(lm,down)=>{C.width=W();C.height=H();cx.clearRect(0,0,C.width,C.height);if(!lm)return;const p=lm.map(q=>({x:q.x*C.width,y:q.y*C.height,v:q.visibility==null?1:q.visibility}));
+    cx.lineWidth=Math.max(3,C.width/120);cx.lineCap='round';
+    PU_BONES.forEach(([a,b])=>{if(p[a].v<.4||p[b].v<.4)return;cx.strokeStyle=[13,14,15,16].includes(a)||[13,14,15,16].includes(b)?(down?'#FFC800':'#FF4B4B'):'#58CC02';cx.beginPath();cx.moveTo(p[a].x,p[a].y);cx.lineTo(p[b].x,p[b].y);cx.stroke()});
+    [0,11,12,13,14,15,16,23,24].forEach(i=>{if(p[i].v<.4)return;cx.fillStyle='#fff';cx.beginPath();cx.arc(p[i].x,p[i].y,cx.lineWidth*1.1,0,7);cx.fill()})};
+  const loop=()=>{if(S.stopped)return;S.raf=requestAnimationFrame(loop);if(V.readyState<2||!MP_PL)return;const t=V.currentTime;if(t===S.lastT)return;S.lastT=t;
+    let r=null;const now=performance.now();try{r=MP_PL.detectForVideo(V,now)}catch(e){return}
+    const lm=r&&r.landmarks&&r.landmarks[0];
+    if(!lm){S.lost++;if(S.lost>8){drawPose(null);if(!S.done)st('Badan belum terlihat. Mundurkan HP sampai badan dan tangan terlihat.','warn')}return}
+    S.lost=0;const res=analyse(lm,now);drawPose(lm,res.down);if(S.done)return;
+    if(!res.ok){st('Tangan belum terlihat jelas. Atur posisi HP.','warn');return}
+    if(!S.seen){S.seen=1;$('#puHelp').classList.add('mini');st('Badan terdeteksi! Mulai push-up.','ok');try{if(soundOn)say('Badan terdeteksi. Mulai push-up.')}catch(e){}}
+    else st(res.down?'Turun… dorong naik!':'Bagus! Turun lagi.','ok')};
   draw();
-  (async()=>{try{S.stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'user',width:{ideal:320},height:{ideal:240},frameRate:{ideal:15}},audio:false});
-      if(S.stopped){S.stream.getTracks().forEach(t=>t.stop());return}V.srcObject=S.stream;try{await V.play()}catch(e){}
-      /* kunci pencahayaan otomatis kalau HP mendukung, supaya gelap-terang lebih jelas */
-      try{const tr=S.stream.getVideoTracks()[0],cap=tr.getCapabilities?tr.getCapabilities():{};if(cap.exposureMode&&cap.exposureMode.includes('manual')){setTimeout(()=>{tr.applyConstraints({advanced:[{exposureMode:'manual'}]}).catch(()=>{})},900)}}catch(e){}
-      st('Memeriksa cahaya… tahan posisi di atas HP');frame()}
-    catch(e){st('Kamera tidak bisa dibuka. Kamu tetap bisa menghitung dengan tombol + 1.');const c=ov.querySelector('.pucam');if(c)c.classList.add('off')}})();
+  (async()=>{try{S.stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'user',width:{ideal:640},height:{ideal:480}},audio:false})}
+    catch(e){st('Kamera tidak bisa dibuka. Hitung dengan tombol +1.','warn');return}
+    if(S.stopped){S.stream.getTracks().forEach(t=>t.stop());return}V.srcObject=S.stream;try{await V.play()}catch(e){}
+    try{await mpPose()}catch(e){if(!S.stopped)st(navigator.onLine===false?'Perlu internet sekali untuk mengunduh AI. Sementara hitung dengan tombol +1.':'AI gagal dimuat. Hitung dengan tombol +1.','warn');return}
+    if(S.stopped)return;st('Mencari badanmu…');loop()})();
   return S}
 function openSport(ui){if(!P)return;const f=spFit();let el=$('#sportOv');if(!el){document.body.insertAdjacentHTML('beforeend','<div class="onb sportov" id="sportOv" hidden></div>');el=$('#sportOv')}
   const st={ui,mini:false,plan:null,k:0,phase:'intro',left:0};const stop=()=>{clearInterval(SPT.timer);SPT.timer=null};
@@ -16791,7 +16812,7 @@ function folBind(root,list,after){root.querySelectorAll('[data-follow]').forEach
   try{await folDo(f,on);if(on){try{sfx.ok()}catch(_){}toast('team',`Kamu mengikuti ${f.name}.`)}b.outerHTML=folBtn(f,b.classList.contains('sm'));folBind(root,list,after);after&&after()}catch(err){b.disabled=false;toast('lock',fbErr(err))}})}
 const shareIcon='<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M12 3 V15 M7 8 L12 3 L17 8 M5 13 V19 C5 20 6 21 7 21 H17 C18 21 19 20 19 19 V13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const qrIcon='<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><path d="M14 14h3v3h-3zM18 18h3v3h-3zM18 14h3M14 18v3" stroke-linecap="round"/></svg>';
-let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=438';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
+let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=439';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
 function qrMatrix(text){const Q=window.QRCodeLib,q=new Q(-1,Q.ECL.M);q.addData(text);q.make();const n=q.getModuleCount(),m=[];for(let r=0;r<n;r++){m.push([]);for(let c=0;c<n;c++)m[r].push(q.isDark(r,c))}return m}
 function qrSvgOf(m){const n=m.length;let d='';for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(m[r][c])d+=`M${c} ${r}h1.02v1.02h-1.02z`;
   return `<svg viewBox="-2 -2 ${n+4} ${n+4}" class="pcqr" shape-rendering="crispEdges" aria-label="Kode QR profil"><rect x="-2" y="-2" width="${n+4}" height="${n+4}" fill="#fff"/><path d="${d}" fill="#1C1E3D"/></svg>`}
@@ -18541,7 +18562,7 @@ const TOOLS=[
  {id:'atp',ic:'cal',c:'#58CC02',t:'ATP, Prota, Promes',d:'Alur tujuan pembelajaran dan program tahunan/semester untuk satu mata pelajaran.',inc:['Tujuan pembelajaran tiap bab','Pembagian JP otomatis','Promes per minggu, siap diisi kalender'],go:wzAtp},
  {id:'soal',ic:'quiz',c:'#FF9600',t:'Cetak Soal Ujian',d:'Lembar kerja, ulangan harian, STS, atau SAS dari bab pilihan dan Bank Soal-mu.',inc:['Paket A dan B (diacak)','Lembar jawaban','Kunci dan pembahasan','Kisi-kisi dengan level kognitif'],go:wzSoal},
  {id:'suara',ic:'rehal',c:'#0E9F6E',t:'Suara Hijaiyah dan Angka Arab',free:1,d:'Rekam suaramu sendiri untuk huruf hijaiyah, bilangan Arab, dan harakat. Murid di kelasmu akan mendengar suaramu.',inc:['29 huruf, 10 bilangan, 45 harakat','Bisa diulang dan dihapus kapan saja','Tanpa rekaman, suara bawaan yang dipakai'],btn:'Rekam suara',go:()=>suaraStudio(FBX.user.uid)},
- {id:'pushup',ic:'dumbbell',c:'#0EA5E9',t:'Penghitung Push-up (kamera)',free:1,btn:'Buka penghitung',d:'HP diletakkan di lantai di bawah dada murid, kamera menghitung push-up otomatis. Cocok untuk tes kebugaran PJOK.',inc:['Mode bebas, 30 detik, atau 60 detik','Hitungan bersuara','Gambar kamera tidak disimpan atau dikirim'],go:()=>pushCam({title:'Penghitung push-up'})}];
+ {id:'pushup',ic:'dumbbell',c:'#0EA5E9',t:'Penghitung Push-up (kamera)',free:1,btn:'Buka penghitung',d:'HP diberdirikan di depan atau samping murid. AI mendeteksi kerangka badan dan menghitung push-up otomatis. Cocok untuk tes kebugaran PJOK.',inc:['Mode bebas, 30 detik, atau 60 detik','Kerangka badan tampil di layar, hitungan bersuara','Gambar kamera tidak disimpan atau dikirim'],go:()=>pushCam({title:'Penghitung push-up'})}];
 function renderTPer(){const v=$('#vTPer');if(!v)return;const c=tCls(),di=docInfo(),pro=proOK();
   v.innerHTML=thead(['Perangkat Ajar','teach'],`Draf otomatis Kurikulum Merdeka untuk ${esc(c.full)}. Periksa dan sesuaikan sebelum dipakai.`,`<button class="ghost press" id="pgDoc" style="color:var(--ink);background:var(--card)">Data dokumen</button>`)+
    `<div class="pgrid">${TOOLS.map(x=>`<div class="tcard pgcard" style="--pc:${x.c}"><div class="pgtop"><span class="pgic"><i data-icon="${x.ic}"></i></span><h3>${x.t}</h3></div><p class="sub">${x.d}</p><ul class="pginc">${x.inc.map(i=>`<li>${i}</li>`).join('')}</ul><button class="primary press" data-pg="${x.id}">${x.free?(x.btn||'Buka'):pro?'Buat sekarang':'🔒 Buat sekarang'}</button></div>`).join('')}</div>
