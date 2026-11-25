@@ -4447,7 +4447,7 @@ html[data-theme=malam] .ayat{background:#063F2E;color:#A7F3D0}
 <div class="syncpill" id="syncPill" hidden></div>
 <div class="toast" id="toast" hidden></div>
 
-<script src="av.js?v=457"></script>
+<script src="av.js?v=458"></script>
 <script>
 /* ---------- visual assets ---------- */
 const INK='#1B1E3D';
@@ -17261,7 +17261,7 @@ function folBind(root,list,after){root.querySelectorAll('[data-follow]').forEach
   try{await folDo(f,on);if(on){try{sfx.ok()}catch(_){}toast('team',`Kamu mengikuti ${f.name}.`)}b.outerHTML=folBtn(f,b.classList.contains('sm'));folBind(root,list,after);after&&after()}catch(err){b.disabled=false;toast('lock',fbErr(err))}})}
 const shareIcon='<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M12 3 V15 M7 8 L12 3 L17 8 M5 13 V19 C5 20 6 21 7 21 H17 C18 21 19 20 19 19 V13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const qrIcon='<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><path d="M14 14h3v3h-3zM18 18h3v3h-3zM18 14h3M14 18v3" stroke-linecap="round"/></svg>';
-let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=457';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
+let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=458';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
 function qrMatrix(text){const Q=window.QRCodeLib,q=new Q(-1,Q.ECL.M);q.addData(text);q.make();const n=q.getModuleCount(),m=[];for(let r=0;r<n;r++){m.push([]);for(let c=0;c<n;c++)m[r].push(q.isDark(r,c))}return m}
 function qrSvgOf(m){const n=m.length;let d='';for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(m[r][c])d+=`M${c} ${r}h1.02v1.02h-1.02z`;
   return `<svg viewBox="-2 -2 ${n+4} ${n+4}" class="pcqr" shape-rendering="crispEdges" aria-label="Kode QR profil"><rect x="-2" y="-2" width="${n+4}" height="${n+4}" fill="#fff"/><path d="${d}" fill="#1C1E3D"/></svg>`}
@@ -19011,8 +19011,7 @@ const TOOLS=[
  {id:'modul',ic:'book',c:'#1CB0F6',t:'Modul Ajar',d:'Modul ajar Pembelajaran Mendalam untuk satu bab, lengkap sampai lampiran.',inc:['Identifikasi murid dari data kelasmu','8 dimensi profil lulusan','Kegiatan tiap pertemuan','Asesmen, KKTP, LKPD, kunci, rubrik'],go:wzModul},
  {id:'atp',ic:'cal',c:'#58CC02',t:'ATP, Prota, Promes',d:'Alur tujuan pembelajaran dan program tahunan/semester untuk satu mata pelajaran.',inc:['Tujuan pembelajaran tiap bab','Pembagian JP otomatis','Promes per minggu, siap diisi kalender'],go:wzAtp},
  {id:'soal',ic:'quiz',c:'#FF9600',t:'Cetak Soal Ujian',d:'Lembar kerja, ulangan harian, STS, atau SAS dari bab pilihan dan Bank Soal-mu.',inc:['Paket A dan B (diacak)','Lembar jawaban','Kunci dan pembahasan','Kisi-kisi dengan level kognitif'],go:wzSoal},
- {id:'suara',ic:'mic',c:'#0E9F6E',t:'Suara Hijaiyah dan Angka Arab',free:1,d:'Rekam suaramu sendiri untuk huruf hijaiyah, bilangan Arab, dan harakat. Murid di kelasmu akan mendengar suaramu.',inc:['29 huruf, 10 bilangan, 45 harakat','Bisa diulang dan dihapus kapan saja','Tanpa rekaman, suara bawaan yang dipakai'],btn:'Rekam suara',go:()=>suaraStudio(FBX.user.uid)},
- {id:'pushup',ic:'dumbbell',c:'#0EA5E9',t:'Penghitung Push-up (kamera)',free:1,btn:'Buka penghitung',d:'HP diberdirikan di depan atau samping murid. AI mendeteksi kerangka badan dan menghitung push-up otomatis. Cocok untuk tes kebugaran PJOK.',inc:['Mode bebas, 30 detik, atau 60 detik','Kerangka badan tampil di layar, hitungan bersuara','Gambar kamera tidak disimpan atau dikirim'],go:()=>pushCam({title:'Penghitung push-up'})}];
+ {id:'suara',ic:'mic',c:'#0E9F6E',t:'Suara Hijaiyah dan Angka Arab',free:1,d:'Rekam suaramu sendiri untuk huruf hijaiyah, bilangan Arab, dan harakat. Murid di kelasmu akan mendengar suaramu.',inc:['29 huruf, 10 bilangan, 45 harakat','Bisa diulang dan dihapus kapan saja','Tanpa rekaman, suara bawaan yang dipakai'],btn:'Rekam suara',go:()=>suaraStudio(FBX.user.uid)}];
 function renderTPer(){const v=$('#vTPer');if(!v)return;const c=tCls(),di=docInfo(),pro=proOK();
   v.innerHTML=thead(['Perangkat Ajar','teach'],`Draf otomatis Kurikulum Merdeka untuk ${esc(c.full)}. Periksa dan sesuaikan sebelum dipakai.`,`<button class="ghost press" id="pgDoc" style="color:var(--ink);background:var(--card)">Data dokumen</button>`)+
    `<div class="pgrid">${TOOLS.map(x=>`<div class="tcard pgcard" style="--pc:${x.c}"><div class="pgtop"><span class="pgic"><i data-icon="${x.ic}"></i></span><h3>${x.t}</h3></div><p class="sub">${x.d}</p><ul class="pginc">${x.inc.map(i=>`<li>${i}</li>`).join('')}</ul><button class="primary press" data-pg="${x.id}">${x.free?(x.btn||'Buka'):pro?'Buat sekarang':'🔒 Buat sekarang'}</button></div>`).join('')}</div>
