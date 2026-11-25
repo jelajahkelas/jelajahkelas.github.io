@@ -4222,6 +4222,11 @@ html[data-theme=malam] .ayat{background:#063F2E;color:#A7F3D0}
 .pudcard{display:flex;align-items:center;gap:14px;width:100%;text-align:left;padding:14px 16px;margin:6px 0 4px;border-radius:20px;border:0;background:linear-gradient(135deg,#FF6B35,#E8384F);color:#fff;box-shadow:0 5px 0 #B3263A;font-family:inherit;cursor:pointer}
 .pudcard .pce{font-size:44px;line-height:1}.pudcard b{display:block;font-family:var(--title);font-size:20px}.pudcard small{display:block;font-size:13px;opacity:.95;font-weight:700}.pudcard .pcn{margin-left:auto;background:#fff;color:#E8384F;font-weight:900;border-radius:999px;padding:6px 12px;font-size:12px}
 .doncard{display:flex;gap:14px;align-items:center;border:2px solid var(--line);border-radius:20px;padding:14px 16px;background:linear-gradient(135deg,rgba(255,75,120,.08),rgba(124,77,255,.08))}.doncard img{width:80px;flex:none}.doncard b{font-family:var(--title);font-size:18px}.doncard p{margin:4px 0 10px;font-size:14px;color:var(--muted)}.doncard .primary{display:inline-block;text-decoration:none;margin:0;padding:10px 18px}.doncard small{display:block;margin-top:6px;font-size:11.5px;color:var(--muted)}
+.doncard button.primary{margin:0;padding:10px 18px;width:auto}
+.donm{display:flex;flex-direction:column;gap:10px;text-align:center;align-items:center}.donm img{width:96px}.donm h3{margin:0}
+.donam{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;width:100%}.donam button{padding:12px;border-radius:14px;border:2px solid var(--line);background:var(--surface);color:var(--ink);font-weight:900;font-family:inherit;font-size:16px}.donam button.on{border-color:#FF4B78;background:rgba(255,75,120,.1);color:#E0245E}
+.donc{display:flex;align-items:center;gap:8px;width:100%;border:2px solid var(--line);border-radius:14px;padding:0 12px}.donc span{font-weight:900;color:var(--muted)}.donc input{flex:1;min-width:0;border:0;background:transparent;padding:12px 0;font:800 16px inherit;color:var(--ink);outline:none}
+.donm .acts{width:100%}
 </style>
 <style>html,body{margin:0}</style>
 </head>
@@ -4438,7 +4443,7 @@ html[data-theme=malam] .ayat{background:#063F2E;color:#A7F3D0}
 <div class="syncpill" id="syncPill" hidden></div>
 <div class="toast" id="toast" hidden></div>
 
-<script src="av.js?v=451"></script>
+<script src="av.js?v=452"></script>
 <script>
 /* ---------- visual assets ---------- */
 const INK='#1B1E3D';
@@ -16715,10 +16720,33 @@ function rkNudge(){try{if(!FBX.user||isT()||Date.now()-(RKV.nAt||0)<15*60e3)retu
   rkGet('cls_'+cid).then(d=>{if(!d||!d.b||d.w!==P.week.id)return;const L=rkLive(d.b.xp||[],'xp'),i=L.findIndex(r=>r.u===FBX.user.uid);if(i<=0)return;
     const up=L[i-1],gap=up.v-L[i].v+1;if(gap>60)return;RKV.nAt=Date.now();setTimeout(()=>toast('trophy',`Peringkat ${i+1} di kelas. Tinggal ${gap} XP lagi untuk menyalip ${up.n}!`),1800)})}catch(e){}}
 lgSync=rkSync;window.lgSync=rkSync;lgResult=rkResult;
-/* Dukung JELAS: tautan dukungan dari pengaturan admin; tidak tampil di aplikasi Play Store (aturan pembayaran Google Play) */
+/* Dukung JELAS: bayar langsung (QRIS, e-wallet, transfer) lewat gerbang pembayaran JELAS bila aktif, atau tautan Saweria/Trakteer dari admin.
+   Tidak tampil di aplikasi Play Store (aturan pembayaran Google Play). */
+const donDirect=()=>!!(FBX.user&&FBX.cfg&&FBX.cfg.payOn&&FB.cfg&&FB.cfg.pushUrl);
+function donOpen(){const link=FBX.cfg&&FBX.cfg.donate;if(!donDirect()){if(link)window.open(link,'_blank','noopener');return}
+  const AM=[10000,25000,50000,100000];let sel=25000;
+  openModal(`<div class="donm"><img src="pets/uli-lambai.webp" alt=""><h3>Dukung JELAS ❤️</h3><p class="note">Dukunganmu membantu JELAS tetap gratis dan tanpa iklan. Dukungan bersifat sukarela dan tidak membuka fitur apa pun.</p>
+   <div class="donam">${AM.map(v=>`<button class="press ${v===sel?'on':''}" data-am="${v}">${rupiah(v)}</button>`).join('')}</div>
+   <div class="donc"><span>Rp</span><input id="donIn" inputmode="numeric" placeholder="Nominal lain (min. 10.000)"></div>
+   <p class="note payways">Bayar dengan <b>QRIS</b> (DANA, OVO, ShopeePay, LinkAja, semua m-banking), <b>GoPay</b>, atau <b>transfer bank</b>.</p>
+   <p class="note" style="margin:0">Untuk murid: minta izin orang tua dulu, ya.</p><p class="note" id="donErr" style="color:var(--bad);font-weight:700;margin:0"></p>
+   <div class="acts"><button class="ghost" id="mNo">Nanti saja</button><button class="primary press" id="donGo">Dukung ${rupiah(sel)}</button></div></div>`);
+  const upd=()=>{const g=$('#donGo');if(g)g.textContent='Dukung '+rupiah(sel)};
+  document.querySelectorAll('[data-am]').forEach(b=>b.onclick=()=>{sel=+b.dataset.am;$('#donIn').value='';document.querySelectorAll('[data-am]').forEach(x=>x.classList.toggle('on',x===b));upd()});
+  $('#donIn').oninput=e=>{const v=+String(e.target.value).replace(/\D/g,'');e.target.value=v?v.toLocaleString('id-ID'):'';if(v){sel=v;document.querySelectorAll('[data-am]').forEach(x=>x.classList.remove('on'))}upd()};
+  $('#mNo').onclick=closeModal;
+  $('#donGo').onclick=async()=>{const g=$('#donGo'),er=$('#donErr');er.textContent='';if(sel<10000||sel>2000000){er.textContent='Nominal Rp10.000 sampai Rp2.000.000.';return}
+    g.disabled=true;g.textContent='Membuka pembayaran…';
+    try{const t=await FBX.user.getIdToken();const r=await fetch(FB.cfg.pushUrl,{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+t},body:JSON.stringify({type:'donate',amount:sel})});
+      const j=await r.json().catch(()=>({}));if(!r.ok||!j.url)throw new Error(j.error||'Server pembayaran tidak menjawab.');location.href=j.url}
+    catch(e){g.disabled=false;upd();er.textContent=/fetch|network/i.test(String(e.message))?'Tidak tersambung. Periksa internet, lalu coba lagi.':e.message}}}
+window.donOpen=donOpen;
+{const q=new URLSearchParams(location.search),v=q.get('dukung');if(v){q.delete('dukung');['order_id','status_code','transaction_status'].forEach(k=>q.delete(k));try{history.replaceState(null,'',location.pathname+(q.toString()?'?'+q:'')+location.hash)}catch(e){}
+  setTimeout(()=>{if(v==='ok'){openModal(`<div style="text-align:center"><img src="pets/uli-sorak.webp" alt="" style="width:120px"><h3>Terima kasih! ❤️</h3><p>Dukunganmu sangat berarti untuk JELAS. Setelah pembayaran terkonfirmasi, kamu mendapat lencana <b>Pendukung JELAS</b> di profil.</p><button class="primary" id="mClose" style="width:100%">Sama-sama!</button></div>`);$('#mClose').onclick=closeModal;try{burstConfetti()}catch(e){}}else toast('lock','Dukungan dibatalkan. Tidak ada biaya yang ditarik.')},1500)}}
 {const _rPD=renderProfile;renderProfile=function(){_rPD();try{const v=$('#vProfile');if(!v)return;const o=v.querySelector('#donCard');if(o)o.remove();const u=FBX.cfg&&FBX.cfg.donate;
-  if(!u||window.IS_PLAY||isT()||!/^https:\/\//.test(u))return;
-  v.insertAdjacentHTML('beforeend',`<div class="doncard" id="donCard"><img src="pets/uli-lambai.webp" alt=""><div><b>Dukung JELAS ❤️</b><p>JELAS gratis dan tanpa iklan untuk semua murid. Dukunganmu membantu kami terus menambah pelajaran dan game baru.</p><a class="primary" href="${esc(u)}" target="_blank" rel="noopener">Dukung JELAS</a><small>Dukungan bersifat sukarela dan tidak membuka fitur apa pun.</small></div></div>`)}catch(e){}}}
+  if(window.IS_PLAY||isT()||!(donDirect()||(u&&/^https:\/\//.test(u))))return;const sup=FBX.me&&FBX.me.supporter;
+  v.insertAdjacentHTML('beforeend',`<div class="doncard" id="donCard"><img src="pets/${sup?'uli-sorak':'uli-lambai'}.webp" alt=""><div><b>${sup?'Kamu Pendukung JELAS 💜':'Dukung JELAS ❤️'}</b><p>${sup?'Terima kasih sudah mendukung JELAS. Dukunganmu membuat JELAS tetap gratis dan tanpa iklan.':'JELAS gratis dan tanpa iklan untuk semua murid. Dukunganmu membantu kami terus menambah pelajaran dan game baru.'}</p><button class="primary" id="donBtn">${sup?'Dukung lagi':'Dukung JELAS'}</button><small>${donDirect()?'Bisa bayar lewat QRIS, e-wallet, atau transfer bank. ':''}Dukungan bersifat sukarela dan tidak membuka fitur apa pun.</small></div></div>`);
+  $('#donBtn').onclick=donOpen}catch(e){}}}
 Object.assign(window,{rkNudge,rkCert,rkSync,rkResult,rkTeacherCard,RKV,RKC});
 /* ---------- guru: juara kelas di dasbor ---------- */
 function rkTeacherCard(v){if(!FBX.user||!isT()||!v||v.querySelector('#rkT'))return;const cid=tcid();const host=v.querySelector('#tdRail')||v;
@@ -17227,7 +17255,7 @@ function folBind(root,list,after){root.querySelectorAll('[data-follow]').forEach
   try{await folDo(f,on);if(on){try{sfx.ok()}catch(_){}toast('team',`Kamu mengikuti ${f.name}.`)}b.outerHTML=folBtn(f,b.classList.contains('sm'));folBind(root,list,after);after&&after()}catch(err){b.disabled=false;toast('lock',fbErr(err))}})}
 const shareIcon='<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M12 3 V15 M7 8 L12 3 L17 8 M5 13 V19 C5 20 6 21 7 21 H17 C18 21 19 20 19 19 V13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const qrIcon='<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><path d="M14 14h3v3h-3zM18 18h3v3h-3zM18 14h3M14 18v3" stroke-linecap="round"/></svg>';
-let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=451';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
+let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=452';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
 function qrMatrix(text){const Q=window.QRCodeLib,q=new Q(-1,Q.ECL.M);q.addData(text);q.make();const n=q.getModuleCount(),m=[];for(let r=0;r<n;r++){m.push([]);for(let c=0;c<n;c++)m[r].push(q.isDark(r,c))}return m}
 function qrSvgOf(m){const n=m.length;let d='';for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(m[r][c])d+=`M${c} ${r}h1.02v1.02h-1.02z`;
   return `<svg viewBox="-2 -2 ${n+4} ${n+4}" class="pcqr" shape-rendering="crispEdges" aria-label="Kode QR profil"><rect x="-2" y="-2" width="${n+4}" height="${n+4}" fill="#fff"/><path d="${d}" fill="#1C1E3D"/></svg>`}

@@ -168,6 +168,39 @@ async function savePending(uid, plan, url, exp, ext) {
     body: JSON.stringify({ fields: { pay: { mapValue: { fields: { plan: fv(plan.id), price: fv(plan.price), url: fv(url), exp: fv(exp), ext: fv(ext) } } } } }),
   });
 }
+// ---------- Dukungan sukarela (donasi) lewat gerbang pembayaran yang sama; tidak membuka fitur apa pun ----------
+async function createDonation(env, uid, amount, origin) {
+  amount = Math.round(+amount || 0);
+  if (!(amount >= 10000 && amount <= 2000000)) return { status: 400, body: { error: 'Nominal dukungan Rp10.000 sampai Rp2.000.000.' } };
+  const user = (await getDoc('users/' + uid)) || {};
+  const now = Date.now(), site = (ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0]) + '/';
+  const name = String(user.name || 'Pendukung JELAS').slice(0, 50);
+  if (env.MIDTRANS_SERVER_KEY) {
+    const ext = `D-${uid}-${now.toString(36)}`;
+    const r = await fetch(mtBase(env).snap + '/snap/v1/transactions', {
+      method: 'POST', headers: { Authorization: mtAuth(env), 'Content-Type': 'application/json', Accept: 'application/json' },
+      body: JSON.stringify({ transaction_details: { order_id: ext, gross_amount: amount }, item_details: [{ id: 'dukung', price: amount, quantity: 1, name: 'Dukungan untuk JELAS' }],
+        customer_details: { first_name: name, email: user.email || undefined }, callbacks: { finish: site + '?dukung=ok' }, expiry: { unit: 'hours', duration: 24 } }),
+    });
+    const j = await r.json().catch(() => ({}));
+    if (!r.ok || !j.redirect_url) return { status: 502, body: { error: 'Midtrans menolak: ' + ((j.error_messages || []).join(', ') || r.status) } };
+    await patchDoc('payments/' + ext, { uid, kind: 'donasi', amount, status: 'PENDING', gateway: 'midtrans', url: j.redirect_url, email: user.email || '', created: now });
+    return { status: 200, body: { url: j.redirect_url } };
+  }
+  if (env.XENDIT_SECRET_KEY) {
+    const ext = `jelasdon_${uid}_${now}`;
+    const r = await fetch('https://api.xendit.co/v2/invoices', {
+      method: 'POST', headers: { Authorization: xAuth(env), 'Content-Type': 'application/json' },
+      body: JSON.stringify({ external_id: ext, amount, currency: 'IDR', invoice_duration: 86400, description: 'Dukungan untuk JELAS', success_redirect_url: site + '?dukung=ok', failure_redirect_url: site + '?dukung=batal',
+        items: [{ name: 'Dukungan untuk JELAS', quantity: 1, price: amount, category: 'Dukungan' }] }),
+    });
+    const inv = await r.json().catch(() => ({}));
+    if (!r.ok || !inv.invoice_url) return { status: 502, body: { error: 'Xendit menolak: ' + (inv.message || r.status) } };
+    await patchDoc('payments/' + ext, { uid, kind: 'donasi', amount, status: 'PENDING', invoiceId: inv.id, url: inv.invoice_url, email: user.email || '', created: now });
+    return { status: 200, body: { url: inv.invoice_url } };
+  }
+  return { status: 503, body: { error: 'Pembayaran langsung belum diaktifkan.' } };
+}
 // Aktifkan / perpanjang Pro sekali saja untuk satu pembayaran.
 async function grantPro(ext, extra) {
   const pay = await getDocRaw('payments/' + ext);
@@ -176,6 +209,7 @@ async function grantPro(ext, extra) {
   if (p.status === 'PAID') return 'already';
   try { await patchDoc('payments/' + ext, Object.assign({ status: 'PAID', paidAt: Date.now() }, extra), pay.updateTime); }
   catch (e) { return 'race'; }
+  if (p.kind === 'donasi') { await patchDoc('users/' + p.uid, { supporter: Date.now() }).catch(() => {}); return 'ok'; }
   const user = (await getDoc('users/' + p.uid)) || {};
   const base = Math.max(Date.now(), +user.proUntil || 0);
   await patchDoc('users/' + p.uid, { plan: 'pro', proUntil: base + (+p.days) * 864e5, pay: null, lastPay: ext });
@@ -217,7 +251,7 @@ async function midtransWebhook(request, env) {
   if (!env.MIDTRANS_SERVER_KEY) return new Response('off', { status: 200 });
   const b = await request.json().catch(() => ({}));
   const ext = String(b.order_id || '');
-  if (!/^J-[A-Za-z0-9]+-[A-Za-z0-9]+-[a-z0-9]+$/.test(ext)) return new Response('ignored', { status: 200 });
+  if (!/^J-[A-Za-z0-9]+-[A-Za-z0-9]+-[a-z0-9]+$/.test(ext) && !/^D-[A-Za-z0-9]+-[a-z0-9]+$/.test(ext)) return new Response('ignored', { status: 200 });
   const sig = await sha512hex(ext + String(b.status_code || '') + String(b.gross_amount || '') + env.MIDTRANS_SERVER_KEY);
   if (sig !== b.signature_key) return new Response('bad signature', { status: 403 });
   const r = await fetch(mtBase(env).api + '/v2/' + encodeURIComponent(ext) + '/status', { headers: { Authorization: mtAuth(env), Accept: 'application/json' } });
@@ -237,7 +271,7 @@ async function xenditWebhook(request, env) {
   if (!env.XENDIT_CALLBACK_TOKEN || request.headers.get('x-callback-token') !== env.XENDIT_CALLBACK_TOKEN) return new Response('forbidden', { status: 403 });
   const body = await request.json().catch(() => ({}));
   const ext = String(body.external_id || '');
-  if (!/^jelas_[A-Za-z0-9]+_[A-Za-z0-9]+_\d+$/.test(ext) || !body.id) return new Response('ignored', { status: 200 });
+  if ((!/^jelas_[A-Za-z0-9]+_[A-Za-z0-9]+_\d+$/.test(ext) && !/^jelasdon_[A-Za-z0-9]+_\d+$/.test(ext)) || !body.id) return new Response('ignored', { status: 200 });
   const r = await fetch('https://api.xendit.co/v2/invoices/' + encodeURIComponent(body.id), { headers: { Authorization: xAuth(env) } });
   const inv = await r.json();
   if (!r.ok || inv.external_id !== ext) return new Response('unknown invoice', { status: 200 });
@@ -398,7 +432,8 @@ export default {
     try {
       if (!SA) SA = JSON.parse(env.SERVICE_ACCOUNT);
       const uid = await verifyUser((request.headers.get('Authorization') || '').replace(/^Bearer\s+/i, ''));
-      const { type, id, cid, tid, plan } = await request.json();
+      const { type, id, cid, tid, plan, amount } = await request.json();
+      if (type === 'donate') { const r = await createDonation(env, uid, amount, origin); return reply(r.status, r.body, origin); }
       if (type === 'pay') { const r = await createInvoice(env, uid, String(plan || ''), origin); return reply(r.status, r.body, origin); }
       if (type === 'task') {
         if (!cid || (cid !== uid && !String(cid).startsWith(uid + '_')) || !/^[A-Za-z0-9_-]{4,120}$/.test(tid || '')) return reply(403, { error: 'Bukan guru kelas ini' }, origin);
