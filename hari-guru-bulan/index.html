@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta name="robots" content="noindex">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>Selamat Hari Guru, Bu Bulan</title>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Nunito:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --wall:#f4ead4; --wall2:#e9dcbf; --wood:#9b6a3f; --wood2:#7a4f2b;
+    --board:#21453a; --board2:#1a382f; --chalk:#f7f5ea; --chalkY:#ffe58a; --chalkP:#ffb7c9; --chalkB:#a9dcff;
+    --ink:#3b2f2a; --paper:#fffdf6; --line:#cfe0f2; --red:#d9455f; --apple:#e0413f;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  html,body{height:100%;overflow:hidden}
+  body{font-family:'Nunito',sans-serif;color:var(--ink);
+    background:
+      radial-gradient(ellipse at 50% 30%,rgba(255,255,255,.55),transparent 60%),
+      repeating-linear-gradient(90deg,var(--wall) 0 46px,var(--wall2) 46px 48px);}
+  .floor{position:fixed;left:0;right:0;bottom:0;height:9vh;z-index:1;
+    background:repeating-linear-gradient(90deg,#b8834f 0 120px,#a87443 120px 122px);box-shadow:0 -6px 18px rgba(0,0,0,.15)}
+  .floor::before{content:"";position:absolute;left:0;right:0;top:-10px;height:10px;background:#8c5d36}
+  canvas#fx{position:fixed;inset:0;width:100%;height:100%;z-index:50;pointer-events:none}
+
+  .scene{position:fixed;inset:0;z-index:10;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    padding:20px 14px 12vh;text-align:center;opacity:0;visibility:hidden;transform:translateY(18px);
+    transition:opacity .8s,transform .8s,visibility 0s .8s}
+  .scene.active{opacity:1;visibility:visible;transform:none;transition:opacity .8s,transform .8s}
+
+  /* ---------- papan tulis ---------- */
+  .board{position:relative;width:min(94vw,640px);padding:26px 22px 30px;border-radius:8px;color:var(--chalk);
+    font-family:'Caveat',cursive;border:14px solid var(--wood);
+    background:radial-gradient(ellipse at 30% 20%,rgba(255,255,255,.07),transparent 55%),
+      radial-gradient(ellipse at 80% 90%,rgba(255,255,255,.05),transparent 50%),var(--board);
+    box-shadow:inset 0 0 40px rgba(0,0,0,.35),0 14px 30px rgba(60,35,15,.3)}
+  .board::after{content:"";position:absolute;left:8%;right:8%;bottom:-26px;height:10px;background:var(--wood2);border-radius:3px;
+    box-shadow:0 4px 6px rgba(0,0,0,.2)}
+  .board .date{position:absolute;top:8px;right:14px;font-size:1.05rem;opacity:.75}
+  .board h1{font-size:clamp(2.3rem,9vw,3.6rem);line-height:1.1;font-weight:700;text-shadow:0 0 2px rgba(255,255,255,.4)}
+  .board h2{font-size:clamp(1.8rem,7vw,2.5rem);font-weight:700;line-height:1.15}
+  .board p{font-size:clamp(1.35rem,5vw,1.7rem);line-height:1.35}
+  .y{color:var(--chalkY)} .p{color:var(--chalkP)} .b{color:var(--chalkB)}
+  .chalkline{min-height:2.6em;margin-top:10px}
+  .chalkline::after{content:"";}
+  .doodle{position:absolute;font-size:1.4rem;opacity:.55}
+
+  .btn{margin-top:30px;font-family:'Nunito';font-weight:800;font-size:1rem;color:#fff;border:none;border-radius:999px;
+    padding:13px 28px;cursor:pointer;background:linear-gradient(135deg,#e85a6f,#f08a5d);
+    box-shadow:0 5px 0 #b83a50,0 10px 20px rgba(200,70,80,.3);transition:transform .15s,box-shadow .15s;opacity:0;pointer-events:none}
+  .btn.show{opacity:1;pointer-events:auto;animation:pop .55s ease}
+  .btn:active{transform:translateY(4px);box-shadow:0 1px 0 #b83a50}
+  .btn.alt{background:linear-gradient(135deg,#3d8f6e,#5bb08a);box-shadow:0 5px 0 #2a6a50,0 10px 20px rgba(40,110,80,.3)}
+  @keyframes pop{0%{transform:scale(.6);opacity:0}70%{transform:scale(1.07)}100%{transform:scale(1);opacity:1}}
+  @keyframes swing{0%,100%{transform:rotate(-12deg)}50%{transform:rotate(12deg)}}
+  .bell{font-size:3rem;display:inline-block;margin-bottom:-6px}
+  .bell.ring{animation:swing .12s 10}
+  .note{font-size:.9rem;color:#7a6455;margin-top:14px}
+
+  /* ---------- kertas ---------- */
+  .paper{width:min(94vw,520px);background:var(--paper);border-radius:6px;padding:26px 22px 24px 48px;position:relative;text-align:left;
+    box-shadow:0 12px 30px rgba(80,50,20,.22);
+    background-image:linear-gradient(90deg,transparent 36px,#f3a6b4 36px,#f3a6b4 38px,transparent 38px),
+      repeating-linear-gradient(transparent 0 31px,var(--line) 31px 32px);background-position:0 0,0 14px}
+  .paper .title{font-family:'Caveat';font-size:2rem;font-weight:700;color:#2c4a7a;line-height:32px;margin-bottom:6px}
+  .paper .row{display:flex;align-items:center;gap:10px;font-size:1.05rem;line-height:32px}
+  .tape{position:absolute;top:-12px;left:50%;width:110px;height:26px;margin-left:-55px;background:rgba(255,230,150,.75);transform:rotate(-3deg)}
+
+  /* absen */
+  .absen-row{display:flex;align-items:center;justify-content:space-between;gap:8px;line-height:32px;font-size:1.1rem}
+  .absen-row .dots{flex:1;border-bottom:2px dotted #b9a99a;margin:0 6px;transform:translateY(-8px)}
+  .check{font-family:'Caveat';font-size:2rem;color:var(--red);width:40px;text-align:center;transform:scale(0);transition:.4s cubic-bezier(.3,1.8,.5,1)}
+  .check.on{transform:scale(1)}
+  .absen-row.dim{opacity:.55}
+  .bubble{margin-top:18px;background:#fff;border-radius:18px;padding:12px 18px;font-weight:600;position:relative;
+    box-shadow:0 6px 16px rgba(0,0,0,.12);opacity:0;transform:scale(.7);transition:.45s cubic-bezier(.3,1.6,.5,1)}
+  .bubble.on{opacity:1;transform:none}
+  .bubble::before{content:"";position:absolute;top:-10px;left:50%;margin-left:-10px;border:10px solid transparent;border-top:0;border-bottom-color:#fff}
+
+  /* scratch */
+  .scratch-wrap{position:relative;width:min(94vw,640px);height:min(60vw,330px)}
+  .scratch-wrap .board{position:absolute;inset:0;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center}
+  #scratch{position:absolute;left:14px;top:14px;width:calc(100% - 28px);height:calc(100% - 28px);border-radius:2px;cursor:grab;touch-action:none;z-index:3}
+  .eraser{font-size:.95rem;color:#6b5646;margin-top:30px}
+  .prog{width:min(70vw,260px);height:8px;background:#e3d5bb;border-radius:9px;margin:10px auto 0;overflow:hidden}
+  .prog i{display:block;height:100%;width:0;background:linear-gradient(90deg,#5bb08a,#e85a6f);transition:width .2s}
+
+  /* kuis */
+  .opts{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}
+  .opt{font-family:'Caveat';font-size:1.45rem;color:var(--chalk);background:rgba(255,255,255,.06);border:2px dashed rgba(247,245,234,.5);
+    border-radius:10px;padding:8px 6px;cursor:pointer;transition:.2s}
+  .opt:hover{background:rgba(255,255,255,.14)}
+  .opt.pick{border-style:solid;border-color:var(--chalkY);color:var(--chalkY);background:rgba(255,229,138,.12)}
+  .qnum{font-size:1.2rem;opacity:.7}
+  .feedback{min-height:2.3em;margin-top:12px;font-size:1.5rem;color:var(--chalkY)}
+  .score{font-size:clamp(4rem,18vw,6rem);color:var(--red);font-family:'Caveat';font-weight:700;line-height:1;
+    border:5px solid var(--red);border-radius:50%;width:1.9em;height:1.9em;display:flex;align-items:center;justify-content:center;
+    margin:6px auto;transform:rotate(-8deg);background:rgba(255,255,255,.05)}
+
+  /* rapor */
+  .rapor{width:min(94vw,520px);background:var(--paper);border-radius:8px;padding:22px 18px;position:relative;
+    box-shadow:0 12px 30px rgba(80,50,20,.22);border-top:10px solid #2c4a7a;text-align:left}
+  .rapor h3{font-family:'Caveat';font-size:2rem;color:#2c4a7a;text-align:center;line-height:1}
+  .rapor .meta{text-align:center;font-size:.85rem;color:#7a6455;margin-bottom:12px}
+  .rapor table{width:100%;border-collapse:collapse;font-size:.95rem}
+  .rapor td{padding:7px 4px;border-bottom:1px solid #eadfcd;vertical-align:middle}
+  .rapor td.g{font-family:'Caveat';font-size:1.7rem;font-weight:700;color:var(--red);text-align:center;width:58px}
+  .rapor tr{opacity:0;transform:translateX(-12px);transition:.5s}
+  .rapor tr.on{opacity:1;transform:none}
+  .rapor small{display:block;color:#8a7768;font-size:.78rem}
+  .catatan{margin-top:12px;padding-right:120px;min-height:70px;font-family:'Caveat';font-size:1.35rem;color:#2c4a7a;opacity:0;transition:.8s}
+  .catatan.on{opacity:1}
+  .stamp{position:absolute;right:10px;bottom:16px;border:4px double var(--red);color:var(--red);font-weight:800;
+    padding:6px 10px;border-radius:8px;text-align:center;font-size:.85rem;line-height:1.15;letter-spacing:1px;
+    opacity:0;transform:scale(3) rotate(-14deg);background:rgba(255,253,246,.85)}
+  .stamp.on{animation:stamp .45s cubic-bezier(.5,0,.6,1.4) forwards}
+  .stamp b{font-size:1.25rem;display:block}
+  @keyframes stamp{to{opacity:.9;transform:scale(1) rotate(-14deg)}}
+
+  /* surat */
+  .letter{max-height:60vh;overflow-y:auto}
+  .letter .body{font-family:'Caveat';font-size:1.45rem;line-height:32px;color:#2b3a5c;white-space:pre-line;min-height:6em}
+  .letter .body::after{content:"✎";color:var(--red);margin-left:2px}
+  .letter.done .body::after{content:""}
+  .letter .sign{font-family:'Caveat';font-size:1.6rem;color:var(--red);text-align:right;opacity:0;transition:1s;line-height:32px}
+  .letter.done .sign{opacity:1}
+
+  /* akhir */
+  .apple{font-size:clamp(5rem,24vw,8rem);cursor:pointer;display:inline-block;animation:bob 2.4s ease-in-out infinite;filter:drop-shadow(0 10px 12px rgba(150,30,30,.3))}
+  @keyframes bob{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(-10px) rotate(4deg)}}
+  .final{opacity:0;transition:1s;margin-top:4px}
+  .final.on{opacity:1}
+  .final h1{font-family:'Caveat';font-size:clamp(2.4rem,10vw,3.8rem);color:#2c4a7a;line-height:1.05}
+  .final p{font-size:clamp(1rem,3.8vw,1.15rem);max-width:480px;margin:10px auto 0;line-height:1.6}
+  .final .sig{font-family:'Caveat';font-size:1.7rem;color:var(--red);margin-top:8px}
+  .hint{font-size:.95rem;color:#7a6455;animation:blink 1.8s infinite}
+  @keyframes blink{50%{opacity:.35}}
+  .moon-badge{position:fixed;top:12px;left:14px;z-index:20;font-family:'Caveat';font-size:1.2rem;color:#7a6455}
+</style>
+</head>
+<body>
+<div class="floor"></div>
+<canvas id="fx"></canvas>
+<div class="moon-badge">🌙 untuk <span class="nmGuru"></span> · dari 🐧 <span class="nmMurid"></span></div>
+
+<!-- 1. Bel masuk -->
+<section class="scene active" id="s1">
+  <div class="board">
+    <div class="date" id="today"></div>
+    <span class="doodle" style="left:14px;top:10px">✏️</span>
+    <h1>Kelas <span class="y nmGuru"></span> 🌙</h1>
+    <p class="chalkline" id="greet"></p>
+  </div>
+  <button class="btn show alt" id="bellBtn"><span class="bell" id="bellIcon">🔔</span><br>Bunyikan bel masuk</button>
+  <button class="btn" id="b1">Mulai pelajaran →</button>
+</section>
+
+<!-- 2. Absen -->
+<section class="scene" id="s2">
+  <div class="paper">
+    <div class="tape"></div>
+    <div class="title">Daftar Hadir Hari Ini</div>
+    <div class="absen-row dim"><span>1. Rasa lelah</span><span class="dots"></span><span style="color:#999">izin libur</span></div>
+    <div class="absen-row dim"><span>2. Rasa malas</span><span class="dots"></span><span style="color:#999">alpa</span></div>
+    <div class="absen-row"><span><b>3. <span class="nmMurid"></span></b></span><span class="dots"></span><span class="check" id="chk">✓</span></div>
+  </div>
+  <button class="btn show" id="hadirBtn">✋ Hadir, Bu!</button>
+  <div class="bubble" id="bubble"></div>
+  <button class="btn" id="b2" style="margin-top:18px">Lanjut →</button>
+</section>
+
+<!-- 3. Hapus papan -->
+<section class="scene" id="s3">
+  <div class="scratch-wrap">
+    <div class="board">
+      <h2>Terima kasih, <span class="y">Bu Guru</span> 🍎</h2>
+      <p id="boardMsg" style="margin-top:8px"></p>
+    </div>
+    <canvas id="scratch"></canvas>
+  </div>
+  <div class="eraser" id="eraserTxt">🧽 Papannya penuh coretan. Hapus pakai jarimu, Bu…</div>
+  <div class="prog"><i id="progBar"></i></div>
+  <button class="btn" id="b3" style="margin-top:18px">Waktunya kuis! 📝</button>
+</section>
+
+<!-- 4. Kuis -->
+<section class="scene" id="s4">
+  <div class="board" id="quizBoard"></div>
+  <button class="btn" id="b4">Lihat rapor Ibu 📒</button>
+</section>
+
+<!-- 5. Rapor -->
+<section class="scene" id="s5">
+  <div class="rapor">
+    <h3>Rapor Guru Teladan</h3>
+    <div class="meta">Nama: <b class="nmGuru"></b> · Penilai: <span class="nmMurid"></span> · Semester: Selamanya</div>
+    <table id="raporTable"></table>
+    <div class="catatan" id="catatan"></div>
+    <div class="stamp" id="stamp"><b>LULUS</b>GURU<br>TERHEBAT</div>
+  </div>
+  <button class="btn" id="b5">Ada surat di laci meja 💌</button>
+</section>
+
+<!-- 6. Surat -->
+<section class="scene" id="s6">
+  <div class="paper letter" id="letter">
+    <div class="tape"></div>
+    <div class="title">Untuk <span class="nmGuru"></span>,</div>
+    <div class="body" id="letterBody"></div>
+    <div class="sign">— muridmu yang paling sayang, <span class="nmMurid"></span> 🐧</div>
+  </div>
+  <p class="note" id="skipNote">(ketuk suratnya untuk langsung membaca semua)</p>
+  <button class="btn" id="b6" style="margin-top:16px">Satu hadiah terakhir →</button>
+</section>
+
+<!-- 7. Apel -->
+<section class="scene" id="s7">
+  <div class="apple" id="apple">🍎</div>
+  <p class="hint" id="appleHint">Ada apel untuk Bu Guru, ketuk ya</p>
+  <div class="final" id="final">
+    <h1>Selamat Hari Guru,<br><span class="nmGuru"></span>!</h1>
+    <p id="finalMsg"></p>
+    <div class="sig">Aku bangga sekali padamu. 🤍</div>
+  </div>
+  <button class="btn alt" id="b7">↺ Ulangi dari bel masuk</button>
+</section>
+
+<script>
+/* =====================================================
+   ✏️  UBAH ISI DI SINI SESUKA HATIMU
+   ===================================================== */
+const CONFIG = {
+  guru: "Bu Bulan",
+  murid: "Antartika",
+  sapaanPapan: "Selamat pagi, Bu Guru! Hari ini, 25 November, kelas ini dibuat khusus untukmu.",
+  responHadir: "Hadir, Bu! Dan akan selalu hadir buat Bu Bulan 🤍",
+  pesanPapan: "Sudah menyalakan cahaya di kepala dan hati murid-muridmu, seperti Bulan di langit malam 🌙",
+  kuis: [
+    { q: "Siapa guru paling hebat sedunia?",
+      opsi: ["Bu Bulan", "Bulan, S.Pd.", "Ibu guru yang cantik itu", "Semua jawaban di atas"],
+      respon: "Benar! Semua jawaban merujuk ke orang yang sama 😌" },
+    { q: "Apa bekal utama seorang guru?",
+      opsi: ["Kesabaran", "Kopi pagi", "Spidol yang masih nyala", "Pelukan dari Antartika"],
+      respon: "Benar juga! Semuanya penting, apalagi yang terakhir 🤭" },
+    { q: "Berapa nilai rasa bangga Antartika pada Bu Bulan?",
+      opsi: ["100", "1.000", "1.000.000", "Tak terhingga ∞"],
+      respon: "Semua benar, tapi yang paling tepat: tak terhingga ∞" }
+  ],
+  rapor: [
+    ["Kesabaran", "Menghadapi satu kelas penuh dan tetap tersenyum", "A+"],
+    ["Ketulusan", "Mengajar pakai hati, bukan cuma pakai buku", "A+"],
+    ["Kreativitas", "Bikin pelajaran yang susah jadi seru", "A+"],
+    ["Senyum di depan kelas", "Bikin murid betah dan semangat", "100"],
+    ["Mengajari Antartika arti sayang", "Pelajaran paling berharga yang pernah ada", "∞"]
+  ],
+  catatanWali: "Catatan: Pertahankan, Bu. Dunia butuh lebih banyak guru seperti kamu.",
+  surat:
+`Selamat Hari Guru, sayang.
+
+Setiap pagi kamu berangkat membawa sabar yang lebih banyak dari isi tasmu. Kamu mengajari anak-anak membaca, berhitung, dan yang paling penting: menjadi orang baik.
+
+Mungkin sekarang mereka belum sadar. Tapi suatu hari nanti mereka akan ingat ada seorang guru yang dulu percaya pada mereka. Guru itu kamu.
+
+Kalau kamu sedang lelah, ingat ya: kerja kerasmu tidak pernah sia-sia. Dan setiap kamu pulang, ada aku yang bangga sekali punya kamu.
+
+Terima kasih sudah jadi guru yang luar biasa untuk murid-muridmu, dan jadi guru terbaik dalam hidupku, yang mengajariku arti sayang.`,
+  pesanAkhir: "Untuk setiap ilmu yang kamu tanam, setiap sabar yang kamu jaga, dan setiap senyum yang kamu bagikan di kelas, terima kasih. Kamu adalah cahaya, untuk mereka dan untukku."
+};
+/* ===================================================== */
+
+const $ = id => document.getElementById(id);
+document.querySelectorAll(".nmGuru").forEach(e => e.textContent = CONFIG.guru);
+document.querySelectorAll(".nmMurid").forEach(e => e.textContent = CONFIG.murid);
+$("today").textContent = new Date().toLocaleDateString("id-ID",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
+
+const scenes = {};
+function go(n){
+  document.querySelectorAll(".scene").forEach(s => s.classList.remove("active"));
+  $("s"+n).classList.add("active");
+  if (scenes[n]) scenes[n]();
+}
+function chalkType(el, text, speed=45, done){
+  el.textContent = ""; let i = 0;
+  clearInterval(el._t);
+  el._t = setInterval(() => { el.textContent = text.slice(0, ++i); if (i >= text.length){ clearInterval(el._t); done && done(); } }, speed);
+}
+
+/* ---------- efek partikel ---------- */
+const fx = $("fx"), ctx = fx.getContext("2d");
+let W, H, parts = [];
+function resize(){ W = fx.width = innerWidth; H = fx.height = innerHeight; }
+addEventListener("resize", resize); resize();
+const COLORS = ["#e85a6f","#ffd166","#5bb08a","#6fb7ff","#ffb7c9","#ffffff"];
+function confetti(n=150, x=W/2, y=H*.45){
+  for (let i=0;i<n;i++) parts.push({t:"c",x,y,vx:(Math.random()-.5)*15,vy:-Math.random()*13-3,w:Math.random()*8+4,h:Math.random()*5+3,
+    c:COLORS[i%COLORS.length],r:Math.random()*6,vr:(Math.random()-.5)*.3,life:220});
+}
+function emojiRain(n=30, set=["🍎","📚","✏️","💗","🌙","⭐"]){
+  for (let i=0;i<n;i++) parts.push({t:"e",x:Math.random()*W,y:-30-Math.random()*H*.5,vx:(Math.random()-.5)*1,vy:Math.random()*2+1.5,
+    s:Math.random()*14+18,ch:set[Math.floor(Math.random()*set.length)],r:Math.random()*6,vr:(Math.random()-.5)*.05,life:600});
+}
+function hearts(n=30){
+  for (let i=0;i<n;i++) parts.push({t:"h",x:Math.random()*W,y:H+20,vx:(Math.random()-.5)*1.2,vy:-(Math.random()*2.5+1.5),
+    s:Math.random()*16+14,ch:Math.random()<.7?"💗":"🍎",life:420});
+}
+(function loop(){
+  ctx.clearRect(0,0,W,H);
+  parts = parts.filter(p => p.life-- > 0 && p.y < H+80 && p.y > -H);
+  for (const p of parts){
+    if (p.t==="c"){
+      p.vy += .3; p.vx *= .99; p.x += p.vx; p.y += p.vy; p.r += p.vr;
+      ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.r); ctx.fillStyle=p.c; ctx.fillRect(-p.w/2,-p.h/2,p.w,p.h); ctx.restore();
+    } else {
+      if (p.t==="h") p.x += p.vx + Math.sin(p.life/20)*.5; else { p.x += p.vx; p.r += p.vr; }
+      p.y += p.vy;
+      ctx.save(); ctx.globalAlpha = Math.min(1,p.life/80); ctx.translate(p.x,p.y); if (p.r) ctx.rotate(p.r);
+      ctx.font = p.s+"px serif"; ctx.fillText(p.ch,0,0); ctx.restore();
+    }
+  }
+  requestAnimationFrame(loop);
+})();
+
+/* ---------- suara ---------- */
+let actx = null;
+function audio(){ if (!actx) actx = new (window.AudioContext||window.webkitAudioContext)(); actx.resume(); return actx; }
+function tone(f, when, dur, vol=.18, type="sine"){
+  const a = audio(), o = a.createOscillator(), g = a.createGain();
+  o.type = type; o.frequency.value = f;
+  g.gain.setValueAtTime(0,when); g.gain.linearRampToValueAtTime(vol,when+.005); g.gain.exponentialRampToValueAtTime(.0001,when+dur);
+  o.connect(g).connect(a.destination); o.start(when); o.stop(when+dur+.05);
+}
+function schoolBell(){
+  const a = audio(); let t = a.currentTime + .05;
+  for (let i=0;i<14;i++){ tone(1180,t,.25,.12); tone(1180*2.76,t,.15,.04); tone(1180*5.4,t,.08,.02); t += .09; }
+}
+function ding(){ const t = audio().currentTime; tone(880,t,.5,.15); tone(1318.5,t+.12,.7,.15); }
+function chime(){ const t = audio().currentTime; [523.25,659.25,783.99,1046.5].forEach((f,i)=>tone(f,t+i*.12,1.2,.13)); }
+
+/* ---------- 1. Bel ---------- */
+$("bellBtn").onclick = () => {
+  schoolBell(); $("bellIcon").classList.remove("ring"); void $("bellIcon").offsetWidth; $("bellIcon").classList.add("ring");
+  $("bellBtn").classList.remove("show");
+  setTimeout(() => chalkType($("greet"), CONFIG.sapaanPapan, 50, () => $("b1").classList.add("show")), 900);
+};
+scenes[1] = () => { $("greet").textContent=""; $("b1").classList.remove("show"); $("bellBtn").classList.add("show"); };
+$("b1").onclick = () => go(2);
+
+/* ---------- 2. Absen ---------- */
+scenes[2] = () => { $("chk").classList.remove("on"); $("bubble").classList.remove("on"); $("hadirBtn").classList.add("show"); $("b2").classList.remove("show"); };
+$("hadirBtn").onclick = () => {
+  ding(); $("chk").classList.add("on"); $("hadirBtn").classList.remove("show");
+  $("bubble").textContent = CONFIG.responHadir; $("bubble").classList.add("on");
+  hearts(12); setTimeout(() => $("b2").classList.add("show"), 1200);
+};
+$("b2").onclick = () => go(3);
+
+/* ---------- 3. Hapus papan (scratch) ---------- */
+const sc = $("scratch"), sctx = sc.getContext("2d");
+let scratchDone = false, drawing = false, moves = 0;
+function setupScratch(){
+  scratchDone = false; $("b3").classList.remove("show"); $("progBar").style.width = "0%";
+  $("eraserTxt").textContent = "🧽 Papannya penuh coretan. Hapus pakai jarimu, Bu…";
+  $("boardMsg").textContent = CONFIG.pesanPapan;
+  const r = sc.getBoundingClientRect(), dpr = Math.min(devicePixelRatio||1, 2);
+  sc.width = r.width*dpr; sc.height = r.height*dpr; sctx.setTransform(dpr,0,0,dpr,0,0);
+  sctx.globalCompositeOperation = "source-over"; sc.style.opacity = 1; sc.style.transition = "";
+  sctx.fillStyle = "#2a5446"; sctx.fillRect(0,0,r.width,r.height);
+  // debu kapur
+  for (let i=0;i<500;i++){ sctx.fillStyle=`rgba(255,255,255,${Math.random()*.08})`; sctx.beginPath();
+    sctx.arc(Math.random()*r.width,Math.random()*r.height,Math.random()*18+4,0,6.28); sctx.fill(); }
+  // coretan
+  const scribbles = ["2 + 2 = 4","A B C D","x² + y² = r²","PR hal. 25!","3 × 7 = 21","Jangan lupa piket","♡","☆","Budi pergi ke pasar","π ≈ 3,14"];
+  sctx.fillStyle = "rgba(247,245,234,.85)"; sctx.textBaseline = "middle";
+  for (let i=0;i<16;i++){
+    const s = scribbles[i % scribbles.length];
+    sctx.save(); sctx.translate(Math.random()*r.width*.8+10, Math.random()*r.height*.9+10); sctx.rotate((Math.random()-.5)*.5);
+    sctx.font = `${Math.random()*14+20}px Caveat, cursive`; sctx.fillText(s,0,0); sctx.restore();
+  }
+  sctx.strokeStyle = "rgba(247,245,234,.6)"; sctx.lineWidth = 2;
+  for (let i=0;i<6;i++){ sctx.beginPath(); let x=Math.random()*r.width, y=Math.random()*r.height; sctx.moveTo(x,y);
+    for (let j=0;j<6;j++){ x+= (Math.random()-.5)*90; y+=(Math.random()-.5)*60; sctx.lineTo(x,y);} sctx.stroke(); }
+  sctx.globalCompositeOperation = "destination-out";
+}
+function erase(e){
+  if (!drawing || scratchDone) return;
+  e.preventDefault();
+  const r = sc.getBoundingClientRect();
+  const pts = e.touches ? Array.from(e.touches) : [e];
+  for (const pt of pts){
+    const x = pt.clientX - r.left, y = pt.clientY - r.top;
+    sctx.beginPath(); sctx.arc(x,y,Math.max(24, r.width/16),0,6.28); sctx.fill();
+  }
+  if (++moves % 8 === 0) checkCleared();
+}
+function checkCleared(){
+  const {width:w, height:h} = sc, data = sctx.getImageData(0,0,w,h).data;
+  let clear = 0, total = 0;
+  for (let i=3;i<data.length;i+=4*40){ total++; if (data[i] < 40) clear++; }
+  const pct = clear/total; $("progBar").style.width = Math.min(100, pct/.6*100) + "%";
+  if (pct > .6 && !scratchDone){
+    scratchDone = true; sc.style.transition = "opacity .8s"; sc.style.opacity = 0;
+    $("eraserTxt").textContent = "✨ Bersih! Ternyata ada pesan di baliknya…";
+    chime(); confetti(90); setTimeout(() => $("b3").classList.add("show"), 1200);
+  }
+}
+sc.addEventListener("pointerdown", e => { drawing = true; erase(e); });
+addEventListener("pointerup", () => drawing = false);
+sc.addEventListener("pointermove", erase);
+sc.addEventListener("touchmove", e => e.preventDefault(), {passive:false});
+scenes[3] = () => setTimeout(setupScratch, 50);
+$("b3").onclick = () => go(4);
+
+/* ---------- 4. Kuis ---------- */
+let qi = 0;
+scenes[4] = () => { qi = 0; $("b4").classList.remove("show"); renderQ(); };
+function renderQ(){
+  const b = $("quizBoard");
+  if (qi >= CONFIG.kuis.length){
+    b.innerHTML = `<h2>Nilai ${CONFIG.guru}:</h2><div class="score">100</div><p class="y">Sempurna, seperti biasanya ⭐</p>`;
+    chime(); confetti(140); setTimeout(() => $("b4").classList.add("show"), 1000);
+    return;
+  }
+  const q = CONFIG.kuis[qi];
+  b.innerHTML = `<div class="qnum">Soal ${qi+1} dari ${CONFIG.kuis.length}</div><h2>${q.q}</h2>
+    <div class="opts">${q.opsi.map((o,i)=>`<button class="opt" data-i="${i}">${"ABCD"[i]}. ${o}</button>`).join("")}</div>
+    <div class="feedback" id="fb"></div>`;
+  b.querySelectorAll(".opt").forEach(btn => btn.onclick = () => {
+    if (b.dataset.lock === "1") return; b.dataset.lock = "1";
+    btn.classList.add("pick"); ding();
+    $("fb").textContent = "✓ " + q.respon;
+    setTimeout(() => { b.dataset.lock = "0"; qi++; renderQ(); }, 2300);
+  });
+}
+$("b4").onclick = () => go(5);
+
+/* ---------- 5. Rapor ---------- */
+scenes[5] = () => {
+  $("b5").classList.remove("show"); $("stamp").classList.remove("on"); $("catatan").classList.remove("on");
+  $("catatan").textContent = CONFIG.catatanWali;
+  $("raporTable").innerHTML = CONFIG.rapor.map(([m,d,g]) => `<tr><td><b>${m}</b><small>${d}</small></td><td class="g">${g}</td></tr>`).join("");
+  const rows = $("raporTable").querySelectorAll("tr");
+  rows.forEach((r,i) => setTimeout(() => { r.classList.add("on"); tone(660+i*90, audio().currentTime, .25, .1); }, 700 + i*650));
+  const end = 700 + rows.length*650;
+  setTimeout(() => $("catatan").classList.add("on"), end);
+  setTimeout(() => { $("stamp").classList.add("on"); setTimeout(()=>{ tone(110,audio().currentTime,.3,.4,"triangle"); confetti(120); },420); }, end + 900);
+  setTimeout(() => $("b5").classList.add("show"), end + 2200);
+};
+$("b5").onclick = () => go(6);
+
+/* ---------- 6. Surat ---------- */
+let typing;
+scenes[6] = () => {
+  $("letter").classList.remove("done"); $("b6").classList.remove("show"); $("skipNote").style.display = "";
+  const body = $("letterBody"), txt = CONFIG.surat; let i = 0; body.textContent = "";
+  clearInterval(typing);
+  typing = setInterval(() => {
+    body.textContent = txt.slice(0, ++i); $("letter").scrollTop = $("letter").scrollHeight;
+    if (i >= txt.length) finishLetter();
+  }, 40);
+};
+function finishLetter(){
+  clearInterval(typing); $("letterBody").textContent = CONFIG.surat;
+  $("letter").classList.add("done"); $("skipNote").style.display = "none"; $("b6").classList.add("show");
+}
+$("letter").onclick = () => { if (!$("letter").classList.contains("done")) finishLetter(); };
+$("b6").onclick = () => go(7);
+
+/* ---------- 7. Apel ---------- */
+let rainIv;
+scenes[7] = () => {
+  $("final").classList.remove("on"); $("apple").style.display = ""; $("appleHint").style.display = "";
+  $("b7").classList.remove("show"); $("finalMsg").textContent = CONFIG.pesanAkhir; clearInterval(rainIv);
+};
+$("apple").onclick = () => {
+  chime(); confetti(200); hearts(40); emojiRain(40);
+  $("apple").style.display = "none"; $("appleHint").style.display = "none"; $("final").classList.add("on");
+  rainIv = setInterval(() => emojiRain(8), 1500); setTimeout(() => clearInterval(rainIv), 12000);
+  setTimeout(() => $("b7").classList.add("show"), 3500);
+};
+$("b7").onclick = () => go(1);
+</script>
+</body>
+</html>
