@@ -4305,6 +4305,31 @@ html[data-theme=malam] .gqtheme,html[data-theme=malam] .tguide{background:var(--
 }
 @media (max-width:1199px){.tsetcols,.tscol{display:flex;flex-direction:column;gap:16px}}
 @media (max-width:1099px){.attside{display:flex;flex-direction:column;gap:16px}}
+
+/* papan skor adu push-up */
+.pudsc{position:absolute;left:12px;right:12px;top:calc(max(10px,env(safe-area-inset-top)) + 58px);z-index:4;background:rgba(15,18,40,.78);border:2px solid rgba(255,255,255,.18);border-radius:20px;padding:10px 12px 12px;color:#fff;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+.pudsc[hidden]{display:none}
+.pudsr{display:grid;grid-template-columns:64px 1fr auto 1fr 64px;align-items:center;gap:4px}
+.pudsp{display:flex;flex-direction:column;align-items:center;gap:3px;min-width:0}
+.pudsp small{font-weight:800;font-size:12px;max-width:64px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pudsav .avatar{width:46px;height:46px;border:3px solid #58CC02;border-radius:50%}
+.pudsp.op .pudsav .avatar{border-color:#FF4D8D}
+.pudsn{font-family:var(--title);font-size:40px;line-height:1;text-align:center}
+.pudsn.me{color:#7BE52F}.pudsn.op{color:#FF5C9A}
+.pudsn.pop{animation:pudsPop .35s ease}
+@keyframes pudsPop{0%{transform:scale(1)}40%{transform:scale(1.35)}100%{transform:scale(1)}}
+.pudst{text-align:center;padding:0 6px}
+.pudst small{display:block;font-size:10.5px;font-weight:800;letter-spacing:.12em;color:#B8C0E0}
+.pudst b{font-family:var(--title);font-size:26px;line-height:1.05}
+.pudst b.low{color:#FFC800}
+.pudtug{position:relative;height:16px;margin-top:10px;border-radius:10px;background:linear-gradient(90deg,#C2185B,#FF4D8D);overflow:visible}
+.pudtug i{position:absolute;left:0;top:0;bottom:0;border-radius:10px 0 0 10px;background:linear-gradient(90deg,#46A302,#7BE52F);transition:width .45s cubic-bezier(.3,1.4,.5,1)}
+.pudtug em{position:absolute;top:-4px;bottom:-4px;width:4px;margin-left:-2px;background:#fff;border-radius:3px;box-shadow:0 0 8px rgba(255,255,255,.9);transition:left .45s cubic-bezier(.3,1.4,.5,1)}
+.pudsc[data-lead="me"]{border-color:rgba(123,229,47,.7);box-shadow:0 0 18px rgba(123,229,47,.35)}
+.pudsc[data-lead="op"]{border-color:rgba(255,77,141,.7);box-shadow:0 0 18px rgba(255,77,141,.3)}
+.puov.pudon:has(#pudScore:not([hidden])) .pudopp{top:calc(max(10px,env(safe-area-inset-top)) + 186px);width:120px}
+.puov.pudon:has(#pudScore:not([hidden])) .pudopp b{display:none}
+.puov.pudon:has(#pudScore:not([hidden])) #pudOc{width:104px;height:139px}
 </style>
 </head>
 <body>
@@ -4520,7 +4545,7 @@ html[data-theme=malam] .gqtheme,html[data-theme=malam] .tguide{background:var(--
 <div class="syncpill" id="syncPill" hidden></div>
 <div class="toast" id="toast" hidden></div>
 
-<script src="av.js?v=461"></script>
+<script src="av.js?v=462"></script>
 <script>
 /* ---------- visual assets ---------- */
 const INK='#1B1E3D';
@@ -13740,11 +13765,26 @@ function pudSync(){const d=PUD.doc;if(!d)return;const me=FBX.user.uid,oid=pudOpp
   pudBar()}
 function pudBar(msg){const b=$('#pudBar');if(!b)return;const d=PUD.doc,op=PUD.opp,me=d&&d.players[FBX.user.uid];
   if(msg){b.innerHTML=`<p>${esc(msg)}</p>`;return}
-  if(PUD.phase==='play'){b.innerHTML=`<p class="pudt"><b id="pudTime">${PUD.left_||''}</b> detik</p>`;return}
+  if(PUD.phase==='play'){b.innerHTML='';return}
   if(PUD.phase==='end'){b.innerHTML='';return}
   if(!op){b.innerHTML=PUD.mm&&d&&d.mm?`<p>Mencari lawan… sambil menunggu, atur posisi HP sampai badanmu terlihat.</p><button class="ghost" id="pudX2">Batal</button>`:`<p>Kode tantangan: <b class="pudcode">${PUD.code}</b></p><button class="primary" id="pudShare">Bagikan ke teman</button>`;
     const sh=$('#pudShare');if(sh)sh.onclick=pudShare;const x2=$('#pudX2');if(x2)x2.onclick=()=>pudQuit();return}
   const r=x=>x&&x.ready?'✅ siap':'⏳ bersiap';b.innerHTML=`<p>Kamu ${r(me)} · ${esc(op.name)} ${r(op)}</p><p class="note">Pertandingan mulai otomatis saat badan kalian berdua terlihat kamera.</p>`}
+
+/* papan skor adu push-up: angka kedua pemain, sisa waktu, dan bar tarik-tambang */
+function pudScoreDraw(){const ov=$('#puOv');if(!ov||!ov.classList.contains('pudon'))return;const d=PUD.doc,op=PUD.opp;let el=$('#pudScore');
+  if(!op){if(el)el.hidden=true;return}
+  if(!el){ov.insertAdjacentHTML('beforeend',`<div class="pudsc" id="pudScore"><div class="pudsr"><div class="pudsp me"><span class="pudsav" id="pudSaMe"></span><small id="pudSnMe"></small></div><b class="pudsn me" id="pudSMe">0</b><div class="pudst"><small>WAKTU</small><b id="pudST">60s</b></div><b class="pudsn op" id="pudSOp">0</b><div class="pudsp op"><span class="pudsav" id="pudSaOp"></span><small id="pudSnOp"></small></div></div><div class="pudtug"><i id="pudTug"></i><em id="pudTugM"></em></div></div>`);el=$('#pudScore');
+    $('#pudSaMe').innerHTML=avSpan(P);$('#pudSnMe').textContent='Kamu'}
+  el.hidden=false;const oid=pudOppId();
+  if(el.dataset.oid!==oid){el.dataset.oid=oid||'';$('#pudSaOp').innerHTML=avSpan({uid:oid,name:op.name,avatar:op.av||null});$('#pudSnOp').textContent=op.name}
+  const my=PUD.S?PUD.S.n||0:0,on=op.n||0,dur=(window.PUD_TEST_DUR||(d&&d.dur)||60);
+  const pop=(id,v)=>{const e=$(id);if(e&&e.textContent!==String(v)){e.textContent=v;e.classList.remove('pop');void e.offsetWidth;e.classList.add('pop')}};
+  pop('#pudSMe',my);pop('#pudSOp',on);
+  const t=PUD.phase==='play'?(PUD.left_==null?dur:PUD.left_):PUD.phase==='end'?0:dur;const te=$('#pudST');if(te){te.textContent=t+'s';te.classList.toggle('low',PUD.phase==='play'&&t<=10)}
+  const pct=my+on?Math.round(my/(my+on)*100):50,cl=Math.max(6,Math.min(94,pct));$('#pudTug').style.width=cl+'%';$('#pudTugM').style.left=cl+'%';
+  const lead=my>on?'me':on>my?'op':'';if(el.dataset.lead!==lead){el.dataset.lead=lead}}
+{const _d=pudDrawOpp;pudDrawOpp=function(){_d.apply(this,arguments);try{pudScoreDraw()}catch(e){}}}
 function pudShare(){const t=`Ayo adu push-up di JELAS! Buka menu Bermain → Adu Push-up, lalu masukkan kode ${PUD.code}. https://jelajahkelas.github.io/?pud=${PUD.code}`;if(navigator.share){navigator.share({text:t}).catch(()=>{});return}window.open('https://wa.me/?text='+encodeURIComponent(t),'_blank')}
 function pudCountdown(){PUD.phase='count';const cd=$('#pudCd');let k=3;const show=t=>{if(cd){cd.hidden=false;cd.textContent=t;cd.classList.remove('pop');void cd.offsetWidth;cd.classList.add('pop')}};
   try{PUD.S.reset()}catch(e){}show(k);tone([660],.08);try{if(soundOn)say('Tiga')}catch(e){}
@@ -17334,7 +17374,7 @@ function folBind(root,list,after){root.querySelectorAll('[data-follow]').forEach
   try{await folDo(f,on);if(on){try{sfx.ok()}catch(_){}toast('team',`Kamu mengikuti ${f.name}.`)}b.outerHTML=folBtn(f,b.classList.contains('sm'));folBind(root,list,after);after&&after()}catch(err){b.disabled=false;toast('lock',fbErr(err))}})}
 const shareIcon='<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M12 3 V15 M7 8 L12 3 L17 8 M5 13 V19 C5 20 6 21 7 21 H17 C18 21 19 20 19 19 V13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const qrIcon='<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><path d="M14 14h3v3h-3zM18 18h3v3h-3zM18 14h3M14 18v3" stroke-linecap="round"/></svg>';
-let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=461';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
+let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=462';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
 function qrMatrix(text){const Q=window.QRCodeLib,q=new Q(-1,Q.ECL.M);q.addData(text);q.make();const n=q.getModuleCount(),m=[];for(let r=0;r<n;r++){m.push([]);for(let c=0;c<n;c++)m[r].push(q.isDark(r,c))}return m}
 function qrSvgOf(m){const n=m.length;let d='';for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(m[r][c])d+=`M${c} ${r}h1.02v1.02h-1.02z`;
   return `<svg viewBox="-2 -2 ${n+4} ${n+4}" class="pcqr" shape-rendering="crispEdges" aria-label="Kode QR profil"><rect x="-2" y="-2" width="${n+4}" height="${n+4}" fill="#fff"/><path d="${d}" fill="#1C1E3D"/></svg>`}
