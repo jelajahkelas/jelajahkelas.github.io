@@ -4284,6 +4284,27 @@ body:not(.teacher) .tsubnav,body.evtv .tsubnav{display:none!important}
 @media (max-width:640px){.ttable.stack td.emp{display:none!important}}
 @media (max-width:999px){#vTDash .dgrid>.dtoday{order:-3}}
 html[data-theme=malam] .gqtheme,html[data-theme=malam] .tguide{background:var(--card)!important;border-color:var(--line)!important}html[data-theme=malam] .attdone{background:rgba(88,204,2,.15);color:#8EE04F}
+
+/* tata letak laptop guru */
+@media (min-width:1100px){
+ #vTStud:not([hidden]){display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr));align-items:stretch}
+ #vTStud>*{grid-column:1/-1;min-width:0}
+ #vTStud>.fbcode,#vTStud>.asblock{grid-column:auto;margin:0!important}
+ #vTStud>.fbcode .jrbtns{margin-top:auto}
+ #vTStud>.asblock .asbox{flex:1;min-height:96px}
+ #vTAtt:not([hidden]){display:grid!important;grid-template-columns:minmax(0,1fr) minmax(300px,360px);align-items:start}
+ #vTAtt>.thead{grid-column:1/-1}
+ #vTAtt>.attside{display:flex;flex-direction:column;gap:16px;position:sticky;top:84px;min-width:0}
+ #vTAtt .attside .sessions{max-height:340px;overflow:auto}
+}
+@media (min-width:1200px){
+ .tsetcols{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;align-items:start}
+ .tscol{display:flex;flex-direction:column;gap:16px;min-width:0}
+ .tscol>*{margin:0!important}
+ .tsetcols.one{grid-template-columns:1fr}
+}
+@media (max-width:1199px){.tsetcols,.tscol{display:flex;flex-direction:column;gap:16px}}
+@media (max-width:1099px){.attside{display:flex;flex-direction:column;gap:16px}}
 </style>
 </head>
 <body>
@@ -4499,7 +4520,7 @@ html[data-theme=malam] .gqtheme,html[data-theme=malam] .tguide{background:var(--
 <div class="syncpill" id="syncPill" hidden></div>
 <div class="toast" id="toast" hidden></div>
 
-<script src="av.js?v=459"></script>
+<script src="av.js?v=460"></script>
 <script>
 /* ---------- visual assets ---------- */
 const INK='#1B1E3D';
@@ -17313,7 +17334,7 @@ function folBind(root,list,after){root.querySelectorAll('[data-follow]').forEach
   try{await folDo(f,on);if(on){try{sfx.ok()}catch(_){}toast('team',`Kamu mengikuti ${f.name}.`)}b.outerHTML=folBtn(f,b.classList.contains('sm'));folBind(root,list,after);after&&after()}catch(err){b.disabled=false;toast('lock',fbErr(err))}})}
 const shareIcon='<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M12 3 V15 M7 8 L12 3 L17 8 M5 13 V19 C5 20 6 21 7 21 H17 C18 21 19 20 19 19 V13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const qrIcon='<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><path d="M14 14h3v3h-3zM18 18h3v3h-3zM18 14h3M14 18v3" stroke-linecap="round"/></svg>';
-let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=459';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
+let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=460';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
 function qrMatrix(text){const Q=window.QRCodeLib,q=new Q(-1,Q.ECL.M);q.addData(text);q.make();const n=q.getModuleCount(),m=[];for(let r=0;r<n;r++){m.push([]);for(let c=0;c<n;c++)m[r].push(q.isDark(r,c))}return m}
 function qrSvgOf(m){const n=m.length;let d='';for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(m[r][c])d+=`M${c} ${r}h1.02v1.02h-1.02z`;
   return `<svg viewBox="-2 -2 ${n+4} ${n+4}" class="pcqr" shape-rendering="crispEdges" aria-label="Kode QR profil"><rect x="-2" y="-2" width="${n+4}" height="${n+4}" fill="#fff"/><path d="${d}" fill="#1C1E3D"/></svg>`}
@@ -19282,6 +19303,11 @@ function raporXlsx(){const t=T(),c=tCls(),rows=raporRows();const stt=v=>v==null?
   const blob=makeXlsx([{name:'Rekap Nilai',rows:s1,widths:[6,28,10,...c.subjects.map(()=>14),11,10,15]},{name:'Rekap Absensi',rows:s2,widths:[6,28,8,8,8,8,18,14]},{name:'Absensi Harian',rows:s3,widths:[6,28,...ses.map(()=>13)]}]);
   const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`Rapor ${c.full} ${dayKey()}.xlsx`.replace(/[\\/:*?"<>|]/g,'-');document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},800);
   toast('check','File Excel diunduh: rekap nilai dan absensi.')}
+
+/* ---------- 6. tata letak laptop: bagi kolom supaya tidak banyak ruang kosong ---------- */
+{const _a=renderTAtt2;const wrapAtt=function(){_a.apply(this,arguments);const v=$('#vTAtt');if(!v||v.querySelector('.attside'))return;const cards=[...v.querySelectorAll(':scope > .tcard')].filter(c=>!c.classList.contains('attcard'));if(!cards.length)return;const side=document.createElement('div');side.className='attside';cards.forEach(c=>side.appendChild(c));v.appendChild(side)};
+ renderTAtt=wrapAtt;TEACH_R.tatt=wrapAtt;renderTAtt2=wrapAtt}
+{const _s=renderTSet;renderTSet=function(){_s.apply(this,arguments);const v=$('#vTSet');if(!v||v.querySelector('.tsetcols'))return;const cards=[...v.querySelectorAll(':scope > .tcard')];if(cards.length<2||innerWidth<1200)return;const w=document.createElement('div');w.className='tsetcols';w.innerHTML='<div class="tscol"></div><div class="tscol"></div>';cards[0].before(w);const col=[...w.children];cards.forEach((c,i)=>col[i===0||c.classList.contains('settings')?0:1].appendChild(c));if(!col[0].children.length||!col[1].children.length){col[1].remove();w.classList.add('one')}};TEACH_R.tset=renderTSet}
 window.__raporXlsx=raporXlsx;window.__parseNames=parseNames;
 {const _r=renderTRapor;renderTRapor=function(){_r.apply(this,arguments);const acts=document.querySelector('#vTRapor .rpacts');if(acts&&!$('#rpXlsx')){acts.insertAdjacentHTML('beforeend','<button class="ghost press" id="rpXlsx" style="background:var(--card)">Unduh Excel</button>');$('#rpXlsx').onclick=()=>{try{raporXlsx()}catch(e){console.warn(e);toast('lock','Gagal membuat file Excel.')}}}};TEACH_R.trapor=renderTRapor}
 })();
