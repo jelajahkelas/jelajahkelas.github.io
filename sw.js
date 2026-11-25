@@ -1,5 +1,5 @@
 // Selalu ambil versi terbaru dari internet; pakai salinan tersimpan hanya saat offline.
-const CACHE = 'jelajah-kelas-v455';
+const CACHE = 'jelajah-kelas-v456';
 // AI pendeteksi push-up (MediaPipe, versi tetap): disimpan terpisah supaya tidak diunduh ulang setiap pembaruan.
 const MP_CACHE = 'jk-mediapipe-0.10.14';
 self.addEventListener('install', e => self.skipWaiting());
