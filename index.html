@@ -4201,6 +4201,26 @@ html[data-theme=malam] .ayat{background:#063F2E;color:#A7F3D0}
 .rkbot{overflow:hidden;background:#EEE6FF!important}.rkbot img{width:100%;height:100%;object-fit:contain}.rkbtag{font-style:normal;font-size:11px;font-weight:800;color:#7C3AED;background:rgba(124,58,237,.12);border-radius:999px;padding:1px 6px;vertical-align:middle}
 .rkbotrow{background:rgba(124,58,237,.04)}
 .rk2-ajak{display:flex;gap:12px;align-items:center}.rk2-ajak img{width:76px;flex:none}.rk2-ajak b{font-family:var(--title);font-size:17px}.rk2-ajak p{margin:2px 0 8px;font-size:13.5px;color:var(--muted)}.rk2-ajak .primary{margin:0;padding:10px 18px}
+.pudopp{position:absolute;right:12px;top:calc(max(10px,env(safe-area-inset-top)) + 66px);width:150px;background:rgba(15,18,40,.82);border:2px solid rgba(255,255,255,.25);border-radius:16px;padding:8px;text-align:center;z-index:3}
+.pudoh{display:flex;align-items:center;gap:6px;font-weight:800;font-size:12.5px;justify-content:center}.pudoh span{max-width:110px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pudoh i{width:9px;height:9px;border-radius:50%;background:#FFC800;flex:none}.pudoh i.p2p{background:#58CC02}.pudoh i.srv{background:#1CB0F6}
+#pudOc{display:block;width:134px;height:178px;margin:4px auto;background:rgba(255,255,255,.06);border-radius:10px}
+.pudopp b{display:block;font-family:var(--title);font-size:34px;line-height:1}.pudopp small{display:block;font-size:11px;color:#FFB4B4;min-height:13px}
+.puov.pudon .puhelp{right:174px}
+.pudbar{position:absolute;left:12px;right:12px;bottom:calc(150px + env(safe-area-inset-bottom));background:rgba(0,0,0,.6);border-radius:14px;padding:10px 12px;text-align:center;z-index:3}
+.pudbar:empty{display:none}.pudbar p{margin:0 0 6px;font-weight:800}.pudbar p:last-child{margin-bottom:0}.pudbar .note{color:#ddd;font-size:12.5px;font-weight:600}.pudbar button{margin:0;width:100%}
+.pudcode{font-family:var(--title);font-size:24px;letter-spacing:.15em;color:#FFC800}
+.pudt{font-size:18px}.pudt b{font-family:var(--title);font-size:30px;color:#FFC800}
+.pudcd{position:absolute;inset:0;display:grid;place-items:center;font-family:var(--title);font-size:110px;color:#fff;text-shadow:0 6px 0 rgba(0,0,0,.35);z-index:5;pointer-events:none}.pudcd.pop{animation:puPop .5s ease}
+.pudres{position:absolute;inset:0;background:rgba(10,12,30,.85);display:grid;place-items:center;z-index:6;padding:20px}
+.pudrin{width:100%;max-width:380px;background:var(--surface,#fff);color:var(--ink);border-radius:22px;padding:20px;text-align:center;display:flex;flex-direction:column;gap:10px}.pudrin h2{margin:0;font-family:var(--title)}
+.pudvs{display:flex;align-items:center;justify-content:center;gap:10px}.pudvs>div{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:10px;border-radius:16px;border:2px solid var(--line)}.pudvs>div.w{border-color:#FFC800;background:rgba(255,200,0,.12)}
+.pudvs b{font-family:var(--title);font-size:40px;line-height:1}.pudvs small{font-size:12px;color:var(--muted)}.pudvs>span{font-weight:900;color:var(--muted)}
+.pudrin button{margin:0;width:100%}
+.pudhub{display:flex;flex-direction:column;gap:10px;text-align:center}.pudhub h3{margin:0}.pudhero{font-size:56px;line-height:1}.pudhub button{margin:0;width:100%}
+.pudjoin{display:flex;gap:8px}.pudjoin input{flex:1;min-width:0;padding:12px;border-radius:12px;border:2px solid var(--line);font:800 18px var(--title);letter-spacing:.15em;text-transform:uppercase;text-align:center;background:var(--surface);color:var(--ink)}.pudjoin button{width:auto!important;flex:none}
+.pudcard{display:flex;align-items:center;gap:14px;width:100%;text-align:left;padding:14px 16px;margin:6px 0 4px;border-radius:20px;border:0;background:linear-gradient(135deg,#FF6B35,#E8384F);color:#fff;box-shadow:0 5px 0 #B3263A;font-family:inherit;cursor:pointer}
+.pudcard .pce{font-size:44px;line-height:1}.pudcard b{display:block;font-family:var(--title);font-size:20px}.pudcard small{display:block;font-size:13px;opacity:.95;font-weight:700}.pudcard .pcn{margin-left:auto;background:#fff;color:#E8384F;font-weight:900;border-radius:999px;padding:6px 12px;font-size:12px}
 </style>
 <style>html,body{margin:0}</style>
 </head>
@@ -4417,7 +4437,7 @@ html[data-theme=malam] .ayat{background:#063F2E;color:#A7F3D0}
 <div class="syncpill" id="syncPill" hidden></div>
 <div class="toast" id="toast" hidden></div>
 
-<script src="av.js?v=449"></script>
+<script src="av.js?v=450"></script>
 <script>
 /* ---------- visual assets ---------- */
 const INK='#1B1E3D';
@@ -13498,25 +13518,25 @@ function pushCam(o){o=o||{};const target=o.target||0,wall=!!o.wall;let ov=$('#pu
   ov.innerHTML=`<div class="puview"><video id="puV" playsinline muted autoplay></video><canvas id="puC"></canvas></div>
    <div class="putop"><button class="xbtn press" id="puX" aria-label="Tutup">✕</button><div class="pupill" id="puSt"><i></i><span>Memuat AI pendeteksi gerakan…</span></div></div>
    <div class="puhelp" id="puHelp"><b>${esc(o.title||'Penghitung push-up')}</b><p>${place}</p><p>✅ Dihitung kalau dada turun cukup dalam dan lengan lurus lagi saat naik. Kalau HP di samping, AI juga memeriksa badan tetap lurus.</p><p class="pupriv">🔒 Gambar kamera hanya diproses di HP ini, tidak disimpan dan tidak dikirim. Pertama kali perlu internet untuk mengunduh AI (±15 MB), berikutnya lebih cepat.</p></div>
-   <div class="pubot">${target?'':`<div class="pumode"><button data-pm="bebas" class="on">Bebas</button><button data-pm="30">30 detik</button><button data-pm="60">60 detik</button></div>`}
+   <div class="pubot">${target||o.duel?'':`<div class="pumode"><button data-pm="bebas" class="on">Bebas</button><button data-pm="30">30 detik</button><button data-pm="60">60 detik</button></div>`}
     <div class="purow"><button class="pusm press" id="puUndo" aria-label="Kurangi satu">−1</button><div class="pucnt"><small id="puOf">${target?'TARGET '+target:'HITUNGAN'}</small><b id="puN">0</b></div><button class="pusm press" id="puPlus" aria-label="Tambah satu">+1</button></div>
-    ${target?'':'<button class="primary press" id="puOk">Selesai</button>'}</div>`;
+    ${target||o.duel?'':'<button class="primary press" id="puOk">Selesai</button>'}</div>`;
   const V=$('#puV'),C=$('#puC'),cx=C.getContext('2d');
   const st=(t,k)=>{const e=$('#puSt');if(!e)return;e.querySelector('span').textContent=t;e.className='pupill'+(k?' '+k:'')};
   const draw=()=>{$('#puN').textContent=S.n};
   const stopCam=()=>{S.stopped=true;cancelAnimationFrame(S.raf);clearInterval(S.timer);try{S.stream&&S.stream.getTracks().forEach(t=>t.stop())}catch(e){}};
-  const close=()=>{stopCam();ov.remove();if(o.onClose)o.onClose(S.n)};
+  const close=()=>{stopCam();ov.remove();if(o.onClose)o.onClose(S.n)};S.close=close;S.stopCam=stopCam;S.ov=ov;S.reset=()=>{S.n=0;S.bad={};S.done=false;draw()};
   const finish=()=>{if(S.done)return;S.done=true;stopCam();try{sfx.win()}catch(e){tone([660,990,1320],.06)}try{haptic([60,40,60])}catch(e){}
     const bd=Object.entries(S.bad).filter(x=>x[1]);const sum=bd.length?' · '+bd.map(([k,v])=>`${v} ${k==='dalam'?'kurang dalam':'badan tidak lurus'}`).join(' · '):'';
     st((target?`Hebat! ${S.n} push-up benar`:`Selesai! ${S.n} push-up benar`)+sum,'ok');try{if(soundOn)say(target?'Hebat! Selesai.':`Selesai. ${S.n} push-up.`)}catch(e){}
     if(o.onDone)setTimeout(()=>{ov.remove();o.onDone(S.n)},Object.keys(S.bad).length?3000:1500)};
   const startTimer=()=>{const sec=+S.mode;S.tleft=sec;$('#puOf').textContent=sec+' DETIK';S.timer=setInterval(()=>{S.tleft--;$('#puOf').textContent=Math.max(0,S.tleft)+' DETIK';if(S.tleft<=3&&S.tleft>0)tone([600],.03);if(S.tleft<=0){clearInterval(S.timer);finish()}},1000)};
-  const rep=()=>{if(S.done)return;if(S.mode!=='bebas'&&S.mode!=='target'&&!S.timer)startTimer();
+  const rep=()=>{if(S.done)return;if(o.gate&&!o.gate())return;if(S.mode!=='bebas'&&S.mode!=='target'&&!S.timer)startTimer();
     S.n++;draw();const b=$('#puN');if(b){b.classList.remove('pop');void b.offsetWidth;b.classList.add('pop')}tone([660+Math.min(S.n,20)*20],.05);try{haptic(25)}catch(e){}
-    try{if(soundOn&&!(target&&S.n>=target))say(String(S.n))}catch(e){}if(target&&S.n>=target)finish()};
+    try{if(soundOn&&!(target&&S.n>=target))say(String(S.n))}catch(e){}if(o.onRep)o.onRep(S.n);if(target&&S.n>=target)finish()};
   ov.querySelectorAll('[data-pm]').forEach(b=>b.onclick=()=>{if(S.n||S.timer)return;ov.querySelectorAll('[data-pm]').forEach(x=>x.classList.toggle('on',x===b));S.mode=b.dataset.pm;$('#puOf').textContent=S.mode==='bebas'?'HITUNGAN':S.mode+' DETIK'});
   $('#puX').onclick=close;$('#puPlus').onclick=()=>{if(!ov.classList.contains('strict'))rep()};$('#puUndo').onclick=()=>{if(S.n>0&&!S.done){S.n--;draw()}};
-  const manual=()=>{ov.classList.remove('strict')};if(target)ov.classList.add('strict');
+  const manual=()=>{if(!o.duel)ov.classList.remove('strict')};if(target||o.duel)ov.classList.add('strict');
   if($('#puOk'))$('#puOk').onclick=()=>{if(S.done)return;if(target&&S.n<target){stopCam();ov.remove();if(o.onDone)o.onDone(S.n);return}finish();if(!o.onDone)setTimeout(close,1700)};
   /* hitung dari titik-titik badan */
   const W=()=>V.videoWidth||640,H=()=>V.videoHeight||480;
@@ -13554,8 +13574,8 @@ function pushCam(o){o=o||{};const target=o.target||0,wall=!!o.wall;let ov=$('#pu
     const down=S.a.st==='down';return {ok:true,down,body:S.body}};
   const BODY_OK=148;
   const FAULT={dalam:'Turun lebih dalam, dada dekat lantai.',turun:'Luruskan badan, pinggul jangan turun.',naik:'Luruskan badan, pinggul jangan terlalu tinggi.'};
-  const fault=k=>{if(S.done)return;S.bad[k]=(S.bad[k]||0)+1;st(FAULT[k]+' Tidak dihitung.','warn');S.warnUntil=performance.now()+1800;tone([300,240],.08);try{haptic([20,30,20])}catch(e){}
-    try{if(soundOn&&performance.now()-(S.lastSay||0)>2500){S.lastSay=performance.now();say(k==='dalam'?'Turun lebih dalam':'Luruskan badanmu')}}catch(e){}};
+  const fault=k=>{if(S.done)return;if(o.gate&&!o.gate())return;S.bad[k]=(S.bad[k]||0)+1;st(FAULT[k]+' Tidak dihitung.','warn');S.warnUntil=performance.now()+1800;tone([300,240],.08);try{haptic([20,30,20])}catch(e){}
+    try{if(soundOn&&performance.now()-(S.lastSay||0)>2500){S.lastSay=performance.now();say(k==='dalam'?'Turun lebih dalam':'Luruskan badanmu')}}catch(e){}if(o.onFault)o.onFault(S.bad)};
   S.feed=analyse;
   const drawPose=(lm,down)=>{C.width=W();C.height=H();cx.clearRect(0,0,C.width,C.height);if(!lm)return;const p=lm.map(q=>({x:q.x*C.width,y:q.y*C.height,v:q.visibility==null?1:q.visibility}));
     cx.lineWidth=Math.max(3,C.width/120);cx.lineCap='round';
@@ -13567,17 +13587,133 @@ function pushCam(o){o=o||{};const target=o.target||0,wall=!!o.wall;let ov=$('#pu
      if(MP_KIND==='full'&&S.dts.length===30&&!S.slowSw&&S.dts.reduce((a,b)=>a+b,0)/30>110){S.slowSw=1;try{localStorage.setItem('jk_mpslow','1')}catch(e){}mpPose('lite').catch(()=>{})}}
     const lm=r&&r.landmarks&&r.landmarks[0];
     if(!lm){S.lost++;if(S.lost>8){drawPose(null);if(!S.done)st('Badan belum terlihat. Mundurkan HP sampai badan dan tangan terlihat.','warn')}return}
-    S.lost=0;const res=analyse(lm,now);drawPose(lm,res.down);if(S.done)return;
+    S.lost=0;const res=analyse(lm,now);drawPose(lm,res.down);if(o.onPose)o.onPose(lm,res);if(S.done)return;
     if(!res.ok){st('Tangan belum terlihat jelas. Atur posisi HP.','warn');return}
-    if(!S.seen){S.seen=1;$('#puHelp').classList.add('mini');st('Badan terdeteksi! Mulai push-up.','ok');try{if(soundOn)say('Badan terdeteksi. Mulai push-up.')}catch(e){}}
+    if(!S.seen){S.seen=1;$('#puHelp').classList.add('mini');if(o.onSeen)o.onSeen();st('Badan terdeteksi! Mulai push-up.','ok');try{if(soundOn)say('Badan terdeteksi. Mulai push-up.')}catch(e){}}
     else if(performance.now()>(S.warnUntil||0))st(res.down?'Turun… dorong naik!':res.body!=null&&res.body<BODY_OK?'Luruskan badanmu.':'Bagus! Turun lagi.',res.body!=null&&res.body<BODY_OK?'warn':'ok')};
   draw();
   (async()=>{try{S.stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'user',width:{ideal:640},height:{ideal:480}},audio:false})}
-    catch(e){st('Kamera tidak bisa dibuka. Hitung dengan tombol +1.','warn');manual();return}
+    catch(e){st(o.duel?'Kamera tidak bisa dibuka. Adu push-up butuh kamera.':'Kamera tidak bisa dibuka. Hitung dengan tombol +1.','warn');manual();if(o.onFail)o.onFail('kamera');return}
     if(S.stopped){S.stream.getTracks().forEach(t=>t.stop());return}V.srcObject=S.stream;try{await V.play()}catch(e){}
-    try{await mpPose()}catch(e){if(!S.stopped)st(navigator.onLine===false?'Perlu internet sekali untuk mengunduh AI. Sementara hitung dengan tombol +1.':'AI gagal dimuat. Hitung dengan tombol +1.','warn');manual();return}
-    if(S.stopped)return;st('Mencari badanmu…');loop()})();
+    try{await mpPose()}catch(e){if(!S.stopped)st(navigator.onLine===false?'Perlu internet sekali untuk mengunduh AI. Sementara hitung dengan tombol +1.':'AI gagal dimuat. Hitung dengan tombol +1.','warn');manual();if(o.onFail)o.onFail('ai');return}
+    if(S.stopped)return;st('Mencari badanmu…');if(o.onReady)o.onReady();loop()})();
+  if(o.onOpen)o.onOpen(ov,S);
   return S}
+/* ---------- ADU PUSH-UP (mabar): dua pemain, hitungan dari AI, kerangka badan lawan tampil langsung ----------
+   Yang dikirim ke lawan hanya 13 titik kerangka badan (bukan video), lewat koneksi langsung antar-HP (WebRTC);
+   kalau koneksi langsung gagal, titik dikirim lewat server 2 kali per detik. Kamera tidak pernah dikirim. */
+const PUD={code:null,doc:null,un:null,unP:null,S:null,pc:null,dc:null,phase:'idle',opp:null,oppPose:null,oppAt:0,sent:0,nAt:0,link:'',mm:false,mmHb:null,cdT:null,endT:null,res:false};
+const PUD_KP=[0,11,12,13,14,15,16,23,24,25,26,27,28],PUD_B=[[1,2],[1,3],[3,5],[2,4],[4,6],[1,7],[2,8],[7,8],[7,9],[9,11],[8,10],[10,12]];
+const pudMe=()=>({name:String(P.name||'Pemain').slice(0,40),av:P.avatar||null,g:P.gender||'',ready:false,n:0,bad:0,done:false,left:false});
+function pudHub(){if(!FBX.user||!P||isT()){toast('lock','Masuk ke akun JELAS dulu untuk adu push-up online.');return}
+  openModal(`<div class="pudhub"><div class="pudhero">💪</div><h3>Adu Push-up</h3><p class="note">Bertanding push-up berdua secara langsung. AI menghitung gerakan kalian, dan kerangka badan lawan tampil di layarmu, jadi tidak bisa curang. Video kamera tidak dikirim.</p>
+   <button class="primary" id="pudRand">⚡ Cari lawan acak</button><button class="ghost" id="pudNew">🔑 Buat kode untuk teman</button>
+   <div class="pudjoin"><input id="pudCode" maxlength="6" value="${(()=>{try{return sessionStorage.getItem('jk_pud')||''}catch(e){return ''}})()}" placeholder="KODE" autocomplete="off" autocapitalize="characters"><button class="ghost" id="pudJoin">Gabung</button></div>
+   <button class="linkbtn" id="pudSolo">Latihan sendiri dulu</button></div>`);
+  $('#pudRand').onclick=()=>{closeModal();pudRandom()};$('#pudNew').onclick=()=>{closeModal();pudCreate()};$('#pudSolo').onclick=()=>{closeModal();pushCam({title:'Latihan push-up'})};
+  $('#pudJoin').onclick=()=>{const c=($('#pudCode').value||'').toUpperCase().replace(/[^A-Z0-9]/g,'');if(c.length!==6){toast('lock','Kodenya 6 huruf.');return}closeModal();pudJoin(c)}}
+const pudCodeGen=()=>Array.from({length:6},()=>'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'[Math.floor(Math.random()*32)]).join('');
+async function pudCreate(viaMM){let code=null;for(let k=0;k<5&&!code;k++){const c=pudCodeGen();try{await FB.db.doc('pud/'+c).set({host:FBX.user.uid,status:'lobby',dur:60,created:Date.now(),round:1,players:{[FBX.user.uid]:pudMe()},mm:!!viaMM});code=c}catch(e){if(k===4){toast('lock',fbErr(e));return null}}}
+  pudStart(code,true);return code}
+async function pudJoin(code){let s;try{s=await FB.db.doc('pud/'+code).get()}catch(e){toast('lock',fbErr(e));return false}
+  if(!s.exists){toast('lock','Tantangan tidak ditemukan. Periksa lagi kodenya.');return false}const d=s.data(),me=FBX.user.uid;
+  if(Date.now()-(d.created||0)>864e5){toast('lock','Tantangan ini sudah kedaluwarsa.');return false}
+  if(!d.players[me]){if(Object.keys(d.players).length>=2){toast('lock','Tantangan ini sudah ada lawannya.');return false}
+    try{await FB.db.doc('pud/'+code).update({['players.'+me]:pudMe()})}catch(e){toast('lock',fbErr(e));return false}}
+  pudStart(code,false);return true}
+/* cari lawan acak: satu antrean untuk semua pengguna */
+async function pudRandom(){const ref=FB.db.doc('pumm/q'),me=FBX.user.uid;PUD.mm=true;
+  const valid=d=>d&&d.code&&d.host!==me&&Math.abs(Date.now()-(d.at||0))<45000;
+  try{const c=await FB.db.runTransaction(async tr=>{const s=await tr.get(ref);const d=s.exists?s.data():null;if(valid(d)){tr.delete(ref);return d.code}return null});
+    if(c&&await pudJoin(c))return;
+    const my=await pudCreate(true);if(!my)return;await ref.set({code:my,host:me,at:Date.now()});
+    clearInterval(PUD.mmHb);PUD.mmHb=setInterval(async()=>{const d=PUD.doc;if(PUD.code!==my||!d||Object.keys(d.players||{}).length>=2||d.status!=='lobby'){clearInterval(PUD.mmHb);return}try{await ref.set({code:my,host:me,at:Date.now()})}catch(e){}},15000)}
+  catch(e){toast('lock',fbErr(e))}}
+function pudStart(code,host){pudLeave(true);Object.assign(PUD,{code,host,phase:'lobby',opp:null,oppPose:null,oppAt:0,link:'',res:false,dc:null,pc:null,iRole:null});
+  PUD.S=pushCam({title:'Adu push-up',duel:true,gate:()=>PUD.phase==='play',
+    onOpen:(ov)=>{ov.classList.add('pudon');ov.insertAdjacentHTML('beforeend',`<div class="pudopp" id="pudOpp"><div class="pudoh"><span id="pudOn">Lawan</span><i id="pudLink" title="Koneksi"></i></div><canvas id="pudOc" width="150" height="200"></canvas><b id="pudOn2">–</b><small id="pudOb"></small></div>
+      <div class="pudbar" id="pudBar"></div><div class="pudcd" id="pudCd" hidden></div>`);const o=$('#puOf');if(o)o.textContent='KAMU';pudBar()},
+    onSeen:()=>pudSet({ready:true}),onReady:()=>{},onFail:()=>{pudBar('Adu push-up butuh kamera dan AI. Periksa izin kamera dan internet, lalu coba lagi.')},
+    onRep:n=>{if(PUD.phase!=='play')return;pudCount()},onFault:b=>{if(PUD.phase==='play')pudCount()},
+    onPose:(lm)=>pudSendPose(lm),onClose:()=>pudLeave()});
+  PUD.un=FB.db.doc('pud/'+code).onSnapshot(s=>{if(!s.exists){if(PUD.code===code){toast('lock','Tantangan ditutup.');pudQuit()}return}PUD.doc=s.data();pudSync()},e=>{toast('lock',fbErr(e));pudQuit()});
+  PUD.unP=FB.db.collection('pud/'+code+'/p').onSnapshot(q=>{q.docs.forEach(d=>{if(d.id===FBX.user.uid)return;const x=d.data();if(PUD.link!=='p2p'&&x&&x.k){PUD.oppPose=x.k;PUD.oppAt=Date.now()}})},()=>{});
+  clearInterval(PUD.drawT);PUD.drawT=setInterval(pudDrawOpp,100)}
+function pudSet(o){if(!PUD.code)return;const me=FBX.user.uid,u={};Object.entries(o).forEach(([k,v])=>u[`players.${me}.${k}`]=v);FB.db.doc('pud/'+PUD.code).update(u).catch(()=>{})}
+function pudCount(){/* kirim hitungan paling banyak 2x per detik */const S=PUD.S;if(!S)return;clearTimeout(PUD.cT);const go=()=>{PUD.nAt=Date.now();pudSet({n:S.n,bad:Object.values(S.bad).reduce((a,b)=>a+b,0)})};if(Date.now()-PUD.nAt>500)go();else PUD.cT=setTimeout(go,500)}
+function pudOppId(){const d=PUD.doc;return d?Object.keys(d.players||{}).find(u=>u!==FBX.user.uid):null}
+function pudSync(){const d=PUD.doc;if(!d)return;const me=FBX.user.uid,oid=pudOppId(),op=oid&&d.players[oid],mp=d.players[me];PUD.opp=op||null;
+  if(!mp){toast('lock','Kamu dikeluarkan dari tantangan.');pudQuit();return}
+  const on=$('#pudOn');if(on)on.textContent=op?op.name:'Menunggu lawan…';const n2=$('#pudOn2');if(n2)n2.textContent=op?op.n||0:'–';const ob=$('#pudOb');if(ob)ob.textContent=op&&op.bad?`${op.bad} gerakan tidak dihitung`:'';
+  if(op&&!PUD.pc&&!op.left)pudRtc();
+  if(d.status==='lobby'&&op&&!mp.ready&&PUD.S&&PUD.S.seen&&Date.now()-(PUD.rdAt||0)>1500){PUD.rdAt=Date.now();pudSet({ready:true})}
+  if(op&&op.left&&PUD.phase!=='end'&&!PUD.leftShown){PUD.leftShown=true;toast('lock',`${op.name} keluar dari pertandingan.`)}
+  if(PUD.host&&d.status==='lobby'&&op&&op.ready&&mp.ready&&!PUD.starting){PUD.starting=true;FB.db.doc('pud/'+PUD.code).update({status:'count',startAt:Date.now()}).catch(()=>{PUD.starting=false})}
+  if(d.status==='count'&&PUD.phase==='lobby')pudCountdown();
+  if(PUD.host&&d.status==='play'&&op&&mp.done&&(op.done||op.left))FB.db.doc('pud/'+PUD.code).update({status:'end'}).catch(()=>{});
+  if(d.status==='end'&&!PUD.res)pudResult();
+  if(d.status==='lobby'&&PUD.phase==='end'){Object.assign(PUD,{phase:'lobby',res:false,starting:false});try{PUD.S.reset()}catch(e){}const cd=$('#pudCd');if(cd)cd.hidden=true}
+  pudBar()}
+function pudBar(msg){const b=$('#pudBar');if(!b)return;const d=PUD.doc,op=PUD.opp,me=d&&d.players[FBX.user.uid];
+  if(msg){b.innerHTML=`<p>${esc(msg)}</p>`;return}
+  if(PUD.phase==='play'){b.innerHTML=`<p class="pudt"><b id="pudTime">${PUD.left_||''}</b> detik</p>`;return}
+  if(PUD.phase==='end'){b.innerHTML='';return}
+  if(!op){b.innerHTML=PUD.mm&&d&&d.mm?`<p>Mencari lawan… sambil menunggu, atur posisi HP sampai badanmu terlihat.</p><button class="ghost" id="pudX2">Batal</button>`:`<p>Kode tantangan: <b class="pudcode">${PUD.code}</b></p><button class="primary" id="pudShare">Bagikan ke teman</button>`;
+    const sh=$('#pudShare');if(sh)sh.onclick=pudShare;const x2=$('#pudX2');if(x2)x2.onclick=()=>pudQuit();return}
+  const r=x=>x&&x.ready?'✅ siap':'⏳ bersiap';b.innerHTML=`<p>Kamu ${r(me)} · ${esc(op.name)} ${r(op)}</p><p class="note">Pertandingan mulai otomatis saat badan kalian berdua terlihat kamera.</p>`}
+function pudShare(){const t=`Ayo adu push-up di JELAS! Buka menu Bermain → Adu Push-up, lalu masukkan kode ${PUD.code}. https://jelajahkelas.github.io/?pud=${PUD.code}`;if(navigator.share){navigator.share({text:t}).catch(()=>{});return}window.open('https://wa.me/?text='+encodeURIComponent(t),'_blank')}
+function pudCountdown(){PUD.phase='count';const cd=$('#pudCd');let k=3;const show=t=>{if(cd){cd.hidden=false;cd.textContent=t;cd.classList.remove('pop');void cd.offsetWidth;cd.classList.add('pop')}};
+  try{PUD.S.reset()}catch(e){}show(k);tone([660],.08);try{if(soundOn)say('Tiga')}catch(e){}
+  clearInterval(PUD.cdT);PUD.cdT=setInterval(()=>{k--;if(k>0){show(k);tone([660],.08);try{if(soundOn)say(k===2?'Dua':'Satu')}catch(e){}return}
+    clearInterval(PUD.cdT);show('MULAI!');tone([990,1320],.08);try{if(soundOn)say('Mulai!')}catch(e){}setTimeout(()=>{if(cd)cd.hidden=true},700);
+    PUD.phase='play';if(PUD.host)FB.db.doc('pud/'+PUD.code).update({status:'play'}).catch(()=>{});const dur=window.PUD_TEST_DUR||(PUD.doc&&PUD.doc.dur)||60;const t0=Date.now();PUD.left_=dur;pudBar();
+    clearInterval(PUD.endT);PUD.endT=setInterval(()=>{const l=Math.max(0,Math.ceil(dur-(Date.now()-t0)/1000));PUD.left_=l;const e=$('#pudTime');if(e)e.textContent=l;if(l<=3&&l>0)tone([600],.03);
+      if(l<=0){clearInterval(PUD.endT);PUD.phase='end';const S=PUD.S;pudSet({n:S.n,bad:Object.values(S.bad).reduce((a,b)=>a+b,0),done:true});pudBar();
+        const b=$('#pudBar');if(b)b.innerHTML='<p>Waktu habis! Menunggu hasil lawan…</p>';setTimeout(()=>{if(PUD.code&&!PUD.res&&PUD.host)FB.db.doc('pud/'+PUD.code).update({status:'end'}).catch(()=>{})},8000)}},250)},1000)}
+function pudResult(){PUD.res=true;PUD.phase='end';clearInterval(PUD.endT);const d=PUD.doc,me=FBX.user.uid,mp=d.players[me]||{},oid=pudOppId(),op=(oid&&d.players[oid])||{name:'Lawan',n:0};
+  const S=PUD.S,myN=S?S.n:mp.n||0,opN=op.n||0,win=myN>opN,draw_=myN===opN;
+  try{addXp(win?15:10,'game');P.stats=P.stats||{};P.stats.matches=(P.stats.matches||0)+1;if(win)P.stats.wins=(P.stats.wins||0)+1;P.pud=P.pud||{best:0};P.pud.best=Math.max(P.pud.best||0,myN);save()}catch(e){}
+  try{if(win){sfx.win();burstConfetti()}else tone([440,330],.1)}catch(e){}try{if(soundOn)say(win?'Kamu menang!':draw_?'Seri!':'Kamu kalah. Ayo coba lagi!')}catch(e){}
+  const ov=$('#puOv');if(!ov)return;ov.querySelector('.pudres')&&ov.querySelector('.pudres').remove();
+  ov.insertAdjacentHTML('beforeend',`<div class="pudres"><div class="pudrin"><h2>${win?'🏆 Kamu menang!':draw_?'🤝 Seri!':'💪 Hampir!'}</h2>
+    <div class="pudvs"><div class="${win?'w':''}">${avSpan(P)}<b>${myN}</b><small>Kamu${mp.bad?` · ${mp.bad} tidak dihitung`:''}</small></div><span>VS</span><div class="${!win&&!draw_?'w':''}">${avSpan({uid:oid,name:op.name,avatar:op.av||null})}<b>${opN}</b><small>${esc(op.name)}${op.bad?` · ${op.bad} tidak dihitung`:''}</small></div></div>
+    <p class="note">+${win?15:10} XP · Rekor push-up kamu: ${(P.pud&&P.pud.best)||myN}</p>
+    ${PUD.host&&!op.left?'<button class="primary" id="pudAgain">Main lagi</button>':op.left?'':'<p class="note">Menunggu tuan rumah memulai lagi…</p>'}<button class="ghost" id="pudOut">Keluar</button></div></div>`);
+  const a=$('#pudAgain');if(a)a.onclick=()=>{const pl={};Object.entries(d.players).forEach(([u,p])=>pl[u]=Object.assign({},p,{n:0,bad:0,done:false,ready:true}));ov.querySelector('.pudres').remove();
+    FB.db.doc('pud/'+PUD.code).update({status:'lobby',players:pl,round:(d.round||1)+1}).then(()=>setTimeout(()=>{if(PUD.doc&&PUD.doc.status==='lobby')FB.db.doc('pud/'+PUD.code).update({status:'count',startAt:Date.now()}).catch(()=>{})},1500)).catch(e=>toast('lock',fbErr(e)))};
+  $('#pudOut').onclick=()=>pudQuit()}
+/* ----- kerangka lawan ----- */
+function pudPack(lm){return PUD_KP.map(i=>{const p=lm[i];return (p.visibility==null||p.visibility>.4)?[Math.round(p.x*1000),Math.round(p.y*1000)]:null})}
+function pudSendPose(lm){if(!PUD.code||!PUD.opp)return;const k=pudPack(lm),now=Date.now();
+  if(PUD.link==='p2p'&&PUD.dc&&PUD.dc.readyState==='open'){if(now-PUD.sent>80){PUD.sent=now;try{PUD.dc.send(JSON.stringify({k}))}catch(e){}}return}
+  if((PUD.phase==='play'||PUD.phase==='count')&&now-PUD.sent>500){PUD.sent=now;FB.db.doc('pud/'+PUD.code+'/p/'+FBX.user.uid).set({k,t:now}).catch(()=>{})}}
+function pudDrawOpp(){const c=$('#pudOc');if(!c)return;const g=c.getContext('2d');g.clearRect(0,0,c.width,c.height);const L=$('#pudLink');if(L){L.className=PUD.link;L.title=PUD.link==='p2p'?'Terhubung langsung':PUD.link==='srv'?'Lewat server':'Menyambungkan'}
+  const k=PUD.oppPose;if(!k||Date.now()-PUD.oppAt>4000){g.fillStyle='rgba(255,255,255,.5)';g.font='bold 13px sans-serif';g.textAlign='center';g.fillText(PUD.opp?(PUD.phase==='play'?'Menunggu gerakan…':'Lawan bersiap'):'—',c.width/2,c.height/2);return}
+  /* cermin seperti kamera sendiri, dan pas di kotak */
+  const pts=k.map(p=>p?{x:1-p[0]/1000,y:p[1]/1000}:null).filter(Boolean);if(!pts.length)return;const xs=pts.map(p=>p.x),ys=pts.map(p=>p.y);
+  const x0=Math.min(...xs),x1=Math.max(...xs),y0=Math.min(...ys),y1=Math.max(...ys),sc=Math.min((c.width-24)/Math.max(.05,x1-x0),(c.height-24)/Math.max(.05,y1-y0));
+  const P2=k.map(p=>p?{x:12+((1-p[0]/1000)-x0)*sc+((c.width-24)-(x1-x0)*sc)/2,y:12+(p[1]/1000-y0)*sc+((c.height-24)-(y1-y0)*sc)/2}:null);
+  g.lineWidth=5;g.lineCap='round';PUD_B.forEach(([a,b])=>{if(!P2[a]||!P2[b])return;g.strokeStyle=[3,4,5,6].includes(a)||[3,4,5,6].includes(b)?'#FFC800':'#58CC02';g.beginPath();g.moveTo(P2[a].x,P2[a].y);g.lineTo(P2[b].x,P2[b].y);g.stroke()});
+  if(P2[0]){g.fillStyle='#fff';g.beginPath();g.arc(P2[0].x,P2[0].y,8,0,7);g.fill()}}
+/* ----- koneksi langsung (WebRTC). Sinyal lewat dokumen tantangan; tanpa server TURN, jadi kalau gagal pakai server Firestore ----- */
+function pudRtc(){if(PUD.pc||typeof RTCPeerConnection==='undefined'){PUD.link='srv';return}const code=PUD.code,host=PUD.host;
+  const pc=PUD.pc=new RTCPeerConnection({iceServers:[{urls:['stun:stun.l.google.com:19302','stun:stun1.l.google.com:19302']}]});
+  const onDc=dc=>{PUD.dc=dc;dc.onopen=()=>{PUD.link='p2p'};dc.onclose=()=>{if(PUD.link==='p2p')PUD.link='srv'};dc.onmessage=e=>{try{const m=JSON.parse(e.data);if(m.k){PUD.oppPose=m.k;PUD.oppAt=Date.now()}}catch(_){}}};
+  const gathered=()=>new Promise(r=>{if(pc.iceGatheringState==='complete')return r();const t=setTimeout(r,2500);pc.onicegatheringstatechange=()=>{if(pc.iceGatheringState==='complete'){clearTimeout(t);r()}}});
+  setTimeout(()=>{if(PUD.code===code&&PUD.link!=='p2p')PUD.link='srv'},9000);
+  if(host){onDc(pc.createDataChannel('p',{ordered:false,maxRetransmits:0}));(async()=>{try{await pc.setLocalDescription(await pc.createOffer());await gathered();await FB.db.doc('pud/'+code).update({offer:JSON.stringify(pc.localDescription),ans:null})}catch(e){PUD.link='srv'}})();
+    PUD.sigT=setInterval(async()=>{const d=PUD.doc;if(PUD.code!==code||!d){clearInterval(PUD.sigT);return}if(d.ans&&!pc.remoteDescription){clearInterval(PUD.sigT);try{await pc.setRemoteDescription(JSON.parse(d.ans))}catch(e){PUD.link='srv'}}},500)}
+  else{pc.ondatachannel=e=>onDc(e.channel);PUD.sigT=setInterval(async()=>{const d=PUD.doc;if(PUD.code!==code||!d){clearInterval(PUD.sigT);return}if(d.offer&&!pc.remoteDescription){clearInterval(PUD.sigT);
+      try{await pc.setRemoteDescription(JSON.parse(d.offer));await pc.setLocalDescription(await pc.createAnswer());await gathered();await FB.db.doc('pud/'+code).update({ans:JSON.stringify(pc.localDescription)})}catch(e){PUD.link='srv'}}},500)}}
+function pudLeave(silent){const code=PUD.code;if(!code)return;const d=PUD.doc,me=FBX.user&&FBX.user.uid;
+  ['un','unP'].forEach(k=>{try{PUD[k]&&PUD[k]()}catch(e){}PUD[k]=null});['cdT','endT','drawT','sigT','mmHb'].forEach(k=>clearInterval(PUD[k]));
+  try{PUD.dc&&PUD.dc.close();PUD.pc&&PUD.pc.close()}catch(e){}
+  if(me){if(PUD.host&&(!d||d.status==='lobby'||d.status==='end'))FB.db.doc('pud/'+code).delete().catch(()=>{});else FB.db.doc('pud/'+code).update({[`players.${me}.left`]:true}).catch(()=>{});
+    FB.db.doc('pud/'+code+'/p/'+me).delete().catch(()=>{});if(PUD.mm)FB.db.doc('pumm/q').get().then(s=>{if(s.exists&&s.data().code===code)return FB.db.doc('pumm/q').delete()}).catch(()=>{})}
+  Object.assign(PUD,{code:null,doc:null,S:null,pc:null,dc:null,phase:'idle',opp:null,oppPose:null,link:'',mm:false,starting:false,leftShown:false,res:false})}
+function pudQuit(){const S=PUD.S;pudLeave();try{S&&S.close()}catch(e){}const o=$('#puOv');if(o)o.remove()}
+window.pudHub=pudHub;
+try{const q=new URLSearchParams(location.search).get('pud');if(q&&/^[A-Z0-9]{6}$/.test(q))sessionStorage.setItem('jk_pud',q)}catch(e){}
 function openSport(ui){if(!P)return;const f=spFit();let el=$('#sportOv');if(!el){document.body.insertAdjacentHTML('beforeend','<div class="onb sportov" id="sportOv" hidden></div>');el=$('#sportOv')}
   const st={ui,mini:false,plan:null,k:0,phase:'intro',left:0};const stop=()=>{clearInterval(SPT.timer);SPT.timer=null};
   const close=()=>{stop();el.hidden=true;document.body.classList.remove('sporting')};
@@ -17086,7 +17222,7 @@ function folBind(root,list,after){root.querySelectorAll('[data-follow]').forEach
   try{await folDo(f,on);if(on){try{sfx.ok()}catch(_){}toast('team',`Kamu mengikuti ${f.name}.`)}b.outerHTML=folBtn(f,b.classList.contains('sm'));folBind(root,list,after);after&&after()}catch(err){b.disabled=false;toast('lock',fbErr(err))}})}
 const shareIcon='<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M12 3 V15 M7 8 L12 3 L17 8 M5 13 V19 C5 20 6 21 7 21 H17 C18 21 19 20 19 19 V13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const qrIcon='<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><path d="M14 14h3v3h-3zM18 18h3v3h-3zM18 14h3M14 18v3" stroke-linecap="round"/></svg>';
-let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=449';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
+let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=450';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
 function qrMatrix(text){const Q=window.QRCodeLib,q=new Q(-1,Q.ECL.M);q.addData(text);q.make();const n=q.getModuleCount(),m=[];for(let r=0;r<n;r++){m.push([]);for(let c=0;c<n;c++)m[r].push(q.isDark(r,c))}return m}
 function qrSvgOf(m){const n=m.length;let d='';for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(m[r][c])d+=`M${c} ${r}h1.02v1.02h-1.02z`;
   return `<svg viewBox="-2 -2 ${n+4} ${n+4}" class="pcqr" shape-rendering="crispEdges" aria-label="Kode QR profil"><rect x="-2" y="-2" width="${n+4}" height="${n+4}" fill="#fff"/><path d="${d}" fill="#1C1E3D"/></svg>`}
@@ -18572,9 +18708,10 @@ function plRoot(){const on=typeof phOnline==='function'&&phOnline();const s=P.st
   const ic=(d,t)=>`<span class="plst"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">${d}</svg>${t}</span>`;
   return `<div class="plstick"><div class="pltop"><h1>Bermain</h1><div class="plstats">${ic('<path d="M3 12h4l3-8 4 16 3-8h4"/>',`${s.matches||0} main`)}${ic('<circle cx="12" cy="12" r="9"/><path d="m8 12 3 3 5-6"/>',`${s.wins||0} menang`)}</div></div>
    <div class="plmore gchips">${on?'<button class="plchip" data-pl2="acak">⚡ Lawan pemain acak</button>':''}<button class="plchip" data-ph="online">🔑 Punya kode?</button></div></div></div>
+   <button class="pudcard" data-pud><span class="pce">💪</span><span><b>Adu Push-up</b><small>Mabar push-up dengan AI · lihat gerakan lawan langsung</small></span><span class="pcn">BARU</span></button>
    <h3 class="sect">Pilih game</h3>${plGallery()}
    <div style="height:24px"></div>`}
-function plBind(hub){gBind(hub);hub.querySelectorAll('[data-pl2]').forEach(b=>b.onclick=()=>{if(!phOnline()){toast('lock','Masuk ke akun JELAS dulu untuk main online.');return}window.mmRandom&&mmRandom()});hub.querySelectorAll('[data-pl]').forEach(b=>b.onclick=()=>{PLSEL=b.dataset.pl;playHub()});
+function plBind(hub){gBind(hub);hub.querySelectorAll('[data-pud]').forEach(b=>b.onclick=()=>{try{tone([620],.03)}catch(e){}pudHub()});hub.querySelectorAll('[data-pl2]').forEach(b=>b.onclick=()=>{if(!phOnline()){toast('lock','Masuk ke akun JELAS dulu untuk main online.');return}window.mmRandom&&mmRandom()});hub.querySelectorAll('[data-pl]').forEach(b=>b.onclick=()=>{PLSEL=b.dataset.pl;playHub()});
   const g=$('#plGo');if(g)g.onclick=()=>{if(PLSEL==='sendiri'){phGo('sendiri');return}
     if(!phOnline()){toast('lock','Masuk ke akun JELAS dulu untuk main online.');return}
     if(PLSEL==='teman'){phPick('on2');return}window.mmRandom&&mmRandom()};

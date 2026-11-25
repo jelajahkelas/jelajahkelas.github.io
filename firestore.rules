@@ -131,6 +131,29 @@ service cloud.firestore {
 
     // Main bareng online: ruang tantangan. Pemain hanya boleh mengubah datanya sendiri.
     // antrean "Pemain Lain": satu ruang menunggu per tingkat kelas
+    // Adu push-up: ruang berdua, antrean lawan acak, dan titik kerangka badan (bukan video) saat koneksi langsung gagal.
+    match /pud/{code} {
+      allow get: if signedIn();
+      allow list: if false;
+      allow create: if signedIn() && request.resource.data.host == request.auth.uid
+        && request.resource.data.players.keys().hasOnly([request.auth.uid]);
+      allow update: if signedIn() && (resource.data.host == request.auth.uid
+        || (changedKeys().hasOnly(['players', 'ans'])
+            && request.resource.data.players.diff(resource.data.players).affectedKeys().hasOnly([request.auth.uid])
+            && request.resource.data.players.size() <= 2));
+      allow delete: if signedIn() && resource.data.host == request.auth.uid;
+      match /p/{uid} {
+        allow read: if signedIn();
+        allow write: if signedIn() && request.auth.uid == uid;
+      }
+    }
+    match /pumm/{id} {
+      allow get: if signedIn();
+      allow list: if false;
+      allow create, update: if signedIn() && request.resource.data.host == request.auth.uid
+        && request.resource.data.code is string && request.resource.data.code.size() == 6;
+      allow delete: if signedIn();
+    }
     match /mm/{cls} {
       allow get: if signedIn();
       allow list: if false;
