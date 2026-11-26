@@ -4545,7 +4545,7 @@ html[data-theme=malam] .gqtheme,html[data-theme=malam] .tguide{background:var(--
 <div class="syncpill" id="syncPill" hidden></div>
 <div class="toast" id="toast" hidden></div>
 
-<script src="av.js?v=464"></script>
+<script src="av.js?v=465"></script>
 <script>
 /* ---------- visual assets ---------- */
 const INK='#1B1E3D';
@@ -13760,12 +13760,18 @@ function pudStart(code,host){pudLeave(true);Object.assign(PUD,{code,host,phase:'
     onRep:n=>{if(PUD.phase!=='play')return;pudCount()},onFault:b=>{if(PUD.phase==='play')pudCount()},
     onPose:(lm)=>pudSendPose(lm),onClose:()=>pudLeave()});
   PUD.un=FB.db.doc('pud/'+code).onSnapshot(s=>{if(!s.exists){if(PUD.code===code){toast('lock','Tantangan ditutup.');pudQuit()}return}PUD.doc=s.data();pudSync()},e=>{toast('lock',fbErr(e));pudQuit()});
-  PUD.unP=FB.db.collection('pud/'+code+'/p').onSnapshot(q=>{q.docs.forEach(d=>{if(d.id===FBX.user.uid)return;const x=d.data();if(PUD.link!=='p2p'&&x&&x.k){PUD.oppPose=x.k;PUD.oppAt=Date.now()}})},()=>{});
+  PUD.unP=FB.db.collection('pud/'+code+'/p').onSnapshot(q=>{q.docs.forEach(d=>{if(d.id===FBX.user.uid)return;const x=d.data();if(PUD.link!=='p2p'&&x&&x.k&&Date.now()-(x.t||0)<5000){PUD.oppPose=x.k;PUD.oppAt=Date.now()}if(x&&x.n!=null)pudOppLive(x.n,x.bad,x.r)})},()=>{});
   clearInterval(PUD.drawT);PUD.drawT=setInterval(pudDrawOpp,100)}
 function pudSet(o){if(!PUD.code)return;const me=FBX.user.uid,u={};Object.entries(o).forEach(([k,v])=>u[`players.${me}.${k}`]=v);FB.db.doc('pud/'+PUD.code).update(u).catch(()=>{})}
-function pudCount(){/* kirim hitungan paling banyak 2x per detik */const S=PUD.S;if(!S)return;clearTimeout(PUD.cT);const go=()=>{PUD.nAt=Date.now();pudSet({n:S.n,bad:Object.values(S.bad).reduce((a,b)=>a+b,0)})};if(Date.now()-PUD.nAt>500)go();else PUD.cT=setTimeout(go,500)}
+function pudCount(){/* hitungan terkirim seketika lewat jalur langsung antar-HP; lewat server dibatasi supaya tidak antre */const S=PUD.S;if(!S)return;const n=S.n,bad=Object.values(S.bad).reduce((a,b)=>a+b,0),now=Date.now();
+  if(PUD.dc&&PUD.dc.readyState==='open'){try{PUD.dc.send(JSON.stringify({n,bad,r:PUD.round||0}))}catch(e){}}
+  clearTimeout(PUD.cT2);const live=()=>{PUD.lAt=Date.now();FB.db.doc('pud/'+PUD.code+'/p/'+FBX.user.uid).set({n,bad,r:PUD.round||0,t:Date.now()},{merge:true}).catch(()=>{})};
+  if(PUD.link!=='p2p'){if(now-(PUD.lAt||0)>700)live();else PUD.cT2=setTimeout(pudCount,700)}
+  clearTimeout(PUD.cT);const go=()=>{PUD.nAt=Date.now();pudSet({n:S.n,bad:Object.values(S.bad).reduce((a,b)=>a+b,0)})};if(now-PUD.nAt>3000)go();else PUD.cT=setTimeout(go,3000-(now-PUD.nAt))}
+function pudOppLive(n,bad,r){if((r||0)!==(PUD.round||0)||PUD.phase==='lobby')return;PUD.oppN=Math.max(PUD.oppN||0,n||0);PUD.oppBad=Math.max(PUD.oppBad||0,bad||0);const op=PUD.opp;if(op){op.n=Math.max(op.n||0,PUD.oppN);op.bad=Math.max(op.bad||0,PUD.oppBad)}
+  const n2=$('#pudOn2');if(n2)n2.textContent=op?op.n:PUD.oppN;const ob=$('#pudOb');if(ob)ob.textContent=PUD.oppBad?`${PUD.oppBad} gerakan tidak dihitung`:''}
 function pudOppId(){const d=PUD.doc;return d?Object.keys(d.players||{}).find(u=>u!==FBX.user.uid):null}
-function pudSync(){const d=PUD.doc;if(!d)return;const me=FBX.user.uid,oid=pudOppId(),op=oid&&d.players[oid],mp=d.players[me];PUD.opp=op||null;
+function pudSync(){const d=PUD.doc;if(!d)return;const me=FBX.user.uid,oid=pudOppId(),op=oid&&d.players[oid],mp=d.players[me];PUD.opp=op||null;PUD.round=d.round||0;if(op&&(PUD.phase==='play'||PUD.phase==='end')){op.n=Math.max(op.n||0,PUD.oppN||0);op.bad=Math.max(op.bad||0,PUD.oppBad||0)}
   if(!mp){toast('lock','Kamu dikeluarkan dari tantangan.');pudQuit();return}
   const on=$('#pudOn');if(on)on.textContent=op?op.name:'Menunggu lawan…';const n2=$('#pudOn2');if(n2)n2.textContent=op?op.n||0:'–';const ob=$('#pudOb');if(ob)ob.textContent=op&&op.bad?`${op.bad} gerakan tidak dihitung`:'';
   if(op&&!PUD.pc&&!op.left)pudRtc();
@@ -13800,7 +13806,7 @@ function pudScoreDraw(){const ov=$('#puOv');if(!ov||!ov.classList.contains('pudo
   const lead=my>on?'me':on>my?'op':'';if(el.dataset.lead!==lead){el.dataset.lead=lead}}
 {const _d=pudDrawOpp;pudDrawOpp=function(){_d.apply(this,arguments);try{pudScoreDraw()}catch(e){}}}
 function pudShare(){const t=`Ayo adu push-up di JELAS! Buka menu Bermain → Adu Push-up, lalu masukkan kode ${PUD.code}. https://jelajahkelas.github.io/?pud=${PUD.code}`;if(navigator.share){navigator.share({text:t}).catch(()=>{});return}window.open('https://wa.me/?text='+encodeURIComponent(t),'_blank')}
-function pudCountdown(){PUD.phase='count';const cd=$('#pudCd');let k=3;const show=t=>{if(cd){cd.hidden=false;cd.textContent=t;cd.classList.remove('pop');void cd.offsetWidth;cd.classList.add('pop')}};
+function pudCountdown(){PUD.phase='count';PUD.oppN=0;PUD.oppBad=0;PUD.nAt=0;const cd=$('#pudCd');let k=3;const show=t=>{if(cd){cd.hidden=false;cd.textContent=t;cd.classList.remove('pop');void cd.offsetWidth;cd.classList.add('pop')}};
   try{PUD.S.reset()}catch(e){}show(k);tone([660],.08);try{if(soundOn)say('Tiga')}catch(e){}
   clearInterval(PUD.cdT);PUD.cdT=setInterval(()=>{k--;if(k>0){show(k);tone([660],.08);try{if(soundOn)say(k===2?'Dua':'Satu')}catch(e){}return}
     clearInterval(PUD.cdT);show('MULAI!');tone([990,1320],.08);try{if(soundOn)say('Mulai!')}catch(e){}setTimeout(()=>{if(cd)cd.hidden=true},700);
@@ -13824,7 +13830,7 @@ function pudResult(){PUD.res=true;PUD.phase='end';clearInterval(PUD.endT);const 
 function pudPack(lm){return PUD_KP.map(i=>{const p=lm[i];return (p.visibility==null||p.visibility>.4)?[Math.round(p.x*1000),Math.round(p.y*1000)]:null})}
 function pudSendPose(lm){if(!PUD.code||!PUD.opp)return;const k=pudPack(lm),now=Date.now();
   if(PUD.link==='p2p'&&PUD.dc&&PUD.dc.readyState==='open'){if(now-PUD.sent>80){PUD.sent=now;try{PUD.dc.send(JSON.stringify({k}))}catch(e){}}return}
-  if((PUD.phase==='play'||PUD.phase==='count')&&now-PUD.sent>500){PUD.sent=now;FB.db.doc('pud/'+PUD.code+'/p/'+FBX.user.uid).set({k,t:now}).catch(()=>{})}}
+  if((PUD.phase==='play'||PUD.phase==='count')&&now-PUD.sent>1000&&now-(PUD.lAt||0)>400){PUD.sent=now;FB.db.doc('pud/'+PUD.code+'/p/'+FBX.user.uid).set({k,t:now},{merge:true}).catch(()=>{})}}
 function pudDrawOpp(){const c=$('#pudOc');if(!c)return;const g=c.getContext('2d');g.clearRect(0,0,c.width,c.height);const L=$('#pudLink');if(L){L.className=PUD.link;L.title=PUD.link==='p2p'?'Terhubung langsung':PUD.link==='srv'?'Lewat server':'Menyambungkan'}
   const k=PUD.oppPose;if(!k||Date.now()-PUD.oppAt>4000){g.fillStyle='rgba(255,255,255,.5)';g.font='bold 13px sans-serif';g.textAlign='center';g.fillText(PUD.opp?(PUD.phase==='play'?'Menunggu gerakan…':'Lawan bersiap'):'—',c.width/2,c.height/2);return}
   /* cermin seperti kamera sendiri, dan pas di kotak */
@@ -13836,7 +13842,7 @@ function pudDrawOpp(){const c=$('#pudOc');if(!c)return;const g=c.getContext('2d'
 /* ----- koneksi langsung (WebRTC). Sinyal lewat dokumen tantangan; tanpa server TURN, jadi kalau gagal pakai server Firestore ----- */
 function pudRtc(){if(PUD.pc||typeof RTCPeerConnection==='undefined'){PUD.link='srv';return}const code=PUD.code,host=PUD.host;
   const pc=PUD.pc=new RTCPeerConnection({iceServers:[{urls:['stun:stun.l.google.com:19302','stun:stun1.l.google.com:19302']}]});
-  const onDc=dc=>{PUD.dc=dc;dc.onopen=()=>{PUD.link='p2p'};dc.onclose=()=>{if(PUD.link==='p2p')PUD.link='srv'};dc.onmessage=e=>{try{const m=JSON.parse(e.data);if(m.k){PUD.oppPose=m.k;PUD.oppAt=Date.now()}}catch(_){}}};
+  const onDc=dc=>{PUD.dc=dc;dc.onopen=()=>{PUD.link='p2p'};dc.onclose=()=>{if(PUD.link==='p2p')PUD.link='srv'};dc.onmessage=e=>{try{const m=JSON.parse(e.data);if(m.k){PUD.oppPose=m.k;PUD.oppAt=Date.now()}if(m.n!=null)pudOppLive(m.n,m.bad,m.r)}catch(_){}}};
   const gathered=()=>new Promise(r=>{if(pc.iceGatheringState==='complete')return r();const t=setTimeout(r,2500);pc.onicegatheringstatechange=()=>{if(pc.iceGatheringState==='complete'){clearTimeout(t);r()}}});
   setTimeout(()=>{if(PUD.code===code&&PUD.link!=='p2p')PUD.link='srv'},9000);
   if(host){onDc(pc.createDataChannel('p',{ordered:false,maxRetransmits:0}));(async()=>{try{await pc.setLocalDescription(await pc.createOffer());await gathered();await FB.db.doc('pud/'+code).update({offer:JSON.stringify(pc.localDescription),ans:null})}catch(e){PUD.link='srv'}})();
@@ -17388,7 +17394,7 @@ function folBind(root,list,after){root.querySelectorAll('[data-follow]').forEach
   try{await folDo(f,on);if(on){try{sfx.ok()}catch(_){}toast('team',`Kamu mengikuti ${f.name}.`)}b.outerHTML=folBtn(f,b.classList.contains('sm'));folBind(root,list,after);after&&after()}catch(err){b.disabled=false;toast('lock',fbErr(err))}})}
 const shareIcon='<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M12 3 V15 M7 8 L12 3 L17 8 M5 13 V19 C5 20 6 21 7 21 H17 C18 21 19 20 19 19 V13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const qrIcon='<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><path d="M14 14h3v3h-3zM18 18h3v3h-3zM18 14h3M14 18v3" stroke-linecap="round"/></svg>';
-let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=464';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
+let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=465';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
 function qrMatrix(text){const Q=window.QRCodeLib,q=new Q(-1,Q.ECL.M);q.addData(text);q.make();const n=q.getModuleCount(),m=[];for(let r=0;r<n;r++){m.push([]);for(let c=0;c<n;c++)m[r].push(q.isDark(r,c))}return m}
 function qrSvgOf(m){const n=m.length;let d='';for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(m[r][c])d+=`M${c} ${r}h1.02v1.02h-1.02z`;
   return `<svg viewBox="-2 -2 ${n+4} ${n+4}" class="pcqr" shape-rendering="crispEdges" aria-label="Kode QR profil"><rect x="-2" y="-2" width="${n+4}" height="${n+4}" fill="#fff"/><path d="${d}" fill="#1C1E3D"/></svg>`}
