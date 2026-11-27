@@ -1,5 +1,5 @@
 // Selalu ambil versi terbaru dari internet; pakai salinan tersimpan hanya saat offline.
-const CACHE = 'jelajah-kelas-v466';
+const CACHE = 'jelajah-kelas-v467';
 // AI pendeteksi push-up (MediaPipe, versi tetap): disimpan terpisah supaya tidak diunduh ulang setiap pembaruan.
 const MP_CACHE = 'jk-mediapipe-0.10.14';
 self.addEventListener('install', e => self.skipWaiting());
@@ -57,7 +57,7 @@ self.addEventListener('notificationclick', e => {
 self.addEventListener('push', e => {
   let d = {};
   try { const j = e.data ? e.data.json() : {}; d = j.data || j; } catch (_) {}
-  const opt = { body: d.body || '', icon: 'icons/icon-192.png', badge: 'icons/badge-96.png', tag: d.inv ? 'inv-' + d.inv : (d.type || 'jelas'),
+  const opt = { body: d.body || '', icon: 'icons/icon-192.png', badge: 'icons/badge-96.png?v=2', tag: d.inv ? 'inv-' + d.inv : (d.type || 'jelas'),
     renotify: true, vibrate: [200, 100, 200], data: d };
   if (d.type === 'invite') {
     if (d.exp && Date.now() > +d.exp) return;
