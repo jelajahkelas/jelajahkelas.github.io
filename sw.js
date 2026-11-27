@@ -1,5 +1,5 @@
 // Selalu ambil versi terbaru dari internet; pakai salinan tersimpan hanya saat offline.
-const CACHE = 'jelajah-kelas-v467';
+const CACHE = 'jelajah-kelas-v468';
 // AI pendeteksi push-up (MediaPipe, versi tetap): disimpan terpisah supaya tidak diunduh ulang setiap pembaruan.
 const MP_CACHE = 'jk-mediapipe-0.10.14';
 self.addEventListener('install', e => self.skipWaiting());
@@ -66,7 +66,7 @@ self.addEventListener('push', e => {
       const nm = d.title.replace(/ menantangmu!$/, ''), sj = String(d.body || '').split(' · ')[0].replace(/\. Terima tantangannya\?$/, '');
       d.title = `${nm} menantangmu tanding${sj ? ' ' + sj : ''}!`; d.body = 'Kamu punya 2 menit untuk menerima tantangan'; opt.body = d.body;
     }
-    opt.requireInteraction = true; opt.icon = 'icons/duel.png'; opt.badge = 'icons/badge-96.png'; opt.timestamp = Date.now();
+    opt.requireInteraction = true; opt.icon = 'icons/duel.png'; opt.badge = 'icons/badge-96.png?v=2'; opt.timestamp = Date.now();
     opt.actions = [{ action: 'accept', title: 'Terima' }, { action: 'decline', title: 'Tolak' }];
     // tantangan berlaku 2 menit: tutup sendiri setelah habis
     e.waitUntil(new Promise(r => setTimeout(r, Math.max(0, Math.min(125000, (+d.exp || Date.now() + 120000) - Date.now())))).then(() =>
