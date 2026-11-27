@@ -4330,6 +4330,9 @@ html[data-theme=malam] .gqtheme,html[data-theme=malam] .tguide{background:var(--
 .puov.pudon:has(#pudScore:not([hidden])) .pudopp{top:calc(max(10px,env(safe-area-inset-top)) + 186px);width:120px}
 .puov.pudon:has(#pudScore:not([hidden])) .pudopp b{display:none}
 .puov.pudon:has(#pudScore:not([hidden])) #pudOc{width:104px;height:139px}
+
+/* tanpa nyawa */
+#heartBtn{display:none!important}
 </style>
 </head>
 <body>
@@ -4545,7 +4548,7 @@ html[data-theme=malam] .gqtheme,html[data-theme=malam] .tguide{background:var(--
 <div class="syncpill" id="syncPill" hidden></div>
 <div class="toast" id="toast" hidden></div>
 
-<script src="av.js?v=468"></script>
+<script src="av.js?v=469"></script>
 <script>
 /* ---------- visual assets ---------- */
 const INK='#1B1E3D';
@@ -12754,7 +12757,7 @@ function finish(){tmStop();
    ========================================================= */
 const K='#1B1E3D';
 /* Nyawa tanpa batas kecuali admin menyalakan batas di Panel Admin (config/app.hearts='limited'). */
-const HUNL=()=>!!(typeof P!=='undefined'&&P&&P.unlimited)||!(window.FBX&&FBX.cfg&&FBX.cfg.hearts==='limited');window.HUNL=HUNL;
+/* nyawa dihapus: murid bebas belajar sepuasnya */const HUNL=()=>true;window.HUNL=HUNL;
 const ICONS={
  home:`<svg viewBox="0 0 48 48"><path d="M8 22 L24 9 L40 22 V41 H8Z" fill="#FFB65C" stroke="${K}" stroke-width="3" stroke-linejoin="round"/><path d="M4 23 L24 6 L44 23" fill="none" stroke="#F2394B" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><rect x="18" y="27" width="12" height="14" rx="3" fill="#3D8BFF" stroke="${K}" stroke-width="3"/></svg>`,
  team:`<svg viewBox="0 0 48 48"><g stroke="${K}" stroke-width="3" stroke-linejoin="round"><circle cx="16" cy="15" r="7" fill="#FFC23D"/><path d="M3 40 c0-10 6-15 13-15 s13 5 13 15z" fill="#3D8BFF"/><circle cx="33" cy="17" r="6" fill="#FFC23D"/><path d="M22 40 c0-9 5-13 11-13 s11 4 11 13z" fill="#26BF66"/></g></svg>`,
@@ -14415,7 +14418,7 @@ function beginRun(o){PLAY='solo';{const rr=document.getElementById('roomRace');i
   else{$('#checkBar').hidden=true;arcBegin()}}
 function selectOpt(k){if(!game||game.locked||!game.lesson)return;const q=game.qs[game.i];if(k<0||k>=q.opts.length)return;game.sel=k;
   $('#opts').querySelectorAll('.opt').forEach((b,i)=>b.classList.toggle('sel',i===k));$('#checkBtn').disabled=false;tone([520],.04)}
-function lessonHearts(){return `<span class="lhearts">${ICONS.heart.replace('fill="currentColor"','fill="#FF5A5F"')}<b>${!game.lesson.usesHearts||!P||HUNL()?'∞':Math.max(0,P.hearts)}</b></span>`}
+function lessonHearts(){if(HUNL())return '';return `<span class="lhearts">${ICONS.heart.replace('fill="currentColor"','fill="#FF5A5F"')}<b>${!game.lesson.usesHearts||!P||HUNL()?'∞':Math.max(0,P.hearts)}</b></span>`}
 function quitAsk(){if(window.examActive&&window.examActive()){toast('lock','Selesaikan tugas dulu. Kamu tidak bisa keluar saat mode ujian.');return}if(game&&game.lesson&&game.lesson.room&&window.roomQuit){openModal(`<div class="mascot" data-mascot data-mood="sad" style="width:110px;margin:0 auto"></div><h3 style="text-align:center">Keluar dari tantangan?</h3><p style="text-align:center">Nilaimu dihitung sampai soal ini, lalu kamu keluar dari ruang tanding. Teman lain tetap bisa melanjutkan.</p><div class="acts"><button class="primary" id="mStay">Lanjut main</button><button class="ghost" id="mLeave" style="color:var(--bad)">Keluar</button></div>`);hydrate($('#mbox'));
     $('#mStay').onclick=closeModal;$('#mLeave').onclick=()=>{closeModal();clearInterval(timerId);arcStop();roomQuit()};return}
   openModal(`<div class="mascot" data-mascot data-mood="sad" style="width:110px;margin:0 auto"></div><h3 style="text-align:center">Tunggu, jangan berhenti dulu!</h3><p style="text-align:center">Kalau keluar sekarang, kemajuan di level ini akan hilang.</p><div class="acts"><button class="primary" id="mStay">Lanjut belajar</button><button class="ghost" id="mLeave" style="color:var(--bad)">Keluar</button></div>`);
@@ -14467,7 +14470,7 @@ function openChest(idx){const pr=progOf();if(idx!==pr.done)return;const n=R(15,3
   openModal(`<div style="display:grid;place-items:center"><span class="chestbig shakeit" id="chestImg">${ICONS.chest}</span></div><h3 style="text-align:center" id="chestT">Membuka peti…</h3><p style="text-align:center" id="chestP">&nbsp;</p><button class="primary" id="mClose" disabled>Ambil hadiah</button>`);
   tone([300,400,500],.12);
   setTimeout(()=>{const ci=$('#chestImg');if(ci){ci.classList.remove('shakeit');ci.innerHTML=ICONS.chestGlow;ci.classList.add('chglow')}},650);
-  setTimeout(()=>{$('#chestImg').classList.remove('shakeit','chglow');$('#chestImg').innerHTML=ICONS.chestFull;$('#chestImg').classList.add('chpop');$('#chestT').textContent=`+${n} permata!`;$('#chestP').textContent='Tukarkan permata di Toko dengan nyawa, pelindung api, atau gaya baru untuk '+petName()+'.';$('#mClose').disabled=false;sfx.win();popFx($('#chestImg'),`+${n}`);
+  setTimeout(()=>{$('#chestImg').classList.remove('shakeit','chglow');$('#chestImg').innerHTML=ICONS.chestFull;$('#chestImg').classList.add('chpop');$('#chestT').textContent=`+${n} permata!`;$('#chestP').textContent='Tukarkan permata di Toko dengan pelindung api atau gaya baru untuk '+petName()+'.';$('#mClose').disabled=false;sfx.win();popFx($('#chestImg'),`+${n}`);
     P.gems+=n;P.stats.chests++;pr.done++;save();renderTop()},1100);
   $('#mClose').onclick=()=>{closeModal();renderPath();setTimeout(scrollToCurrent,60)}}
 
@@ -15187,7 +15190,7 @@ function renderTSet(){const t=T();
      <div class="tfield"><label for="stLabel">Nama kelas</label><input id="stLabel" maxlength="30" placeholder="Contoh: 5A" value="${esc(t.label||'')}"></div><div class="tfield"><label for="stCls">Jenjang</label><select id="stCls">${COURSE.filter(c=>!c.hidden||c.id===t.cls).map(c=>`<option value="${c.id}" ${c.id===t.cls?'selected':''}>${c.full}</option>`).join('')}</select></div><div class="tfield"><label for="stKkm">KKM</label><input id="stKkm" type="number" min="0" max="100" value="${t.kkm}"></div></div>
      <p class="sub" style="margin:0">Mengganti kelas juga memindahkan semua murid ke materi kelas tersebut.</p><button class="primary" id="stSave" style="align-self:flex-start">Simpan data kelas</button></div>`+
    addStudentBlock()+
-   `<div class="tcard settings" style="padding:6px 16px"><h3 style="padding-top:10px">Mode kelas</h3>${tg('stUnl',!!t.unlimited,'Nyawa tak terbatas untuk semua murid','Murid tidak terhenti saat salah menjawab')+tg('stTV',TV,'Layar TV','Huruf dan tombol lebih besar untuk TV sentuh')+tg('stVoice',t.voice!==false,'Obrolan suara di Petualangan Berdua','Murid bisa berbicara dengan teman sekelas atau teman yang saling mengikuti saat main online')+tg('stMusic',MUS.on,'Musik latar','Musik ceria selama bermain')+tg('stSound',soundOn,'Efek suara','Bunyi jawaban dan pembacaan soal TK')}
+   `<div class="tcard settings" style="padding:6px 16px"><h3 style="padding-top:10px">Mode kelas</h3>${tg('stTV',TV,'Layar TV','Huruf dan tombol lebih besar untuk TV sentuh')+tg('stVoice',t.voice!==false,'Obrolan suara di Petualangan Berdua','Murid bisa berbicara dengan teman sekelas atau teman yang saling mengikuti saat main online')+tg('stMusic',MUS.on,'Musik latar','Musik ceria selama bermain')+tg('stSound',soundOn,'Efek suara','Bunyi jawaban dan pembacaan soal TK')}
      ${themeRow()}${instRow()}<div class="set"><span><b>Layar penuh</b><small>Sembunyikan tampilan browser di TV</small></span><button class="smallbtn" id="stFull">Aktifkan</button></div></div>
    ${licCard()}
    <div class="tcard"><h3>Keamanan</h3><div class="tform"><div class="tfield"><label for="stPin">Sandi guru baru</label><input id="stPin" type="password" autocomplete="new-password"></div><div class="tfield"><label for="stPin2">Ulangi sandi baru</label><input id="stPin2" type="password" autocomplete="new-password"></div></div><p class="sub" style="margin:0">Nama pengguna guru: <b>${esc(t.user||'guru')}</b></p><button class="ghost" id="stPinSave" style="align-self:flex-start">Ganti sandi guru</button></div>
@@ -15196,7 +15199,7 @@ function renderTSet(){const t=T();
   hydrate($('#vTSet'));bindStudentBlock(renderTSet);bindLicCard(renderTSet);
   $('#stSave').onclick=()=>{t.name=$('#stName').value.trim()||t.name;{const lb=$('#stLabel');if(lb)t.label=lb.value.trim()}t.school=$('#stSchool').value.trim();t.kkm=Math.max(0,Math.min(100,+$('#stKkm').value||75));const nc=$('#stCls').value;if(nc!==t.cls){t.cls=nc;APP.profiles.forEach(p=>p.cls=nc)}save();toast('check','Data kelas tersimpan.')};
   {const v=$('#stVoice');if(v)v.onclick=()=>{t.voice=!(t.voice!==false);save();renderTSet();if(window.FBX&&FBX.user&&FBX.cid)FB.db.doc('classes/'+FBX.cid+'/cfg/main').set({voice:t.voice!==false,upd:Date.now()},{merge:true}).then(()=>toast('check',t.voice!==false?'Obrolan suara diizinkan.':'Obrolan suara dimatikan untuk kelas ini.')).catch(e=>toast('lock',fbErr(e)))}}
-  $('#stUnl').onclick=()=>{t.unlimited=!t.unlimited;APP.profiles.forEach(p=>p.unlimited=t.unlimited);save();renderTSet()};
+  
   $('#stTV').onclick=()=>{TV=!TV;store.set('tv',TV);applyTV();renderTSet()};
   $('#stMusic').onclick=()=>{MUS.on=!MUS.on;store.set('music',MUS.on);if(MUS.on)musicStart();else musicStop();renderTSet()};
   $('#stSound').onclick=()=>{soundOn=!soundOn;store.set('sound',soundOn);renderTSet()};
@@ -15297,7 +15300,7 @@ function openAdmin(){const el=$('#adminPanel');el.hidden=false;const until=dayKe
    <div class="tcard"><h3>Masa aktif di perangkat ini</h3><div class="tform"><div class="tfield"><label for="adUntil">Berlaku sampai</label><input type="date" id="adUntil" value="${until}"></div><div class="tfield"><label for="adMax">Batas jumlah murid (0 = tidak terbatas)</label><input type="number" id="adMax" min="0" max="999" value="${licMax()}"></div><div class="tfield" style="grid-column:1/-1"><label for="adHolder">Pemegang lisensi (sekolah atau guru)</label><input id="adHolder" value="${esc(LIC.holder||'')}"></div></div>
     <div class="daychips"><button class="daychip" data-add="30">+30 hari</button><button class="daychip" data-add="182">+6 bulan</button><button class="daychip" data-add="365">+1 tahun</button><button class="daychip" data-add="-1" style="color:var(--bad)">Hentikan sekarang</button></div><button class="primary" id="adSave" style="align-self:flex-start">Simpan masa aktif</button></div>
    <div class="tcard"><h3>Buat kode aktivasi</h3><p class="sub">Untuk pelanggan di tempat lain. Kirim kodenya lewat WhatsApp, guru memasukkannya di menu Atur → Lisensi.</p><div class="tform"><div class="tfield"><label for="cgUntil">Berlaku sampai</label><input type="date" id="cgUntil" value="${dayKey(new Date(Date.now()+365*864e5))}"></div><div class="tfield"><label for="cgMax">Batas murid (0 = tidak terbatas)</label><input type="number" id="cgMax" min="0" max="999" value="40"></div></div><button class="primary" id="cgGo" style="align-self:flex-start">Buat kode</button><div id="cgOut"></div></div>
-   <div class="tcard settings" style="padding:6px 16px"><h3 style="padding-top:10px">Fitur yang aktif</h3>${tg('fTeam',f.team!==false,'Main Bareng','Mode beregu dan rebutan di TV')+tg('fDuel',f.duel!==false,'Layar terbagi','Dua pemain bermain bersamaan')+tg('fShop',f.shop!==false,'Toko','Belanja nyawa dan gaya Uli dengan permata')}</div>
+   <div class="tcard settings" style="padding:6px 16px"><h3 style="padding-top:10px">Fitur yang aktif</h3>${tg('fTeam',f.team!==false,'Main Bareng','Mode beregu dan rebutan di TV')+tg('fDuel',f.duel!==false,'Layar terbagi','Dua pemain bermain bersamaan')+tg('fShop',f.shop!==false,'Toko','Belanja gaya Uli dan pelindung api dengan permata')}</div>
    <div class="tcard"><h3>Kontak dan pengumuman</h3><div class="tfield"><label for="adContact">Kontak penjual (tampil saat masa aktif habis)</label><input id="adContact" value="${esc(LIC.contact||'')}" placeholder="Contoh: WA 0812-3456-7890 (Pak Farid)"></div><div class="tfield"><label for="adAnn">Pengumuman di dasbor guru</label><textarea class="note-area" id="adAnn" placeholder="Contoh: Pembaruan materi semester 2 sudah tersedia.">${esc(LIC.announce||'')}</textarea></div><button class="primary" id="adMsgSave" style="align-self:flex-start">Simpan</button></div>
    <div class="tcard"><h3>Keamanan</h3><div class="tform"><div class="tfield"><label for="adPin">Sandi guru baru (jika guru lupa)</label><input id="adPin" type="password" autocomplete="new-password"></div><div class="tfield"><label for="adPw1">Sandi admin baru</label><input id="adPw1" type="password" autocomplete="new-password"></div></div><div style="display:flex;gap:10px;flex-wrap:wrap"><button class="ghost" id="adPinSave">Ganti sandi guru</button><button class="ghost" id="adPwSave">Ganti sandi admin</button></div>
     <p class="note" style="margin:0">${GAS?'Lisensi, sandi admin, dan pembuat kode aktivasi dijalankan di server Apps Script. Sandi admin awal dan rahasia lisensi diatur di bagian <b>CONFIG</b> file Code.gs.':'Sandi admin bawaan adalah <b>admin123</b>. Segera ganti. Kode aktivasi dibuat dari kode rahasia <b>LIC_SECRET</b> di dalam file aplikasi, jadi ganti rahasia itu sebelum menjual.'}</p></div></div>`;
@@ -17413,7 +17416,7 @@ function folBind(root,list,after){root.querySelectorAll('[data-follow]').forEach
   try{await folDo(f,on);if(on){try{sfx.ok()}catch(_){}toast('team',`Kamu mengikuti ${f.name}.`)}b.outerHTML=folBtn(f,b.classList.contains('sm'));folBind(root,list,after);after&&after()}catch(err){b.disabled=false;toast('lock',fbErr(err))}})}
 const shareIcon='<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M12 3 V15 M7 8 L12 3 L17 8 M5 13 V19 C5 20 6 21 7 21 H17 C18 21 19 20 19 19 V13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const qrIcon='<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><path d="M14 14h3v3h-3zM18 18h3v3h-3zM18 14h3M14 18v3" stroke-linecap="round"/></svg>';
-let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=468';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
+let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=469';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
 function qrMatrix(text){const Q=window.QRCodeLib,q=new Q(-1,Q.ECL.M);q.addData(text);q.make();const n=q.getModuleCount(),m=[];for(let r=0;r<n;r++){m.push([]);for(let c=0;c<n;c++)m[r].push(q.isDark(r,c))}return m}
 function qrSvgOf(m){const n=m.length;let d='';for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(m[r][c])d+=`M${c} ${r}h1.02v1.02h-1.02z`;
   return `<svg viewBox="-2 -2 ${n+4} ${n+4}" class="pcqr" shape-rendering="crispEdges" aria-label="Kode QR profil"><rect x="-2" y="-2" width="${n+4}" height="${n+4}" fill="#fff"/><path d="${d}" fill="#1C1E3D"/></svg>`}
@@ -17595,7 +17598,6 @@ function notifEnable(){const st=notifState();
 /* panduan singkat untuk murid baru */
 const TOUR=[{ic:'bolt',c:'#FFC23D',t:'Kumpulkan XP',d:'Setiap level yang kamu selesaikan memberi XP. Makin banyak XP, makin tinggi peringkatmu di Liga minggu ini.'},
  {ic:'flame',c:'#FF9600',t:'Jaga runtunan',d:'Belajar minimal satu level setiap hari agar api runtunanmu terus menyala. Pelindung api menjagamu kalau lupa sehari.'},
- {ic:'heartbig',c:'#FF4B4B',t:'Hati-hati dengan nyawa',d:'Jawaban salah mengurangi nyawa. Nyawa terisi lagi seiring waktu, atau lewat Latihan.'},
  {ic:'quest',c:'#1CB0F6',t:'Selesaikan misi',d:'Misi harian memberi permata. Ajak teman untuk Misi Teman mingguan dan buka peti bersama!'}];
 function tourAsk(){try{if(isT()||!P||P.tour||document.body.classList.contains('playing')||!$('#modal').hidden||curTab!=='learn')return false;
   if((+P.xp||0)>150){P.tour=1;save();return false}P.tour=1;save();let i=0;
@@ -17975,7 +17977,6 @@ openAdmin=function(){const el=$('#adminPanel'),u=FBX.user;if(!u){showLogin();ret
    <div class="tcard"><h3>Pengaturan aplikasi</h3>
     <div class="adgrp"><h4>Kontak dan harga</h4><div class="adgrid2"><div class="tfield"><label for="adDon">Tautan dukungan (Saweria, Trakteer, atau KaryaKarsa). Kosongkan untuk menyembunyikan tombol Dukung JELAS</label><input id="adDon" inputmode="url" placeholder="Contoh: https://saweria.co/namamu" value="${esc(FBX.cfg.donate||'')}"></div><div class="tfield"><label for="adWa">Nomor WhatsApp admin (untuk tombol Hubungi admin)</label><input id="adWa" inputmode="tel" placeholder="Contoh: 6281234567890" value="${esc(FBX.cfg.wa||'')}"></div>
     <div class="tfield"><label for="adPrice">Harga Pro yang ditampilkan ke guru</label><input id="adPrice" placeholder="Contoh: Rp49.000 per bulan" value="${esc(FBX.cfg.price||'')}"></div></div></div>
-    <div class="adgrp"><h4>Murid</h4><label class="adpay-on adsw"><span><b>Batasi nyawa murid</b><small>5 nyawa, berkurang saat jawaban salah. Jika tidak aktif, nyawa murid tanpa batas.</small></span><input type="checkbox" id="adHearts" ${FBX.cfg.hearts==='limited'?'checked':''}></label></div>
     <div class="adgrp"><h4>Pengumuman</h4><div class="adgrid2"><div class="tfield"><label for="adAnn">Pengumuman untuk semua guru (kosongkan jika tidak ada)</label><textarea id="adAnn" class="note-area">${esc(FBX.cfg.announce||'')}</textarea></div>
     <div class="tfield"><label for="adAnnS">Pengumuman untuk semua murid (tampil di halaman Belajar, kosongkan jika tidak ada)</label><textarea id="adAnnS" class="note-area">${esc(FBX.cfg.announceS||'')}</textarea></div></div></div>
     <button class="primary" id="adCfg" style="align-self:flex-start">Simpan pengaturan</button></div>
@@ -18001,7 +18002,7 @@ openAdmin=function(){const el=$('#adminPanel'),u=FBX.user;if(!u){showLogin();ret
   FB.db.collection('payments').get().then(q=>{window.AD_PAYS=q.docs.map(d=>Object.assign({id:d.id},d.data())).sort((a,b)=>(b.created||0)-(a.created||0));const list=window.AD_PAYS.slice(0,30);const el=$('#adPays');if(!el)return;
     const paid=list.filter(x=>x.status==='PAID'),sum=paid.reduce((a,x)=>a+(+x.amount||0),0);
     el.innerHTML=list.length?`<p class="sub" style="margin:0 0 8px">${paid.length} lunas · total ${rupiah(sum)} (sebelum potongan biaya)</p><div class="tablewrap"><table class="ttable"><thead><tr><th>Tanggal</th><th>Guru</th><th>Paket</th><th class="num">Jumlah</th><th>Status</th></tr></thead><tbody>${list.map(x=>`<tr><td>${new Date(x.created||0).toLocaleDateString('id-ID',{day:'numeric',month:'short'})}</td><td class="nm">${esc(x.email||'')}</td><td>${esc(x.planName||x.plan||'')}</td><td class="num">${rupiah(x.amount)}</td><td>${x.status==='PAID'?'<span class="pill ok">Lunas</span>':x.status==='EXPIRED'?'<span class="pill mute">Kedaluwarsa</span>':'<span class="pill mid">Menunggu</span>'}</td></tr>`).join('')}</tbody></table></div>`:adEmpty('🧾','Belum ada pembayaran','Riwayat pembayaran guru akan tampil di sini.')}).catch(()=>{const el=$('#adPays');if(el)el.innerHTML='<p class="note">Belum bisa memuat. Pastikan aturan Firestore terbaru sudah dipasang.</p>'});
-  $('#adCfg').onclick=()=>{const c={donate:(()=>{const v=($('#adDon')?$('#adDon').value.trim():'');return /^https:\/\/(www\.)?(saweria\.co|trakteer\.id|karyakarsa\.com)\//i.test(v)?v:''})(),wa:$('#adWa').value.replace(/\D/g,''),price:$('#adPrice').value.trim(),announce:$('#adAnn').value.trim(),announceS:($('#adAnnS')?$('#adAnnS').value.trim():''),hearts:$('#adHearts').checked?'limited':'unlimited',upd:Date.now()};
+  $('#adCfg').onclick=()=>{const c={donate:(()=>{const v=($('#adDon')?$('#adDon').value.trim():'');return /^https:\/\/(www\.)?(saweria\.co|trakteer\.id|karyakarsa\.com)\//i.test(v)?v:''})(),wa:$('#adWa').value.replace(/\D/g,''),price:$('#adPrice').value.trim(),announce:$('#adAnn').value.trim(),announceS:($('#adAnnS')?$('#adAnnS').value.trim():''),hearts:'unlimited',upd:Date.now()};
     FB.db.doc('config/app').set(c,{merge:true}).then(()=>{FBX.cfg=Object.assign({},FBX.cfg,c);toast('check','Pengaturan aplikasi tersimpan.')}).catch(e=>toast('lock',fbErr(e)))};
   let rows=[];
   const draw=()=>{const q=$('#adFind').value.trim().toLowerCase();const now=Date.now();
