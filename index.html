@@ -4545,7 +4545,7 @@ html[data-theme=malam] .gqtheme,html[data-theme=malam] .tguide{background:var(--
 <div class="syncpill" id="syncPill" hidden></div>
 <div class="toast" id="toast" hidden></div>
 
-<script src="av.js?v=465"></script>
+<script src="av.js?v=466"></script>
 <script>
 /* ---------- visual assets ---------- */
 const INK='#1B1E3D';
@@ -15919,7 +15919,23 @@ doLogin=function(user,pw,fail){const raw=String(user||'').trim();pw=String(pw||'
   else{if(raw.toLowerCase()==='admin'){fail('Admin masuk dengan email, bukan dengan nama pengguna "admin".');return}if(!/^\d{4}$/.test(pw)){fail('Sandi murid berupa 4 angka.');return}email=uMail(raw);pass=uPass(pw);FBX.lastPin=pw}
   const b=$('#lgGo');if(b){b.disabled=true;b.textContent='Memeriksa…'}
   setSession(null);
-  FB.auth.signInWithEmailAndPassword(email,pass).catch(e=>{if(b){b.disabled=false;b.textContent='MASUK'}fail(fbErr(e))})};
+  FBX.lastCred={id:raw,pw};FB.auth.signInWithEmailAndPassword(email,pass).catch(e=>{if(b){b.disabled=false;b.textContent='MASUK'}FBX.lastCred=null;fail(fbErr(e))})};
+
+/* ---------- tetap masuk: simpan data situs secara permanen + sandi di pengelola sandi HP ----------
+   Firebase tidak pernah mengakhiri sesi sendiri. Akun "keluar sendiri" biasanya karena data situs dibersihkan
+   (HP penuh, aplikasi pembersih, hapus data Chrome). Maka: (1) minta penyimpanan permanen, (2) simpan nama pengguna
+   + sandi ke Pengelola Sandi Google, (3) kalau sesi hilang, masuk lagi otomatis dari pengelola sandi tanpa mengetik. */
+const CRED_OK=typeof window.PasswordCredential==='function'&&navigator.credentials&&navigator.credentials.get;
+function stayPersist(){try{if(navigator.storage&&navigator.storage.persist)navigator.storage.persisted().then(p=>{if(!p)return navigator.storage.persist()}).catch(()=>{})}catch(e){}}
+function credSave(){const c=FBX.lastCred;FBX.lastCred=null;if(!c||!CRED_OK||!c.id||!c.pw)return;
+  try{navigator.credentials.store(new PasswordCredential({id:c.id,password:c.pw,name:(P&&P.name)||c.id})).catch(()=>{})}catch(e){}}
+let credTried=false;
+async function credAuto(mode){if(!CRED_OK||FB.auth.currentUser)return false;if(mode==='silent'){if(credTried)return false;credTried=true}
+  try{const c=await navigator.credentials.get({password:true,mediation:mode||'silent'});if(!c||!c.id||!c.password||FB.auth.currentUser)return false;
+    toast('user','Masuk otomatis sebagai '+(c.name||c.id)+'…');doLogin(c.id,c.password,msg=>{toast('lock',msg);showLogin(c.id)});return true}catch(e){return false}}
+window.credAuto=credAuto;
+{const _r=fbRoute;fbRoute=async function(u){const r=await _r.apply(this,arguments);try{if(u){try{sessionStorage.removeItem('jk_out')}catch(e){}credSave();stayPersist()}else if(!sessionStorage.getItem('jk_out'))credAuto('silent')}catch(e){}return r}}
+{const _o=logout;logout=function(){try{sessionStorage.setItem('jk_out','1');if(CRED_OK&&navigator.credentials.preventSilentAccess)navigator.credentials.preventSilentAccess().catch(()=>{})}catch(e){}return _o.apply(this,arguments)}}
 const _userTaken=userTaken;
 userTaken=function(u,ex){if(isT())return _userTaken(u,ex);return String(u).toLowerCase()==='admin'};
 
@@ -15928,7 +15944,7 @@ window.fbSignupStudent=async function(o,next,err){if(o.fbDone){next();return}con
   try{let u;
     if(o.google){u=FB.auth.currentUser;if(!u)throw new Error('Sesi Google berakhir. Masuk dengan Google lagi.');
       const h=await FB.db.doc('handles/'+o.user).get();if(h.exists&&h.data().uid!==u.uid){const e=new Error('taken');e.code='auth/email-already-in-use';throw e}}
-    else{const c=await FB.auth.createUserWithEmailAndPassword(uMail(o.user),uPass(o.pass));u=c.user;
+    else{FBX.lastCred={id:o.user,pw:o.pass};const c=await FB.auth.createUserWithEmailAndPassword(uMail(o.user),uPass(o.pass));u=c.user;
       try{const h=await FB.db.doc('handles/'+o.user).get();if(h.exists&&h.data().uid!==u.uid){try{await u.delete()}catch(x){}const e=new Error('taken');e.code='auth/email-already-in-use';throw e}}catch(x){if(x.code==='auth/email-already-in-use')throw x}}
     await FB.db.doc('handles/'+o.user).set({uid:u.uid,name:o.name.trim(),av:null,cls:o.cls,kw:searchKw(o.name.trim(),o.user),upd:Date.now()}).catch(()=>{});
     const p=newProfile({name:o.name.trim(),cls:o.cls,subj:o.subj,goal:o.goal,color:o.color,gender:o.gender});p.user=o.user;p.pass=o.google?null:o.pass;
@@ -15960,7 +15976,7 @@ function fbTeacherForm(existing){const el=$('#onb');el.hidden=false;closeAuth();
     if(!name)return err('Nama guru wajib diisi.');if(!/^\S+@\S+\.\S+$/.test(email))return err('Tulis email yang benar.');
     let pw='';if(!existing){pw=$('#tsPin').value;if(pw.length<6)return err('Sandi minimal 6 karakter.');if(pw!==$('#tsPin2').value)return err('Sandi yang diulang tidak sama.')}
     const b=$('#tsGo');b.disabled=true;b.textContent='Mendaftarkan…';FBX.busy=true;
-    try{let u=existing;if(!u){const c=await FB.auth.createUserWithEmailAndPassword(email,pw);u=c.user;try{await u.sendEmailVerification()}catch(e){}}
+    try{let u=existing;if(!u){FBX.lastCred={id:email,pw};const c=await FB.auth.createUserWithEmailAndPassword(email,pw);u=c.user;try{await u.sendEmailVerification()}catch(e){}}
       const me={role:'teacher',email:u.email,name,school,cls,plan:'free',proUntil:0,teacherUid:null,created:Date.now()};
       await FB.db.doc('users/'+u.uid).set(me);FBX.user=u;FBX.me=me;FBX.classDoc=null;
       const teacher={name,school,cls,kkm,days:[1,2,3,4,5],unlimited:true,created:Date.now(),user:u.email};
@@ -16380,6 +16396,9 @@ showLogin=function(pf){_showLoginD(pf);const el=$('#auth');const g=n=>el.querySe
   $('#lgBack2').onclick=()=>{ACC.get().length?showBack(false):(WEL.force=true,showWelcome())};
   $('#lgFb').onclick=e=>fbFacebook(e.currentTarget);$('#lgG2').onclick=e=>fbGoogle(e.currentTarget);
   setTimeout(()=>{try{if(document.body.contains(pw))(pf?pw:u).focus()}catch(e){}},80)};
+{const _l=showLogin;showLogin=function(prefill){_l.apply(this,arguments);if(prefill||!(typeof window.PasswordCredential==='function'&&navigator.credentials))return;
+  const box=$('#auth #dFg')||$('#auth .tcard');if(box&&!$('#lgSaved'))box.insertAdjacentHTML('afterend','<button class="ghost press" id="lgSaved" style="display:flex;gap:8px;align-items:center;justify-content:center;width:100%;margin-top:10px">🔑 Pakai akun yang tersimpan di HP ini</button>');
+  const sb=$('#lgSaved');if(sb)sb.onclick=async()=>{sb.disabled=true;const ok=window.credAuto&&await window.credAuto('required');sb.disabled=false;if(!ok)toast('lock','Belum ada akun tersimpan. Masuk sekali dengan sandi, lalu pilih "Simpan" saat ditawari.')}}}
 /* ---------- hapus akun (wajib untuk Play Store) ---------- */
 function fbDeleteAsk(){const st=!isT();
   openModal(`<h3>Hapus akun?</h3><p>${st?'Semua progres belajar, XP, dan permatamu akan dihapus permanen.':'Akun guru, kelas, kode kelas, tugas, absensi, dan nilai akan dihapus permanen. Akun murid tetap ada.'} Tindakan ini tidak bisa dibatalkan.</p>
@@ -17394,7 +17413,7 @@ function folBind(root,list,after){root.querySelectorAll('[data-follow]').forEach
   try{await folDo(f,on);if(on){try{sfx.ok()}catch(_){}toast('team',`Kamu mengikuti ${f.name}.`)}b.outerHTML=folBtn(f,b.classList.contains('sm'));folBind(root,list,after);after&&after()}catch(err){b.disabled=false;toast('lock',fbErr(err))}})}
 const shareIcon='<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M12 3 V15 M7 8 L12 3 L17 8 M5 13 V19 C5 20 6 21 7 21 H17 C18 21 19 20 19 19 V13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const qrIcon='<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><path d="M14 14h3v3h-3zM18 18h3v3h-3zM18 14h3M14 18v3" stroke-linecap="round"/></svg>';
-let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=465';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
+let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=466';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
 function qrMatrix(text){const Q=window.QRCodeLib,q=new Q(-1,Q.ECL.M);q.addData(text);q.make();const n=q.getModuleCount(),m=[];for(let r=0;r<n;r++){m.push([]);for(let c=0;c<n;c++)m[r].push(q.isDark(r,c))}return m}
 function qrSvgOf(m){const n=m.length;let d='';for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(m[r][c])d+=`M${c} ${r}h1.02v1.02h-1.02z`;
   return `<svg viewBox="-2 -2 ${n+4} ${n+4}" class="pcqr" shape-rendering="crispEdges" aria-label="Kode QR profil"><rect x="-2" y="-2" width="${n+4}" height="${n+4}" fill="#fff"/><path d="${d}" fill="#1C1E3D"/></svg>`}
